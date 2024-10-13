@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="../static/images/logo-icon.png"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../static/styles/dashboard1.css"/>
+    <title>Dashboard</title>
+</head>
+<body>
+    <div class="blur-circle"></div>
+    <header> <!-- this is the header section  -->
+        <div class="logo">
+            <img src="../static/images/logo.png" width="120px"/>
+        </div>
+
+        <div class="tabs">
+            <ul>
+                <li><a href="../templates/dashboard1.html">Dashboard</a></li>
+                <li><a href="../templates/announcements1.html">Announcements</a></li>
+                <li><a href="../templates/management.html">Management</a></li>
+            </ul>
+        </div>
+
+        <div class="profile"></div>
+    </header>
+
+    <div class="hr-container">
+        <hr/>
+    </div>
+
+    <!-- this is the main container  -->
+    <main class="main-container">
+        <!-- container for tenant information -->
+        <div class="tenants">
+            <p>Tenant Information</p>
+
+            <div class="dropdown">
+                <div class="select">
+                    <span class="selected">See More</span>
+                    <div class="caret"></div>
+                </div>
+
+                <ul class="menu">
+                    <li class="active">Room 1</li>
+                    <li>Room 2</li>
+                    <li>Room 3</li>
+                    <li>Room 4</li>
+                </ul>
+            </div>
+
+            <!-- tenant separate infos here -->
+             <div class="tenants-container">
+
+                <div class="tenant-container">
+                    <div class="tenant-profile"></div>
+                    <p>Tenant A</p>
+                    <div class="tenant-info">
+                        <p>+69123456789</p>
+                        <p>Polytechnic University of the Philippines</p>
+                    </div>
+                </div>
+
+                <div class="tenant-container">
+                    <div class="tenant-profile"></div>
+                    <p>Tenant B</p>
+                    <div class="tenant-info">
+                        <p>+69123456789</p>
+                        <p>Polytechnic University of the Philippines</p>
+                    </div>
+                </div>
+             </div>
+             
+            
+        </div>
+
+        <!-- container for admin pages  -->
+        <div class="admin">
+            <div class="main-profile"></div>
+            <div class="admin-details">
+                <span class="admin-name">Hi, Admin Name</span>
+                <p class="admin-desc">Here's an overview of your properties</p>
+            </div>
+
+            <div class="announcement-overview">
+                <p>Announcements</p>
+                <span class="view-more">
+                    <a href="../templates/announcements1.html">
+                        <img src="../static/images/maximize.png" width="25px"/>
+                    </a>
+                </span>
+
+                <div class="announcement-container"></div>
+            </div>
+
+            <div class="management-overview">
+                <p>Management</p>
+                <span class="view-more">
+                    <a href="../templates/management.html">
+                        <img src="../static/images/maximize.png" width="25px"/>
+                    </a>
+                </span>
+                
+                <div class="management-container"></div>
+            </div>
+        </div>
+
+        <!-- container for analytics  -->
+        <div class="analytics">
+            <p>Analytics</p>
+
+            <div class="analytic1">
+                <div class="icon"></div>
+            </div>
+
+            <div class="analytic2">
+                <div class="icon"></div>
+            </div>
+
+            <div class="analytic3">
+                <div class="icon"></div>
+            </div>
+
+            <div class="analytic4">
+                <div class="icon"></div>
+            </div>
+
+            <div class="analytic5">
+                <div class="icon"></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../static/js/dashboard1.js"></script>
+</body>
+</html>
