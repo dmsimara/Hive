@@ -65,6 +65,22 @@ header {
     font-size: 15px;
 }
 
+.active-tab {
+    background-color: rgba(255, 158, 0, 0.18);
+    color: var(--orange);
+    padding: 10px 18px;
+    border-radius: 20px;
+    font-size: 15px;
+}
+
+.tabs ul li a.active-tab {
+    background-color: rgba(255, 158, 0, 0.18);
+    color: var(--orange);
+    padding: 10px 18px;
+    border-radius: 20px;
+    font-size: 15px;
+}
+
 .profile { 
     border: black solid; 
     border-width: 1px; 

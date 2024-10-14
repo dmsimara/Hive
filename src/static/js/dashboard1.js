@@ -1,3 +1,21 @@
+// for styles to be applied not just with hover
+// Get all the tab links
+const tabs = document.querySelectorAll('.tabs ul li a');
+
+// Get the current URL path (only the file name)
+const currentPath = window.location.pathname.split("/").pop();
+
+// Loop through each tab and add 'active-tab' to the corresponding tab based on URL
+tabs.forEach(tab => {
+    const tabPath = tab.getAttribute('href').split("/").pop();
+    if (tabPath === currentPath) {
+        tab.classList.add('active-tab');
+    }
+});
+
+
+
+// for see more dropdown functionality
 const dropdowns = document.querySelectorAll('.dropdown');
 
 dropdowns.forEach(dropdown => {
@@ -10,7 +28,7 @@ dropdowns.forEach(dropdown => {
     select.addEventListener('click', () => {
         select.classList.toggle('select-clicked');
         caret.classList.toggle('caret-rotate');
-        menu.classList.toggle('menu-open'); // This should toggle visibility
+        menu.classList.toggle('menu-open'); 
     });
 
     options.forEach(option => {
