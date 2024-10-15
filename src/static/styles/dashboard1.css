@@ -172,18 +172,6 @@ body#blur.active .content-container{
     display: block;
 }
 
-.seemore-container a {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-}
-
-.seemore-container a:hover {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-}
-
 .tenant-container {
     background-color: rgba(255, 158, 0, 0.13);
     padding: 10px;
@@ -319,14 +307,14 @@ body#blur.active .content-container{
     position: relative;
     top: -4.5em;
     font-weight: 700;
-    font-size: 24px;
+    font-size: 21px;
     color: var(--dark-gray);
 }
 
 .seemore {
     background-color: white;
-    height: 2.5em;
-    width: 16em;
+    height: 3em;
+    width: 19em;
     margin: 5px auto;
     border-radius: 2em;
     border: 1px solid black;
@@ -344,8 +332,27 @@ body#blur.active .content-container{
     color: var(--dark-gray);
     font-weight: 600;
     position: relative;
-    left: 2.8em;
-    top: 2px;
+    left: -3.6em;
+    top: -1px;
+}
+
+.seemore-container button {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    cursor: pointer;
+    padding: 0;
+}
+
+.seemore-container #three-dots {
+    position: absolute;
+    top: 6px;
+    left: 9em;
+}
+
+.seemore-container button:hover {
+    text-decoration: none;
+    color: inherit;
 }
 
 .count {
@@ -361,7 +368,116 @@ body#blur.active .content-container{
     font-weight: bold;
     position: absolute;
     left: 7px; 
-    top: 3.5px;
+    top: 5px;
+}
+
+.seemore-popup {
+    display: none;
+    position: fixed;
+    top: 265px;
+    left: 60px;
+    opacity: 0;
+    transform: translate(0, 0) scale(1.25);
+    height: 250px;
+    width: 200px;
+    padding: 20px 30px;
+    background: white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+    border-radius: 1.5em;
+    border: 1px solid black;
+    transition: top 0ms ease-in-out 200ms, 
+                opacity 200ms ease-in-out 0ms, 
+                transform 200ms ease-in-out 0ms;
+}
+
+.seemore-popup.active1 {
+    display: block;
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+    transition: top 0ms ease-in-out 0ms, 
+                opacity 200ms ease-in-out 0ms, 
+                transform 200ms ease-in-out 0ms;
+}
+
+.seemore-popup .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 15px;
+    height: 15px;
+    color: white;
+    text-align: center;
+    line-height: 15px;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.popups-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.popups-container a{
+    text-decoration: none;
+    color: var(--dark-gray);
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.popup-container {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.popup-profile {
+    background: white;
+    height: 30px;
+    width: 30px;
+    border: 1px solid black;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.lower a {
+    text-decoration: none;
+    color: var(--dark-gray);
+    font-size: 11px;
+}
+
+.add-tenant {
+    display: flex;                 
+    align-items: center;   
+    margin-top: -15px;
+    padding: 0;
+}
+
+.lower {
+    display: flex;             
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid black;
+    padding-top: 20px;
+    padding-bottom: 5px; 
+    margin-top: 30px;
+    /* height: 100px; */
+
+}
+
+.add-tenant p {
+    margin-left: 10px;
+    font-weight: 600;
+     /* margin-top: 5px; */ 
+}
+
+#add-circle {
+    font-size: 20px;
+    color: var(--dark-gray);
+    cursor: pointer;
+    margin-left: 20px;
+    margin-top: 5px;  
+    margin-left: 0;
+    vertical-align: middle;
 }
 
 .admin {

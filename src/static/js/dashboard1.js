@@ -12,9 +12,29 @@ tabs.forEach(tab => {
 
 
 // for tenants info pop-up
-function toggle() {
+function toggle1() {
     var blur = document.getElementById('blur');
-    blur.classList.toggle('active'); // Toggles blur effect
+    blur.classList.toggle('active'); 
     var popup = document.getElementById('popup');
-    popup.classList.toggle('active'); // Toggles popup visibility
+    popup.classList.toggle('active'); 
 }
+
+// for seemore button popup
+// document.querySelector('#show-seemore').addEventListener('click', function() {
+//     document.querySelector('.seemore-popup').classList.add('active1');
+// });
+
+// document.querySelector('.seemore-popup .close-btn').addEventListener('click', function() {
+//     document.querySelector('.seemore-popup').classList.remove('active1');
+// });
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelector('#show-seemore').addEventListener('click', function() {
+        console.log("See More clicked"); // Debugging
+        document.querySelector('.seemore-popup').classList.add('active1');
+    });
+
+    document.querySelector('.seemore-popup .close-btn').addEventListener('click', function() {
+        document.querySelector('.seemore-popup').classList.remove('active1');
+    });
+});

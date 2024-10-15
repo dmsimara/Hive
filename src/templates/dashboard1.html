@@ -42,37 +42,37 @@
                  <div class="tenants-container">
     
                     <div class="tenant-forpopup">
-                        <a href="#" onclick="toggle()">
+                        <a href="#" onclick="toggle1()">
                             <div class="tenant-container">
                                 <div class="tenant-profile"></div>
                                 <p>Tenant A</p>
                             </div>
                         </a>
+
+                        <a href="#" onclick="toggle1()">
+                            <div class="tenant-container">
+                                <div class="tenant-profile"></div>
+                                <p>Tenant B</p>
+                            </div>
+                        </a>
+                        
+                        <a href="#" onclick="toggle1()">
+                            <div class="tenant-container">
+                                <div class="tenant-profile"></div>
+                                <p>Tenant C</p>
+                            </div>
+                        </a>
                     </div>
-    
-                    <a href="#" onclick="toggle()">
-                        <div class="tenant-container">
-                            <div class="tenant-profile"></div>
-                            <p>Tenant B</p>
-                        </div>
-                    </a>
-                    
-                    <a href="#" onclick="toggle()">
-                        <div class="tenant-container">
-                            <div class="tenant-profile"></div>
-                            <p>Tenant C</p>
-                        </div>
-                    </a>
+
                  </div>
     
                  <div class="seemore-container">
-                    <a href="#" onclick="toggle()">
-                        <div class="seemore">
-                            <div class="count"></div>
-                            <p>See More</p>
-                        </div>
-                     </a>
-                 </div>
+                    <button id="show-seemore" class="seemore">
+                        <div class="count"></div>
+                        <p>See More</p>
+                        <span><i class="material-icons" id="three-dots">more_horiz</i></span>
+                    </button>
+                </div>
             </div>
     
             <!-- container for admin pages  -->
@@ -133,11 +133,11 @@
         </main>
     </div>
 
-    <div class="tenant-popup" id="popup">
+    <div class="tenant-popup" id="popup" style="display: none;">
         <h2>Personal Details</h2>
         <div class="deets-profile"></div>
         <span>
-            <a href="#" onclick="toggle()">
+            <a href="#" onclick="toggle1()">
                 <i class="material-icons" id="close">cancel</i>
             </a>
         </span>
@@ -181,6 +181,44 @@
         </div>
 
         <h2 class="deets-title">Utilities and Bills</h2>
+    </div>
+
+    <div class="seemore-popup">
+        <div class="upper">
+            <div class="close-btn">
+                <i class="material-icons" id="close">cancel</i>
+            </div>
+            <div class="popups-container">
+                <a href="#" onclick="showTenantPopup(this)">
+                    <div class="popup-container">
+                        <div class="popup-profile"></div>
+                        <p>Tenant D</p>
+                    </div>
+                </a>
+        
+                <a href="#" onclick="showTenantPopup(this)">
+                    <div class="popup-container">
+                        <div class="popup-profile"></div>
+                        <p>Tenant E</p>
+                    </div>
+                </a>
+        
+                <a href="#" onclick="showTenantPopup(this)">
+                    <div class="popup-container">
+                        <div class="popup-profile"></div>
+                        <p>Tenant F</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="lower">
+            <a href="#" onclick="toggle3()">
+                <div class="add-tenant">
+                    <i class="material-icons" id="add-circe">add_circle</i>
+                    <p>Add tenant information</p>
+                </div>
+            </a>
+        </div>
     </div>
 
     <script src="../static/js/dashboard1.js"></script>
