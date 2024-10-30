@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+    --yellow: rgb(255, 251, 151);  /* #FFFB97 */
+    --orange: rgb(254, 127, 66);   /* #FE7F42 */
+    --maroon: rgb(179, 44, 26);    /* #B32C1A */
+    --gray: rgb(122, 75, 71);      /* #7A4B47 */
+    --dark-gray: rgb(42, 22, 23);  /* #2A1617 */
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    font-family: 'Raleway', 'Inter', sans-serif; 
+    background-color: rgb(245, 245, 245);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.row {
+    display: flex;
+    height: 100vh;
+}
+
+.side-container {
+    flex: 0 0 2%;
+    background: linear-gradient(to right, var(--maroon), var(--orange));
+    border-top-right-radius: 1em;
+    border-bottom-right-radius: 1em;
+}
+
+.form-container {
+    flex: 0 0 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-decoration: none;
+}
+
+.logo-container {
+    flex: 0 0 38%;
+    text-align: left;
+    background: linear-gradient(to right, var(--orange), var(--maroon), var(--gray));
+    border-top-left-radius: 1em;
+    border-bottom-left-radius: 1em;
+}
+
+.content, .logo-container img {
+    max-width: 80%;
+}
+
+.logo-container img {
+    filter: brightness(0) invert(1);
+}
+
+.content img {
+    position: absolute;
+    top: -10px;
+    left: 5em;
+}
+
+.intro {
+    font-size: 55px;
+    color: var(--dark-gray);
+    position: absolute;
+    left: 100px;
+    top: 160px;
+}
+
+.desc {
+    color: var(--gray);
+    position: absolute;
+    left: 110px;
+    top: 220px;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+form {
+    margin-top: 70px; 
+    margin-left: -15px;
+}
+
+label {
+    font-weight: 600;
+}
+
+form .form-control {
+    width: 70% !important; 
+    max-width: 100%; 
+    border: 2px solid var(--orange);
+}
+
+#adminEmail {
+    margin-bottom: 10px; 
+}
+
+label[for="adminPassword"] {
+    margin-top: 10px; 
+}
+
+.create {
+    font-size: 15px;
+    position: absolute;
+    bottom: 11.5em;
+    left: 7.5em;
+}
+
+.create a {
+    text-decoration: none;
+    color: var(--maroon);
+    font-weight: 700;
+}
+
+.btn {
+    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
+    border: none;
+    font-weight: 700;
+    padding: 6px 15px;
+    position: absolute;
+    bottom: 8em;
+}
