@@ -1,8 +1,13 @@
 import Admin from '../models/admin.models.js';
+import Tenant from '../models/tenant.models.js';
+import Room from '../models/room.models.js';
 import bcryptjs from 'bcryptjs';
 import crypto from "crypto";
-import { generateTokenAndSetCookie } from '../utils/generateTokenAndSetCookie.js';
-import { sendPasswordResetEmail, sendResetSuccessEmail, sendVerificationEmail, sendWelcomeEmail } from '../mailtrap/emails.js';
+import { generateTokenAndSetCookie, generateTokenAndSetTenantCookie } from '../utils/generateTokenAndSetCookie.js';
+import { sendPasswordResetEmail, sendResetSuccessEmail, sendTenantVerificationEmail, sendVerificationEmail, sendWelcomeEmail } from '../mailtrap/emails.js';
+import { connectDB } from '../db/connectDB.js';
+import { Op } from 'sequelize';
+
 
 export const adminRegister = async (req, res) => {
     const {adminFirstName, adminLastName, adminEmail, adminPassword, eName} = req.body;
@@ -123,8 +128,52 @@ export const adminLogin = async (req, res) => {
     }
 }
 
+export const tenantLogin = async (req, res) => {
+    const { tenantEmail, tenantPassword } = req.body;
+
+    try {
+        const tenant = await Tenant.findOne({
+            where: { tenantEmail }
+        });
+
+        if (!tenant) {
+            return res.status(400).json({ success: false, message: "Tenant not found" });
+        }
+
+        const isPasswordValid = await bcryptjs.compare(tenantPassword, tenant.tenantPassword);
+        if (!isPasswordValid) {
+            return res.status(400).json({ success: false, message: "Invalid email or password" });
+        }
+
+        generateTokenAndSetTenantCookie(res, tenant.tenant_id);
+
+        // tenant.lastLogin = new Date();
+        await tenant.save();
+
+        res.status(201).json({
+            success: true,
+            message: "Tenant logged in successfully",
+            admin: {
+                ...tenant.dataValues,
+                tenantPassword: undefined,
+            },
+        });
+    } catch (error) {
+        console.log("Error in login:", error);
+        res.status(400).json({ success: false, message: error.message});
+    }
+}
+
 export const adminLogout = async (req, res) => {
     res.clearCookie("token");
+    res.status(200).json({
+        success: true,
+        message: "Logged out successfully"
+    });
+}
+
+export const tenantLogout = async (req, res) => {
+    res.clearCookie("tenantToken");
     res.status(200).json({
         success: true,
         message: "Logged out successfully"
@@ -224,4 +273,200 @@ export const checkAuth = async (req, res) => {
         console.log("Error in checkAuth", error);
         res.status(500).json({ success: false, message: error.message});
     }
+};
+
+export const checkTenantAuth = async (req, res) => {
+    try{
+        const tenant = await Tenant.findOne({
+            where: { tenant_id: req.tenantId }
+        });
+    
+        res.status(200).json({
+            success: true,
+            tenant: {
+                ...tenant.dataValues,
+                tenantPassword: undefined,
+            }
+        });
+    } catch (error) {
+        console.log("Error in checkAuth", error);
+        res.status(500).json({ success: false, message: error.message});
+    }
+};
+
+export const viewTenants = async (req, res) => {
+    try {
+        // const rows = await Tenant.findAll();
+        const rows = await Tenant.findAll({
+            where: {
+                status: 'active' 
+            }
+        });
+
+        const plainRows = rows.map(row => {
+            const tenant = row.get({ plain: true });
+            tenant.gender = tenant.gender === 'M' ? 'Male' : tenant.gender === 'F' ? 'Female' : 'Other';
+            return tenant;
+        });
+
+
+        if (!plainRows.length) {
+            return res.status(404).json({ success: false, message: 'No tenants found' });
+        }
+
+        res.render('userManagement', {
+            title: "Hive",
+            styles: ["userManagement"],
+            rows: plainRows, 
+        });
+    } catch (error) {
+        console.error('Error fetching tenants:', error);
+        res.status(500).json({ success: false, message: 'Error fetching tenants' });
+    }
+};
+
+export const findTenants = async (req, res) => {
+    const searchTerm = req.body.search;
+
+    console.log('Received search term:', searchTerm); 
+
+    if (!searchTerm) {
+        return res.status(400).json({ success: false, message: 'Search term is required' });
+    }
+
+    try {
+        const tenants = await Tenant.findAll({
+            where: {
+                [Op.or]: [
+                    { tenantFirstName: { [Op.like]: `%${searchTerm}%` } },
+                    { tenantLastName: { [Op.like]: `%${searchTerm}%` } }
+                ]
+            }
+        });
+
+        const rows = tenants.map(tenant => tenant.get({ plain: true }));
+
+        // res.render('userManagement', { rows });
+        res.render('userManagement', {
+            title: "Hive",
+            styles: ["userManagement"],
+            rows, 
+        });
+    } catch (error) {
+        console.error('Error in findTenants:', error); 
+        res.status(500).json({ success: false, message: 'Unexpected error occurred' });
+    }
+};
+
+export const addTenant = async (req, res) => {
+    const { tenantFirstName, tenantLastName, tenantEmail, gender, mobileNum, tenantPassword } = req.body;
+
+    try {
+        if (!tenantFirstName || !tenantLastName || !tenantEmail || !gender || !mobileNum || !tenantPassword) {
+            return res.status(400).json({ success: false, message: "All fields are required." });
+        }
+
+        const existingTenant = await Tenant.findOne({ where: { tenantEmail } });
+        if (existingTenant) {
+            return res.status(400).json({ success: false, message: "Tenant already exists." });
+        }
+
+        // Hash password
+        const hashedPassword = await bcryptjs.hash(tenantPassword, 10);
+
+        // Insert tenant into the database using ORM
+        const newTenant = await Tenant.create({
+            tenantFirstName,
+            tenantLastName,
+            tenantEmail,
+            gender,
+            mobileNum,
+            tenantPassword: hashedPassword
+        });
+        
+        generateTokenAndSetTenantCookie(res, newTenant.tenant_id);
+        
+        return res.redirect('/admin/dashboard/userManagement');
+    } catch (error) {
+        console.error('Error adding tenant:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+export const addTenantView = async (req, res) => {
+    res.render('addTenants');
+};
+
+export const editTenant = (req, res) => {
+    const tenantId = req.params.tenant_id; 
+    const connection = connectDB(); 
+
+    connection.query('SELECT * FROM tenants WHERE tenant_id = ?', [tenantId], (err, rows) => {
+        connection.end(); 
+
+        if (err) {
+            console.error('Error fetching tenant data:', err);
+            return res.status(500).send("Error fetching tenant data");
+        }
+
+        if (rows.length === 0) {
+            return res.status(404).send("Tenant not found");
+        }
+
+        res.render('editTenant', {
+            title: "Hive",
+            rows: rows,
+        });
+    });
+};
+
+ export const updateTenant = (req, res) => {
+     const { tenantFirstName, tenantLastName, tenantEmail, gender, mobileNum } = req.body;
+
+     const tenantId = req.params.tenant_id; 
+     const connection = connectDB(); 
+
+     connection.query(
+         'UPDATE tenants SET tenantFirstName = ?, tenantLastName = ?, tenantEmail = ?, gender = ?, mobileNum = ? WHERE tenant_id = ?', 
+         [tenantFirstName, tenantLastName, tenantEmail, gender, mobileNum, tenantId], 
+         (err, result) => {
+             connection.end(); 
+
+             if (err) {
+                 console.error('Error updating tenant data:', err);
+                 return res.status(500).send("Error updating tenant data");
+             }
+
+             if (result.affectedRows === 0) {
+                 return res.status(404).send("Tenant not found");
+             }
+
+             res.redirect('/admin/dashboard/userManagement');
+         }
+     );
+ };
+
+
+export const deleteTenant = (req, res) => {
+    const tenantId = req.params.tenant_id; 
+    const connection = connectDB(); 
+
+    connection.query('UPDATE tenants SET status = ? WHERE tenant_id = ?', ['expired', tenantId], (err, result) => {
+        connection.end(); 
+
+        if (err) {
+            console.error('Error updating tenant data:', err);
+            return res.status(500).send("Error updating tenant data");
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).send("Tenant not found");
+        }
+
+        res.render('userManagement', {
+            title: "Hive",
+            message: "Tenant successfully removed", 
+            rows: [], 
+        });
+    });
 };

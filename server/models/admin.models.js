@@ -5,10 +5,9 @@ dotenv.config();
 
 const sequelize = new Sequelize(process.env.DATABASE, process.env.DATABASE_USER, process.env.DATABASE_PASSWORD, {
   host: 'localhost',
-  dialect: 'mysql', // Specify MySQL as the database
+  dialect: 'mysql', 
 });
 
-// Define your model (schema)
 const Admin = sequelize.define('Admin', {
   admin_id: {
     type: DataTypes.INTEGER,

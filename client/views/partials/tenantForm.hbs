@@ -1,0 +1,49 @@
+<div class="col-6">
+    <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="tenantFirstName" value="{{tenantFirstName}}" placeholder="First Name" name="tenantFirstName">
+        <label for="floatingInput">First Name</label>
+    </div>
+</div>
+<div class="col-6">
+    <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="tenantLastName" value="{{tenantLastName}}" placeholder="Last Name" name="tenantLastName">
+        <label for="floatingInput">Last Name</label>
+    </div>
+</div>
+<div class="col-6">
+    <div class="form-floating mb-3">
+        <input type="email" class="form-control" id="tenantEmail" value="{{tenantEmail}}" placeholder="email@email.com" name="tenantEmail">
+        <label for="floatingInput">Email</label>
+    </div>
+</div>
+<div class="col-6">
+    <div class="form-floating mb-3">
+        <input type="number" class="form-control" id="mobileNum" value="{{mobileNum}}" placeholder="Phone" name="mobileNum">
+        <label for="floatingInput">Phone</label>
+    </div>
+</div>
+<div class="col-6">
+    <div class="form-floating mb-3">
+        <input type="password" class="form-control" id="tenantPassword" value="{{tenantPassword}}" placeholder="Password" name="tenantPassword" {{#if isUpdate}}disabled{{/if}}>
+        <label for="floatingInput">Password</label>
+    </div>
+</div>
+<div class="col-6">
+    <div class="form-floating mb-3">
+        <input type="password" class="form-control" id="tenantConfirmPassword" value="{{tenantConfirmPassword}}" placeholder="Confirm Password" name="tenantConfirmPassword" {{#if isUpdate}}disabled{{/if}}>
+        <label for="floatingInput">Confirm Password</label>
+    </div>
+</div>
+<div class="col-6">
+    <select class="form-select" name="gender" id="gender" required>
+        <option value="" disabled>Select Gender</option>
+        <option value="F" {{#if (eq gender "Female" )}}selected{{/if}}>Female</option>
+        <option value="M" {{#if (eq gender "Male" )}}selected{{/if}}>Male</option>
+        <option value="Other" {{#if (eq gender "Other" )}}selected{{/if}}>Other</option>
+    </select>
+</div>
+<div class="col-12">
+    <button class="btn btn-primary" id="addButton" type="submit">
+        {{#if isUpdate}}Update{{else}}Add{{/if}}
+    </button>
+</div>

@@ -21,6 +21,27 @@ export const sendVerificationEmail = async (adminEmail, verificationToken) => {
     }
 };
 
+export const sendTenantVerificationEmail = async (tenantEmail, verificationToken) => {
+    const recipient = [{ email: tenantEmail }];
+
+    try {
+        const response = await mailtrapClient.send({
+            from: sender,
+            to: recipient,
+            subject: 'Tenant Verification',
+            html: VERIFICATION_EMAIL_TEMPLATE.replace("{verificationCode}", verificationToken),
+            category: "Email Verification"
+        });
+
+        console.log("Email sent successfully", response);
+    } catch (error) {
+        console.error('Error sending verification email:', error.response ? error.response.data : error.message);
+
+        throw new Error(`Error sending verification email: ${error.message}`);
+    }
+};
+
+
 export const sendWelcomeEmail = async (adminEmail, adminFirstName) => {
     const recipient = [{ email: adminEmail }];
 
