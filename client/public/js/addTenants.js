@@ -1,50 +1,52 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const form = document.querySelector("form");
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('addForm');
+    const alertMessage = document.getElementById('alertMessage');
 
-    form.addEventListener("submit", async (event) => {
-        event.preventDefault(); // Prevents default form submission
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault(); 
 
-        const tenantFirstName = document.getElementById("tenantFirstName").value;
-        const tenantLastName = document.getElementById("tenantLastName").value;
-        const tenantEmail = document.getElementById("tenantEmail").value;
-        const gender = document.getElementById("gender").value;
-        const mobileNum = document.getElementById("mobileNum").value;
-        const tenantPassword = document.getElementById("tenantPassword").value;
-        const tenantConfirmPassword = document.getElementById("tenantConfirmPassword").value;
-
-        // Check if passwords match
-        if (tenantPassword !== tenantConfirmPassword) {
-            alert("Passwords do not match. Please try again.");
-            return; 
-        }
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
 
         try {
-            const response = await fetch("/api/auth/addTenant", {
-                method: "POST",
+            const response = await fetch('/api/auth/addTenant', {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    tenantFirstName,
-                    tenantLastName,
-                    tenantEmail,
-                    gender,
-                    mobileNum,
-                    tenantPassword
-                }),
+                body: JSON.stringify(data),
             });
 
-            // Handle response status to determine the next action
-            if (response.redirected) {
-                // If the response redirected, use window.location
-                window.location.href = response.url; // Redirect to the new URL
+            if (!response.ok) {
+                const result = await response.json();
+                alertMessage.textContent = result.message || 'An error occurred. Please try again.';
+                alertMessage.classList.remove('alert-success');
+                alertMessage.classList.add('alert-danger');
+                alertMessage.style.display = 'block';
+                return; // Stop further execution
+            }
+
+            const result = await response.json();
+            
+            // Clear previous alert message
+            alertMessage.style.display = 'none';
+            alertMessage.classList.remove('alert-success', 'alert-danger');
+
+            if (result.success) {
+                alertMessage.textContent = 'Tenant added successfully!';
+                alertMessage.classList.add('alert-success');
+                alertMessage.style.display = 'block';
+                setTimeout(() => window.location.href = '/admin/dashboard/userManagement', 2000); // Redirect after 2 seconds
             } else {
-                const data = await response.json();
-                alert(data.message || "Registration failed. Please try again.");
+                alertMessage.textContent = result.message;
+                alertMessage.classList.add('alert-danger');
+                alertMessage.style.display = 'block';
             }
         } catch (error) {
-            alert("An error occurred. Please try again later.");
-            console.error("Error:", error);
+            console.error('Error:', error);
+            alertMessage.textContent = 'An error occurred. Please try again.';
+            alertMessage.classList.add('alert-danger');
+            alertMessage.style.display = 'block';
         }
     });
 });

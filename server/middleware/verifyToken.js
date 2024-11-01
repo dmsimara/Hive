@@ -3,60 +3,42 @@ import jwt from "jsonwebtoken";
 export const verifyToken = (req, res, next) => {
     const token = req.cookies.token;
     if (!token) {
-        res.status(401).json({
-            success: false,
-            message: "Unauthorized - no token provided"
-        });
+        return res.redirect("/admin/login");
     }
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
         if (!decoded) {
-            res.status(403).json({
-                success: false,
-                message: "Unauthorized - invalid token"
-            });
+            return res.redirect("/admin/login");
         }
 
         req.adminId = decoded.adminId;
         next();
     } catch (error) {
         console.log("Error in verifyToken", error);
-        res.status(500).json({
-            success: false,
-            message: "Internal Server Error"
-        });
+        return res.redirect("/admin/login");
     }
 }
 
 export const verifyTenantToken = (req, res, next) => {
     const token = req.cookies.tenantToken; // Get tenant token from cookies
     if (!token) {
-        return res.status(401).json({
-            success: false,
-            message: "Unauthorized - no token provided"
-        });
+        return res.redirect("/tenant/login");
     }
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify the token
 
         if (!decoded) {
-            res.status(403).json({
-                success: false,
-                message: "Unauthorized - invalid token"
-            });
+            return res.redirect("/tenant/login");
         }
 
         req.tenantId = decoded.tenantId;
         next();
     } catch (error) {
         console.log("Error in verifyTenantToken", error);
-        return res.status(500).json({
-            success: false,
-            message: "Internal Server Error"
-        });
+        return res.redirect("/tenant/login");
     }
 };
 

@@ -122,6 +122,8 @@ export const adminLogin = async (req, res) => {
                 adminPassword: undefined,
             },
         });
+
+        request.session.adminFirstName = admin.adminFirstName;
     } catch (error) {
         console.log("Error in login:", error);
         res.status(400).json({ success: false, message: error.message});
@@ -325,6 +327,30 @@ export const viewTenants = async (req, res) => {
     }
 };
 
+export const viewAdmins = async (req, res) => {
+    try {
+        const rows = await Admin.findAll();
+
+        const plainRows = rows.map(row => {
+            const admin = row.get({ plain: true });
+            return {
+                admin_id: admin.admin_id,
+                adminFirstName: admin.adminFirstName,
+                adminLastName: admin.adminLastName,
+                adminEmail: admin.adminEmail,
+                eName: admin.eName
+            };
+        });
+
+        return plainRows; // Return the admin data
+    } catch (error) {
+        console.error('Error fetching admins:', error);
+        res.status(500).json({ success: false, message: 'Error fetching admins' });
+    }
+};
+
+
+
 export const findTenants = async (req, res) => {
     const searchTerm = req.body.search;
 
@@ -359,39 +385,43 @@ export const findTenants = async (req, res) => {
 };
 
 export const addTenant = async (req, res) => {
-    const { tenantFirstName, tenantLastName, tenantEmail, gender, mobileNum, tenantPassword } = req.body;
+      const { tenantFirstName, tenantLastName, tenantEmail, gender, mobileNum, tenantPassword, tenantConfirmPassword  } = req.body;
 
-    try {
-        if (!tenantFirstName || !tenantLastName || !tenantEmail || !gender || !mobileNum || !tenantPassword) {
-            return res.status(400).json({ success: false, message: "All fields are required." });
-        }
+      try {
+          if (!tenantFirstName || !tenantLastName || !tenantEmail || !gender || !mobileNum || !tenantPassword || !tenantConfirmPassword ) {
+              return res.status(400).json({ success: false, message: "All fields are required." });
+          }
 
-        const existingTenant = await Tenant.findOne({ where: { tenantEmail } });
-        if (existingTenant) {
-            return res.status(400).json({ success: false, message: "Tenant already exists." });
-        }
+           if (tenantPassword !== tenantConfirmPassword) {
+                return res.status(400).json({ success: false, message: "Passwords do not match." });
+           }
 
-        // Hash password
-        const hashedPassword = await bcryptjs.hash(tenantPassword, 10);
+          const existingTenant = await Tenant.findOne({ where: { tenantEmail } });
+          if (existingTenant) {
+              return res.status(400).json({ success: false, message: "Tenant already exists." });
+          }
 
-        // Insert tenant into the database using ORM
-        const newTenant = await Tenant.create({
-            tenantFirstName,
-            tenantLastName,
-            tenantEmail,
-            gender,
-            mobileNum,
-            tenantPassword: hashedPassword
-        });
+          // Hash password
+          const hashedPassword = await bcryptjs.hash(tenantPassword, 10);
+
+          // Insert tenant into the database using ORM
+          const newTenant = await Tenant.create({
+              tenantFirstName,
+              tenantLastName,
+              tenantEmail,
+              gender,
+              mobileNum,
+              tenantPassword: hashedPassword
+          });
         
-        generateTokenAndSetTenantCookie(res, newTenant.tenant_id);
+          generateTokenAndSetTenantCookie(res, newTenant.tenant_id);
         
-        return res.redirect('/admin/dashboard/userManagement');
-    } catch (error) {
-        console.error('Error adding tenant:', error);
-        res.status(500).json({ success: false, message: error.message });
-    }
-};
+          return res.status(201).json({ success: true, message: "Tenant added successfully", tenant: newTenant});
+      } catch (error) {
+          console.error('Error adding tenant:', error);
+          res.status(500).json({ success: false, message: error.message });
+      }
+  };
 
 export const addTenantView = async (req, res) => {
     res.render('addTenants');
@@ -406,11 +436,11 @@ export const editTenant = (req, res) => {
 
         if (err) {
             console.error('Error fetching tenant data:', err);
-            return res.status(500).send("Error fetching tenant data");
+            return res.status(500).json({ success: false, message: "Error fetching tenant data" });
         }
 
         if (rows.length === 0) {
-            return res.status(404).send("Tenant not found");
+            return res.status(404).json({ success: false, message: "Tenant not found" });
         }
 
         res.render('editTenant', {
@@ -432,31 +462,31 @@ export const editTenant = (req, res) => {
          (err, result) => {
              connection.end(); 
 
+             // return res.status(400).json({ success: false, message: "Tenant already exists." });
              if (err) {
                  console.error('Error updating tenant data:', err);
-                 return res.status(500).send("Error updating tenant data");
+                 return res.status(500).json({ success: false, message: "Error updating tenant data"});
              }
 
              if (result.affectedRows === 0) {
-                 return res.status(404).send("Tenant not found");
+                 return res.status(404).json({ success: false, message: "Tenant not found"});
              }
 
-             res.redirect('/admin/dashboard/userManagement');
+             return res.status(201).json({ success: true, message: "Tenant updated successfully"});
          }
      );
  };
 
-
 export const deleteTenant = (req, res) => {
-    const tenantId = req.params.tenant_id; 
-    const connection = connectDB(); 
+    const tenantId = req.params.tenant_id;
+    const connection = connectDB();
 
-    connection.query('UPDATE tenants SET status = ? WHERE tenant_id = ?', ['expired', tenantId], (err, result) => {
-        connection.end(); 
+    connection.query('DELETE FROM tenants WHERE tenant_id = ?', [tenantId], (err, result) => {
+        connection.end();
 
         if (err) {
-            console.error('Error updating tenant data:', err);
-            return res.status(500).send("Error updating tenant data");
+            console.error('Error deleting tenant data:', err);
+            return res.status(500).send("Error deleting tenant data");
         }
 
         if (result.affectedRows === 0) {
@@ -465,8 +495,8 @@ export const deleteTenant = (req, res) => {
 
         res.render('userManagement', {
             title: "Hive",
-            message: "Tenant successfully removed", 
-            rows: [], 
+            message: "Tenant successfully removed",
+            rows: [],
         });
     });
 };

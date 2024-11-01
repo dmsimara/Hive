@@ -2,7 +2,4 @@ node_modules/
 src/
 static/
 templates/
-.env/
-.gitattributes/
-package-lock.json/
-package.json/
+.env

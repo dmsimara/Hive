@@ -1,5 +1,5 @@
 import express from "express";
-import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, editTenant, updateTenant, deleteTenant } from "../controllers/auth.controllers.js";
+import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, editTenant, updateTenant, deleteTenant, viewAdmins } from "../controllers/auth.controllers.js";
 import { verifyTenantToken, verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
@@ -24,5 +24,6 @@ router.post("/tenantLogout", tenantLogout);
 router.get("/editTenant/:tenant_id", editTenant);
 router.post("/editTenant/:tenant_id", updateTenant);
 router.delete("/deleteTenant/:tenant_id", deleteTenant);
+router.get("/view-admins", viewAdmins);
 
 export default router;

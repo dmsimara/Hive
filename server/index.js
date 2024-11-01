@@ -8,8 +8,10 @@ import { connectDB } from "./db/connectDB.js";
 import authRoutes from "./routes/auth.js";
 import exphbs from "express-handlebars";
 import path from "path";
+import session from "express-session"; 
+import flash from "connect-flash";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
-import { addTenant, addTenantView, editTenant, findTenants, viewTenants } from './controllers/auth.controllers.js';
+import { addTenant, addTenantView, editTenant, findTenants, viewAdmins, viewTenants } from './controllers/auth.controllers.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -48,6 +50,13 @@ app.use(express.static(path.join(__dirname, "../client/public"))); // Serve stat
 
 app.use("/api/auth", authRoutes);
 
+app.use(session({
+    secret: process.env.SESSION_SECRET, 
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } 
+}));
+
 app.get("/", (req, res) => {
     res.render("home", { title: "Home Page", styles: ["home"] });
 });
@@ -64,12 +73,29 @@ app.get("/admin/register", (req, res) => {
     res.render("adminRegister", { title: "Hive", styles: ["adminRegister"] });
 })
 
-app.get("/admin/dashboard", verifyToken, (req, res) => {
-    res.render("adminDashboard", { title: "Hive", styles: ["adminDashboard"] });
-});
+//  app.get("/admin/dashboard", verifyToken, (req, res) => {
+//       res.render("adminDashboard", { title: "Hive", styles: ["adminDashboard"] });
+//   });
 
 app.get("/tenant/dashboard", verifyTenantToken, (req, res) => {
     res.render("tenantDashboard", { title: "Hive", styles: ["tenantDashboard"] });
+});
+
+app.get("/admin/dashboard", verifyToken, async (req, res) => {
+    try {
+        // Fetch admin data
+        const admins = await viewAdmins(req, res); // Assuming viewAdmins returns the data you need
+
+        // Render the dashboard with admin data
+        res.render("adminDashboard", {
+            title: "Hive",
+            styles: ["adminDashboard"],
+            rows: admins // Pass the fetched admin data to the view
+        });
+    } catch (error) {
+        console.error('Error fetching admin data:', error);
+        res.status(500).json({ success: false, message: 'Error fetching admin data' });
+    }
 });
 
 app.get("/admin/register/verifyEmail", (req, res) => {
@@ -77,14 +103,14 @@ app.get("/admin/register/verifyEmail", (req, res) => {
 });
 
 
-app.get("/admin/dashboard/userManagement", verifyToken, viewTenants);
-app.post("/admin/dashboard/userManagement", findTenants, (req, res) => {
-    res.render("userManagement", { title: "Hive", styles: ["userManagement"], tenants: req.tenants });
-});
+ app.get("/admin/dashboard/userManagement", verifyToken, viewTenants);
+ app.post("/admin/dashboard/userManagement", findTenants, (req, res) => {
+     res.render("userManagement", { title: "Hive", styles: ["userManagement"], tenants: req.tenants });
+ });
 
-app.get("/admin/dashboard/userManagement/add", verifyToken, addTenantView);
+ app.get("/admin/dashboard/userManagement/add", verifyToken, addTenantView);
 
-app.post("/api/auth/addTenant", verifyToken, addTenant);
+//  app.post("/api/auth/addTenant", verifyToken, addTenant);
 
 app.get("/admin/dashboard/userManagement/editTenant/:tenant_id", verifyToken, editTenant);
 

@@ -35,8 +35,10 @@
         </ol>
     </nav>
 
+    <div id="alertMessage" class="alert" style="display: none;"></div>
+
     {{#each rows}}
-    <form action="/api/auth/editTenant/{{this.tenant_id}}" class="row g-3 needs-validation" method="POST" required>
+    <form action="/api/auth/editTenant/{{this.tenant_id}}" id="editForm" class="row g-3 needs-validation" method="POST">
         {{> tenantForm isUpdate=true }}
     </form>
     {{/each}}
