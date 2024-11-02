@@ -25,5 +25,6 @@ router.get("/editTenant/:tenant_id", editTenant);
 router.post("/editTenant/:tenant_id", updateTenant);
 router.delete("/deleteTenant/:tenant_id", deleteTenant);
 router.get("/view-admins", viewAdmins);
+// router.post("/edit/adminAccount", editAdminAccount);
 
 export default router;

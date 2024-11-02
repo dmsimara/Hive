@@ -3,6 +3,7 @@ import Tenant from '../models/tenant.models.js';
 import Room from '../models/room.models.js';
 import bcryptjs from 'bcryptjs';
 import crypto from "crypto";
+import path from 'path';
 import { generateTokenAndSetCookie, generateTokenAndSetTenantCookie } from '../utils/generateTokenAndSetCookie.js';
 import { sendPasswordResetEmail, sendResetSuccessEmail, sendTenantVerificationEmail, sendVerificationEmail, sendWelcomeEmail } from '../mailtrap/emails.js';
 import { connectDB } from '../db/connectDB.js';
@@ -338,18 +339,18 @@ export const viewAdmins = async (req, res) => {
                 adminFirstName: admin.adminFirstName,
                 adminLastName: admin.adminLastName,
                 adminEmail: admin.adminEmail,
-                eName: admin.eName
+                eName: admin.eName,
+                adminProfile: admin.adminProfile
             };
         });
 
-        return plainRows; // Return the admin data
+        return plainRows; // Return the admin 
+        // return res.status(200).json({ success: true, admins: plainRows });
     } catch (error) {
         console.error('Error fetching admins:', error);
         res.status(500).json({ success: false, message: 'Error fetching admins' });
     }
 };
-
-
 
 export const findTenants = async (req, res) => {
     const searchTerm = req.body.search;
@@ -500,3 +501,4 @@ export const deleteTenant = (req, res) => {
         });
     });
 };
+

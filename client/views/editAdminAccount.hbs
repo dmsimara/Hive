@@ -23,20 +23,20 @@
             <a class="nav-link" href="#">Tracker</a>
         </li>
       </ul>
-      {{#each rows}}
-      <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}" alt="Profile" class="user-pic" onclick="toggleMenu()"/>
+      <img src="/images/defaultUser.webp" alt="Profile" class="user-pic" onclick="toggleMenu()"/>
       <div class="sub-menu-wrap" id="subMenu">
       <div class="sub-menu">
         <div class="user-info">
-          <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}" alt="Profile" width="40px"/>
+          <img src="/images/defaultUser.webp" alt="Profile" width="40px"/>
+          {{#each rows}}
           <h3>{{this.adminFirstName}} {{this.adminLastName}}</h3>
           {{/each}}
         </div>
         <hr/>
 
-        <a href="/admin/dashboard/edit/account" class="sub-menu-link">
+        <a href="#" class="sub-menu-link">
           <i class="material-icons">person</i>
-          <p>View Account</p>
+          <p>Edit Account</p>
           <span>></span>
         </a>
         <a href="#" id="logoutButton" class="sub-menu-link">
@@ -51,21 +51,26 @@
 </nav>
 
 {{#each rows}}
-<div class="container pt-5 pb-5">
-  <div class="row">
-    <div class="col-4" style="flex: 0 0 30%; max-width: 30%;">
-      <a href="/admin/dashboard/userManagement">User Management</a>
-    </div>
+<div class="container">
+    <form id="updateAdminForm" action="/admin/dashboard/edit/account" method="POST" encType="multipart/form-data">
+        <h3>Upload Profile Picture</h3>
+        <input type="file" name="sampleFile" accept="image/*"/>
+        <input type="hidden" name="admin_id" value="{{this.admin_id}}"/>
+        <input type="submit" class="btn btn-primary upload">
+    </form>
 
-    <div class="col-4" style="flex: 0 0 35%; max-width: 35%;">
-      <h2>Hi, {{this.adminFirstName}}</h2>
+    <div class="card">
+        {{#if this.adminProfile}}
+            <img class="card__profile" src="/images/upload/{{this.adminProfile}}" alt="User Profile">
+        {{else}}
+            <img class="card__profile" src="/images/defaultUser.webp" alt="User Profile">
+        {{/if}}
+        <h1 class="card__title">{{this.adminFirstName}}</h1>
+        <div class="card__email">{{this.adminEmail}}</div>
+        <p class="card__about">{{this.eName}}</p>
+        <button type="button" class="btn btn-primary view">View Profile</button>
     </div>
-
-    <div class="col-4" style="flex: 0 0 35%; max-width: 35%;">
-      {{!-- <a href="/admin/dashboard/edit/account">Edit Account</a> --}}
-    </div>
-  </div>
 </div>
 {{/each}}
 
-<script src="/js/adminDashboard.js"></script>
+<script src="/js/editAdminAccount.js"></script>

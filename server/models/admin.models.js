@@ -36,6 +36,10 @@ const Admin = sequelize.define('Admin', {
     type: DataTypes.STRING,
     allowNull: false
   },
+  adminProfile: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
   isVerified: {
     type: DataTypes.BOOLEAN,
     defaultValue: false

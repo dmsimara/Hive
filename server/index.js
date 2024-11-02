@@ -9,7 +9,9 @@ import authRoutes from "./routes/auth.js";
 import exphbs from "express-handlebars";
 import path from "path";
 import session from "express-session"; 
-import flash from "connect-flash";
+import fileUpload from "express-fileupload";
+import fs from 'fs';
+import Admin from "./models/admin.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
 import { addTenant, addTenantView, editTenant, findTenants, viewAdmins, viewTenants } from './controllers/auth.controllers.js';
 
@@ -47,6 +49,7 @@ app.set("views", path.join(__dirname, "../client/views"));
 console.log("Views Directory: ", path.join(__dirname, "../client/views"));
 
 app.use(express.static(path.join(__dirname, "../client/public"))); // Serve static files from the public folder
+// app.use('/images/upload', express.static(path.join(__dirname, 'client/public/images/upload')));
 
 app.use("/api/auth", authRoutes);
 
@@ -57,6 +60,10 @@ app.use(session({
     cookie: { secure: false } 
 }));
 
+// default option for profile pic upload
+app.use(fileUpload());
+
+// routes
 app.get("/", (req, res) => {
     res.render("home", { title: "Home Page", styles: ["home"] });
 });
@@ -73,24 +80,18 @@ app.get("/admin/register", (req, res) => {
     res.render("adminRegister", { title: "Hive", styles: ["adminRegister"] });
 })
 
-//  app.get("/admin/dashboard", verifyToken, (req, res) => {
-//       res.render("adminDashboard", { title: "Hive", styles: ["adminDashboard"] });
-//   });
-
 app.get("/tenant/dashboard", verifyTenantToken, (req, res) => {
     res.render("tenantDashboard", { title: "Hive", styles: ["tenantDashboard"] });
 });
 
 app.get("/admin/dashboard", verifyToken, async (req, res) => {
     try {
-        // Fetch admin data
-        const admins = await viewAdmins(req, res); // Assuming viewAdmins returns the data you need
+        const admins = await viewAdmins(req, res); 
 
-        // Render the dashboard with admin data
         res.render("adminDashboard", {
             title: "Hive",
             styles: ["adminDashboard"],
-            rows: admins // Pass the fetched admin data to the view
+            rows: admins 
         });
     } catch (error) {
         console.error('Error fetching admin data:', error);
@@ -114,6 +115,57 @@ app.get("/admin/register/verifyEmail", (req, res) => {
 
 app.get("/admin/dashboard/userManagement/editTenant/:tenant_id", verifyToken, editTenant);
 
+// route for admin edit account
+app.get("/admin/dashboard/edit/account", verifyToken, async (req, res) => {
+    try {
+        const admins = await viewAdmins(req, res);
+
+        res.render("editAdminAccount", {
+            title: "Hive",
+            styles: ["editAdminAccount"],
+            rows: admins
+        });
+    } catch (error) {
+        console.error('Error fetching admin data:', error);
+        res.status(500).json({ success: false, message: 'Error fetching admin data' });
+    }
+});
+
+app.post("/admin/dashboard/edit/account", verifyToken, async (req, res) => {
+    if (!req.files || Object.keys(req.files).length === 0) {
+        return res.status(400).json({ success: false, message: 'No files were uploaded' });
+    }
+
+    const sampleFile = req.files.sampleFile;
+    const uploadDir = path.join(__dirname, '..', 'client', 'public', 'images', 'upload');
+    const uploadPath = path.join(uploadDir, sampleFile.name);
+
+    fs.mkdir(uploadDir, { recursive: true }, async (err) => {
+        if (err) return res.status(500).json({ success: false, message: 'Failed to create upload directory.' });
+
+        sampleFile.mv(uploadPath, async (err) => {
+            if (err) return res.status(500).json({ success: false, message: err });
+
+            try {
+                const adminDetails = {
+                    adminProfile: sampleFile.name, 
+                    adminEmail: req.body.adminEmail,
+                    adminFirstName: req.body.adminFirstName,
+                    adminLastName: req.body.adminLastName,
+                    eName: req.body.eName,
+                };
+
+                const adminId = req.body.admin_id; 
+                await Admin.update(adminDetails, { where: { admin_id: adminId } });
+
+                return res.json({ success: true, message: 'File uploaded and admin details updated successfully.', filePath: uploadPath });
+            } catch (dbError) {
+                console.error('Error saving admin details to database:', dbError);
+                return res.status(500).json({ success: false, message: 'Failed to save admin details to database.' });
+            }
+        });
+    });
+});
 
 app.listen(PORT, () => {
     connectDB();
