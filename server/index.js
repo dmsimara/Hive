@@ -110,10 +110,26 @@ app.get("/admin/register/verifyEmail", (req, res) => {
  });
 
  app.get("/admin/dashboard/userManagement/add", verifyToken, addTenantView);
-
-//  app.post("/api/auth/addTenant", verifyToken, addTenant);
+ 
+ app.post("/api/auth/addTenant", verifyToken, addTenant);
 
 app.get("/admin/dashboard/userManagement/editTenant/:tenant_id", verifyToken, editTenant);
+
+// route for admin view account
+app.get("/admin/dashboard/view/account", verifyToken, async (req, res) => {
+    try {
+        const admins = await viewAdmins(req, res);
+
+        res.render("viewAdminAccount", {
+            title: "Hive",
+            styles: ["viewAdminAccount"],
+            rows: admins
+        });
+    } catch (error) {
+        console.error('Error fetching admin data:', error);
+        res.status(500).json({ success: false, message: 'Error fetching admin data' });
+    }
+});
 
 // route for admin edit account
 app.get("/admin/dashboard/edit/account", verifyToken, async (req, res) => {

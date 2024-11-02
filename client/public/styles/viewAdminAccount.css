@@ -17,7 +17,6 @@ html, body {
     font-family: 'Raleway', 'Inter', sans-serif; 
     background-color: var(--background-color);
     overflow: hidden; 
-    box-sizing: border-box;
 } 
 
 .navbar {
@@ -147,10 +146,7 @@ html, body {
 }
 
 .container img {
-    max-width: 100%; /* Ensure it doesn't exceed the width of its container */
-    max-height: 200px; /* Set a max height for the image */
-    height: auto; /* Maintain aspect ratio */
-    margin-left: 30px;
+    width: 100%;
 }
 
 .container {
@@ -164,8 +160,6 @@ html, body {
 .view {
     display: inline-flex; 
     align-items: center; 
-    position: absolute;
-    left: 20em;
     border: none;
     color: white;
     padding: 10px 15px;
@@ -187,22 +181,6 @@ html, body {
     font-size: 18px; 
 }
 
-.upload {
-    margin-top: 20px;
-    border: none;
-    color: white;
-    padding: 8px 20px;
-    width: 50%;
-    text-align: center;
-    font-size: 16px; /* Fixed from font-style to font-size */
-    cursor: pointer;
-    border-radius: 3px;
-    transition: background 0.3s ease;
-}
-
-.btn-primary {
-    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
-}
 
 .card {
     display: flex;
@@ -217,30 +195,62 @@ html, body {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0), 0 6px 36px rgba(0, 0, 0, 0.13);
 }
 
-.card_left img {
-    /* width: 100px ; 
-    height: 100px;  */
+.card__profile img {
+    width: 300px; 
+    height: 300px; 
     object-fit: cover;
     border: 3px solid white;
     margin-right: 60px;
-    margin-left: 50px;
+    margin-left: 20px;
 }
 
+.card__details {
+    text-align: left;
+}
 
-.card__left {
+.card__content {
     display: flex;
     align-items: center;
     width: 100%;
 }
 
-.card__right {
-    text-align: left;
+.card__title h1,
+.card__email h1,
+.card__about h1 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--dark-gray);
 }
 
-#updateAdminForm {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    position: absolute;
-    top: 15em;
+.card__title h2,
+.card__email h2,
+.card__about h2 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray);
+    margin-bottom: 10px;
 }
+
+.card__title {
+    margin-bottom: 20px;
+}
+
+.card__email {
+    margin-bottom: 20px;
+}
+
+.card__about {
+    margin-bottom: 20px;
+}
+
+/*
+.card__title {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0 0 5px;
+}
+
+.card__email {
+    color: var(--gray);
+    margin: 5px 0; 
+} */

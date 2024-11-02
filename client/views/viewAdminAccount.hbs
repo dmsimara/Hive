@@ -50,48 +50,36 @@
   </div>
 </nav>
 
-{{!-- <div class="container">
-    <div class="card">
-        {{#if this.adminProfile}}
-            <img class="card__profile" src="/images/upload/{{this.adminProfile}}" alt="User Profile">
-        {{else}}
-            <img class="card__profile" src="/images/defaultUser.webp" alt="User Profile">
-        {{/if}}
-        <form id="updateAdminForm" action="/admin/dashboard/edit/account" method="POST" encType="multipart/form-data">
-        <input type="file" name="sampleFile" accept="image/*"/>
-        <input type="hidden" name="admin_id" value="{{this.admin_id}}"/>
-        <input type="submit" class="btn btn-primary upload">
-    </form>
-        <h1 class="card__title">{{this.adminFirstName}}</h1>
-        <div class="card__email">{{this.adminEmail}}</div>
-        <p class="card__about">{{this.eName}}</p>
-        <button type="button" class="btn btn-primary view">View Profile</button>
-    </div>
-</div> --}}
-
-{{#each rows}}
-
 <div class="container">
+    {{#each rows}}
     <div class="card">
-        <div class="card__left">
-            {{#if this.adminProfile}}
-                <img class="card__profile" src="/images/upload/{{this.adminProfile}}" alt="{{this.adminFirstName}}'s Profile">
-            {{else}}
-                <img class="card__profile" src="/images/defaultUser.webp" alt="Default Profile">
-            {{/if}}
-            <form id="updateAdminForm" action="/admin/dashboard/edit/account" method="POST" encType="multipart/form-data">
-                <input type="file" name="sampleFile" accept="image/*" class="upload-input"/>
-                <input type="hidden" name="admin_id" value="{{this.admin_id}}"/>
-                <input type="submit" class="btn btn-primary upload" value="Upload Image">
-            </form>
-        </div>
-        <div class="card__right">
-            
-            <a href="/admin/dashboard/edit/account" class="view"><i class="material-icons">edit</i>Edit Profile</a>
+        <div class="card__content">
+            <div class="card__profile">
+                {{#if this.adminProfile}}
+                <img src="/images/upload/{{this.adminProfile}}" alt="User Profile">
+                {{else}}
+                <img src="/images/defaultUser.webp" alt="User Profile">
+                {{/if}}
+            </div>
+            <div class="card__details">
+                <div class="card__title">
+                    <h1>Name:</h1>
+                    <h2>{{this.adminFirstName}} {{this.adminLastName}}</h2>
+                </div>
+                <div class="card__email">
+                    <h1>Email:</h1>
+                    <h2>{{this.adminEmail}}</h2>
+                </div>
+                <div class="card__about">
+                    <h1>Establishment Name:</h1>
+                    <h2>{{this.eName}}</h2>
+                </div>
+                  <a href="/admin/dashboard/edit/account" class="view"><i class="material-icons">edit</i>Edit Profile</a>
+            </div>
         </div>
     </div>
+    {{/each}}
 </div>
-{{/each}}
 
 
-<script src="/js/editAdminAccount.js"></script>
+<script src="/js/viewAdminAccount.js"></script>
