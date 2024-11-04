@@ -9,11 +9,8 @@ export const verifyToken = (req, res, next) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        if (!decoded) {
-            return res.redirect("/admin/login");
-        }
-
         req.adminId = decoded.adminId;
+        req.establishmentId = decoded.establishmentId;
         next();
     } catch (error) {
         console.log("Error in verifyToken", error);
@@ -22,19 +19,21 @@ export const verifyToken = (req, res, next) => {
 }
 
 export const verifyTenantToken = (req, res, next) => {
-    const token = req.cookies.tenantToken; // Get tenant token from cookies
+    const token = req.cookies.tenantToken; 
     if (!token) {
         return res.redirect("/tenant/login");
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify the token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET); 
+        console.log('Decoded token:', decoded);
 
         if (!decoded) {
             return res.redirect("/tenant/login");
         }
 
         req.tenantId = decoded.tenantId;
+        req.establishmentId = decoded.establishmentId;
         next();
     } catch (error) {
         console.log("Error in verifyTenantToken", error);

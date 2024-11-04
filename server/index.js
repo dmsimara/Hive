@@ -12,8 +12,9 @@ import session from "express-session";
 import fileUpload from "express-fileupload";
 import fs from 'fs';
 import Admin from "./models/admin.models.js";
+import Room from "./models/room.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
-import { addTenant, addTenantView, editTenant, findTenants, viewAdmins, viewTenants } from './controllers/auth.controllers.js';
+import { addTenant, addTenantView, addUnitView, editTenant, findTenants, findUnits, getOccupiedUnits, viewAdmins, viewTenants, viewUnits } from './controllers/auth.controllers.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -27,6 +28,13 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json()); // allows us to parse incoming requests: req.body
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: process.env.NODE_ENV === 'production' } // Make sure secure is set based on NODE_ENV
+}));
 
 app.engine("hbs", exphbs.engine({
     extname: ".hbs",
@@ -53,37 +61,33 @@ app.use(express.static(path.join(__dirname, "../client/public"))); // Serve stat
 
 app.use("/api/auth", authRoutes);
 
-app.use(session({
-    secret: process.env.SESSION_SECRET, 
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false } 
-}));
-
 // default option for profile pic upload
 app.use(fileUpload());
 
-// routes
+// home route
 app.get("/", (req, res) => {
     res.render("home", { title: "Home Page", styles: ["home"] });
 });
 
+// admin authentication routes
 app.get("/admin/login", (req, res) => {
     res.render("adminLogin", { title: "Hive", styles: ["adminLogin"] });
 });
 
+app.get("/admin/register", (req, res) => {
+    res.render("adminRegister", { title: "Hive", styles: ["adminRegister"] });
+});
+
+app.get("/admin/register/verifyEmail", (req, res) => {
+    res.render("verifyEmail", { title: "Hive", styles: ["verifyEmail"] })
+});
+
+// tenant authentication routes
 app.get("/tenant/login", (req, res) => {
     res.render("tenantLogin", { title: "Hive", styles: ["tenantLogin"] });
 });
 
-app.get("/admin/register", (req, res) => {
-    res.render("adminRegister", { title: "Hive", styles: ["adminRegister"] });
-})
-
-app.get("/tenant/dashboard", verifyTenantToken, (req, res) => {
-    res.render("tenantDashboard", { title: "Hive", styles: ["tenantDashboard"] });
-});
-
+// ADMIN PAGES ROUTES
 app.get("/admin/dashboard", verifyToken, async (req, res) => {
     try {
         const admins = await viewAdmins(req, res); 
@@ -99,23 +103,59 @@ app.get("/admin/dashboard", verifyToken, async (req, res) => {
     }
 });
 
-app.get("/admin/register/verifyEmail", (req, res) => {
-    res.render("verifyEmail", { title: "Hive", styles: ["verifyEmail"] })
+// manage room routes
+app.get("/admin/manage/unit", verifyToken, async (req, res) => {
+    try {
+        const admins = await viewAdmins(req, res);
+        console.log('Fetched admin data:', admins);
+
+        const units = await viewUnits(req, res);
+        console.log('Units:', units);
+
+        if (!units) {
+            return res.render("manageUnits", {
+                title: "Hive",
+                styles: ["manageUnits"],
+                rows: admins,
+                units: []
+            });
+        }
+
+        // Call getOccupiedUnits
+        const occupiedUnits = await getOccupiedUnits(req, res);
+
+        res.render("manageUnits", {
+            title: "Hive",
+            styles: ["manageUnits"],
+            rows: admins,
+            units: units,
+            occupiedUnits 
+        });
+    } catch (error) {
+        console.error('Error fetching admin or unit data:', error);
+        res.status(500).json({ success: false, message: 'Error fetching data' });
+    }
 });
 
 
+app.post("/admin/manage/unit", findUnits, (req, res) => {
+    res.render("manageUnits", { title: "Hive", styles: ["manageUnits"], rooms: req.rooms });
+})
+
+app.get("/admin/manage/unit/add", verifyToken, addUnitView);
+
+
+// user management routes
  app.get("/admin/dashboard/userManagement", verifyToken, viewTenants);
  app.post("/admin/dashboard/userManagement", findTenants, (req, res) => {
      res.render("userManagement", { title: "Hive", styles: ["userManagement"], tenants: req.tenants });
  });
 
  app.get("/admin/dashboard/userManagement/add", verifyToken, addTenantView);
- 
- app.post("/api/auth/addTenant", verifyToken, addTenant);
 
-app.get("/admin/dashboard/userManagement/editTenant/:tenant_id", verifyToken, editTenant);
+ app.get("/admin/dashboard/userManagement/editTenant/:tenant_id", verifyToken, editTenant);
 
-// route for admin view account
+// view and edit account
 app.get("/admin/dashboard/view/account", verifyToken, async (req, res) => {
     try {
         const admins = await viewAdmins(req, res);
@@ -130,8 +170,6 @@ app.get("/admin/dashboard/view/account", verifyToken, async (req, res) => {
         res.status(500).json({ success: false, message: 'Error fetching admin data' });
     }
 });
-
-// route for admin edit account
 app.get("/admin/dashboard/edit/account", verifyToken, async (req, res) => {
     try {
         const admins = await viewAdmins(req, res);
@@ -182,6 +220,30 @@ app.post("/admin/dashboard/edit/account", verifyToken, async (req, res) => {
         });
     });
 });
+
+// Example: Define a route to get the total units for the admin's establishment
+app.get('/api/auth/admin/totalUnits', async (req, res) => {
+    try {
+        const { establishmentId } = req.admin; // Assuming `establishmentId` is part of `req.admin`
+        
+        const totalUnits = await Room.sum('roomTotalSlot', {
+            where: { establishmentId }
+        });
+
+        res.status(200).json({ totalUnits });
+    } catch (error) {
+        console.error('Error calculating total units:', error);
+        res.status(500).json({ message: 'Failed to calculate total units' });
+    }
+});
+
+
+ // TENANT PAGES ROUTES
+ app.get("/tenant/dashboard", verifyTenantToken, (req, res) => {
+    res.render("tenantDashboard", { title: "Hive", styles: ["tenantDashboard"] });
+});
+
+ app.post("/api/auth/addTenant", verifyToken, addTenant);
 
 app.listen(PORT, () => {
     connectDB();

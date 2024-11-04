@@ -1,5 +1,6 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import dotenv from 'dotenv';
+import Establishment from './establishment.models.js';
 
 dotenv.config();
 
@@ -32,9 +33,15 @@ const Admin = sequelize.define('Admin', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  eName: {
-    type: DataTypes.STRING,
-    allowNull: false
+  establishmentId: { 
+    type: DataTypes.INTEGER,
+    field: 'establishment_id', // This is important to map the DB column correctly
+    references: {
+        model: 'Establishment',
+        key: 'establishment_id'
+    },
+    allowNull: false,
+    onDelete: 'CASCADE'
   },
   adminProfile: {
     type: DataTypes.STRING,
@@ -60,7 +67,10 @@ const Admin = sequelize.define('Admin', {
   verificationTokenExpiresAt: {
     type: DataTypes.DATE
   }
-}, { timestamps: true });
+}, { timestamps: false });
+
+Establishment.hasMany(Admin, { foreignKey: 'establishment_id' });
+Admin.belongsTo(Establishment, { foreignKey: 'establishment_id' });
 
 sequelize.sync().then(() => {
     console.log('Admin table has been created.');

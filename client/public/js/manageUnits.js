@@ -36,3 +36,26 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+function deleteUnit(roomId) {
+    const confirmation = confirm("Are you sure you want to delete this room?");
+    if (confirmation) {
+        fetch(`/api/auth/deleteUnit/${roomId}`, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Room successfully deleted');
+                location.reload(); 
+            } else {
+                alert('Error deleting room');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while deleting the room.');
+        });
+    } else {
+        alert('Deletion canceled.');
+    }
+}

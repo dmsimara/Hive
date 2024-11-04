@@ -1,5 +1,6 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import dotenv from 'dotenv';
+import Establishment from './establishment.models.js';
 
 dotenv.config();
 
@@ -9,29 +10,46 @@ const sequelize = new Sequelize(process.env.DATABASE, process.env.DATABASE_USER,
 });
 
 const Room = sequelize.define('Room', {
-    room_id: {
+  room_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
       allowNull: false
-    },
-    roomNumber: {
+  },
+  roomNumber: {
       type: DataTypes.STRING(10),
       allowNull: false
-    },
-    roomType: {
+  },
+  roomType: {
       type: DataTypes.STRING(50),
       allowNull: false
-    },
-    roomTotalSlot: {
+  },
+  roomTotalSlot: {
       type: DataTypes.INTEGER,
       allowNull: false
-    },
-    roomRemainingSlot: {
+  },
+  roomRemainingSlot: {
       type: DataTypes.INTEGER,
       allowNull: false
-    }
-  }, { timestamps: false });
+  },
+  floorNumber: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+  },
+  establishmentId: { 
+    type: DataTypes.INTEGER,
+    field: 'establishment_id', // This is important to map the DB column correctly
+    references: {
+        model: 'Establishment',
+        key: 'establishment_id'
+    },
+    allowNull: false,
+    onDelete: 'CASCADE'
+  }
+}, { timestamps: false });
+
+Room.belongsTo(Establishment, { foreignKey: 'establishment_id' });
+Establishment.hasMany(Room, { foreignKey: 'establishment_id' });
   
   sequelize.sync()
     .then(() => {

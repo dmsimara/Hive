@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
 
+        const establishmentId = document.getElementById('establishment_id').value; // Assuming there's a hidden input for establishment_id
+        data.establishment_id = establishmentId;
+
         try {
             const response = await fetch('/api/auth/addTenant', {
                 method: 'POST',

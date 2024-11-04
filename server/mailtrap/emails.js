@@ -5,19 +5,22 @@ export const sendVerificationEmail = async (adminEmail, verificationToken) => {
     const recipient = [{ email: adminEmail }];
 
     try {
+        // Log the email content for debugging
+        const emailContent = VERIFICATION_EMAIL_TEMPLATE.replace("{verificationCode}", verificationToken);
+        console.log("Verification email content:", emailContent);
+
         const response = await mailtrapClient.send({
             from: sender,
             to: recipient,
             subject: 'Admin Verification',
-            html: VERIFICATION_EMAIL_TEMPLATE.replace("{verificationCode}", verificationToken),
+            html: emailContent,
             category: "Email Verification"
-        })
+        });
 
-        console.log("Email sent successfully", response)
+        console.log("Email sent successfully", response);
     } catch (error) {
         console.error('Error sending verification email:', error.response ? error.response.data : error.message);
-
-        throw new Error('Error sending verification email: ${error.message}');
+        throw new Error(`Error sending verification email: ${error.message}`);
     }
 };
 

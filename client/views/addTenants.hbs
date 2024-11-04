@@ -36,6 +36,7 @@
   <div id="alertMessage" class="alert" style="display: none;"></div>
 
   <form action="/api/auth/addTenant" class="row g-3 needs-validation" method="POST" id="addForm">
+    <input type="hidden" name="establishment_id" value="{{establishment_id}}">
     {{> tenantForm }}
   </form>
 </div>

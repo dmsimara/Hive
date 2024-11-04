@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 window.location.href = "/admin/dashboard"; 
             } else {
                 alert(data.message || "Login failed. Please try again.");
+                console.error("Login error data:", data); // Log additional data for debugging
             }
         } catch (error) {
             alert("An error occurred. Please try again later.");
