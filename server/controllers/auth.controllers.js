@@ -4,7 +4,6 @@ import Room from '../models/room.models.js';
 import Establishment from '../models/establishment.models.js';
 import bcryptjs from 'bcryptjs';
 import crypto from "crypto";
-import path from 'path';
 import jwt from "jsonwebtoken";
 import { generateTokenAndSetCookie, generateTokenAndSetTenantCookie } from '../utils/generateTokenAndSetCookie.js';
 import { sendPasswordResetEmail, sendResetSuccessEmail, sendTenantVerificationEmail, sendVerificationEmail, sendWelcomeEmail } from '../mailtrap/emails.js';
