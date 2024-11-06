@@ -50,46 +50,52 @@
   </div>
 </nav>
 
-{{!-- <div class="container">
-    <div class="card">
-        {{#if this.adminProfile}}
-            <img class="card__profile" src="/images/upload/{{this.adminProfile}}" alt="User Profile">
-        {{else}}
-            <img class="card__profile" src="/images/defaultUser.webp" alt="User Profile">
-        {{/if}}
-        <form id="updateAdminForm" action="/admin/dashboard/edit/account" method="POST" encType="multipart/form-data">
-        <input type="file" name="sampleFile" accept="image/*"/>
-        <input type="hidden" name="admin_id" value="{{this.admin_id}}"/>
-        <input type="submit" class="btn btn-primary upload">
-    </form>
-        <h1 class="card__title">{{this.adminFirstName}}</h1>
-        <div class="card__email">{{this.adminEmail}}</div>
-        <p class="card__about">{{this.eName}}</p>
-        <button type="button" class="btn btn-primary view">View Profile</button>
-    </div>
-</div> --}}
-
 {{#each rows}}
 
-<div class="container">
-    <div class="card">
-        <div class="card__left">
-            {{#if this.adminProfile}}
-                <img class="card__profile" src="/images/upload/{{this.adminProfile}}" alt="{{this.adminFirstName}}'s Profile">
-            {{else}}
-                <img class="card__profile" src="/images/defaultUser.webp" alt="Default Profile">
-            {{/if}}
-            <form id="updateAdminForm" action="/admin/dashboard/edit/account" method="POST" encType="multipart/form-data">
-                <input type="file" name="sampleFile" accept="image/*" class="upload-input"/>
-                <input type="hidden" name="admin_id" value="{{this.admin_id}}"/>
-                <input type="submit" class="btn btn-primary upload" value="Upload Image">
-            </form>
-        </div>
-        <div class="card__right">
-            
-            <a href="/admin/dashboard/edit/account" class="view"><i class="material-icons">edit</i>Edit Profile</a>
-        </div>
+<div class="container pt-5 pb-5">
+  <h3><i class="material-icons dots">more_horiz</i>Edit Profile</h3>
+  <div class="card">
+    <div class="card__left">
+      {{#if this.adminProfile}}
+      <img class="card__profile" src="/images/upload/{{this.adminProfile}}" alt="{{this.adminFirstName}}'s Profile"
+        id="profileImage">
+      {{else}}
+      <img class="card__profile" src="/images/defaultUser.webp" alt="Default Profile" id="profileImage">
+      {{/if}}
     </div>
+
+    <div class="card__right">
+      <form id="updateAdminForm" action="/admin/dashboard/edit/account" method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+          <div class="row">
+            <div class="col-12 col-md-6">
+              <label for="adminFirstName" class="form-label">First Name</label>
+              <input type="text" class="form-control" id="adminFirstName" name="adminFirstName"
+                value="{{this.adminFirstName}}" placeholder="{{this.adminFirstName}}" required>
+            </div>
+            <div class="col-12 col-md-6">
+              <label for="adminLastName" class="form-label">Last Name</label>
+              <input type="text" class="form-control" id="adminLastName" name="adminLastName"
+                value="{{this.adminLastName}}" placeholder="{{this.adminLastName}}" required>
+            </div>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="adminEmail" class="form-label">Email</label>
+          <input type="email" class="form-control" id="adminEmail" name="adminEmail" value="{{this.adminEmail}}"
+            placeholder="{{this.adminEmail}}" required>
+        </div>
+        <div>
+          <input type="file" name="sampleFile" accept="image/*" class="upload-input" id="fileInput"
+            style="display: none;" />
+          <input type="hidden" name="admin_id" value="{{this.admin_id}}" />
+          <div class="button-group">
+            <a class="cancel" type="button">Cancel</a>
+            <input type="submit" class="btn btn-primary" value="Save" />
+          </div>
+      </form>
+    </div>
+  </div>
 </div>
 {{/each}}
 

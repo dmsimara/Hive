@@ -160,16 +160,17 @@ html, body {
 .view {
     display: inline-flex; 
     align-items: center; 
-    border: none;
-    color: white;
-    padding: 10px 15px;
+    border: 1px solid var(--maroon);
+    color: var(--maroon);
+    padding: 8px 30px;
     text-align: center;
     font-size: 16px; 
+    font-weight: 500;
     cursor: pointer;
     text-decoration: none;
-    border-radius: 1em;
+    border-radius: 10px;
     transition: background 0.3s ease;
-    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
+    background: var(--background-color);
 }
 
 .view:hover {
@@ -181,6 +182,18 @@ html, body {
     font-size: 18px; 
 }
 
+.container h3 {
+    position: relative;
+    left: -12em;
+    font-weight: 600;
+    top: -10px;
+}
+
+.container .dots {
+    color: var(--orange);
+    font-size: 25px;
+    margin-right: 1em;
+}
 
 .card {
     display: flex;
@@ -189,19 +202,20 @@ html, body {
     width: 100%;
     padding: 50px 30px;
     max-width: 800px;
-    border-radius: 5px;
+    border-radius: 1em;
     background-color: white;
-    margin-top: -5em;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0), 0 6px 36px rgba(0, 0, 0, 0.13);
+    margin-top: -12em;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0), 0 3px 18px rgba(0, 0, 0, 0.13);
 }
 
 .card__profile img {
     width: 300px; 
     height: 300px; 
     object-fit: cover;
-    border: 3px solid white;
+    border: 2px solid var(--maroon);
     margin-right: 60px;
     margin-left: 20px;
+    border-radius: 1em;
 }
 
 .card__details {

@@ -186,45 +186,54 @@ app.get("/admin/dashboard/edit/account", verifyToken, async (req, res) => {
 });
 
 app.post("/admin/dashboard/edit/account", verifyToken, async (req, res) => {
-    if (!req.files || Object.keys(req.files).length === 0) {
-        return res.status(400).json({ success: false, message: 'No files were uploaded' });
+    try {
+        let adminProfile = req.body.adminProfile;  
+        
+        if (req.files && Object.keys(req.files).length > 0) {
+            const sampleFile = req.files.sampleFile;
+            const uploadDir = path.join(__dirname, '..', 'client', 'public', 'images', 'upload');
+            const uploadPath = path.join(uploadDir, sampleFile.name);
+
+            fs.mkdir(uploadDir, { recursive: true }, async (err) => {
+                if (err) {
+                    return res.status(500).json({ success: false, message: 'Failed to create upload directory.' });
+                }
+
+                sampleFile.mv(uploadPath, async (err) => {
+                    if (err) return res.status(500).json({ success: false, message: err });
+
+                    adminProfile = sampleFile.name;
+
+                    await updateAdminDetails(req.body, adminProfile);
+                    return res.json({ success: true, message: 'Admin details updated successfully.' });
+                });
+            });
+        } else {
+            await updateAdminDetails(req.body, adminProfile);
+            return res.json({ success: true, message: 'Admin details updated successfully.' });
+        }
+    } catch (error) {
+        console.error('Error updating admin account:', error);
+        return res.status(500).json({ success: false, message: 'Failed to update admin account.' });
     }
-
-    const sampleFile = req.files.sampleFile;
-    const uploadDir = path.join(__dirname, '..', 'client', 'public', 'images', 'upload');
-    const uploadPath = path.join(uploadDir, sampleFile.name);
-
-    fs.mkdir(uploadDir, { recursive: true }, async (err) => {
-        if (err) return res.status(500).json({ success: false, message: 'Failed to create upload directory.' });
-
-        sampleFile.mv(uploadPath, async (err) => {
-            if (err) return res.status(500).json({ success: false, message: err });
-
-            try {
-                const adminDetails = {
-                    adminProfile: sampleFile.name, 
-                    adminEmail: req.body.adminEmail,
-                    adminFirstName: req.body.adminFirstName,
-                    adminLastName: req.body.adminLastName,
-                    eName: req.body.eName,
-                };
-
-                const adminId = req.body.admin_id; 
-                await Admin.update(adminDetails, { where: { admin_id: adminId } });
-
-                return res.json({ success: true, message: 'File uploaded and admin details updated successfully.', filePath: uploadPath });
-            } catch (dbError) {
-                console.error('Error saving admin details to database:', dbError);
-                return res.status(500).json({ success: false, message: 'Failed to save admin details to database.' });
-            }
-        });
-    });
 });
 
-// Example: Define a route to get the total units for the admin's establishment
+const updateAdminDetails = async (body, adminProfile) => {
+    const adminDetails = {
+        adminProfile: adminProfile,  
+        adminEmail: body.adminEmail,
+        adminFirstName: body.adminFirstName,
+        adminLastName: body.adminLastName,
+        eName: body.eName,
+    };
+    const adminId = body.admin_id; 
+    await Admin.update(adminDetails, { where: { admin_id: adminId } });
+};
+
+
 app.get('/api/auth/admin/totalUnits', async (req, res) => {
     try {
-        const { establishmentId } = req.admin; // Assuming `establishmentId` is part of `req.admin`
+        const { establishmentId } = req.admin; 
         
         const totalUnits = await Room.sum('roomTotalSlot', {
             where: { establishmentId }

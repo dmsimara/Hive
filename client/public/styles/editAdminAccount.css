@@ -12,7 +12,7 @@
 html, body {
     margin: 0;
     padding: 0;
-    height: 100vh;
+    height: 100%;
     width: 100%;
     font-family: 'Raleway', 'Inter', sans-serif; 
     background-color: var(--background-color);
@@ -146,19 +146,11 @@ html, body {
     font-weight: 600;
 }
 
-.container img {
-    max-width: 100%; /* Ensure it doesn't exceed the width of its container */
-    max-height: 200px; /* Set a max height for the image */
-    height: auto; /* Maintain aspect ratio */
-    margin-left: 30px;
-}
-
 .container {
-    display: grid;
-    place-items: center;
-    height: 100vh;
-    text-align: center;
-    margin-top: -2em;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 2rem;
 }
 
 .view {
@@ -168,7 +160,7 @@ html, body {
     left: 20em;
     border: none;
     color: white;
-    padding: 10px 15px;
+    padding: 10px 20px;
     text-align: center;
     font-size: 16px; 
     cursor: pointer;
@@ -180,6 +172,32 @@ html, body {
 
 .view:hover {
     opacity: 0.8;
+}
+
+.cancel {
+    text-decoration: none;
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-align: center;
+    color: var(--orange);
+    border: 1px solid var(--orange);
+    border-radius: 3px;
+    background-color: var(--background-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 10px; 
+}
+
+.cancel:hover {
+    background-color: white;
+}
+
+.button-group {
+    display: flex;
+    justify-content: flex-end; /* Aligns items to the right */
+    gap: 10px; /* Adds spacing between the buttons */
+    padding-top: 20px; /* Optional, to add space above buttons */
 }
 
 .material-icons {
@@ -194,7 +212,7 @@ html, body {
     padding: 8px 20px;
     width: 50%;
     text-align: center;
-    font-size: 16px; /* Fixed from font-style to font-size */
+    font-size: 16px;
     cursor: pointer;
     border-radius: 3px;
     transition: background 0.3s ease;
@@ -206,41 +224,96 @@ html, body {
 
 .card {
     display: flex;
-    text-align: center;
-    justify-content: center;
+    flex-direction: row;
+    align-items: center;
     width: 100%;
     padding: 50px 30px;
     max-width: 800px;
     border-radius: 5px;
     background-color: white;
-    margin-top: -5em;
+    position: relative;
+    margin: 0 auto; 
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0), 0 6px 36px rgba(0, 0, 0, 0.13);
 }
 
-.card_left img {
-    /* width: 100px ; 
-    height: 100px;  */
+.card_left img, .card__profile {
+    width: 250px;
+    height: 250px;
     object-fit: cover;
-    border: 3px solid white;
-    margin-right: 60px;
-    margin-left: 50px;
+    border: 2px solid var(--maroon); 
+    border-radius: 8px;
+    cursor: pointer;
 }
 
-
 .card__left {
+    /* flex: 1;                         */
     display: flex;
+    justify-content: center;
     align-items: center;
-    width: 100%;
+    cursor: pointer;
+    max-width: 60em !important;
+}
+
+.card__profile {
+    max-width: 250px;             
+    height: auto;                
+    border-radius: 5px;           
 }
 
 .card__right {
+    /* flex: 2; */
     text-align: left;
+    padding-top: 10px;
 }
+
+
+.card__left, .card__right {
+    flex: 1;
+    padding: 1rem;
+  }
 
 #updateAdminForm {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    position: absolute;
-    top: 15em;
+    margin-left: -15px;
+    max-width: 400px;
+    /* position: relative;
+    top: -12em;
+    left: 16em; */
+}
+
+form input[type="text"],
+form input[type="email"] {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    width: 100%;
+    background: var(--background-color);
+}
+
+form input[type="submit"] {
+    background: linear-gradient(to left, var(--gray), var(--maroon), var(--orange));
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background 0.3s ease;
+}
+
+form input[type="submit"]:hover {
+    opacity: 0.8;
+}
+
+h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    margin-left: -30em;
+}
+
+.dots {
+    color: var(--orange);
+    font-size: 20px;
 }
