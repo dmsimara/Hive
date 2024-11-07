@@ -102,6 +102,10 @@ html, body {
     margin-right: 15px;
 }
 
+.sub-menu-wrap {
+    z-index: 1000;
+}
+
 .sub-menu hr {
     border: 0;
     height: 1px;

@@ -14,7 +14,7 @@ import fs from 'fs';
 import Admin from "./models/admin.models.js";
 import Room from "./models/room.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
-import { addTenant, addTenantView, addUnitView, editTenant, findTenants, findUnits, getOccupiedUnits, viewAdmins, viewTenants, viewUnits } from './controllers/auth.controllers.js';
+import { addTenant, addTenantView, addUnitView, findTenants, findUnits, getOccupiedUnits, viewAdmins, viewTenants, viewUnits } from './controllers/auth.controllers.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -129,7 +129,7 @@ app.get("/admin/manage/unit", verifyToken, async (req, res) => {
             styles: ["manageUnits"],
             rows: admins,
             units: units,
-            occupiedUnits 
+            occupiedUnits: occupiedUnits
         });
     } catch (error) {
         console.error('Error fetching admin or unit data:', error);
@@ -137,23 +137,72 @@ app.get("/admin/manage/unit", verifyToken, async (req, res) => {
     }
 });
 
+app.post("/admin/dashboard/userManagement", findTenants, async (req, res) => {
+    try {
+        const tenants = req.tenants || []; 
 
-app.post("/admin/manage/unit", findUnits, (req, res) => {
-    res.render("manageUnits", { title: "Hive", styles: ["manageUnits"], rooms: req.rooms });
-})
+        const admins = await viewAdmins(req, res); 
+
+        res.render("viewAdminAccount", {
+            title: "Hive",
+            styles: ["viewAdminAccount"],
+            rows: admins,   
+            tenants         
+        });
+    } catch (error) {
+        console.error('Error fetching tenant or admin data:', error);
+        res.status(500).json({ success: false, message: 'Error fetching tenant or admin data' });
+    }
+});
+
 
 app.get("/admin/manage/unit/add", verifyToken, addUnitView);
 
 
 // user management routes
- app.get("/admin/dashboard/userManagement", verifyToken, viewTenants);
- app.post("/admin/dashboard/userManagement", findTenants, (req, res) => {
+app.get("/admin/dashboard/userManagement", verifyToken, async (req, res) => {
+    try {
+        const tenants = await viewTenants(req, res);  
+        const admins = await viewAdmins(req, res);  // Fetch admin data
+
+        console.log('Fetched tenant data:', tenants);
+        console.log('Fetched admin data:', admins);
+
+        // Check for an edit operation by verifying a tenantId query parameter
+        const tenantId = req.query.tenantId;  
+        let tenantToEdit = null;
+        
+        if (tenantId) {
+            // If editing, fetch the specific tenant's data
+            tenantToEdit = tenants.find(tenant => tenant.tenant_id === tenantId);
+            if (!tenantToEdit) {
+                return res.status(404).json({ success: false, message: 'Tenant not found' });
+            }
+        }
+
+        res.render("userManagement", {
+            title: "Hive",
+            styles: ["userManagement"],
+            rows: tenants || [], 
+            admin: admins,
+            tenantToEdit  // Pass tenant data for the modal if in edit mode
+        });
+
+    } catch (error) {
+        console.error('Error fetching tenant or admin data:', error);
+        res.status(500).json({ success: false, message: 'Error fetching data' });
+    }
+});
+
+
+
+app.post("/admin/dashboard/userManagement", findTenants, (req, res) => {
      res.render("userManagement", { title: "Hive", styles: ["userManagement"], tenants: req.tenants });
  });
 
- app.get("/admin/dashboard/userManagement/add", verifyToken, addTenantView);
+app.get("/admin/dashboard/userManagement/add", verifyToken, addTenantView);
 
- app.get("/admin/dashboard/userManagement/editTenant/:tenant_id", verifyToken, editTenant);
+//  app.get("/admin/dashboard/userManagement/editTenant/:tenant_id", verifyToken, editTenant);
 
 // view and edit account
 app.get("/admin/dashboard/view/account", verifyToken, async (req, res) => {

@@ -50,7 +50,7 @@ const Tenant = sequelize.define('Tenant', {
   },
   establishmentId: { 
     type: DataTypes.INTEGER,
-    field: 'establishment_id', // This is important to map the DB column correctly
+    field: 'establishment_id', 
     references: {
         model: 'Establishment',
         key: 'establishment_id'
@@ -74,10 +74,10 @@ const Tenant = sequelize.define('Tenant', {
     allowNull: false,
     defaultValue: 'active'
   },
-  // New fields
   dateJoined: {
     type: DataTypes.DATE,
-    allowNull: false
+    allowNull: true,
+    defaultValue: DataTypes.NOW 
   },
   tenantSchool: {
     type: DataTypes.STRING(255),

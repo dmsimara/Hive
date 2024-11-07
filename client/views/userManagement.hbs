@@ -1,36 +1,79 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <img class="navbar-brand" src="/images/hiveLight.png" alt="Hive Logo" width="100px"/>
-    {{!-- <a class="navbar-brand" href="#">Navbar</a> --}}
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <img class="navbar-brand" src="/images/hiveLight.png" alt="Hive Logo" width="100px" />
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-center">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/view-tenants">Home</a>
+          <a class="nav-link" href="/admin/dashboard">Dashboard</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Announcement</a>
+          <a class="nav-link" href="#">Manage Tenant</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Management</a>
+          <a class="nav-link active" href="/admin/manage/unit">Manage Unit</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Announcements</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Tracker</a>
         </li>
       </ul>
-      <form class="d-flex" role="search" method="POST" action="/admin/dashboard/userManagement" novalidate>
-        <input class="form-control me-2" type="search" placeholder="Search" name="search" aria-label="Search" required>
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
+
+      <!-- Admin Profile Display -->
+      {{#if admin.length}}
+      {{#each admin}}
+      <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+        alt="Profile" class="user-pic" onclick="toggleMenu()" />
+      <div class="sub-menu-wrap" id="subMenu">
+        <div class="sub-menu">
+          <div class="user-info">
+            <img
+              src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+              alt="Profile" width="40px" />
+            <h3>{{this.adminFirstName}} {{this.adminLastName}}</h3>
+          </div>
+          <hr />
+          <a href="/admin/dashboard/view/account" class="sub-menu-link">
+            <i class="material-icons">person</i>
+            <p>View Account</p>
+            <span>></span>
+          </a>
+          <a href="#" id="logoutButton" class="sub-menu-link">
+            <i class="material-icons">logout</i>
+            <p>Logout</p>
+            <span>></span>
+          </a>
+        </div>
+      </div>
+      {{/each}}
+      {{else}}
+      <!-- Fallback for no admin data -->
+      <img src="/images/defaultUser.webp" alt="Profile" class="user-pic" onclick="toggleMenu()" />
+      {{/if}}
     </div>
   </div>
 </nav>
+
 <div class="container pt-5 pb-5">
   <div class="row">
-    <div class="col-6">
-      <h1>Tenants</h1>
-    </div>
-    <div class="col-6 d-flex justify-content-end">
-      <a href="/admin/dashboard/userManagement/add" type="button" class="btn btn-primary align-self-center">+ Add Tenant</a>
+    <div class="row align-items-center">
+      <div class="col-6">
+        <h1>Tenants</h1>
+      </div>
+      <div class="col-6 d-flex justify-content-end gap-2">
+        <form class="d-flex" role="search" method="POST" action="/admin/dashboard/userManagement" novalidate>
+          <input class="form-control form-control-sm me-2" type="search" placeholder="Search" name="search"
+            aria-label="Search" required value="{{lastSearchTerm}}">
+          <button class="btn btn-outline-success btn-sm" type="submit">Search</button>
+        </form>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#addTenantModal" class="btn btn-light btn-sm">+ Add
+          Tenant</a>
+      </div>
     </div>
   </div>
 
@@ -43,7 +86,7 @@
         <th scope="col">Email</th>
         <th scope="col">Gender</th>
         <th scope="col">Mobile Number</th>
-        <th scope="col" class="text-end">Acton</th>
+        <th scope="col" class="text-end">Action</th>
       </tr>
     </thead>
     <tbody>
@@ -57,10 +100,11 @@
         <td>{{this.gender}}</td>
         <td>{{this.mobileNum}}</td>
         <td class="text-end">
-          <a href="#" type="button" class="btn btn-light btn-small"><i class="material-icons">visibility</i> Assign</a>
-          <a href="/admin/dashboard/userManagement/editTenant/{{this.tenant_id}}" type="button" class="btn btn-light btn-small"><i class="material-icons">edit</i> Edit</a>
-          <a href="#" type="button" onclick="deleteTenant('{{this.tenant_id}}')" class="btn btn-light btn-small"><i class="material-icons">person_remove</i>
-            Delete</a>
+          <a href="#" class="btn btn-light btn-sm"><i class="material-icons">visibility</i> Assign</a>
+          <a href="#" data-bs-toggle="modal" data-bs-target="#editTenantModal" class="btn btn-light btn-sm"><i
+              class="material-icons">edit</i> Edit</a>
+          <a href="#" onclick="deleteTenant('{{this.tenant_id}}')" class="btn btn-light btn-sm"><i
+              class="material-icons">person_remove</i> Delete</a>
         </td>
       </tr>
       {{/each}}
@@ -70,9 +114,198 @@
       </tr>
       {{/if}}
     </tbody>
-
-
   </table>
+</div>
+
+<!-- Loading Spinner -->
+<div id="loadingSpinner" class="spinner-border text-primary position-fixed top-50 start-50 translate-middle"
+  style="display: none;" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
+
+<!-- Add Tenant Modal -->
+<div class="modal fade" id="addTenantModal" tabindex="-1" aria-labelledby="addTenantModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addTenantModalLabel">Add Tenant</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="tenantForm" method="POST" action="/api/auth/addTenant">
+          <input type="hidden" name="establishmentId" value="{{establishmentId}}">
+
+          <!-- First and Last Name Row -->
+          <div class="row mb-3">
+            <div class="col">
+              <label for="tenantFirstName" class="form-label">First Name</label>
+              <input type="text" class="form-control form-control-sm" id="tenantFirstName" name="tenantFirstName"
+                required>
+            </div>
+            <div class="col">
+              <label for="tenantLastName" class="form-label">Last Name</label>
+              <input type="text" class="form-control form-control-sm" id="tenantLastName" name="tenantLastName"
+                required>
+            </div>
+          </div>
+
+          <!-- Email Input -->
+          <div class="mb-3">
+            <label for="tenantEmail" class="form-label">Email</label>
+            <input type="email" class="form-control form-control-sm" id="tenantEmail" name="tenantEmail" required>
+          </div>
+
+          <!-- Gender and Mobile Row -->
+          <div class="row mb-3">
+            <div class="col">
+              <label for="gender" class="form-label">Gender</label>
+              <select class="form-select form-select-sm" name="gender" id="gender" required>
+                <option value="" disabled>Select Gender</option>
+                <option value="F" {{#if (eq gender "Female" )}}selected{{/if}}>Female</option>
+                <option value="M" {{#if (eq gender "Male" )}}selected{{/if}}>Male</option>
+                <option value="Other" {{#if (eq gender "Other" )}}selected{{/if}}>Other</option>
+              </select>
+            </div>
+            <div class="col">
+              <label for="mobileNum" class="form-label">Mobile Number</label>
+              <input type="number" class="form-control form-control-sm" id="mobileNum" name="mobileNum" required>
+            </div>
+          </div>
+
+          <!-- Stay Dates Row -->
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="stayFrom" class="form-label">Start Date</label>
+              <input type="date" class="form-control form-control-sm" id="stayFrom" name="stayFrom" required>
+            </div>
+            <div class="col-md-6">
+              <label for="stayTo" class="form-label">End Date</label>
+              <input type="date" class="form-control form-control-sm" id="stayTo" name="stayTo" required>
+            </div>
+          </div>
+
+          <!-- Password Row -->
+          <div class="row mb-3">
+            <div class="col">
+              <label for="tenantPassword" class="form-label">Password</label>
+              <input type="password" class="form-control form-control-sm" id="tenantPassword" name="tenantPassword"
+                required>
+            </div>
+            <div class="col">
+              <label for="tenantConfirmPassword" class="form-label">Confirm Password</label>
+              <input type="password" class="form-control form-control-sm" id="tenantConfirmPassword"
+                name="tenantConfirmPassword" required>
+            </div>
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+          <button id="addTenantButton" type="submit" class="btn btn-primary btn-sm">Add</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{!-- Edit Tenant Modal --}}
+
+<div class="modal fade" id="editTenantModal" tabindex="-1" aria-labelledby="editTenantModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editTenantModalLabel">Edit Tenant</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="editTenantForm" method="POST" action="/api/auth/editTenant/{{tenant_id}}">
+          <input type="hidden" name="tenantId" id="tenantId">
+
+          <!-- First and Last Name Row -->
+          <div class="row mb-3">
+            <div class="col">
+              <label for="editFirstName" class="form-label">First Name</label>
+              <input type="text" class="form-control form-control-sm" id="editFirstName" name="editFirstName"
+                value="{{tenantToEdit.tenantFirstName}}">
+            </div>
+            <div class="col">
+              <label for="editLastName" class="form-label">Last Name</label>
+              <input type="text" class="form-control form-control-sm" id="editLastName" name="editLastName"
+                value="{{tenantToEdit.tenantLastName}}">
+            </div>
+          </div>
+
+          <!-- Email Input -->
+          <div class="mb-3">
+            <label for="editEmail" class="form-label">Email</label>
+            <input type="email" class="form-control form-control-sm" id="editEmail" name="editEmail" value="{{tenantToEdit.tenantEmail}}">
+          </div>
+
+          <!-- Gender and Mobile Row -->
+          <div class="row mb-3">
+            <div class="col">
+              <label for="editGender" class="form-label">Gender</label>
+              <select class="form-select form-select-sm" name="editGender" id="editGender">
+                <option value="" disabled selected>Select Gender</option>
+                <option value="F" {{#if (eq gender "Female" )}}selected{{/if}}>Female</option>
+                <option value="M" {{#if (eq gender "Male" )}}selected{{/if}}>Male</option>
+                <option value="Other" {{#if (eq gender "Other" )}}selected{{/if}}>Other</option>
+              </select>
+            </div>
+            <div class="col">
+              <label for="editMobile" class="form-label">Mobile Number</label>
+              <input type="number" class="form-control form-control-sm" id="editMobile" name="editMobile" value="{{tenantToEdit.mobileNum}}">
+            </div>
+          </div>
+
+          <!-- Stay Dates Row -->
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="editStartDate" class="form-label">Start Date</label>
+              <input type="date" class="form-control form-control-sm" id="editStartDate" name="editStartDate" value="{{tenantToEdit.stayFrom}}" disabled>
+            </div>
+            <div class="col-md-6">
+              <label for="editEndDate" class="form-label">End Date</label>
+              <input type="date" class="form-control form-control-sm" id="editEndDate" name="editEndDate" value="{{tenantToEdit.stayTo}}" disabled>
+            </div>
+          </div>
+
+          <!-- Password Row -->
+          <div class="row mb-3">
+            <div class="col">
+              <label for="tenantPassword" class="form-label">Password</label>
+              <input type="password" class="form-control form-control-sm" id="tenantPassword" name="tenantPassword"
+                disabled>
+            </div>
+            <div class="col">
+              <label for="tenantConfirmPassword" class="form-label">Confirm Password</label>
+              <input type="password" class="form-control form-control-sm" id="tenantConfirmPassword"
+                name="tenantConfirmPassword" disabled>
+            </div>
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+          <button id="editTenantButton" type="submit" class="btn btn-primary btn-sm">Save changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Confirmation Modal for Deleting Tenant -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmationModalLabel">Confirm Action</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete this tenant?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteButton">Confirm</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="/js/userManagement.js"></script>

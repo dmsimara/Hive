@@ -3,6 +3,7 @@ const form = document.querySelector('form'); // Ensure you define the form varia
 
 form.addEventListener('submit', async (event) => {
     event.preventDefault();
+    console.log('Form submission started');
 
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
