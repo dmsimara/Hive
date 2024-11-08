@@ -620,54 +620,61 @@ export const addUnitView = async (req, res) => {
 }
 
 export const editTenant = (req, res) => {
-    const tenantId = req.params.tenant_id; 
-    const connection = connectDB(); 
+    const connection = connectDB();  
 
-    connection.query('SELECT * FROM tenants WHERE tenant_id = ?', [tenantId], (err, rows) => {
-        connection.end(); 
-
+    connection.query('SELECT * FROM tenants WHERE tenant_id = ?', [req.params.tenantId], (err, rows) => {
         if (err) {
-            console.error('Error fetching tenant data:', err);
-            return res.status(500).json({ success: false, message: "Error fetching tenant data" });
+            console.error('Database error:', err);
+            return res.status(500).send('An error occurred while fetching tenant data');
         }
 
-        if (rows.length === 0) {
-            return res.status(404).json({ success: false, message: "Tenant not found" });
+        if (rows.length > 0) {
+            res.render('userManagement', {
+                title: "Hive",
+                styles: ["userManagement"],
+                tenant: rows[0]  
+            });
+        } else {
+            res.status(404).send("Tenant not found");
         }
-
-        res.render('editTenant', {
-            title: "Hive",
-            rows: rows,
-        });
     });
+
+    connection.end();  
 };
 
 export const updateTenant = (req, res) => {
-     const { tenantFirstName, tenantLastName, tenantEmail, gender, mobileNum } = req.body;
+    const { tenantFirstName, tenantLastName, tenantEmail, mobileNum, gender } = req.body;
+    const tenantId = req.params.tenantId;
+    const connection = connectDB(); 
 
-     const tenantId = req.params.tenant_id; 
-     const connection = connectDB(); 
+    connection.query(
+        'UPDATE tenants SET tenantFirstName = ?, tenantLastName = ?, tenantEmail = ?, mobileNum = ?, gender = ? WHERE tenant_id = ?',
+        [tenantFirstName, tenantLastName, tenantEmail, mobileNum, gender, tenantId],
+        (err, updateResult) => {
+            if (err) {
+                console.error('Error updating tenant:', err);
+                connection.end();  
+                return res.status(500).send('An error occurred while updating tenant data');
+            }
 
-     connection.query(
-         'UPDATE tenants SET tenantFirstName = ?, tenantLastName = ?, tenantEmail = ?, gender = ?, mobileNum = ? WHERE tenant_id = ?', 
-         [tenantFirstName, tenantLastName, tenantEmail, gender, mobileNum, tenantId], 
-         (err, result) => {
-             connection.end(); 
+            if (updateResult.affectedRows > 0) {
+                connection.query('SELECT * FROM tenants WHERE tenant_id = ?', [tenantId], (err, rows) => {
+                    if (err) {
+                        console.error('Error fetching tenant data:', err);
+                        connection.end();  
+                        return res.status(500).send('An error occurred while fetching tenant data');
+                    }
 
-             // return res.status(400).json({ success: false, message: "Tenant already exists." });
-             if (err) {
-                 console.error('Error updating tenant data:', err);
-                 return res.status(500).json({ success: false, message: "Error updating tenant data"});
-             }
-
-             if (result.affectedRows === 0) {
-                 return res.status(404).json({ success: false, message: "Tenant not found"});
-             }
-
-             return res.status(201).json({ success: true, message: "Tenant updated successfully"});
-         }
-     );
- };
+                    res.json({ success: true, message: 'Tenant updated successfully', tenant: rows[0] });
+                    connection.end();  
+                });
+            } else {
+                connection.end(); 
+                res.status(404).send("Tenant not found or no changes made.");
+            }
+        }
+    );
+};
 
 export const deleteTenant = (req, res) => {
     const tenantId = req.params.tenant_id;
@@ -678,18 +685,14 @@ export const deleteTenant = (req, res) => {
 
         if (err) {
             console.error('Error deleting tenant data:', err);
-            return res.status(500).send("Error deleting tenant data");
+            return res.status(500).json({ success: false, message: 'Error deleting tenant data' });
         }
 
         if (result.affectedRows === 0) {
-            return res.status(404).send("Tenant not found");
+            return res.status(404).json({ success: false, message: 'Tenant not found' });
         }
 
-        res.render('userManagement', {
-            title: "Hive",
-            message: "Tenant successfully removed",
-            rows: [],
-        });
+        return res.status(200).json({ success: true, message: 'Tenant successfully removed' });
     });
 };
 

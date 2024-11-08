@@ -14,7 +14,7 @@ import fs from 'fs';
 import Admin from "./models/admin.models.js";
 import Room from "./models/room.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
-import { addTenant, addTenantView, addUnitView, findTenants, findUnits, getOccupiedUnits, viewAdmins, viewTenants, viewUnits } from './controllers/auth.controllers.js';
+import { addTenant, addTenantView, addUnitView, editTenant, findTenants, findUnits, getOccupiedUnits, updateTenant, viewAdmins, viewTenants, viewUnits } from './controllers/auth.controllers.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -49,6 +49,21 @@ app.engine("hbs", exphbs.engine({
             return args;
         },
         eq: (a, b) => a === b, 
+        // Add the ifCond helper for conditional checks
+        ifCond: function(v1, operator, v2, options) {
+            switch (operator) {
+                case '===':
+                    return (v1 === v2) ? options.fn(this) : options.inverse(this);
+                case '!==':
+                    return (v1 !== v2) ? options.fn(this) : options.inverse(this);
+                case '>':
+                    return (v1 > v2) ? options.fn(this) : options.inverse(this);
+                case '<':
+                    return (v1 < v2) ? options.fn(this) : options.inverse(this);
+                default:
+                    return options.inverse(this);
+            }
+        }
     }
 }));
 
@@ -202,7 +217,8 @@ app.post("/admin/dashboard/userManagement", findTenants, (req, res) => {
 
 app.get("/admin/dashboard/userManagement/add", verifyToken, addTenantView);
 
-//  app.get("/admin/dashboard/userManagement/editTenant/:tenant_id", verifyToken, editTenant);
+app.get("/admin/dashboard/userManagement/editTenant/:tenant_id", verifyToken, editTenant);
+app.put('/api/auth/updateTenant/:tenantId', updateTenant);
 
 // view and edit account
 app.get("/admin/dashboard/view/account", verifyToken, async (req, res) => {

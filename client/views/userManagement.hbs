@@ -100,8 +100,9 @@
         <td>{{this.gender}}</td>
         <td>{{this.mobileNum}}</td>
         <td class="text-end">
-          <a href="#" class="btn btn-light btn-sm"><i class="material-icons">visibility</i> Assign</a>
-          <a href="#" data-bs-toggle="modal" data-bs-target="#editTenantModal" class="btn btn-light btn-sm"><i
+          <a href="#" class="btn btn-light btn-sm"><i
+              class="material-icons">visibility</i> Assign</a>
+          <a href="/api/auth/editTenant/{{this.tenant_id}}" data-bs-toggle="modal" data-bs-target="#editTenantModal" class="btn btn-light btn-sm"><i
               class="material-icons">edit</i> Edit</a>
           <a href="#" onclick="deleteTenant('{{this.tenant_id}}')" class="btn btn-light btn-sm"><i
               class="material-icons">person_remove</i> Delete</a>
@@ -215,74 +216,49 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="editTenantForm" method="POST" action="/api/auth/editTenant/{{tenant_id}}">
-          <input type="hidden" name="tenantId" id="tenantId">
+        {{#each rows}}
+        <form id="editTenantForm" method="POST" action="/api/auth/updateTenant/{{this.tenant_id}}">
+          <input type="hidden" name="tenantId" id="tenantId" value="{{this.tenant_id}}">
 
-          <!-- First and Last Name Row -->
           <div class="row mb-3">
             <div class="col">
               <label for="editFirstName" class="form-label">First Name</label>
-              <input type="text" class="form-control form-control-sm" id="editFirstName" name="editFirstName"
-                value="{{tenantToEdit.tenantFirstName}}">
+              <input type="text" class="form-control form-control-sm" id="editFirstName" name="tenantFirstName"
+                value="{{this.tenantFirstName}}">
             </div>
             <div class="col">
               <label for="editLastName" class="form-label">Last Name</label>
-              <input type="text" class="form-control form-control-sm" id="editLastName" name="editLastName"
-                value="{{tenantToEdit.tenantLastName}}">
+              <input type="text" class="form-control form-control-sm" id="editLastName" name="tenantLastName"
+                value="{{this.tenantLastName}}">
             </div>
           </div>
 
-          <!-- Email Input -->
           <div class="mb-3">
             <label for="editEmail" class="form-label">Email</label>
-            <input type="email" class="form-control form-control-sm" id="editEmail" name="editEmail" value="{{tenantToEdit.tenantEmail}}">
+            <input type="email" class="form-control form-control-sm" id="editEmail" name="tenantEmail"
+              value="{{this.tenantEmail}}">
           </div>
 
-          <!-- Gender and Mobile Row -->
           <div class="row mb-3">
             <div class="col">
               <label for="editGender" class="form-label">Gender</label>
-              <select class="form-select form-select-sm" name="editGender" id="editGender">
-                <option value="" disabled selected>Select Gender</option>
-                <option value="F" {{#if (eq gender "Female" )}}selected{{/if}}>Female</option>
-                <option value="M" {{#if (eq gender "Male" )}}selected{{/if}}>Male</option>
-                <option value="Other" {{#if (eq gender "Other" )}}selected{{/if}}>Other</option>
+              <select class="form-select form-select-sm" name="gender" id="editGender">
+                <option value="F" {{#if (eq this.gender "F" )}}selected{{/if}}>Female</option>
+                <option value="M" {{#if (eq this.gender "M" )}}selected{{/if}}>Male</option>
+                <option value="Other" {{#if (eq this.gender "Other" )}}selected{{/if}}>Other</option>
               </select>
             </div>
             <div class="col">
               <label for="editMobile" class="form-label">Mobile Number</label>
-              <input type="number" class="form-control form-control-sm" id="editMobile" name="editMobile" value="{{tenantToEdit.mobileNum}}">
+              <input type="text" class="form-control form-control-sm" id="editMobile" name="mobileNum"
+                value="{{this.mobileNum}}">
             </div>
           </div>
 
-          <!-- Stay Dates Row -->
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label for="editStartDate" class="form-label">Start Date</label>
-              <input type="date" class="form-control form-control-sm" id="editStartDate" name="editStartDate" value="{{tenantToEdit.stayFrom}}" disabled>
-            </div>
-            <div class="col-md-6">
-              <label for="editEndDate" class="form-label">End Date</label>
-              <input type="date" class="form-control form-control-sm" id="editEndDate" name="editEndDate" value="{{tenantToEdit.stayTo}}" disabled>
-            </div>
-          </div>
-
-          <!-- Password Row -->
-          <div class="row mb-3">
-            <div class="col">
-              <label for="tenantPassword" class="form-label">Password</label>
-              <input type="password" class="form-control form-control-sm" id="tenantPassword" name="tenantPassword"
-                disabled>
-            </div>
-            <div class="col">
-              <label for="tenantConfirmPassword" class="form-label">Confirm Password</label>
-              <input type="password" class="form-control form-control-sm" id="tenantConfirmPassword"
-                name="tenantConfirmPassword" disabled>
-            </div>
-          </div>
           <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
           <button id="editTenantButton" type="submit" class="btn btn-primary btn-sm">Save changes</button>
         </form>
+        {{/each}}
       </div>
     </div>
   </div>
@@ -290,7 +266,8 @@
 
 
 <!-- Confirmation Modal for Deleting Tenant -->
-<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
