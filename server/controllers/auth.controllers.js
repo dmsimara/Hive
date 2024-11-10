@@ -8,7 +8,7 @@ import jwt from "jsonwebtoken";
 import { generateTokenAndSetCookie, generateTokenAndSetTenantCookie } from '../utils/generateTokenAndSetCookie.js';
 import { sendPasswordResetEmail, sendResetSuccessEmail, sendTenantVerificationEmail, sendVerificationEmail, sendWelcomeEmail } from '../mailtrap/emails.js';
 import { connectDB } from '../db/connectDB.js';
-import { Op } from 'sequelize';
+import { Sequelize, Op } from 'sequelize';
 import { title } from 'process';
 
 
@@ -484,12 +484,12 @@ export const findUnits = async (req, res) => {
 };
 
 export const addTenant = async (req, res) => {
-    const { tenantFirstName, tenantLastName, tenantEmail, gender, mobileNum, tenantPassword, tenantConfirmPassword, stayTo, stayFrom } = req.body;
+    const { tenantFirstName, tenantLastName, tenantEmail, gender, mobileNum, tenantPassword, tenantConfirmPassword, stayTo, stayFrom, room_id } = req.body;
 
     try {
         console.log('Incoming request data:', req.body);
 
-        if (!tenantFirstName || !tenantLastName || !tenantEmail || !gender || !mobileNum || !tenantPassword || !tenantConfirmPassword || !stayTo || !stayFrom) {
+        if (!tenantFirstName || !tenantLastName || !tenantEmail || !gender || !mobileNum || !tenantPassword || !tenantConfirmPassword || !stayTo || !stayFrom || !room_id) {
             return res.status(400).json({ success: false, message: "All fields are required." });
         }
 
@@ -525,14 +525,30 @@ export const addTenant = async (req, res) => {
             return res.status(401).json({ success: false, message: "Invalid or expired token." });
         }
 
+        const availableRooms = await Room.findAll({
+            where: {
+                establishmentId,
+                roomRemainingSlot: { [Sequelize.Op.gt]: 0 }, 
+            }
+        });
+
+        if (availableRooms.length === 0) {
+            return res.status(400).json({ success: false, message: "No available rooms for this establishment." });
+        }
+
         const existingTenant = await Tenant.findOne({ where: { tenantEmail, establishmentId } });
         if (existingTenant) {
             return res.status(400).json({ success: false, message: "Tenant already exists in this establishment." });
         }
 
         const hashedPassword = await bcryptjs.hash(tenantPassword, 10);
-
         console.log('Hashed Password:', hashedPassword);
+
+        const room = await Room.findOne({ where: { room_id, establishmentId } });
+
+        if (!room) {
+            return res.status(400).json({ success: false, message: "Room not found." });
+        }
 
         const newTenant = await Tenant.create({
             tenantFirstName,
@@ -543,10 +559,14 @@ export const addTenant = async (req, res) => {
             stayTo,
             stayFrom,
             tenantPassword: hashedPassword,
-            establishmentId
+            establishmentId,
+            room_id: room.room_id
         });
 
         console.log('New Tenant Created:', newTenant);
+
+        room.roomRemainingSlot -= 1;
+        await room.save();  
 
         generateTokenAndSetTenantCookie(res, newTenant.tenant_id, establishmentId);
 
@@ -561,7 +581,14 @@ export const addTenant = async (req, res) => {
                 mobileNum: newTenant.mobileNum,
                 stayTo: newTenant.stayTo,
                 stayFrom: newTenant.stayFrom,
-            }
+                room_id: newTenant.room_id 
+            },
+            availableRooms: availableRooms.map(room => ({
+                room_id: room.room_id,
+                roomNumber: room.roomNumber,
+                roomType: room.roomType,
+                floorNumber: room.floorNumber
+            }))
         });
     } catch (error) {
         console.error('Error adding tenant:', error);
@@ -676,24 +703,35 @@ export const updateTenant = (req, res) => {
     );
 };
 
-export const deleteTenant = (req, res) => {
+export const deleteTenant = async (req, res) => {
     const tenantId = req.params.tenant_id;
-    const connection = connectDB();
+    console.log('tenantId received by backend:', tenantId); // Debugging the received tenantId
 
-    connection.query('DELETE FROM tenants WHERE tenant_id = ?', [tenantId], (err, result) => {
-        connection.end();
+    if (!tenantId) {
+        return res.status(400).json({ success: false, message: 'Tenant ID is required' });
+    }
 
-        if (err) {
-            console.error('Error deleting tenant data:', err);
-            return res.status(500).json({ success: false, message: 'Error deleting tenant data' });
-        }
-
-        if (result.affectedRows === 0) {
+    try {
+        const tenant = await Tenant.findByPk(tenantId);
+        if (!tenant) {
             return res.status(404).json({ success: false, message: 'Tenant not found' });
         }
 
-        return res.status(200).json({ success: true, message: 'Tenant successfully removed' });
-    });
+        // Fetch the room associated with the tenant
+        const room = await Room.findByPk(tenant.room_id);  // Make sure room_id is used here
+        if (room) {
+            room.roomRemainingSlot += 1;
+            await room.save();  // Save the updated room
+            console.log('Updated roomRemainingSlot:', room.roomRemainingSlot); // Log to verify the room update
+        }
+
+        // Delete the tenant
+        await tenant.destroy();
+        return res.status(200).json({ success: true, message: 'Tenant deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting tenant:', error);
+        return res.status(500).json({ success: false, message: 'An error occurred while deleting the tenant' });
+    }
 };
 
 export const deleteUnit = (req, res) => {
@@ -747,3 +785,17 @@ export const getOccupiedUnits = async (req, res) => {
         }
     }
 };
+
+export const getAvailableRooms = async (req, res) => {
+    try {
+      const rooms = await Room.findAll({
+        where: { roomRemainingSlot: { [Op.gt]: 0 } },  // This can be your "available" condition
+        attributes: ['room_id', 'roomNumber', 'roomType', 'floorNumber'],
+      });
+  
+      res.json({ success: true, availableRooms: rooms });
+    } catch (error) {
+      console.error('Error fetching available rooms:', error);
+      res.status(500).json({ success: false, message: 'An error occurred while fetching available rooms.' });
+    }
+  };

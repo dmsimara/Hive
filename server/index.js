@@ -14,7 +14,7 @@ import fs from 'fs';
 import Admin from "./models/admin.models.js";
 import Room from "./models/room.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
-import { addTenant, addTenantView, addUnitView, editTenant, findTenants, findUnits, getOccupiedUnits, updateTenant, viewAdmins, viewTenants, viewUnits } from './controllers/auth.controllers.js';
+import { addTenant, addTenantView, addUnitView, editTenant, findTenants, findUnits, getAvailableRooms, getOccupiedUnits, updateTenant, viewAdmins, viewTenants, viewUnits } from './controllers/auth.controllers.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -219,6 +219,8 @@ app.get("/admin/dashboard/userManagement/add", verifyToken, addTenantView);
 
 app.get("/admin/dashboard/userManagement/editTenant/:tenant_id", verifyToken, editTenant);
 app.put('/api/auth/updateTenant/:tenantId', updateTenant);
+app.get('/api/auth/getAvailableRooms', getAvailableRooms);
+
 
 // view and edit account
 app.get("/admin/dashboard/view/account", verifyToken, async (req, res) => {
