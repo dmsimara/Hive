@@ -195,18 +195,22 @@ const getTenantsByRoomId = async (roomId) => {
     }
   });
   
-    app.get('/admin/manage/unit/tenants', async (req, res) => {
+  app.get('/admin/manage/unit/tenants', async (req, res) => {
     const roomId = req.query.room_id;
     try {
       const tenants = await getTenantsByRoomId(roomId);
       const roomDetails = await getRoomDetails(roomId);
-  
+
       if (roomDetails) {
+        // Calculate rented slots
+        const rented = roomDetails.roomTotalSlot - roomDetails.roomRemainingSlot;
+        
+        // Respond with room details and tenants
         res.json({
           tenants,
-          totalSlot: roomDetails.totalSlot,
-          rented: roomDetails.rented,
-          remaining: roomDetails.remaining
+          roomTotalSlot: roomDetails.roomTotalSlot,  // Ensure this field exists
+          roomRemainingSlot: roomDetails.roomRemainingSlot,  // Ensure this field exists
+          rented: rented
         });
       } else {
         res.status(404).json({ error: "Room not found" });
@@ -214,7 +218,8 @@ const getTenantsByRoomId = async (roomId) => {
     } catch (error) {
       res.status(500).json({ error: "Error fetching room details" });
     }
-  });
+});
+
 
 // userManagement routes
 app.post("/admin/dashboard/userManagement", findTenants, async (req, res) => {

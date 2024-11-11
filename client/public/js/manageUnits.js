@@ -83,12 +83,18 @@ function loadTenants(roomId) {
           return response.json();
       })
       .then(data => {
-        document.getElementById("totalSlot").innerText = data.totalSlot;
-        document.getElementById("rentedSlot").innerText = data.rented;
-        document.getElementById("remainingSlot").innerText = data.remaining;
+        // Use the correct field names from the backend response
+        const totalSlot = data.roomTotalSlot;  // Make sure this field is correct
+        const remainingSlot = data.roomRemainingSlot;  // Make sure this field is correct
+        const rentedSlot = data.rented;  // Using the rented value sent from the backend
         
+        // Update UI elements
+        document.getElementById("totalSlot").innerText = totalSlot || 0;
+        document.getElementById("rentedSlot").innerText = rentedSlot || 0;
+        document.getElementById("remainingSlot").innerText = remainingSlot || 0;
+
         const tenantList = document.getElementById("tenantList");
-        tenantList.innerHTML = ""; 
+        tenantList.innerHTML = ""; // Clear previous content
   
         if (data.tenants && data.tenants.length > 0) {
           data.tenants.forEach(tenant => {
