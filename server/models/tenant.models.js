@@ -99,6 +99,7 @@ const Tenant = sequelize.define('Tenant', {
 
 Establishment.hasMany(Tenant, { foreignKey: 'establishment_id' });
 Tenant.belongsTo(Establishment, { foreignKey: 'establishment_id' });
+
   
   sequelize.sync()
     .then(() => {

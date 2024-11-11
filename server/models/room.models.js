@@ -38,7 +38,7 @@ const Room = sequelize.define('Room', {
   },
   establishmentId: { 
     type: DataTypes.INTEGER,
-    field: 'establishment_id', // This is important to map the DB column correctly
+    field: 'establishment_id', 
     references: {
         model: 'Establishment',
         key: 'establishment_id'

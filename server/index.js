@@ -153,6 +153,70 @@ app.get("/admin/manage/unit", verifyToken, async (req, res) => {
     }
 });
 
+const getTenantsByRoomId = async (roomId) => {
+    try {
+      const tenants = await Tenant.findAll({
+        where: {
+          room_id: roomId
+        }
+      });
+      return tenants;
+    } catch (error) {
+      console.error('Error fetching tenants:', error);
+      return [];
+    }
+  };
+  
+  
+  const getRoomDetails = async (roomId) => {
+    try {
+      const room = await Room.findOne({
+        where: {
+          room_id: roomId
+        }
+      });
+      return room ? room : {};  
+    } catch (error) {
+      console.error('Error fetching room details:', error);
+      return {};
+    }
+  };
+  
+  
+  app.get('/admin/manage/unit/tenants/:room_id', async (req, res) => {
+    const { room_id } = req.params;
+    try {
+      const tenants = await getTenantsByRoomId(room_id);
+      console.log('Tenants:', tenants); 
+      res.json({ tenants });
+    } catch (error) {
+      console.error('Error fetching tenants:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+  
+    app.get('/admin/manage/unit/tenants', async (req, res) => {
+    const roomId = req.query.room_id;
+    try {
+      const tenants = await getTenantsByRoomId(roomId);
+      const roomDetails = await getRoomDetails(roomId);
+  
+      if (roomDetails) {
+        res.json({
+          tenants,
+          totalSlot: roomDetails.totalSlot,
+          rented: roomDetails.rented,
+          remaining: roomDetails.remaining
+        });
+      } else {
+        res.status(404).json({ error: "Room not found" });
+      }
+    } catch (error) {
+      res.status(500).json({ error: "Error fetching room details" });
+    }
+  });
+
+// userManagement routes
 app.post("/admin/dashboard/userManagement", findTenants, async (req, res) => {
     try {
         const tenants = req.tenants || []; 
@@ -208,8 +272,6 @@ app.get("/admin/dashboard/userManagement", verifyToken, async (req, res) => {
     }
 });
 
-
-
 app.post("/admin/dashboard/userManagement", findTenants, (req, res) => {
      res.render("userManagement", { title: "Hive", styles: ["userManagement"], tenants: req.tenants });
  });
@@ -238,7 +300,6 @@ app.get("/admin/dashboard/userManagement/editTenant/:tenant_id", verifyToken, as
         res.status(500).json({ success: false, message: 'Error fetching data' });
     }
 });
-
 
 app.put('/api/auth/updateTenant/:tenantId', updateTenant);
 app.get('/api/auth/getAvailableRooms', getAvailableRooms);
