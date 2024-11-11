@@ -1,42 +1,87 @@
+let subMenu = document.getElementById("subMenu");
+
+function toggleMenu() {
+    subMenu.classList.toggle("open-menu");
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-    const editForm = document.getElementById("editForm");
-    const alertMessageDiv = document.getElementById("alertMessage");
+    const logoutButton = document.getElementById("logoutButton");
 
-    editForm.addEventListener("submit", (event) => {
-        event.preventDefault(); // Prevent default form submission
+    logoutButton.addEventListener("click", async () => {
+        const isConfirmed = confirm("Are you sure you want to log out?");
+        
+        if (!isConfirmed) {
+            return;
+        }
+        
+        try {
+            const response = await fetch("/api/auth/adminLogout", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
 
-        const formData = new FormData(editForm);
-        const formDataJSON = Object.fromEntries(formData.entries()); // Convert to JSON
+            const data = await response.json();
 
-        fetch(editForm.action, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formDataJSON)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showAlert(data.message, 'success');
-                setTimeout(() => {
-                    window.location.href = '/admin/dashboard/userManagement';
-                }, 1000); 
+            if (response.ok) {
+                alert(data.message); 
+                window.location.href = "/"; 
             } else {
-                showAlert(data.message, 'danger');
+                alert(data.message || "Logout failed. Please try again.");
             }
-        })
-        .catch(error => {
-            showAlert("An unexpected error occurred. Please try again later.", 'danger');
-        });
+        } catch (error) {
+            alert("An error occurred during logout. Please try again later.");
+            console.error("Error:", error);
+        }
     });
-
-    function showAlert(message, type) {
-        alertMessageDiv.style.display = 'block';
-        alertMessageDiv.className = `alert alert-${type}`;
-        alertMessageDiv.textContent = message;
-        setTimeout(() => {
-            alertMessageDiv.style.display = 'none';
-        }, 2000); 
-    }
 });
+
+// editTenant.js
+
+document.getElementById('editForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = {
+        tenantId: document.getElementById('tenantId').value,
+        tenantFirstName: document.getElementById('editFirstName').value,
+        tenantLastName: document.getElementById('editLastName').value,
+        tenantEmail: document.getElementById('editEmail').value,
+        mobileNum: document.getElementById('editMobile').value,
+        gender: document.getElementById('editGender').value,
+    };
+
+    await handleEditTenant(formData);
+});
+
+async function handleEditTenant(formData) {
+    const tenantId = formData.tenantId;
+
+    try {
+        const response = await fetch(`/api/auth/updateTenant/${tenantId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Tenant updated successfully:', data);
+
+            // Show success alert
+            alert('Tenant updated successfully!');
+
+            // Redirect to user management page after successful update
+            window.location.href = '/admin/dashboard/userManagement';
+        } else {
+            const error = await response.text();
+            console.error('Error:', error);
+            alert('Error updating tenant');
+        }
+    } catch (error) {
+        console.error('Network error:', error);
+        alert('Network error occurred');
+    }
+}

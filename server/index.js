@@ -13,6 +13,7 @@ import fileUpload from "express-fileupload";
 import fs from 'fs';
 import Admin from "./models/admin.models.js";
 import Room from "./models/room.models.js";
+import Tenant from "./models/tenant.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
 import { addTenant, addTenantView, addUnitView, editTenant, findTenants, findUnits, getAvailableRooms, getOccupiedUnits, updateTenant, viewAdmins, viewTenants, viewUnits } from './controllers/auth.controllers.js';
 
@@ -178,17 +179,15 @@ app.get("/admin/manage/unit/add", verifyToken, addUnitView);
 app.get("/admin/dashboard/userManagement", verifyToken, async (req, res) => {
     try {
         const tenants = await viewTenants(req, res);  
-        const admins = await viewAdmins(req, res);  // Fetch admin data
+        const admins = await viewAdmins(req, res);  
 
         console.log('Fetched tenant data:', tenants);
         console.log('Fetched admin data:', admins);
 
-        // Check for an edit operation by verifying a tenantId query parameter
         const tenantId = req.query.tenantId;  
         let tenantToEdit = null;
         
         if (tenantId) {
-            // If editing, fetch the specific tenant's data
             tenantToEdit = tenants.find(tenant => tenant.tenant_id === tenantId);
             if (!tenantToEdit) {
                 return res.status(404).json({ success: false, message: 'Tenant not found' });
@@ -200,7 +199,7 @@ app.get("/admin/dashboard/userManagement", verifyToken, async (req, res) => {
             styles: ["userManagement"],
             rows: tenants || [], 
             admin: admins,
-            tenantToEdit  // Pass tenant data for the modal if in edit mode
+            tenantToEdit  
         });
 
     } catch (error) {
@@ -217,7 +216,30 @@ app.post("/admin/dashboard/userManagement", findTenants, (req, res) => {
 
 app.get("/admin/dashboard/userManagement/add", verifyToken, addTenantView);
 
-app.get("/admin/dashboard/userManagement/editTenant/:tenant_id", verifyToken, editTenant);
+app.get("/admin/dashboard/userManagement/editTenant/:tenant_id", verifyToken, async (req, res) => {
+    try {
+        const tenant = await Tenant.findOne({ where: { tenant_id: req.params.tenant_id } });
+        const admins = await viewAdmins(req, res);
+
+        if (!tenant) {
+            return res.status(404).json({ success: false, message: 'Tenant not found' });
+        }
+
+        const plainTenant = tenant.get({ plain: true });
+
+        res.render("editTenant", {
+            title: "Hive",
+            styles: ["editTenant"],
+            rows: [plainTenant], 
+            admin: admins
+        });
+    } catch (error) {
+        console.error('Error fetching tenant or admin data:', error);
+        res.status(500).json({ success: false, message: 'Error fetching data' });
+    }
+});
+
+
 app.put('/api/auth/updateTenant/:tenantId', updateTenant);
 app.get('/api/auth/getAvailableRooms', getAvailableRooms);
 

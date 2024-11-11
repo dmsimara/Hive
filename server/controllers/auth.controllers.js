@@ -646,66 +646,64 @@ export const addUnitView = async (req, res) => {
     });
 }
 
-export const editTenant = (req, res) => {
-    const connection = connectDB();  
+export const editTenant = async (req, res) => {
+    const tenantId = req.params.tenant_id; 
 
-    connection.query('SELECT * FROM tenants WHERE tenant_id = ?', [req.params.tenantId], (err, rows) => {
-        if (err) {
-            console.error('Database error:', err);
-            return res.status(500).send('An error occurred while fetching tenant data');
+    if (!tenantId) {
+        return res.status(400).send('Tenant ID is required');
+    }
+
+    try {
+        const tenant = await Tenant.findOne({
+            where: { tenant_id: tenantId },
+        });
+
+        if (!tenant) {
+            return res.status(404).send('Tenant not found');
         }
 
-        if (rows.length > 0) {
-            res.render('userManagement', {
-                title: "Hive",
-                styles: ["userManagement"],
-                tenant: rows[0]  
-            });
-        } else {
-            res.status(404).send("Tenant not found");
-        }
-    });
-
-    connection.end();  
+        res.render('editTenant', { tenant });
+    } catch (error) {
+        console.error('Error fetching tenant data:', error);
+        res.status(500).send('Error fetching tenant data');
+    }
 };
 
-export const updateTenant = (req, res) => {
+
+export const updateTenant = async (req, res) => {
     const { tenantFirstName, tenantLastName, tenantEmail, mobileNum, gender } = req.body;
     const tenantId = req.params.tenantId;
-    const connection = connectDB(); 
 
-    connection.query(
-        'UPDATE tenants SET tenantFirstName = ?, tenantLastName = ?, tenantEmail = ?, mobileNum = ?, gender = ? WHERE tenant_id = ?',
-        [tenantFirstName, tenantLastName, tenantEmail, mobileNum, gender, tenantId],
-        (err, updateResult) => {
-            if (err) {
-                console.error('Error updating tenant:', err);
-                connection.end();  
-                return res.status(500).send('An error occurred while updating tenant data');
-            }
+    try {
+        const connection = connectDB();
 
-            if (updateResult.affectedRows > 0) {
-                connection.query('SELECT * FROM tenants WHERE tenant_id = ?', [tenantId], (err, rows) => {
-                    if (err) {
-                        console.error('Error fetching tenant data:', err);
-                        connection.end();  
-                        return res.status(500).send('An error occurred while fetching tenant data');
-                    }
+        // Update tenant details
+        const updateQuery = `
+            UPDATE tenants 
+            SET tenantFirstName = ?, tenantLastName = ?, tenantEmail = ?, mobileNum = ?, gender = ? 
+            WHERE tenant_id = ?
+        `;
+        const [updateResult] = await connection.promise().query(updateQuery, [
+            tenantFirstName, tenantLastName, tenantEmail, mobileNum, gender, tenantId
+        ]);
 
-                    res.json({ success: true, message: 'Tenant updated successfully', tenant: rows[0] });
-                    connection.end();  
-                });
-            } else {
-                connection.end(); 
-                res.status(404).send("Tenant not found or no changes made.");
-            }
+        if (updateResult.affectedRows > 0) {
+            const [rows] = await connection.promise().query('SELECT * FROM tenants WHERE tenant_id = ?', [tenantId]);
+            connection.end(); 
+            return res.json({ success: true, message: 'Tenant updated successfully', tenant: rows[0] });
+        } else {
+            connection.end();
+            return res.status(404).send("Tenant not found or no changes made.");
         }
-    );
+    } catch (err) {
+        console.error('Error updating tenant:', err);
+        return res.status(500).send('An error occurred while updating tenant data');
+    }
 };
 
 export const deleteTenant = async (req, res) => {
     const tenantId = req.params.tenant_id;
-    console.log('tenantId received by backend:', tenantId); // Debugging the received tenantId
+    console.log('tenantId received by backend:', tenantId); 
 
     if (!tenantId) {
         return res.status(400).json({ success: false, message: 'Tenant ID is required' });
