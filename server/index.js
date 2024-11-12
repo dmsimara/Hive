@@ -122,9 +122,11 @@ app.get("/admin/dashboard", verifyToken, async (req, res) => {
 // manage room routes
 app.get("/admin/manage/unit", verifyToken, async (req, res) => {
     try {
+        // Fetch admin data
         const admins = await viewAdmins(req, res);
         console.log('Fetched admin data:', admins);
 
+        // Fetch unit data
         const units = await viewUnits(req, res);
         console.log('Units:', units);
 
@@ -132,18 +134,17 @@ app.get("/admin/manage/unit", verifyToken, async (req, res) => {
             return res.render("manageUnits", {
                 title: "Hive",
                 styles: ["manageUnits"],
-                rows: admins,
+                admins: admins, 
                 units: []
             });
         }
 
-        // Call getOccupiedUnits
         const occupiedUnits = await getOccupiedUnits(req, res);
 
         res.render("manageUnits", {
             title: "Hive",
             styles: ["manageUnits"],
-            rows: admins,
+            admins: admins,  
             units: units,
             occupiedUnits: occupiedUnits
         });
@@ -152,6 +153,7 @@ app.get("/admin/manage/unit", verifyToken, async (req, res) => {
         res.status(500).json({ success: false, message: 'Error fetching data' });
     }
 });
+
 
 const getTenantsByRoomId = async (roomId) => {
     try {
@@ -202,14 +204,12 @@ const getTenantsByRoomId = async (roomId) => {
       const roomDetails = await getRoomDetails(roomId);
 
       if (roomDetails) {
-        // Calculate rented slots
         const rented = roomDetails.roomTotalSlot - roomDetails.roomRemainingSlot;
         
-        // Respond with room details and tenants
         res.json({
           tenants,
-          roomTotalSlot: roomDetails.roomTotalSlot,  // Ensure this field exists
-          roomRemainingSlot: roomDetails.roomRemainingSlot,  // Ensure this field exists
+          roomTotalSlot: roomDetails.roomTotalSlot,  
+          roomRemainingSlot: roomDetails.roomRemainingSlot,  
           rented: rented
         });
       } else {
@@ -220,25 +220,40 @@ const getTenantsByRoomId = async (roomId) => {
     }
 });
 
+app.post("/admin/manage/unit", findUnits, async (req, res) => {
+    try {
+        const admins = await viewAdmins(req, res);
+
+        res.render("manageUnits", {
+            title: "Hive",
+            styles: ["manageUnits"],
+            rows: admins,
+            units: req.units
+        });
+    } catch (error) {
+        console.error('Error fetching tenant or admin data:', error);
+        res.status(500).json({ success: false, message: 'Error fetching unit or admin data' });
+    }
+});
+
 
 // userManagement routes
 app.post("/admin/dashboard/userManagement", findTenants, async (req, res) => {
     try {
-        const tenants = req.tenants || []; 
-
         const admins = await viewAdmins(req, res); 
 
-        res.render("viewAdminAccount", {
-            title: "Hive",
-            styles: ["viewAdminAccount"],
-            rows: admins,   
-            tenants         
+        res.render("userManagement", { 
+            title: "Hive", 
+            styles: ["userManagement"], 
+            tenants: req.tenants,
+            admin: admins 
         });
     } catch (error) {
         console.error('Error fetching tenant or admin data:', error);
-        res.status(500).json({ success: false, message: 'Error fetching tenant or admin data' });
+        res.status(500).json({ success: false, message: 'Error fetching data' });
     }
 });
+
 
 
 app.get("/admin/manage/unit/add", verifyToken, addUnitView);

@@ -25,7 +25,7 @@
       </ul>
 
       <!-- Admin Profile Display -->
-      {{#each rows}}
+      {{#each admins}}
       <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
         alt="Profile" class="user-pic" onclick="toggleMenu()" />
       <div class="sub-menu-wrap" id="subMenu">

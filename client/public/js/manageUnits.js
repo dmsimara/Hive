@@ -77,51 +77,77 @@ function calculateRemainingPeriod(stayTo) {
 }
 
 function loadTenants(roomId) {
+    const tenantList = document.getElementById("tenantList");
+    tenantList.innerHTML = "<tr><td colspan='6' class='text-center'>Loading tenants...</td></tr>";
+
     fetch(`/admin/manage/unit/tenants?room_id=${roomId}`)
       .then(response => {
           if (!response.ok) throw new Error('Network response was not ok');
           return response.json();
       })
       .then(data => {
-        // Use the correct field names from the backend response
-        const totalSlot = data.roomTotalSlot;  // Make sure this field is correct
-        const remainingSlot = data.roomRemainingSlot;  // Make sure this field is correct
-        const rentedSlot = data.rented;  // Using the rented value sent from the backend
-        
-        // Update UI elements
-        document.getElementById("totalSlot").innerText = totalSlot || 0;
-        document.getElementById("rentedSlot").innerText = rentedSlot || 0;
-        document.getElementById("remainingSlot").innerText = remainingSlot || 0;
+        const totalSlot = data.roomTotalSlot || 0;
+        const remainingSlot = data.roomRemainingSlot || 0;
+        const rentedSlot = data.rented || 0;
 
-        const tenantList = document.getElementById("tenantList");
-        tenantList.innerHTML = ""; // Clear previous content
-  
+        document.getElementById("totalSlot").innerText = totalSlot;
+        document.getElementById("rentedSlot").innerText = rentedSlot;
+        document.getElementById("remainingSlot").innerText = remainingSlot;
+
+        tenantList.innerHTML = ""; // Clear loading message
+
         if (data.tenants && data.tenants.length > 0) {
-          data.tenants.forEach(tenant => {
-            const row = document.createElement("tr");
+            data.tenants.forEach(tenant => {
+                const row = document.createElement("tr");
 
-            const formattedStayFrom = tenant.stayFrom ? formatDate(tenant.stayFrom) : '';
-            const formattedStayTo = tenant.stayTo ? formatDate(tenant.stayTo) : '';
-            const periodRemaining = calculateRemainingPeriod(tenant.stayTo);
-            
-            row.innerHTML = `
-              <th scope="row">${tenant.tenant_id}</th>
-              <td>${tenant.tenantFirstName} ${tenant.tenantLastName}</td>
-              <td>${formattedStayFrom}</td>
-              <td>${formattedStayTo}</td>
-              <td>${periodRemaining} days</td>
-              <td class="text-end">
-                <a href="#" onclick="checkoutTenant('${tenant.tenant_id}')" class="btn btn-light btn-small">Check Out</a>
-              </td>
-            `;
-            tenantList.appendChild(row);
-          });
+                const formattedStayFrom = tenant.stayFrom ? formatDate(tenant.stayFrom) : '';
+                const formattedStayTo = tenant.stayTo ? formatDate(tenant.stayTo) : '';
+                const periodRemaining = calculateRemainingPeriod(tenant.stayTo);
+
+                row.innerHTML = `
+                  <th scope="row">${tenant.tenant_id}</th>
+                  <td>${tenant.tenantFirstName} ${tenant.tenantLastName}</td>
+                  <td>${formattedStayFrom}</td>
+                  <td>${formattedStayTo}</td>
+                  <td>${periodRemaining} days</td>
+                  <td class="text-end">
+                    <a href="#" onclick="checkoutTenant('${tenant.tenant_id}')" class="btn btn-light btn-small">Check Out</a>
+                  </td>
+                `;
+                tenantList.appendChild(row);
+            });
         } else {
-          tenantList.innerHTML = `<tr><td colspan="6" class="text-center">No tenants assigned</td></tr>`;
+            tenantList.innerHTML = `<tr><td colspan="6" class="text-center">No tenants assigned</td></tr>`;
         }
       })
       .catch(error => {
           console.error('Error loading tenant data:', error);
           alert("Error loading tenant data. Please try again.");
       });
+}
+
+function checkoutTenant(tenantId) {
+    console.log('tenantId passed:', tenantId);
+
+    if (!tenantId) {
+        alert("Tenant ID is missing");
+        return;
+    }
+
+    if (!confirm("Are you sure you want to check out this tenant?")) return;
+
+    fetch(`/api/auth/deleteTenant/${tenantId}`, { method: 'DELETE' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Tenant successfully checked out');
+                location.reload();
+            } else {
+                alert('Error checking out tenant: ' + (data.message || 'Unknown error'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while checking out the tenant: ' + error.message);
+        });
 }

@@ -434,11 +434,13 @@ export const findTenants = async (req, res) => {
 
         const rows = tenants.map(tenant => tenant.get({ plain: true }));
 
-        // res.render('userManagement', { rows });
+        const admins = await viewAdmins(req, res); 
+
         res.render('userManagement', {
             title: "Hive",
             styles: ["userManagement"],
-            rows, 
+            rows,
+            admin: admins 
         });
     } catch (error) {
         console.error('Error in findTenants:', error); 
@@ -448,8 +450,7 @@ export const findTenants = async (req, res) => {
 
 export const findUnits = async (req, res) => {
     const searchTerm = req.body.searchUnits;
-
-    console.log('Received search term:', searchTerm); 
+    console.log('Received search term:', searchTerm);
 
     if (!searchTerm) {
         console.log('No search term provided.');
@@ -461,27 +462,31 @@ export const findUnits = async (req, res) => {
             where: {
                 [Op.or]: [
                     { roomNumber: { [Op.like]: `%${searchTerm}%` } },
-                    { roomType: { [Op.like]: `%${searchTerm}%` } }, // This assumes you also want to search by room type.
+                    { roomType: { [Op.like]: `%${searchTerm}%` } }
                 ]
             }
         });
 
-        console.log('Found rooms:', rooms.length); // Log the number of rooms found
-        
+        console.log('Found rooms:', rooms.length);
+
         const rows = rooms.map(room => room.get({ plain: true }));
-        console.log('Rooms Data:', rows); // Log the retrieved room data
+        console.log('Rooms Data:', rows);
+
+        const admins = await viewAdmins(req, res);  
 
         res.render('manageUnits', {
             title: "Hive",
             styles: ["manageUnits"],
-            units: rows, 
-            lastSearchTerm: searchTerm
+            units: rows,
+            lastSearchTerm: searchTerm,
+            admins: admins 
         });
     } catch (error) {
-        console.error('Error in findUnits:', error); 
+        console.error('Error in findUnits:', error);
         res.status(500).json({ success: false, message: 'An error occurred while searching for units.' });
     }
 };
+
 
 export const addTenant = async (req, res) => {
     const { tenantFirstName, tenantLastName, tenantEmail, gender, mobileNum, tenantPassword, tenantConfirmPassword, stayTo, stayFrom, room_id } = req.body;
