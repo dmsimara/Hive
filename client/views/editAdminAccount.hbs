@@ -1,0 +1,103 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <img class="navbar-brand" src="/images/hiveLight.png" alt="Hive Logo" width="100px"/>
+    {{!-- <a class="navbar-brand" href="#">Navbar</a> --}}
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-center">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/admin/dashboard">Dashboard</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Manage Tenant</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Manage Unit</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Announcements</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Tracker</a>
+        </li>
+      </ul>
+      {{#each rows}}
+      <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}" alt="Profile" class="user-pic" onclick="toggleMenu()"/>
+      <div class="sub-menu-wrap" id="subMenu">
+      <div class="sub-menu">
+        <div class="user-info">
+          <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}" alt="Profile" width="40px"/>
+          <h3>{{this.adminFirstName}} {{this.adminLastName}}</h3>
+          {{/each}}
+        </div>
+        <hr/>
+
+        <a href="/admin/dashboard/view/account" class="sub-menu-link">
+          <i class="material-icons">person</i>
+          <p>View Account</p>
+          <span>></span>
+        </a>
+        <a href="#" id="logoutButton" class="sub-menu-link">
+          <i class="material-icons">logout</i>
+          <p>Logout</p>
+          <span>></span>
+        </a>
+      </div>
+    </div>
+    </div>
+  </div>
+</nav>
+
+{{#each rows}}
+
+<div class="container pt-5 pb-5">
+  <h3><i class="material-icons dots">more_horiz</i>Edit Profile</h3>
+  <div class="card">
+    <div class="card__left">
+      {{#if this.adminProfile}}
+      <img class="card__profile" src="/images/upload/{{this.adminProfile}}" alt="{{this.adminFirstName}}'s Profile"
+        id="profileImage">
+      {{else}}
+      <img class="card__profile" src="/images/defaultUser.webp" alt="Default Profile" id="profileImage">
+      {{/if}}
+    </div>
+
+    <div class="card__right">
+      <form id="updateAdminForm" action="/admin/dashboard/edit/account" method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+          <div class="row">
+            <div class="col-12 col-md-6">
+              <label for="adminFirstName" class="form-label">First Name</label>
+              <input type="text" class="form-control" id="adminFirstName" name="adminFirstName"
+                value="{{this.adminFirstName}}" placeholder="{{this.adminFirstName}}" required>
+            </div>
+            <div class="col-12 col-md-6">
+              <label for="adminLastName" class="form-label">Last Name</label>
+              <input type="text" class="form-control" id="adminLastName" name="adminLastName"
+                value="{{this.adminLastName}}" placeholder="{{this.adminLastName}}" required>
+            </div>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="adminEmail" class="form-label">Email</label>
+          <input type="email" class="form-control" id="adminEmail" name="adminEmail" value="{{this.adminEmail}}"
+            placeholder="{{this.adminEmail}}" required>
+        </div>
+        <div>
+          <input type="file" name="sampleFile" accept="image/*" class="upload-input" id="fileInput"
+            style="display: none;" />
+          <input type="hidden" name="admin_id" value="{{this.admin_id}}" />
+          <div class="button-group">
+            <a class="cancel" type="button">Cancel</a>
+            <input type="submit" class="btn btn-primary" value="Save" />
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+{{/each}}
+
+
+<script src="/js/editAdminAccount.js"></script>

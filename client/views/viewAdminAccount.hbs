@@ -1,0 +1,86 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <img class="navbar-brand" src="/images/hiveLight.png" alt="Hive Logo" width="100px"/>
+    {{!-- <a class="navbar-brand" href="#">Navbar</a> --}}
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-center">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/admin/dashboard">Dashboard</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Manage Tenant</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Manage Unit</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Announcements</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Tracker</a>
+        </li>
+      </ul>
+      {{#each rows}}
+      <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}" alt="Profile" class="user-pic" onclick="toggleMenu()"/>
+      <div class="sub-menu-wrap" id="subMenu">
+      <div class="sub-menu">
+        <div class="user-info">
+          <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}" alt="Profile" width="40px"/>
+          <h3>{{this.adminFirstName}} {{this.adminLastName}}</h3>
+          {{/each}}
+        </div>
+        <hr/>
+
+        <a href="/admin/dashboard/view/account" class="sub-menu-link">
+          <i class="material-icons">person</i>
+          <p>View Account</p>
+          <span>></span>
+        </a>
+        <a href="#" id="logoutButton" class="sub-menu-link">
+          <i class="material-icons">logout</i>
+          <p>Logout</p>
+          <span>></span>
+        </a>
+      </div>
+    </div>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <h3><i class="material-icons dots">more_horiz</i>Admin Profile</h3>
+    {{#each rows}}
+    <div class="card">
+        <div class="card__content">
+            <div class="card__profile">
+                {{#if this.adminProfile}}
+                <img src="/images/upload/{{this.adminProfile}}" alt="User Profile">
+                {{else}}
+                <img src="/images/defaultUser.webp" alt="User Profile">
+                {{/if}}
+            </div>
+            <div class="card__details">
+                <div class="card__title">
+                    <h1>Name:</h1>
+                    <h2>{{this.adminFirstName}} {{this.adminLastName}}</h2>
+                </div>
+                <div class="card__email">
+                    <h1>Email:</h1>
+                    <h2>{{this.adminEmail}}</h2>
+                </div>
+                <div class="card__about">
+                    <h1>Establishment Name:</h1>
+                    <h2>{{this.eName}}</h2>
+                </div>
+                  <a href="/admin/dashboard/edit/account" class="view"><i class="material-icons">edit</i>Edit Profile</a>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</div>
+
+
+<script src="/js/viewAdminAccount.js"></script>

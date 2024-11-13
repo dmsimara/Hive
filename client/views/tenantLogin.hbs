@@ -1,0 +1,36 @@
+<div class="container-fluid vh-100">
+    <div class="row h-100">
+        <!-- Left Side: Side Container -->
+        <div class="col-3 side-container">
+        </div>
+
+        <!-- Middle Side: Form Container -->
+        <div class="col-6 form-container d-flex justify-content-center align-items-center">
+            <div class="content">
+                <img src="/images/hiveLight.png" alt="Hive Logo" width="200px"/>
+                <h2 class="intro">Welcome <strong>Back!</strong></h2>
+                <p class="desc">
+                    Stay on track and in control of your living experience
+                </p>
+            </div>
+            <form action="/api/auth/tenantLogin" method="POST" style="width: 80%;"> 
+                <div class="mb-3">
+                    <label for="tenantEmail" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="tenantEmail" name="tenantEmail" required>
+                </div>
+                <div class="mb-3">
+                    <label for="tenantPassword" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="tenantPassword" name="tenantPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Log in</button>
+            </form>
+        </div>
+
+        <!-- Right Side: Logo Container -->
+        <div class="col-3 logo-container d-flex justify-content-center align-items-center">
+            <img src="/images/icon1.png" alt="Logo" class="logo"> 
+        </div>
+    </div>
+</div>
+
+<script src="/js/tenantLogin.js"></script>

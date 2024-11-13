@@ -1,0 +1,323 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+    --yellow: rgb(255, 251, 151);  /* #FFFB97 */
+    --orange: rgb(254, 127, 66);   /* #FE7F42 */
+    --maroon: rgb(179, 44, 26);    /* #B32C1A */
+    --gray: rgb(122, 75, 71);      /* #7A4B47 */
+    --dark-gray: rgb(42, 22, 23);  /* #2A1617 */
+    --background-color: rgb(245, 245, 245);
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    font-family: 'Raleway', 'Inter', sans-serif; 
+    background-color: var(--background-color);
+    overflow: hidden; 
+    box-sizing: border-box;
+} 
+
+.navbar {
+    padding: 0 10px;
+    border-bottom: 1px solid var(--orange);
+    background-color: var(--background-color) !important;
+}
+
+.navbar-brand {
+    padding: 0 8px;
+    margin: 0;
+    transition: opacity 0.3s ease;
+}
+
+.navbar-brand:hover {
+    opacity: 0.8;
+}
+
+.navbar-nav {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    gap: 30px;
+}
+
+.nav-link {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--dark-gray) !important;
+    padding: 8px 18px;
+    border-radius: 15px;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: var(--orange) !important;
+    background-color: rgba(255, 158, 0, 0.18);
+    transform: scale(1.05);
+}
+
+.user-pic {
+    width: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.sub-menu-wrap {
+    position: absolute;
+    top: 100%;
+    right: 1%; 
+    width: 320px;
+    max-height: 0px;
+    overflow: hidden;
+    transition: max-height 0.5s;
+}
+
+.sub-menu-wrap.open-menu {
+    max-height: 400px;
+}
+
+.sub-menu {
+    background: white;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 1em;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-info h3 {
+    font-weight: 500; 
+    color: var(--gray);
+    font-size: 20px;
+}
+
+.user-info img {
+    width: 60px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.sub-menu-wrap {
+    z-index: 1000;
+}
+
+.sub-menu hr {
+    border: 0;
+    height: 1px;
+    width: 100%;
+    background: var(--maroon);
+    margin: 15px 0 10px;
+}
+
+.sub-menu-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--gray);
+    margin: 12px 0;
+}
+
+.sub-menu-link p {
+    width: 100%;
+    line-height: 40px;
+    margin: 0;
+    flex: 1;
+}
+
+.sub-menu-link .material-icons {
+    background: rgb(210, 209, 209);
+    width: 40px;
+    border-radius: 50%;
+    padding: 8px;
+    margin-right: 15px;
+}
+
+.sub-menu-link span {
+    font-size: 22px;
+    transition: transform 0.5s;
+}
+
+.sub-menu-link:hover span {
+    transform: translateX(5px);
+}
+
+.sub-menu-link:hover p {
+    font-weight: 600;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 2rem;
+}
+
+.view {
+    display: inline-flex; 
+    align-items: center; 
+    position: absolute;
+    left: 20em;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 16px; 
+    cursor: pointer;
+    text-decoration: none;
+    border-radius: 1em;
+    transition: background 0.3s ease;
+    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
+}
+
+.view:hover {
+    opacity: 0.8;
+}
+
+.cancel {
+    text-decoration: none;
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-align: center;
+    color: var(--orange);
+    border: 1px solid var(--orange);
+    border-radius: 3px;
+    background-color: var(--background-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 10px; 
+}
+
+.cancel:hover {
+    background-color: white;
+}
+
+.button-group {
+    display: flex;
+    justify-content: flex-end; /* Aligns items to the right */
+    gap: 10px; /* Adds spacing between the buttons */
+    padding-top: 20px; /* Optional, to add space above buttons */
+}
+
+.material-icons {
+    margin-right: 8px; 
+    font-size: 18px; 
+}
+
+.upload {
+    margin-top: 20px;
+    border: none;
+    color: white;
+    padding: 8px 20px;
+    width: 50%;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
+}
+
+.card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    padding: 50px 30px;
+    max-width: 800px;
+    border-radius: 5px;
+    background-color: white;
+    position: relative;
+    margin: 0 auto; 
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0), 0 6px 36px rgba(0, 0, 0, 0.13);
+}
+
+.card_left img, .card__profile {
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    border: 2px solid var(--maroon); 
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.card__left {
+    /* flex: 1;                         */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    max-width: 60em !important;
+}
+
+.card__profile {
+    max-width: 250px;             
+    height: auto;                
+    border-radius: 5px;           
+}
+
+.card__right {
+    /* flex: 2; */
+    text-align: left;
+    padding-top: 10px;
+}
+
+
+.card__left, .card__right {
+    flex: 1;
+    padding: 1rem;
+  }
+
+#updateAdminForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-left: -15px;
+    max-width: 400px;
+    /* position: relative;
+    top: -12em;
+    left: 16em; */
+}
+
+form input[type="text"],
+form input[type="email"] {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    width: 100%;
+    background: var(--background-color);
+}
+
+form input[type="submit"] {
+    background: linear-gradient(to left, var(--gray), var(--maroon), var(--orange));
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background 0.3s ease;
+}
+
+form input[type="submit"]:hover {
+    opacity: 0.8;
+}
+
+h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    margin-left: -30em;
+}
+
+.dots {
+    color: var(--orange);
+    font-size: 20px;
+}

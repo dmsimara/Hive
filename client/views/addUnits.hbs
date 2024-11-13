@@ -1,0 +1,94 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <img class="navbar-brand" src="/images/hiveLight.png" alt="Hive Logo" width="100px"/>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-center">
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="/admin/dashboard">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Manage Tenant</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/admin/manage/unit">Manage Unit</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Announcements</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Tracker</a>
+        </li>
+      </ul>
+
+      <!-- Admin Profile Display -->
+      {{#each rows}}
+        <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}" alt="Profile" class="user-pic" onclick="toggleMenu()" aria-haspopup="true" aria-expanded="false"/>
+        <div class="sub-menu-wrap" id="subMenu" aria-hidden="true">
+          <div class="sub-menu">
+            <div class="user-info">
+              <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}" alt="Profile" width="40px"/>
+              <h3>{{this.adminFirstName}} {{this.adminLastName}}</h3>
+            </div>
+            <hr/>
+            <a href="/admin/dashboard/view/account" class="sub-menu-link">
+              <i class="material-icons">person</i>
+              <p>View Account</p>
+              <span>></span>
+            </a>
+            <a href="#" id="logoutButton" class="sub-menu-link">
+              <i class="material-icons">logout</i>
+              <p>Logout</p>
+              <span>></span>
+            </a>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</nav>
+
+<div class="container pt-5 pb-5">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/admin/manage/unit">Manage Unit</a></li>
+      <li class="breadcrumb-item active" aria-current="page">New Room</li>
+    </ol>
+  </nav>
+
+  <div id="alertMessage" class="alert" style="display: none;"></div>
+
+  <form action="/api/auth/addUnit" class="row g-3 needs-validation" method="POST" id="addForm">
+    <input type="hidden" name="establishmentId" value="{{establishmentId}}">
+    
+    <div class="col-md-6">
+      <label for="floorNumber" class="form-label">Floor Number</label>
+      <input type="number" class="form-control" id="floorNumber" name="floorNumber" required>
+      <div class="invalid-feedback">Please enter a floor number.</div>
+    </div>
+    
+    <div class="col-md-6">
+      <label for="roomNumber" class="form-label">Room Number</label>
+      <input type="number" class="form-control" id="roomNumber" name="roomNumber" required>
+      <div class="invalid-feedback">Please enter a room number.</div>
+    </div>
+    
+    <div class="col-md-6">
+      <label for="roomType" class="form-label">Room Type</label>
+      <input type="text" class="form-control" id="roomType" name="roomType" required>
+      <div class="invalid-feedback">Please enter a room type.</div>
+    </div>
+    
+    <div class="col-md-6">
+      <label for="roomTotalSlot" class="form-label">Total Slots</label>
+      <input type="number" class="form-control" id="roomTotalSlot" name="roomTotalSlot" required>
+      <div class="invalid-feedback">Please enter the total slots available.</div>
+    </div>
+
+    <button type="submit" id="addButton" class="btn btn-primary">Add Room</button>
+  </form>
+</div>
+
+<script src="/js/addUnits.js"></script>

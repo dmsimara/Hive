@@ -1,0 +1,30 @@
+<div class="content">
+    <div class="logo">
+        <img src="/images/hiveLight.png" alt="Hive Logo" width="400px" />
+    </div>
+    <p class="intro">Please select your</p>
+    <h2>USER TYPE</h2>
+    <div class="user-choice">
+        <div class="card-wrapper tenant-wrapper">
+            <a href="/tenant/login" class="tenant" onclick="selectCard(this)">
+                <i class="material-icons check">check_circle</i>
+                <i class="material-icons person">person_add</i>
+                <p>Tenant</p>
+            </a>
+        </div>
+    
+        <div class="card-wrapper admin-wrapper">
+            <a href="/admin/login" class="admin" onclick="selectCard(this)">
+                <i class="material-icons check">check_circle</i>
+                <i class="material-icons person">manage_accounts</i>
+                <p>Admin</p>
+            </a>
+        </div>
+    
+    </div>
+</div>
+<footer class="lower">
+
+</footer>
+
+<script src="/js/home.js"></script>

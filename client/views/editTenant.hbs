@@ -1,0 +1,117 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <img class="navbar-brand" src="/images/hiveLight.png" alt="Hive Logo" width="100px" />
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-center">
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/dashboard">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Manage Tenant</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/admin/manage/unit">Manage Unit</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Announcements</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Tracker</a>
+        </li>
+      </ul>
+
+      <!-- Admin Profile Display -->
+      {{#if admin.length}}
+      {{#each admin}}
+      <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+        alt="Profile" class="user-pic" onclick="toggleMenu()" />
+      <div class="sub-menu-wrap" id="subMenu">
+        <div class="sub-menu">
+          <div class="user-info">
+            <img
+              src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+              alt="Profile" width="40px" />
+            <h3>{{this.adminFirstName}} {{this.adminLastName}}</h3>
+          </div>
+          <hr />
+          <a href="/admin/dashboard/view/account" class="sub-menu-link">
+            <i class="material-icons">person</i>
+            <p>View Account</p>
+            <span>></span>
+          </a>
+          <a href="#" id="logoutButton" class="sub-menu-link">
+            <i class="material-icons">logout</i>
+            <p>Logout</p>
+            <span>></span>
+          </a>
+        </div>
+      </div>
+      {{/each}}
+      {{else}}
+      <!-- Fallback for no admin data -->
+      <img src="/images/defaultUser.webp" alt="Profile" class="user-pic" onclick="toggleMenu()" />
+      {{/if}}
+    </div>
+  </div>
+</nav>
+
+<div class="container pt-5 pb-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin/dashboard/userManagement">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit Tenant</li>
+        </ol>
+    </nav>
+
+    <div id="alertMessage" class="alert" style="display: none;"></div>
+
+    {{#each rows}}
+    <form action="/api/auth/editTenant/{{this.tenant_id}}" id="editForm" class="row g-3 needs-validation" method="POST">
+        <input type="hidden" name="tenantId" id="tenantId" value="{{this.tenant_id}}">
+
+          <div class="row mb-3">
+            <div class="col">
+              <label for="editFirstName" class="form-label">First Name</label>
+              <input type="text" class="form-control form-control-sm" id="editFirstName" name="tenantFirstName"
+                value="{{this.tenantFirstName}}">
+            </div>
+            <div class="col">
+              <label for="editLastName" class="form-label">Last Name</label>
+              <input type="text" class="form-control form-control-sm" id="editLastName" name="tenantLastName"
+                value="{{this.tenantLastName}}">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="editEmail" class="form-label">Email</label>
+            <input type="email" class="form-control form-control-sm" id="editEmail" name="tenantEmail"
+              value="{{this.tenantEmail}}">
+          </div>
+
+          <div class="row mb-3">
+            <div class="col">
+              <label for="editGender" class="form-label">Gender</label>
+              <select class="form-select form-select-sm" name="gender" id="editGender">
+                <option value="F" {{#if (eq this.gender "F" )}}selected{{/if}}>Female</option>
+                <option value="M" {{#if (eq this.gender "M" )}}selected{{/if}}>Male</option>
+                <option value="Other" {{#if (eq this.gender "Other" )}}selected{{/if}}>Other</option>
+              </select>
+            </div>
+            <div class="col">
+              <label for="editMobile" class="form-label">Mobile Number</label>
+              <input type="text" class="form-control form-control-sm" id="editMobile" name="mobileNum"
+                value="{{this.mobileNum}}">
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-secondary btn-sm">Close</button>
+          <button id="editTenantButton" type="submit" class="btn btn-primary btn-sm">Save changes</button>
+    </form>
+    {{/each}}
+</div>
+
+<script src="/js/editTenant.js"></script>

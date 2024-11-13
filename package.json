@@ -1,0 +1,35 @@
+{
+  "name": "sample",
+  "version": "1.0.0",
+  "description": "This repository contains the code and assets for **Hive**, a web application developed by Group 4 of BSIT 2-1. **Hive** is designed to manage the day-to-day operations of residential buildings, apartments, or dormitories, helping streamline tasks like tenant registration, rent collection, maintenance requests, room availability tracking, and more.",
+  "main": "server/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "type": "module",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.3",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-fileupload": "^1.5.1",
+    "express-handlebars": "^8.0.1",
+    "express-session": "^1.18.1",
+    "hbs": "^4.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "mailtrap": "^3.4.0",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.11.3",
+    "nodemon": "^3.1.7",
+    "sequelize": "^6.37.4",
+    "uuid": "^10.0.0"
+  }
+}
