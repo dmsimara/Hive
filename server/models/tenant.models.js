@@ -40,6 +40,10 @@ const Tenant = sequelize.define('Tenant', {
   mobileNum: {
     type: DataTypes.STRING(15)
   },
+  tenantProfile: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
   room_id: {
     type: DataTypes.INTEGER,
     references: {

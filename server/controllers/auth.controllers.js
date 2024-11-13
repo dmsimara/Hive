@@ -326,7 +326,7 @@ export const viewTenants = async (req, res) => {
 
     if (!establishmentId) {
         console.error('Establishment ID is undefined.');
-        return null; // Return null to indicate missing establishmentId
+        return null; 
     }
 
     try {
@@ -334,26 +334,25 @@ export const viewTenants = async (req, res) => {
 
         const rows = await Tenant.findAll({
             where: {
-                establishmentId: establishmentId,  // Ensure tenants belong to the correct establishment
-                status: 'active'  // Only fetch active tenants
+                establishmentId: establishmentId,  
+                status: 'active'  
             }
         });
 
         if (!rows.length) {
-            return [];  // Return empty array if no tenants found
+            return []; 
         }
 
-        // Map to plain objects and modify gender to be human-readable
         const plainRows = rows.map(row => {
             const tenant = row.get({ plain: true });
             tenant.gender = tenant.gender === 'M' ? 'Male' : tenant.gender === 'F' ? 'Female' : 'Other';
             return tenant;
         });
 
-        return plainRows;  // Return the mapped tenant data
+        return plainRows;  
     } catch (error) {
         console.error('Error fetching tenants:', error);
-        return [];  // Return an empty array in case of an error
+        return []; 
     }
 };
 
@@ -373,14 +372,13 @@ export const viewUnits = async (req, res) => {
         });
 
         if (!rooms.length) {
-            return null;  // Return null to indicate no rooms found
+            return null;  
         }
 
-        // Map to plain objects
         return rooms.map(room => room.get({ plain: true }));
     } catch (error) {
         console.error('Error fetching rooms:', error);
-        throw error;  // Re-throw to handle in the main route
+        throw error; 
     }
 };
 
@@ -400,7 +398,6 @@ export const viewAdmins = async (req, res) => {
                 adminFirstName: admin.adminFirstName,
                 adminLastName: admin.adminLastName,
                 adminEmail: admin.adminEmail,
-                // Access the eName from the establishment object
                 eName: admin.Establishment ? admin.Establishment.eName : null,
                 adminProfile: admin.adminProfile,
             };
@@ -486,7 +483,6 @@ export const findUnits = async (req, res) => {
         res.status(500).json({ success: false, message: 'An error occurred while searching for units.' });
     }
 };
-
 
 export const addTenant = async (req, res) => {
     const { tenantFirstName, tenantLastName, tenantEmail, gender, mobileNum, tenantPassword, tenantConfirmPassword, stayTo, stayFrom, room_id } = req.body;
@@ -674,7 +670,6 @@ export const editTenant = async (req, res) => {
     }
 };
 
-
 export const updateTenant = async (req, res) => {
     const { tenantFirstName, tenantLastName, tenantEmail, mobileNum, gender } = req.body;
     const tenantId = req.params.tenantId;
@@ -720,15 +715,13 @@ export const deleteTenant = async (req, res) => {
             return res.status(404).json({ success: false, message: 'Tenant not found' });
         }
 
-        // Fetch the room associated with the tenant
-        const room = await Room.findByPk(tenant.room_id);  // Make sure room_id is used here
+        const room = await Room.findByPk(tenant.room_id);  
         if (room) {
             room.roomRemainingSlot += 1;
-            await room.save();  // Save the updated room
-            console.log('Updated roomRemainingSlot:', room.roomRemainingSlot); // Log to verify the room update
+            await room.save();  
+            console.log('Updated roomRemainingSlot:', room.roomRemainingSlot);
         }
 
-        // Delete the tenant
         await tenant.destroy();
         return res.status(200).json({ success: true, message: 'Tenant deleted successfully' });
     } catch (error) {

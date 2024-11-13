@@ -106,27 +106,40 @@ app.get("/tenant/login", (req, res) => {
 // ADMIN PAGES ROUTES
 app.get("/admin/dashboard", verifyToken, async (req, res) => {
     try {
-        const admins = await viewAdmins(req, res); 
+        const admins = await viewAdmins(req, res);
+        console.log('Fetched admin data:', admins);
+
+        const tenants = await viewTenants(req, res);
+        console.log('Tenants data:', tenants);
+
+        if (!tenants) {
+            return res.render("adminDashboard", {
+                title: "Hive",
+                styles: ["adminDashboard"],
+                admins: admins,
+                tenants: []  
+            });
+        }
 
         res.render("adminDashboard", {
             title: "Hive",
             styles: ["adminDashboard"],
-            rows: admins 
+            admins: admins,
+            tenants: tenants
         });
     } catch (error) {
-        console.error('Error fetching admin data:', error);
-        res.status(500).json({ success: false, message: 'Error fetching admin data' });
+        console.error('Error fetching admin or tenant data:', error);
+        res.status(500).json({ success: false, message: 'Error fetching data' });
     }
 });
+
 
 // manage room routes
 app.get("/admin/manage/unit", verifyToken, async (req, res) => {
     try {
-        // Fetch admin data
         const admins = await viewAdmins(req, res);
         console.log('Fetched admin data:', admins);
 
-        // Fetch unit data
         const units = await viewUnits(req, res);
         console.log('Units:', units);
 
