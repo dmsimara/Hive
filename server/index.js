@@ -15,7 +15,7 @@ import Admin from "./models/admin.models.js";
 import Room from "./models/room.models.js";
 import Tenant from "./models/tenant.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
-import { addTenant, addTenantView, addUnitView, editTenant, findTenants, findUnits, getAvailableRooms, getOccupiedUnits, updateTenant, viewAdmins, viewTenants, viewUnits } from './controllers/auth.controllers.js';
+import { addTenant, addTenantView, addUnitView, editTenant, findDashTenants, findTenants, findUnits, getAvailableRooms, getOccupiedUnits, updateTenant, viewAdmins, viewTenants, viewUnits } from './controllers/auth.controllers.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -117,7 +117,7 @@ app.get("/admin/dashboard", verifyToken, async (req, res) => {
                 title: "Hive",
                 styles: ["adminDashboard"],
                 admins: admins,
-                tenants: []  
+                tenants: tenants || []  
             });
         }
 
@@ -133,6 +133,7 @@ app.get("/admin/dashboard", verifyToken, async (req, res) => {
     }
 });
 
+app.post("/admin/dashboard", findDashTenants);
 
 // manage room routes
 app.get("/admin/manage/unit", verifyToken, async (req, res) => {
@@ -248,7 +249,6 @@ app.post("/admin/manage/unit", findUnits, async (req, res) => {
         res.status(500).json({ success: false, message: 'Error fetching unit or admin data' });
     }
 });
-
 
 // userManagement routes
 app.post("/admin/dashboard/userManagement", findTenants, async (req, res) => {

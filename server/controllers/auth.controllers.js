@@ -445,6 +445,46 @@ export const findTenants = async (req, res) => {
     }
 };
 
+export const findDashTenants = async (req, res) => {
+    const searchTerm = req.body.searchTenants;
+    console.log('Received search term: ', searchTerm);
+
+    if (!searchTerm) {
+        console.log('No search term provided.');
+        return res.status(400).json({ success: false, message: 'Search term is required' });
+    }
+
+    try {
+        const tenants = await Tenant.findAll({
+            where: {
+                [Op.or]: [
+                    { tenantFirstName: { [Op.like]: `%${searchTerm}%` } },
+                    { tenantLastName: { [Op.like]: `%${searchTerm}%` } }
+                ]
+            }
+        });
+
+        console.log('Found tenants:', tenants.length);
+
+        const rows = tenants.map(tenant => tenant.get({ plain: true }));
+        console.log('Tenants Data:', rows);
+
+        const admins = await viewAdmins(req, res);
+
+        res.render('adminDashboard', {
+            title: "Hive",
+            styles: ["adminDashboard"],
+            tenants: rows,
+            admins: admins,
+            lastSearchTerm: searchTerm
+        });
+    } catch (error) {
+        console.error('Error in findDashTenants:', error);
+        res.status(500).json({ success: false, message: 'An error occurred while searching for tenants.' });
+    }
+};
+
+
 export const findUnits = async (req, res) => {
     const searchTerm = req.body.searchUnits;
     console.log('Received search term:', searchTerm);

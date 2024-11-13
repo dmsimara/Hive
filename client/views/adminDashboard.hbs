@@ -1,7 +1,6 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <img class="navbar-brand" src="/images/hiveLight.png" alt="Hive Logo" width="100px" />
-    {{!-- <a class="navbar-brand" href="#">Navbar</a> --}}
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -24,20 +23,18 @@
           <a class="nav-link" href="#">Tracker</a>
         </li>
       </ul>
+
       {{#each admins}}
       <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
         alt="Profile" class="user-pic" onclick="toggleMenu()" />
       <div class="sub-menu-wrap" id="subMenu">
         <div class="sub-menu">
           <div class="user-info">
-            <img
-              src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+            <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
               alt="Profile" width="40px" />
             <h3>{{this.adminFirstName}} {{this.adminLastName}}</h3>
-            {{/each}}
           </div>
           <hr />
-
           <a href="/admin/dashboard/view/account" class="sub-menu-link">
             <i class="material-icons">person</i>
             <p>View Account</p>
@@ -50,6 +47,7 @@
           </a>
         </div>
       </div>
+      {{/each}}
     </div>
   </div>
 </nav>
@@ -57,49 +55,52 @@
 <div class="container pt-5 pb-5">
   <div class="row">
     <!-- Tenant Information -->
-    {{#each admins}}
     <div class="col-4" id="left" style="flex: 0 0 30%; max-width: 30%;">
       <h3>Tenant Information
         <a href="/admin/dashboard/userManagement">
           <i class="material-icons">open_in_new</i>
         </a>
       </h3>
+
+      <form class="d-flex" role="search" method="POST" action="/admin/dashboard" novalidate>
+        <input class="form-control me-2" type="search" placeholder="Search" name="searchTenants" aria-label="Search"
+          required value="{{lastSearchTerm}}">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+
       <div class="tenant-cards">
-        {{#if ../tenants.length}}
-        {{#each ../tenants}}
-        <a href="/admin/tenant/{{this.tenantId}}" class="card-link">
-          <div class="card mb-3">
-            <div class="card-body">
-              <!-- Tenant profile image -->
-              <img
-                src="{{#if this.tenantProfile}}/images/upload/{{this.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
-                alt="Profile" width="40px" class="me-2" />
-              <!-- Card title with tenant's name -->
-              <h5 class="card-title d-inline">{{this.tenantFirstName}} {{this.tenantLastName}}</h5>
+        {{#if tenants.length}}
+          {{#each tenants}}
+          <a href="/admin/tenant/{{this.tenantId}}" class="card-link">
+            <div class="card mb-3">
+              <div class="card-body">
+                <img src="{{#if this.tenantProfile}}/images/upload/{{this.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+                  alt="Profile" width="40px" class="me-2" />
+                <h5 class="card-title d-inline">{{this.tenantFirstName}} {{this.tenantLastName}}</h5>
+              </div>
             </div>
-          </div>
-        </a>
-        {{/each}}
+          </a>
+          {{/each}}
         {{else}}
-        <p>No active tenants found.</p>
+          <p>No active tenants found.</p>
         {{/if}}
       </div>
     </div>
 
     <!-- Admin Profile -->
+    {{#each admins}}
     <div class="col-4" id="middle" style="flex: 0 0 35%; max-width: 35%;">
       <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
         alt="Profile" class="user-pic" />
       <h2>Hi, {{this.adminFirstName}}</h2>
     </div>
+    {{/each}}
 
     <!-- Links and Navigation -->
     <div class="col-4 right" id="right" style="flex: 0 0 35%; max-width: 35%;">
       <h1>Analytics dito</h1>
     </div>
-    {{/each}}
   </div>
 </div>
-
 
 <script src="/js/adminDashboard.js"></script>
