@@ -411,66 +411,116 @@ export const viewAdmins = async (req, res) => {
 };
 
 export const findTenants = async (req, res) => {
-    const searchTerm = req.body.search;
+    // Extract the search term and remove unnecessary spaces
+    const searchTerm = req.body.search?.trim(); 
+    console.log('Received search term: ', searchTerm);
 
-    console.log('Received search term:', searchTerm); 
-
+    // If no search term is provided, fetch all tenants
     if (!searchTerm) {
-        return res.status(400).json({ success: false, message: 'Search term is required' });
+        try {
+            const tenants = await Tenant.findAll(); 
+            const rows = tenants.map(tenant => tenant.get({ plain: true }));
+
+            // If it's an AJAX request, return the tenants as JSON
+            if (req.xhr) {
+                return res.json({ success: true, tenants: rows });
+            }
+
+            // If it's a regular request, render the page with all tenants
+            const admins = await viewAdmins(req, res);
+            return res.render('userManagement', {
+                title: "Hive",
+                styles: ["userManagement"],
+                rows: rows,
+                admin: admins,
+                lastSearchTerm: ''
+            });
+        } catch (error) {
+            console.error('Error fetching all tenants:', error);
+            return res.status(500).json({ success: false, message: 'An error occurred while fetching tenants.' });
+        }
     }
 
+    // If a search term is provided, construct the search query
     try {
-        const tenants = await Tenant.findAll({
-            where: {
-                [Op.or]: [
-                    { tenantFirstName: { [Op.like]: `%${searchTerm}%` } },
-                    { tenantLastName: { [Op.like]: `%${searchTerm}%` } }
-                ]
-            }
-        });
+        // Split the search term into parts and match it against tenant first and last names
+        const searchParts = searchTerm.split(' ').map(part => `%${part}%`); 
 
+        const whereClause = {
+            [Op.or]: [
+                ...searchParts.map(part => ({
+                    tenantFirstName: { [Op.like]: part }
+                })),
+                ...searchParts.map(part => ({
+                    tenantLastName: { [Op.like]: part }
+                }))
+            ]
+        };
+
+        // Execute the query with the where clause to filter tenants
+        const tenants = await Tenant.findAll({ where: whereClause });
         const rows = tenants.map(tenant => tenant.get({ plain: true }));
 
-        const admins = await viewAdmins(req, res); 
+        // If it's an AJAX request, return the filtered tenants as JSON
+        if (req.xhr) {
+            return res.json({ success: true, tenants: rows });
+        }
 
-        res.render('userManagement', {
+        // If it's a regular request, render the page with the filtered tenants
+        const admins = await viewAdmins(req, res);
+        return res.render('userManagement', {
             title: "Hive",
             styles: ["userManagement"],
-            rows,
-            admin: admins 
+            rows: rows,
+            admin: admins,
+            lastSearchTerm: searchTerm
         });
     } catch (error) {
-        console.error('Error in findTenants:', error); 
-        res.status(500).json({ success: false, message: 'Unexpected error occurred' });
+        console.error('Error in findTenants:', error);
+        return res.status(500).json({ success: false, message: 'An error occurred while searching for tenants.' });
     }
 };
 
+
 export const findDashTenants = async (req, res) => {
-    const searchTerm = req.body.searchTenants;
+    const searchTerm = req.body.searchTenants?.trim(); 
     console.log('Received search term: ', searchTerm);
 
     if (!searchTerm) {
-        console.log('No search term provided.');
-        return res.status(400).json({ success: false, message: 'Search term is required' });
+        try {
+            const tenants = await Tenant.findAll(); 
+            return res.json({ success: true, tenants: tenants });
+        } catch (error) {
+            console.error('Error fetching all tenants:', error);
+            return res.status(500).json({ success: false, message: 'An error occurred while fetching tenants.' });
+        }
     }
 
     try {
+        const searchParts = searchTerm.split(' ').map(part => `%${part}%`); 
+
+        const whereClause = {
+            [Op.or]: [
+                ...searchParts.map(part => ({
+                    tenantFirstName: { [Op.like]: part } 
+                })),
+                ...searchParts.map(part => ({
+                    tenantLastName: { [Op.like]: part } 
+                }))
+            ]
+        };
+
         const tenants = await Tenant.findAll({
-            where: {
-                [Op.or]: [
-                    { tenantFirstName: { [Op.like]: `%${searchTerm}%` } },
-                    { tenantLastName: { [Op.like]: `%${searchTerm}%` } }
-                ]
-            }
+            where: whereClause
         });
 
-        console.log('Found tenants:', tenants.length);
-
         const rows = tenants.map(tenant => tenant.get({ plain: true }));
-        console.log('Tenants Data:', rows);
+
+        if (req.xhr) {
+            return res.json({ success: true, tenants: rows });
+        }
 
         const admins = await viewAdmins(req, res);
-
         res.render('adminDashboard', {
             title: "Hive",
             styles: ["adminDashboard"],
@@ -483,7 +533,6 @@ export const findDashTenants = async (req, res) => {
         res.status(500).json({ success: false, message: 'An error occurred while searching for tenants.' });
     }
 };
-
 
 export const findUnits = async (req, res) => {
     const searchTerm = req.body.searchUnits;
