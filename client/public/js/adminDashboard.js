@@ -37,3 +37,68 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+document.getElementById('searchTenantsInput').addEventListener('input', function () {
+    const searchTerm = this.value.trim(); 
+
+    if (searchTerm === '') {
+        fetch('/admin/dashboard', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest' 
+            },
+            body: JSON.stringify({ searchTenants: '' }) 
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                updateTenantCards(data.tenants); 
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching all tenants:', error);
+        });
+    } else {
+        fetch('/admin/dashboard', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ searchTenants: searchTerm })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                updateTenantCards(data.tenants); 
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching tenant data:', error);
+        });
+    }
+});
+
+function updateTenantCards(tenants) {
+    const tenantCardsContainer = document.getElementById('tenantCardsContainer');
+    tenantCardsContainer.innerHTML = ''; 
+
+    if (tenants.length > 0) {
+        tenants.forEach(tenant => {
+            const tenantCard = document.createElement('a');
+            tenantCard.classList.add('card-link');
+            tenantCard.href = `/admin/tenant/${tenant.tenantId}`;
+
+            tenantCard.innerHTML = `
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <img src="${tenant.tenantProfile ? `/images/upload/${tenant.tenantProfile}` : '/images/defaultUser.webp'}" alt="Profile" width="40px" class="me-2" />
+                        <h5 class="card-title d-inline">${tenant.tenantFirstName} ${tenant.tenantLastName}</h5>
+                    </div>
+                </div>`;
+            tenantCardsContainer.appendChild(tenantCard);
+        });
+    } else {
+        tenantCardsContainer.innerHTML = '<p>No active tenants found.</p>';
+    }
+}

@@ -199,3 +199,60 @@ function deleteTenant(tenantId) {
             alert('An error occurred while deleting the tenant: ' + error.message);
         });
 }
+
+document.getElementById('tenantSearchForm').addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent the form from submitting the default way
+
+    const searchTerm = document.getElementById('searchTenantsInput').value.trim(); 
+
+    fetch('/admin/dashboard', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest' // Ensure this header is sent for AJAX requests
+        },
+        body: JSON.stringify({ search: searchTerm }) // Send the 'search' key, not 'searchTenants'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            updateTenantCards(data.tenants); // Assuming this function is defined to update the table
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching tenants:', error);
+    });
+});
+
+function updateTenantTable(tenants) {
+    const tableBody = document.querySelector('table tbody');
+    tableBody.innerHTML = ''; // Clear current table rows
+
+    if (tenants.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="7" class="text-center">No tenants found</td></tr>';
+        return;
+    }
+
+    tenants.forEach(tenant => {
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+            <th scope="row">${tenant.tenant_id}</th>
+            <td>${tenant.tenantFirstName}</td>
+            <td>${tenant.tenantLastName}</td>
+            <td>${tenant.tenantEmail}</td>
+            <td>${tenant.gender}</td>
+            <td>${tenant.mobileNum}</td>
+            <td class="text-end">
+                <a href="/admin/dashboard/userManagement/editTenant/${tenant.tenant_id}" class="btn btn-light btn-sm">
+                    <i class="material-icons">edit</i> Edit
+                </a>
+                <a href="#" onclick="deleteTenant(${tenant.tenant_id})" class="btn btn-light btn-sm">
+                    <i class="material-icons">person_remove</i> Delete
+                </a>
+            </td>
+        `;
+
+        tableBody.appendChild(row);
+    });
+}
