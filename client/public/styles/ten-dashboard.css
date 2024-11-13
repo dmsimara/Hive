@@ -1,0 +1,338 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    font-family: 'Arial', sans-serif;
+    height: 100%;
+}
+
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background-color: #F9F9F9;
+}
+
+.sidebar {
+    background-color: #F4F4F4;
+    width: 20%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-card {
+    background-color: #FFFFFF;
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    margin-bottom: -15px;
+    margin-top: -30px;
+}
+
+.logo-img {
+    width: 140px;
+    height: auto;
+}
+
+.sidebar p {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.menu-title {
+    font-weight: bold;
+    color: #0a0a0a;
+}
+
+.menu ul {
+    list-style: none;
+}
+
+.menu ul li {
+    margin: 10px 0;
+}
+
+.menu ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 1em;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.menu ul li.active a {
+    background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
+    color: white;
+}
+
+.tracker ul {
+    list-style: none;
+}
+
+.tracker ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 0.9em;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #DDD;
+    padding-bottom: 15px;
+}
+
+.header-left h3 {
+    font-size: 1.2em;
+    color: #888;
+}
+
+.header-left h1 {
+    font-size: 2.5em;
+    margin-top: 5px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.date-picker {
+    font-size: 1em;
+    padding: 8px 15px;
+    border-radius: 25px;
+    border: 1px solid #ddd;
+    background-color: #ffffff;
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    outline: none;
+}
+
+.date-picker:focus {
+    border-color: #FF6B45;
+}
+
+.room-header {
+    background: linear-gradient(to right, #cc3e22, #ff825c);
+    padding: 50px 50px;
+    border-radius: 15px;
+    color: white;
+    margin-top: 30px;
+}
+
+.room-header h1 {
+    font-size: 3em;
+    margin-bottom: 5px;
+}
+
+.room-header .room-greeting {
+    font-size: 1.3em;
+}
+
+.utilities-overview {
+    background-color: #F8F8F8;
+    padding: 20px;
+    border-radius: 12px;
+    border: 3px solid #FFA45B;
+}
+
+.overview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.date-card {
+    background-color: white;
+    padding: 8px 15px;
+    border-radius: 25px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+}
+
+.date-card p {
+    font-size: 0.8em;
+    color: #666;
+}
+
+.utilities-cards {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 0.8fr;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.card {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+}
+
+.card h3 {
+    font-size: 1.1em;
+    margin: 0;
+}
+
+.card h3 i {
+    font-size: 1.3em;
+    margin-right: 10px;
+}
+
+.card p {
+    font-size: 0.9em;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.card .due-date {
+    font-size: 0.8em;
+    color: #888;
+    margin-top: 5px;
+}
+
+.status {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    font-size: 0.7em;
+    border-radius: 50px;
+    color: white;
+}
+
+.status.pending {
+    background-color: orange;
+}
+
+.status.paid {
+    background-color: green;
+}
+
+.status.overdue {
+    background-color: red;
+}
+
+.card-large {
+    grid-column: span 2;
+}
+
+.card-medium {
+    grid-column: span 1;
+}
+
+.card-small {
+    grid-column: span 1;
+}
+
+.preview-section {
+    flex: 1;
+    margin-left: 20px;
+}
+
+.preview-title {
+    font-size: 1.8em;
+}
+
+.preview-top {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.preview-card {
+    flex: 1;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    height: 120px;
+    max-width: 300px;
+    margin: auto;
+}
+
+.preview-card i {
+    font-size: 3em;
+    margin-right: 20px;
+    color: black;
+}
+
+.card-info h3 {
+    font-size: 2em;
+}
+
+.preview-bottom {
+    margin-top: 20px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.tenant-card {
+    background-color: #F6F6E6;
+}
+
+.penalty-card {
+    background-color: #F6F6E6;
+}
+
+.announcement-card {
+    background-color: #F6F6E6;
+}
+
+.announcement-gradient-line {
+    height: 15px;
+    width: 100%;
+    background: linear-gradient(to right, #A22F05, #FF6B45);
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.white-card-background {
+    background-color: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    height: 380px;
+    margin-top: 30px;
+    margin-left: 10px;
+    margin-right: 20px;
+}
+
+.overview-preview-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}

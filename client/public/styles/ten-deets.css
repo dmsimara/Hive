@@ -1,0 +1,196 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    font-family: 'Arial', sans-serif;
+    background-color: #F9F9F9;
+    color: #333;
+    height: 100%;
+}
+
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+.sidebar {
+    background-color: #F4F4F4;
+    width: 20%;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    height: 650px;
+}
+
+.logo {
+    margin-bottom: -15px;
+    margin-top: -30px;
+}
+
+.logo-img {
+    width: 100px;
+    height: auto;
+}
+
+.menu-title {
+    font-weight: bold;
+    color: #0a0a0a;
+    margin-top: 20px;
+}
+
+.menu ul,
+.tracker ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.menu ul li,
+.tracker ul li {
+    margin-bottom: 10px;
+}
+
+.menu ul li a,
+.tracker ul li a {
+    text-decoration: none;
+    color: #333;
+    padding: 10px;
+    display: block;
+}
+
+.menu ul li.active a {
+    background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
+    color: white;
+    border-radius: 8px;
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #DDD;
+}
+
+.header h1 {
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.header-subtitle {
+    font-size: 1.2em;
+    color: #777;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.date-picker {
+    padding: 5px;
+    margin-right: 20px;
+}
+
+.notification-icon {
+    font-size: 1.5em;
+}
+
+.room-overview {
+    display: flex;
+    justify-content: space-between;
+}
+
+.left-section {
+    width: 70%;
+}
+
+.right-section {
+    width: 28%;
+    background: #FFF;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.room-info {
+    padding: 10px;
+}
+
+.room-number {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.room-number-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    width: 150px;
+    margin-bottom: 40px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.circle {
+    background-color: #A22F05;
+    color: white;
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.room-details-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.room-details-list li {
+    margin-bottom: 10px;
+}
+
+.white-card {
+    background-color: white;
+    border-radius: 10px;
+    height: 180px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.penalty-section {
+    margin-top: 30px;
+}
+
+.tenants-title,
+.penalty-section h3 {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.white-card {
+    background-color: white;
+    height: 180px;
+    border-radius: 12px;
+}
+
+.white-card {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hive Room Details</title>
+    <link rel="stylesheet" href="ten-deets.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <div class="logo">
+                    <img src="hive light.png" alt="Hive Logo" class="logo-img">
+                </div>
+                <p class="menu-title">Menu</p>
+                <nav class="menu">
+                    <ul>
+                        <li><a href="ten-dashboard.html"><i class="fas fa-columns"></i> Dashboard</a></li>
+                        <li class="active"><a href="#"><i class="fas fa-door-open"></i> Room Details</a></li>
+                    </ul>
+                </nav>
+                <p class="menu-title">Tracker</p>
+                <nav class="tracker">
+                    <ul>
+                        <li><a href="ten-utilities.html"><i class="fas fa-lightbulb"></i> Utilities and Bills</a></li>
+                        <li><a href="ten-announce.html"><i class="fas fa-bullhorn"></i> Announcement</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <div>
+                    <h1>Welcome to Hive</h1>
+                    <h2 class="header-subtitle">Room Details</h2>
+                </div>
+                <div class="header-right">
+                    <input type="date" class="date-picker" value="2024-10-15">
+                    <i class="fa fa-bell notification-icon"></i>
+                </div>
+            </header>
+
+            <section class="room-overview">
+                <div class="left-section">
+                    <div class="tenants-section">
+                        <h3 class="tenants-title"><i class="fas fa-users"></i> Tenants</h3>
+                        <button class="edit-info-btn top-right">Edit Info</button>
+                        <div class="tenant-cards">
+                            <div class="tenant-card">
+                                <i class="fas fa-star star-icon"></i>
+                                <div class="tenant-avatar"></div>
+                                <p>NAME<br>Surname</p>
+                            </div>
+                            <div class="tenant-card">
+                                <i class="fas fa-star star-icon"></i>
+                                <div class="tenant-avatar"></div>
+                                <p>NAME<br>Surname</p>
+                            </div>
+                            <div class="tenant-card">
+                                <i class="fas fa-star star-icon"></i>
+                                <div class="tenant-avatar"></div>
+                                <p>NAME<br>Surname</p>
+                            </div>
+                            <div class="tenant-card">
+                                <i class="fas fa-star star-icon"></i>
+                                <div class="tenant-avatar"></div>
+                                <p>NAME<br>Surname</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tenant-info-wrapper">
+                        <div class="tenants-info">
+                            <h3><i class="fas fa-info-circle"></i> Tenants Info</h3>
+                            <button class="edit-info-btn top-right">Edit Info</button>
+                            <div class="tenant-info-cards">
+                                <div class="tenant-info-card">
+                                    <div class="avatar"></div>
+                                    <div class="tenant-details">
+                                        <p><strong>NAME SURNAME</strong></p>
+                                        <p><strong>Tenant ID:</strong> 2024-12345</p>
+                                        <p><strong>Contact Number:</strong> 0986 765 4321</p>
+                                        <p><strong>Email:</strong> name.surname@gmail.com</p>
+                                    </div>
+                                </div>
+                                <div class="tenant-info-card">
+                                    <div class="avatar"></div>
+                                    <div class="tenant-details">
+                                        <p><strong>NAME SURNAME</strong></p>
+                                        <p><strong>Tenant ID:</strong> 2024-12345</p>
+                                        <p><strong>Contact Number:</strong> 0986 765 4321</p>
+                                        <p><strong>Email:</strong> name.surname@gmail.com</p>
+                                    </div>
+                                </div>
+                                <div class="tenant-info-card">
+                                    <div class="avatar"></div>
+                                    <div class="tenant-details">
+                                        <p><strong>NAME SURNAME</strong></p>
+                                        <p><strong>Tenant ID:</strong> 2024-12345</p>
+                                        <p><strong>Contact Number:</strong> 0986 765 4321</p>
+                                        <p><strong>Email:</strong> name.surname@gmail.com</p>
+                                    </div>
+                                </div>
+                                <div class="tenant-info-card">
+                                    <div class="avatar"></div>
+                                    <div class="tenant-details">
+                                        <p><strong>NAME SURNAME</strong></p>
+                                        <p><strong>Tenant ID:</strong> 2024-12345</p>
+                                        <p><strong>Contact Number:</strong> 0986 765 4321</p>
+                                        <p><strong>Email:</strong> name.surname@gmail.com</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="penalty-section">
+                            <h3><i class="fas fa-shield-alt"></i> Penalty</h3>
+                            <div class="penalty-box white-card"></div>
+                            <h3><i class="fas fa-key"></i> Keycard Code</h3>
+                            <div class="keycard-box white-card"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="right-section">
+                    <div class="room-info">
+                        <div class="room-number">
+                            <div class="room-number-card">
+                                <div class="circle">
+                                    <h1>01</h1>
+                                </div>
+                                <p>Room No.</p>
+                            </div>
+                        </div>
+                        <ul class="room-details-list">
+                            <li><strong>Room Status:</strong> Occupied</li>
+                            <li><strong>Room Type:</strong> Shared Room</li>
+                            <li><strong>Floor Location:</strong> 1st Floor</li>
+                            <li><strong>Room Capacity:</strong> 4 tenants</li>
+                            <li><strong>Furniture:</strong> Bunk Bed, Desk, Chair, Wardrobe</li>
+                            <li><strong>Room Size:</strong> 25 sqm</li>
+                            <li><strong>Amenities:</strong> Shared bathroom, Kitchen, Laundry</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

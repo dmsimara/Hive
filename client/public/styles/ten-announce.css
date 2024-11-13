@@ -1,0 +1,217 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Body Styling */
+body {
+    display: flex;
+    height: 100vh;
+    background-color: #f5f5f5;
+}
+
+/* Layout Setup */
+.container {
+    display: grid;
+    grid-template-columns: 1fr 2.5fr 1fr;
+    width: 100%;
+}
+
+/* Sidebar container */
+.sidebar {
+    background-color: #F4F4F4;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+}
+
+.logo {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.logo-img {
+    width: 120px;
+}
+
+.menu-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.menu,
+.tracker {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.menu ul,
+.tracker ul {
+    list-style: none;
+    padding: 0;
+}
+
+.menu li,
+.tracker li {
+    margin-bottom: 15px;
+}
+
+.menu li a,
+.tracker li a {
+    text-decoration: none;
+    color: #555;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.menu li a i,
+.tracker li a i {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.active a {
+    color: #FF6B45;
+    font-weight: bold;
+}
+
+/* Permanent Notices Styling */
+.permanent-notices {
+    background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
+    border-radius: 15px;
+    padding: 20px;
+    color: white;
+    margin-top: 30px; /* Adjusted to lower the position */
+    height: 80vh; /* Increased height for the card */
+}
+
+.permanent-notices h2 {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.permanent-notices h2 i {
+    margin-right: 8px;
+}
+
+.notices-scroll {
+    margin-top: 15px;
+    overflow-y: auto;
+    max-height: 60vh; /* Increased height for the scrollable area */
+}
+
+.notices-scroll ul {
+    list-style: none;
+    padding: 0;
+}
+
+.notices-scroll li {
+    background-color: #FFF;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: #333;
+}
+
+.notices-scroll li h3 {
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.notices-scroll li p {
+    color: #555;
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+/* Main Content Section Styling */
+.main-content {
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* Announcement Header */
+.announcement-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.announcement-header h1 {
+    font-size: 24px;
+    color: #333;
+    font-weight: bold;
+}
+
+.announcement-header h2 {
+    font-size: 18px;
+    color: #555;
+}
+
+.header-icons i {
+    font-size: 18px;
+    color: #555;
+    margin-left: 15px;
+    cursor: pointer;
+}
+
+/* Announcement Card */
+.announcement-card {
+    display: flex;
+    align-items: flex-start;
+    padding: 15px;
+    background-color: #FFF;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.announcement-card .announcement-date {
+    min-width: 80px;
+    text-align: center;
+    margin-right: 20px;
+    font-weight: bold;
+    color: #A22F05;
+}
+
+.orange-separator h4 {
+    font-size: 16px;
+}
+
+.announcement-content h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.announcement-content p {
+    font-size: 14px;
+    color: #555;
+}
+
+/* Section Headers */
+.pinned-section h3,
+.new-section h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.pinned-section h3 i,
+.new-section h3 i {
+    color: #FF6B45;
+    margin-right: 5px;
+}
