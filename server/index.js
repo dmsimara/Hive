@@ -267,7 +267,6 @@ app.post("/admin/dashboard/userManagement", findTenants, async (req, res) => {
     }
 });
 
-
 app.get("/admin/manage/unit/add", verifyToken, addUnitView);
 
 
