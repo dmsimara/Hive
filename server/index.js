@@ -251,23 +251,22 @@ app.post("/admin/manage/unit", findUnits, async (req, res) => {
 });
 
 // userManagement routes
-// app.post("/admin/dashboard/userManagement", findTenants, async (req, res) => {
-//     try {
-//         const admins = await viewAdmins(req, res); 
+app.post("/admin/dashboard/userManagement", findTenants, async (req, res) => {
+    try {
+        const admins = await viewAdmins(req, res); 
 
-//         res.render("userManagement", { 
-//             title: "Hive", 
-//             styles: ["userManagement"], 
-//             tenants: req.tenants,
-//             admin: admins 
-//         });
-//     } catch (error) {
-//         console.error('Error fetching tenant or admin data:', error);
-//         res.status(500).json({ success: false, message: 'Error fetching data' });
-//     }
-// });
+        res.render("userManagement", { 
+            title: "Hive", 
+            styles: ["userManagement"], 
+            tenants: req.tenants,
+            admin: admins 
+        });
+    } catch (error) {
+        console.error('Error fetching tenant or admin data:', error);
+        res.status(500).json({ success: false, message: 'Error fetching data' });
+    }
+});
 
-app.post("/admin/dashboard/userManagement", findTenants);
 
 app.get("/admin/manage/unit/add", verifyToken, addUnitView);
 

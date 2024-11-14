@@ -411,76 +411,39 @@ export const viewAdmins = async (req, res) => {
 };
 
 export const findTenants = async (req, res) => {
-    // Extract the search term and remove unnecessary spaces
-    const searchTerm = req.body.search?.trim(); 
-    console.log('Received search term: ', searchTerm);
+    const searchTerm = req.body.search;
 
-    // If no search term is provided, fetch all tenants
+    console.log('Received search term:', searchTerm); 
+
     if (!searchTerm) {
-        try {
-            const tenants = await Tenant.findAll(); 
-            const rows = tenants.map(tenant => tenant.get({ plain: true }));
-
-            // If it's an AJAX request, return the tenants as JSON
-            if (req.xhr) {
-                return res.json({ success: true, tenants: rows });
-            }
-
-            // If it's a regular request, render the page with all tenants
-            const admins = await viewAdmins(req, res);
-            return res.render('userManagement', {
-                title: "Hive",
-                styles: ["userManagement"],
-                rows: rows,
-                admin: admins,
-                lastSearchTerm: ''
-            });
-        } catch (error) {
-            console.error('Error fetching all tenants:', error);
-            return res.status(500).json({ success: false, message: 'An error occurred while fetching tenants.' });
-        }
+        return res.status(400).json({ success: false, message: 'Search term is required' });
     }
 
-    // If a search term is provided, construct the search query
     try {
-        // Split the search term into parts and match it against tenant first and last names
-        const searchParts = searchTerm.split(' ').map(part => `%${part}%`); 
+        const tenants = await Tenant.findAll({
+            where: {
+                [Op.or]: [
+                    { tenantFirstName: { [Op.like]: `%${searchTerm}%` } },
+                    { tenantLastName: { [Op.like]: `%${searchTerm}%` } }
+                ]
+            }
+        });
 
-        const whereClause = {
-            [Op.or]: [
-                ...searchParts.map(part => ({
-                    tenantFirstName: { [Op.like]: part }
-                })),
-                ...searchParts.map(part => ({
-                    tenantLastName: { [Op.like]: part }
-                }))
-            ]
-        };
-
-        // Execute the query with the where clause to filter tenants
-        const tenants = await Tenant.findAll({ where: whereClause });
         const rows = tenants.map(tenant => tenant.get({ plain: true }));
 
-        // If it's an AJAX request, return the filtered tenants as JSON
-        if (req.xhr) {
-            return res.json({ success: true, tenants: rows });
-        }
+        const admins = await viewAdmins(req, res); 
 
-        // If it's a regular request, render the page with the filtered tenants
-        const admins = await viewAdmins(req, res);
-        return res.render('userManagement', {
+        res.render('userManagement', {
             title: "Hive",
             styles: ["userManagement"],
-            rows: rows,
-            admin: admins,
-            lastSearchTerm: searchTerm
+            rows,
+            admin: admins 
         });
     } catch (error) {
-        console.error('Error in findTenants:', error);
-        return res.status(500).json({ success: false, message: 'An error occurred while searching for tenants.' });
+        console.error('Error in findTenants:', error); 
+        res.status(500).json({ success: false, message: 'Unexpected error occurred' });
     }
 };
-
 
 export const findDashTenants = async (req, res) => {
     const searchTerm = req.body.searchTenants?.trim(); 
