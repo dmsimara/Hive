@@ -430,7 +430,11 @@ app.get('/api/auth/admin/totalUnits', async (req, res) => {
 
  // TENANT PAGES ROUTES
 app.get("/tenant/dashboard", verifyTenantToken, (req, res) => {
-    res.render("ten-Dashboard", { title: "Hive", styles: ["ten-dashboard"] });
+    res.render("tenantDashboard", { title: "Hive", styles: ["ten-dashboard"] });
+});
+
+app.get("/tenant/room-details", verifyTenantToken, (req, res) => {
+    res.render("ten-RoomDeets", { title: "Hive", styles: ["ten-deets"] });
 });
 
 app.post("/api/auth/addTenant", verifyToken, addTenant);
