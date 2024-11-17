@@ -446,12 +446,12 @@ export const findTenants = async (req, res) => {
 };
 
 export const findDashTenants = async (req, res) => {
-    const searchTerm = req.body.searchTenants?.trim(); 
+    const searchTerm = req.body.searchTenants?.trim();
     console.log('Received search term: ', searchTerm);
 
     if (!searchTerm) {
         try {
-            const tenants = await Tenant.findAll(); 
+            const tenants = await Tenant.findAll();
             return res.json({ success: true, tenants: tenants });
         } catch (error) {
             console.error('Error fetching all tenants:', error);
@@ -460,18 +460,27 @@ export const findDashTenants = async (req, res) => {
     }
 
     try {
-        const searchParts = searchTerm.split(' ').map(part => `%${part}%`); 
+        let whereClause;
 
-        const whereClause = {
-            [Op.or]: [
-                ...searchParts.map(part => ({
-                    tenantFirstName: { [Op.like]: part } 
-                })),
-                ...searchParts.map(part => ({
-                    tenantLastName: { [Op.like]: part } 
-                }))
-            ]
-        };
+        const lowerSearchTerm = searchTerm.toLowerCase();
+
+        const searchWords = lowerSearchTerm.split(' ').filter(word => word.length > 0);
+        
+        if (searchWords.length === 1) {
+            whereClause = {
+                [Op.or]: [
+                    Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('tenantFirstName')), { [Op.like]: `%${searchWords[0]}%` }),
+                    Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('tenantLastName')), { [Op.like]: `%${searchWords[0]}%` })
+                ]
+            };
+        } else if (searchWords.length > 1) {
+            whereClause = {
+                [Op.and]: [
+                    Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('tenantFirstName')), { [Op.like]: `%${searchWords[0]}%` }),
+                    Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('tenantLastName')), { [Op.like]: `%${searchWords[1]}%` })
+                ]
+            };
+        }
 
         const tenants = await Tenant.findAll({
             where: whereClause
@@ -483,7 +492,7 @@ export const findDashTenants = async (req, res) => {
             return res.json({ success: true, tenants: rows });
         }
 
-        const admins = await viewAdmins(req, res);
+        const admins = await viewAdmins(req, res); 
         res.render('adminDashboard', {
             title: "Hive",
             styles: ["adminDashboard"],
@@ -496,6 +505,7 @@ export const findDashTenants = async (req, res) => {
         res.status(500).json({ success: false, message: 'An error occurred while searching for tenants.' });
     }
 };
+
 
 export const findUnits = async (req, res) => {
     const searchTerm = req.body.searchUnits;

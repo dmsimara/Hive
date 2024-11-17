@@ -429,11 +429,15 @@ app.get('/api/auth/admin/totalUnits', async (req, res) => {
 
 
  // TENANT PAGES ROUTES
- app.get("/tenant/dashboard", verifyTenantToken, (req, res) => {
-    res.render("tenantDashboard", { title: "Hive", styles: ["tenantDashboard"] });
+app.get("/tenant/dashboard", verifyTenantToken, (req, res) => {
+    res.render("ten-Dashboard", { title: "Hive", styles: ["ten-dashboard"] });
 });
 
- app.post("/api/auth/addTenant", verifyToken, addTenant);
+app.post("/api/auth/addTenant", verifyToken, addTenant);
+
+app.get("/tenant/announcement", verifyTenantToken, (req, res) => {
+    res.render("ten-announcement", { title: "Hive", styles: ["ten-announce"]});
+})
 
 app.listen(PORT, () => {
     connectDB();

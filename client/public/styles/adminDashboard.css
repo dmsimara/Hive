@@ -169,3 +169,18 @@ html, body {
     max-height: calc(50px * 6);
     overflow-y: auto; 
 }
+
+.modal .modal-dialog {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 50vw;  
+    height: 100vh;  
+    margin: 0;  
+    transform: none !important; 
+  }
+
+  .modal .modal-content {
+    height: 100%; 
+    overflow-y: auto; 
+  }
