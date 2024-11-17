@@ -72,7 +72,7 @@
       <div class="tenant-cards" id="tenantCardsContainer">
         {{#if tenants.length}}
           {{#each tenants}}
-          <a href="/admin/tenant/{{this.tenantId}}" class="card-link">
+          <a href="#" class="card-link" data-bs-toggle="modal" data-bs-target="#tenantModal">
             <div class="card mb-3">
               <div class="card-body">
                 <img src="{{#if this.tenantProfile}}/images/upload/{{this.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
@@ -100,6 +100,25 @@
     <!-- Links and Navigation -->
     <div class="col-4 right" id="right" style="flex: 0 0 35%; max-width: 35%;">
       <h1>Analytics dito</h1>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal Structure -->
+<div class="modal" id="tenantModal" tabindex="-1">
+  <div class="modal-dialog modal-right">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Tenant Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
     </div>
   </div>
 </div>

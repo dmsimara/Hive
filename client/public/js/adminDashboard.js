@@ -35,49 +35,38 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Error:", error);
         }
     });
+
+    fetchTenants('');
 });
 
 document.getElementById('searchTenantsInput').addEventListener('input', function () {
     const searchTerm = this.value.trim(); 
 
-    if (searchTerm === '') {
-        fetch('/admin/dashboard', {
+    fetchTenants(searchTerm);
+});
+
+async function fetchTenants(searchTerm) {
+    try {
+        const response = await fetch('/admin/dashboard', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest' 
             },
-            body: JSON.stringify({ searchTenants: '' }) 
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                updateTenantCards(data.tenants); 
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching all tenants:', error);
-        });
-    } else {
-        fetch('/admin/dashboard', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-            },
             body: JSON.stringify({ searchTenants: searchTerm })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                updateTenantCards(data.tenants); 
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching tenant data:', error);
         });
+
+        const data = await response.json();
+
+        if (data.success) {
+            updateTenantCards(data.tenants); 
+        } else {
+            console.error('Error fetching tenants:', data.message || 'Unknown error');
+        }
+    } catch (error) {
+        console.error('Error fetching tenants:', error);
     }
-});
+}
 
 function updateTenantCards(tenants) {
     const tenantCardsContainer = document.getElementById('tenantCardsContainer');
@@ -87,7 +76,7 @@ function updateTenantCards(tenants) {
         tenants.forEach(tenant => {
             const tenantCard = document.createElement('a');
             tenantCard.classList.add('card-link');
-            tenantCard.href = `/admin/tenant/${tenant.tenantId}`;
+            tenantCard.href = "#"; 
 
             tenantCard.innerHTML = `
                 <div class="card mb-3">
@@ -96,9 +85,36 @@ function updateTenantCards(tenants) {
                         <h5 class="card-title d-inline">${tenant.tenantFirstName} ${tenant.tenantLastName}</h5>
                     </div>
                 </div>`;
+
+            tenantCard.addEventListener('click', (event) => {
+                event.preventDefault();  
+                openTenantModal(tenant);  
+            });
+
             tenantCardsContainer.appendChild(tenantCard);
         });
     } else {
         tenantCardsContainer.innerHTML = '<p>No active tenants found.</p>';
     }
+}
+
+function openTenantModal(tenant) {
+    const tenantModal = new bootstrap.Modal(document.getElementById('tenantModal'));
+    const modalTitle = document.querySelector('#tenantModal .modal-title');
+    const modalBody = document.querySelector('#tenantModal .modal-body');
+
+    modalTitle.textContent = `${tenant.tenantFirstName} ${tenant.tenantLastName}`;
+
+    modalBody.innerHTML = `
+        <p><strong>Email:</strong> ${tenant.tenantEmail}</p>
+        <p><strong>Phone:</strong> ${tenant.mobileNum || 'N/A'}</p>
+        <p><strong>Gender:</strong> ${tenant.gender || 'N/A'}</p>
+        <p><strong>Guardian Number:</strong> ${tenant.tenantGuardianNum || 'N/A'}</p>
+        <p><strong>Tenant ID:</strong> ${tenant.tenant_id}</p>
+        <p><strong>Date Joined:</strong> ${tenant.dateJoined ? new Date(tenant.dateJoined).toLocaleDateString() : 'N/A'}</p>
+        <p><strong>Profile Picture:</strong><br/>
+        <img src="${tenant.tenantProfile ? `/images/upload/${tenant.tenantProfile}` : '/images/defaultUser.webp'}" alt="Profile Picture" width="150px"></p>
+    `;
+
+    tenantModal.show();
 }
