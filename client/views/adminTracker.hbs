@@ -137,7 +137,7 @@
                 right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
             },
             initialView: 'dayGridMonth',
-            editable: true,
+            editable: true,  
             selectable: true,
             select: function (info) {
                 const selectedDate = info.startStr;
@@ -146,7 +146,63 @@
                 const modal = new bootstrap.Modal(document.getElementById('eventModal'));
                 modal.show();
             },
-            events: eventsData 
+            events: eventsData, 
+
+            eventDrop: async function (info) {
+                const updatedEvent = {
+                    event_id: info.event.id,
+                    start: info.event.start.toISOString(),
+                    end: info.event.end.toISOString()
+                };
+
+                try {
+                    const response = await fetch('/api/auth/edit/event', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(updatedEvent)
+                    });
+
+                    const result = await response.json();
+                    if (result.success) {
+                        alert('Event updated successfully!');
+                    } else {
+                        alert(`Error updating event: ${result.message}`);
+                        info.revert(); 
+                    }
+                } catch (error) {
+                    console.error('Error updating event:', error);
+                    alert('An error occurred while updating the event. Please try again.');
+                    info.revert();  
+                }
+            },
+
+            eventResize: async function (info) {
+                const updatedEvent = {
+                    event_id: info.event.id,
+                    start: info.event.start.toISOString(),
+                    end: info.event.end.toISOString()
+                };
+
+                try {
+                    const response = await fetch('/api/auth/edit/event', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(updatedEvent)
+                    });
+
+                    const result = await response.json();
+                    if (result.success) {
+                        alert('Event updated successfully!');
+                    } else {
+                        alert(`Error updating event: ${result.message}`);
+                        info.revert();  
+                    }
+                } catch (error) {
+                    console.error('Error updating event:', error);
+                    alert('An error occurred while updating the event. Please try again.');
+                    info.revert(); 
+                }
+            }
         });
 
         calendar.render();
@@ -185,6 +241,3 @@
         });
     });
 </script>
-dnkcnasknkas
-skmslmclasmlasmlmasl
-snakKSC

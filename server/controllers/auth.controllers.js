@@ -906,11 +906,16 @@ export const addEvent = async (req, res) => {
             return res.status(401).json({ success: false, message: "Invalid or expired token." });
         }
 
+        // Convert dates to UTC before saving them to the database
+        const startDateUTC = new Date(start).toISOString();  // Converts start to UTC ISO string
+        const endDateUTC = end ? new Date(end).toISOString() : null;  // Converts end to UTC ISO string
+
+        // Create new event with UTC dates
         const newEvent = await Calendar.create({
             event_name,
             event_description,
-            start,
-            end,
+            start: startDateUTC,
+            end: endDateUTC,
             status,
             establishment_id: establishmentId,  
             admin_id: adminId, 
@@ -976,5 +981,28 @@ export const viewEvents = async (req) => {
     } catch (error) {
         console.error('Error decoding token:', error);
         return { success: false, message: 'Failed to decode token', error: error.message };
+    }
+};
+
+export const editEvent = async (req, res) => {
+    try {
+        const { event_id, start, end } = req.body;
+
+        const updatedEvent = await Calendar.update(
+            { start, end },  
+            {
+                where: {
+                    event_id: event_id  
+                }
+            });
+
+        if (updatedEvent[0] > 0) {  
+            res.json({ success: true, message: 'Event updated successfully!' });
+        } else {
+            res.status(400).json({ success: false, message: 'Error updating event. Event not found.' });
+        }
+    } catch (error) {
+        console.error('Error updating event:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };
