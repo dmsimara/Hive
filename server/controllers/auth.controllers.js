@@ -859,7 +859,8 @@ export const getAvailableRooms = async (req, res) => {
     }
   };
 
-  export const addEvent = async (req, res) => {
+// auth.controllers.js
+export const addEvent = async (req, res) => {
     const { event_name, event_description, start, end, status } = req.body;
 
     try {
@@ -934,14 +935,24 @@ export const getAvailableRooms = async (req, res) => {
     }
 };
 
-// Updated viewEvents function
 export const viewEvents = async (req) => {
-    const establishmentId = req.establishmentId;
-    if (!establishmentId) {
-        return { success: false, message: 'Establishment ID is required.' };  // Handle error if no ID found
+    const token = req.cookies.token;  
+    if (!token) {
+        console.log('No token found');
+        return { success: false, message: 'Authorization token is missing' };
     }
 
     try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const establishmentId = decoded.establishmentId;
+        console.log('Decoded token:', decoded);
+        console.log('Establishment ID:', establishmentId); 
+
+        if (!establishmentId) {
+            console.log('Establishment ID not found');
+            return { success: false, message: 'Establishment ID not found' };
+        }
+
         const events = await Calendar.findAll({
             where: { establishment_id: establishmentId },
             order: [['start', 'ASC']],
@@ -949,25 +960,21 @@ export const viewEvents = async (req) => {
 
         if (!events || events.length === 0) {
             console.log('No events found');
-            return [];  // Return an empty array if no events are found
+            return { success: false, message: 'No events found for the establishment' };
         }
 
-        // Format events to ensure FullCalendar can parse them correctly
         const formattedEvents = events.map(event => ({
             id: event.event_id,
             title: event.event_name,
-            start: event.start.toISOString(),  // Ensure ISO format for FullCalendar
+            start: event.start.toISOString(),
             end: event.end ? event.end.toISOString() : null,
             description: event.event_description || '',
             status: event.status,
         }));
 
-        console.log('Formatted Events:', formattedEvents); // Log to verify data
-
-        return formattedEvents;  // Return the formatted events
+        return { success: true, events: formattedEvents };
     } catch (error) {
-        console.error('Error fetching events:', error);
-        return { success: false, message: 'Failed to fetch events', error: error.message };  // Return error message
+        console.error('Error decoding token:', error);
+        return { success: false, message: 'Failed to decode token', error: error.message };
     }
 };
-

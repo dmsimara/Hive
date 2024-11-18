@@ -8,7 +8,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-center">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/admin/dashboard">Dashboard</a>
+          <a class="nav-link" aria-current="page" href="/admin/dashboard">Dashboard</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/admin/dashboard/userManagement">Manage Tenant</a>
@@ -20,7 +20,7 @@
           <a class="nav-link" href="#">Announcements</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/admin/tracker">Tracker</a>
+          <a class="nav-link active" href="/admin/tracker">Tracker</a>
         </li>
       </ul>
 
@@ -117,3 +117,74 @@
 </div>
 
 <script src="/js/adminTracker.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const calendarEl = document.getElementById('calendar');
+        
+        let eventsData;
+        try {
+            eventsData = JSON.parse('{{{json events}}}');  
+            console.log(eventsData);  
+        } catch (error) {
+            console.error('Error parsing events data:', error);
+            eventsData = [];  
+        }
+
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            headerToolbar: {
+                left: 'prev today next',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+            },
+            initialView: 'dayGridMonth',
+            editable: true,
+            selectable: true,
+            select: function (info) {
+                const selectedDate = info.startStr;
+                document.getElementById('start').value = `${selectedDate}T00:00`; 
+                document.getElementById('end').value = `${selectedDate}T23:59`; 
+                const modal = new bootstrap.Modal(document.getElementById('eventModal'));
+                modal.show();
+            },
+            events: eventsData 
+        });
+
+        calendar.render();
+
+        document.getElementById('saveEvent').addEventListener('click', async function (event) {
+            event.preventDefault();
+
+            const eventData = {
+                event_name: document.getElementById('event_name').value,
+                event_description: document.getElementById('event_description').value,
+                start: document.getElementById('start').value,
+                end: document.getElementById('end').value,
+                status: document.getElementById('status').value
+            };
+
+            try {
+                const response = await fetch('/api/auth/add/event', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(eventData)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('Event added successfully!');
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('eventModal'));
+                    modal.hide();
+                    location.reload(); 
+                } else {
+                    alert(`Error adding event: ${result.message}`);
+                }
+            } catch (error) {
+                console.error('Error saving event:', error);
+                alert('An error occurred while saving the event. Please try again.');
+            }
+        });
+    });
+</script>
+dnkcnasknkas
+skmslmclasmlasmlmasl
+snakKSC

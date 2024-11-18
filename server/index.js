@@ -11,6 +11,7 @@ import path from "path";
 import session from "express-session"; 
 import fileUpload from "express-fileupload";
 import fs from 'fs';
+import cors from 'cors';
 import Admin from "./models/admin.models.js";
 import Room from "./models/room.models.js";
 import Tenant from "./models/tenant.models.js";
@@ -26,15 +27,20 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(express.json()); // allows us to parse incoming requests: req.body
-app.use(cookieParser());
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:5000",
+    credentials: true
+}));
+
 
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: process.env.NODE_ENV === 'production' } // Make sure secure is set based on NODE_ENV
+    cookie: { secure: process.env.NODE_ENV === 'production' } 
 }));
 
 app.engine("hbs", exphbs.engine({
@@ -50,7 +56,6 @@ app.engine("hbs", exphbs.engine({
             return args;
         },
         eq: (a, b) => a === b, 
-        // Add the ifCond helper for conditional checks
         ifCond: function(v1, operator, v2, options) {
             switch (operator) {
                 case '===':
@@ -64,9 +69,13 @@ app.engine("hbs", exphbs.engine({
                 default:
                     return options.inverse(this);
             }
+        },
+        json: function(context) {
+            return JSON.stringify(context);
         }
     }
 }));
+
 
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "../client/views")); 
@@ -351,6 +360,7 @@ app.get("/admin/dashboard/view/account", verifyToken, async (req, res) => {
         res.status(500).json({ success: false, message: 'Error fetching admin data' });
     }
 });
+
 app.get("/admin/dashboard/edit/account", verifyToken, async (req, res) => {
     try {
         const admins = await viewAdmins(req, res);
@@ -430,20 +440,22 @@ app.get('/api/auth/admin/totalUnits', async (req, res) => {
 // Tracker Page Route
 app.get("/admin/tracker", verifyToken, async (req, res) => {
     try {
-        const events = await viewEvents(req);  // Fetch events data
-        const admins = await viewAdmins(req);  // Fetch admin data
-        const tenants = await viewTenants(req);  // Fetch tenants data
+        const events = await viewEvents(req);  
+        const admins = await viewAdmins(req);  
+        const tenants = await viewTenants(req);  
 
         console.log('Fetched event data:', events);
         console.log('Fetched admin data:', admins);
         console.log('Fetched tenants data:', tenants);
 
+        const eventsData = events.success ? events.events : [];
+
         res.render("adminTracker", {
             title: "Hive",
             styles: ["adminTracker"],
-            events: events || [],  // Pass events data to view
-            admins: admins || [],  // Pass admins data to view
-            tenants: tenants || []  // Pass tenants data to view
+            events: eventsData,  
+            admins: admins || [],  
+            tenants: tenants || []  
         });
     } catch (error) {
         console.error('Error fetching data for admin tracker:', error);
@@ -461,7 +473,8 @@ app.post("/api/auth/addTenant", verifyToken, addTenant);
 
 app.get("/tenant/announcement", verifyTenantToken, (req, res) => {
     res.render("ten-announcement", { title: "Hive", styles: ["ten-announce"]});
-})
+});
+
 
 app.listen(PORT, () => {
     connectDB();
