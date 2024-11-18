@@ -15,7 +15,7 @@ import Admin from "./models/admin.models.js";
 import Room from "./models/room.models.js";
 import Tenant from "./models/tenant.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
-import { addTenant, addTenantView, addUnitView, editTenant, findDashTenants, findTenants, findUnits, getAvailableRooms, getOccupiedUnits, updateTenant, viewAdmins, viewTenants, viewUnits } from './controllers/auth.controllers.js';
+import { addTenant, addTenantView, addUnitView, editTenant, findDashTenants, findTenants, findUnits, getAvailableRooms, getOccupiedUnits, updateTenant, viewAdmins, viewEvents, viewTenants, viewUnits } from './controllers/auth.controllers.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -424,6 +424,30 @@ app.get('/api/auth/admin/totalUnits', async (req, res) => {
     } catch (error) {
         console.error('Error calculating total units:', error);
         res.status(500).json({ message: 'Failed to calculate total units' });
+    }
+});
+
+// Tracker Page Route
+app.get("/admin/tracker", verifyToken, async (req, res) => {
+    try {
+        const events = await viewEvents(req);  // Fetch events data
+        const admins = await viewAdmins(req);  // Fetch admin data
+        const tenants = await viewTenants(req);  // Fetch tenants data
+
+        console.log('Fetched event data:', events);
+        console.log('Fetched admin data:', admins);
+        console.log('Fetched tenants data:', tenants);
+
+        res.render("adminTracker", {
+            title: "Hive",
+            styles: ["adminTracker"],
+            events: events || [],  // Pass events data to view
+            admins: admins || [],  // Pass admins data to view
+            tenants: tenants || []  // Pass tenants data to view
+        });
+    } catch (error) {
+        console.error('Error fetching data for admin tracker:', error);
+        res.status(500).json({ success: false, message: 'Error fetching data' });
     }
 });
 

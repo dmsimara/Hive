@@ -1,0 +1,119 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <img class="navbar-brand" src="/images/hiveLight.png" alt="Hive Logo" width="100px" />
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-center">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/admin/dashboard">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/dashboard/userManagement">Manage Tenant</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/manage/unit">Manage Unit</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Announcements</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/tracker">Tracker</a>
+        </li>
+      </ul>
+
+      {{#each admins}}
+      <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+        alt="Profile" class="user-pic" onclick="toggleMenu()" />
+      <div class="sub-menu-wrap" id="subMenu">
+        <div class="sub-menu">
+          <div class="user-info">
+            <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+              alt="Profile" width="40px" />
+            <h3>{{this.adminFirstName}} {{this.adminLastName}}</h3>
+          </div>
+          <hr />
+          <a href="/admin/dashboard/view/account" class="sub-menu-link">
+            <i class="material-icons">person</i>
+            <p>View Account</p>
+            <span>></span>
+          </a>
+          <a href="#" id="logoutButton" class="sub-menu-link">
+            <i class="material-icons">logout</i>
+            <p>Logout</p>
+            <span>></span>
+          </a>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+</nav>
+
+<div class="container pt-5 pb-5">
+  <!-- Calendar Header with Add Event Button -->
+  <div class="d-flex justify-content-between align-items-center">
+    <h3>Calendar</h3>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">Add Event</button>
+  </div>
+  <div id="calendar"></div>
+  </br>
+</div>
+
+<!-- Modal for Creating Event -->
+<div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="eventModalLabel">Create an Event</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="addEventForm">
+        <div class="modal-body">
+          <!-- Event Title -->
+          <div class="mb-3">
+            <label for="event_name" class="form-label">Event Title</label>
+            <input type="text" id="event_name" name="event_name" class="form-control" placeholder="Enter event title" required>
+          </div>
+
+          <!-- Event Description -->
+          <div class="mb-3">
+            <label for="event_description" class="form-label">Event Description</label>
+            <textarea id="event_description" name="event_description" class="form-control" rows="3" placeholder="Enter event description" required></textarea>
+          </div>
+
+          <!-- Event Date & Time -->
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="start" class="form-label">Start Date & Time</label>
+              <input type="datetime-local" id="start" name="start" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label for="end" class="form-label">End Date & Time</label>
+              <input type="datetime-local" id="end" name="end" class="form-control" required>
+            </div>
+          </div>
+
+          <!-- Event Status -->
+          <div class="mb-3">
+            <label for="status" class="form-label">Status</label>
+            <select id="status" name="status" class="form-select" required>
+              <option value="Not Started">Not Started</option>
+              <option value="In Progress">In Progress</option>
+              <option value="On Hold">On Hold</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" id="saveEvent">Save Event</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="/js/adminTracker.js"></script>

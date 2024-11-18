@@ -1,5 +1,5 @@
 import express from "express";
-import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, deleteTenant, viewAdmins, viewUnits, findUnits, addUnitView, addUnit, deleteUnit, getOccupiedUnits, editTenant, updateTenant, findDashTenants } from "../controllers/auth.controllers.js";
+import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, deleteTenant, viewAdmins, viewUnits, findUnits, addUnitView, addUnit, deleteUnit, getOccupiedUnits, editTenant, updateTenant, findDashTenants, addEvent, viewEvents } from "../controllers/auth.controllers.js";
 import { verifyTenantToken, verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
@@ -19,6 +19,8 @@ router.get("/addUnitView", addUnitView);
 router.post("/addUnit", addUnit);
 router.delete("/deleteUnit/:room_id", deleteUnit);
 router.get("/occupied-units", getOccupiedUnits);
+router.post("/add/event", addEvent);
+router.get("/view/events", viewEvents);
 
 // tenants
 router.get("/view-tenants", viewTenants);
@@ -35,3 +37,4 @@ router.get("/view-admins", viewAdmins);
 // router.post("/edit/adminAccount", editAdminAccount);
 
 export default router;
+
