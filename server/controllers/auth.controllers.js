@@ -10,6 +10,7 @@ import { generateTokenAndSetCookie, generateTokenAndSetTenantCookie } from '../u
 import { sendPasswordResetEmail, sendResetSuccessEmail, sendTenantVerificationEmail, sendVerificationEmail, sendWelcomeEmail } from '../mailtrap/emails.js';
 import { connectDB } from '../db/connectDB.js';
 import { Sequelize, Op } from 'sequelize';
+import { format, startOfWeek, endOfWeek, addHours } from 'date-fns';
 import { title } from 'process';
 
 
@@ -1031,34 +1032,55 @@ export const getEvents = async (req, res) => {
 
     if (!establishmentId) {
         console.error('Establishment ID is undefined.');
-        return null; 
+        return null;
     }
 
     try {
         console.log('Fetching events for establishment ID:', establishmentId);
 
+        // Get the current date and calculate the start and end of the current week
+        const now = new Date();
+        const weekStart = startOfWeek(now, { weekStartsOn: 1 }); // Start of the week (Monday)
+        const weekEnd = endOfWeek(now, { weekStartsOn: 1 }); // End of the week (Sunday)
+
+        // Adjust for timezone if your database stores times in UTC
+        const weekStartUTC = addHours(weekStart, -8); // Convert to UTC (adjust as needed)
+        const weekEndUTC = addHours(weekEnd, -8); // Convert to UTC (adjust as needed)
+
+        console.log("Week start (UTC):", weekStartUTC);
+        console.log("Week end (UTC):", weekEndUTC);
+
         const rows = await Calendar.findAll({
             where: {
-                establishment_id: establishmentId,  
+                establishment_id: establishmentId,
+                start: {
+                    [Op.gte]: weekStartUTC, // Events starting on or after the beginning of the week
+                    [Op.lte]: weekEndUTC,  // Events ending on or before the end of the week
+                },
             },
-            order: [['start', 'ASC']] // Optional: Order events by start date
+            order: [['start', 'ASC']], // Order events by start date
         });
 
         if (!rows.length) {
-            console.log('No events found for the establishment.');
-            return []; 
+            console.log('No events found for this week.');
+            return [];
         }
 
         const plainRows = rows.map(row => {
             const event = row.get({ plain: true });
             event.status = formatEventStatus(event.status); // Format status if needed
+            
+            // Format start and end dates using date-fns
+            event.start = format(new Date(event.start), "EEE, MMM d, yyyy h:mm a");
+            event.end = format(new Date(event.end), "EEE, MMM d, yyyy h:mm a");
+            
             return event;
         });
 
         return plainRows;  
     } catch (error) {
         console.error('Error fetching events:', error);
-        return []; 
+        return [];
     }
 };
 
