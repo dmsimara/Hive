@@ -23,6 +23,7 @@
     "express-fileupload": "^1.5.1",
     "express-handlebars": "^8.0.1",
     "express-session": "^1.18.1",
+    "fullcalendar-scheduler": "^6.1.15",
     "hbs": "^4.2.0",
     "jsonwebtoken": "^9.0.2",
     "mailtrap": "^3.4.0",

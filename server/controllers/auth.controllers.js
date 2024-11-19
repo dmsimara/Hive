@@ -2,6 +2,7 @@ import Admin from '../models/admin.models.js';
 import Tenant from '../models/tenant.models.js';
 import Room from '../models/room.models.js';
 import Establishment from '../models/establishment.models.js';
+import Calendar from '../models/calendar.models.js';
 import bcryptjs from 'bcryptjs';
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
@@ -857,3 +858,170 @@ export const getAvailableRooms = async (req, res) => {
       res.status(500).json({ success: false, message: 'An error occurred while fetching available rooms.' });
     }
   };
+
+// auth.controllers.js
+export const addEvent = async (req, res) => {
+    const { event_name, event_description, start, end, status } = req.body;
+
+    try {
+        console.log('Incoming request data:', req.body);
+
+        // Validate input fields
+        if (!event_name || !start || !status) {
+            return res.status(400).json({ success: false, message: "Event name, start date, and status are required." });
+        }
+
+        // Validate date fields
+        const isStartValid = Date.parse(start);
+        const isEndValid = Date.parse(end);
+
+        console.log('Parsed Start Date:', isStartValid, 'Parsed End Date:', isEndValid);
+
+        if (isNaN(isStartValid)) {
+            return res.status(400).json({ success: false, message: "Invalid start date format." });
+        }
+
+        if (end && isNaN(isEndValid)) {
+            return res.status(400).json({ success: false, message: "Invalid end date format." });
+        }
+
+        if (new Date(end) < new Date(start)) {
+            return res.status(400).json({ success: false, message: "End date cannot be before start date." });
+        }
+
+        // Verify the user's authentication token
+        const token = req.cookies.token;
+        if (!token) {
+            return res.status(401).json({ success: false, message: "Unauthorized. No token provided." });
+        }
+
+        let establishmentId;
+        let adminId;
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            establishmentId = decoded.establishmentId;
+            adminId = decoded.adminId; 
+            console.log('Decoded JWT Token:', decoded);
+        } catch (err) {
+            return res.status(401).json({ success: false, message: "Invalid or expired token." });
+        }
+
+        // Convert dates to UTC before saving them to the database
+        const startDateUTC = new Date(start).toISOString();  // Converts start to UTC ISO string
+        const endDateUTC = end ? new Date(end).toISOString() : null;  // Converts end to UTC ISO string
+
+        // Create new event with UTC dates
+        const newEvent = await Calendar.create({
+            event_name,
+            event_description,
+            start: startDateUTC,
+            end: endDateUTC,
+            status,
+            establishment_id: establishmentId,  
+            admin_id: adminId, 
+        });
+
+        console.log('New Event Created:', newEvent);
+
+        return res.status(201).json({
+            success: true,
+            message: "Event added successfully",
+            event: {
+                event_name: newEvent.event_name,
+                event_description: newEvent.event_description,
+                start: newEvent.start,
+                end: newEvent.end,
+                status: newEvent.status
+            }
+        });
+    } catch (error) {
+        console.error('Error adding event:', error);
+        return res.status(500).json({ success: false, message: 'Failed to add event', error: error.message });
+    }
+};
+
+export const viewEvents = async (req) => {
+    const token = req.cookies.token;  
+    if (!token) {
+        console.log('No token found');
+        return { success: false, message: 'Authorization token is missing' };
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const establishmentId = decoded.establishmentId;
+        console.log('Decoded token:', decoded);
+        console.log('Establishment ID:', establishmentId); 
+
+        if (!establishmentId) {
+            console.log('Establishment ID not found');
+            return { success: false, message: 'Establishment ID not found' };
+        }
+
+        const events = await Calendar.findAll({
+            where: { establishment_id: establishmentId },
+            order: [['start', 'ASC']],
+        });
+
+        if (!events || events.length === 0) {
+            console.log('No events found');
+            return { success: false, message: 'No events found for the establishment' };
+        }
+
+        const formattedEvents = events.map(event => ({
+            id: event.event_id,
+            title: event.event_name,
+            start: event.start.toISOString(),
+            end: event.end ? event.end.toISOString() : null,
+            description: event.event_description || '',
+            status: event.status,
+        }));
+
+        return { success: true, events: formattedEvents };
+    } catch (error) {
+        console.error('Error decoding token:', error);
+        return { success: false, message: 'Failed to decode token', error: error.message };
+    }
+};
+
+export const editEvent = async (req, res) => {
+    try {
+        const { event_id, start, end } = req.body;
+
+        const updatedEvent = await Calendar.update(
+            { start, end },  
+            {
+                where: {
+                    event_id: event_id  
+                }
+            });
+
+        if (updatedEvent[0] > 0) {  
+            res.json({ success: true, message: 'Event updated successfully!' });
+        } else {
+            res.status(400).json({ success: false, message: 'Error updating event. Event not found.' });
+        }
+    } catch (error) {
+        console.error('Error updating event:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+};
+
+export const deleteEvent = async (req, res) => {
+    const { eventId } = req.params;
+
+    try {
+        const result = await Calendar.destroy({
+            where: { event_id: eventId }
+        });
+
+        if (result > 0) {
+            return res.json({ success: true, message: 'Event deleted successfully' });
+        } else {
+            return res.status(404).json({ success: false, message: 'Event not found' });
+        }
+    } catch (error) {
+        console.error('Error deleting event:', error);
+        return res.status(500).json({ success: false, message: 'Failed to delete event' });
+    }
+};
