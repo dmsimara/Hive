@@ -463,7 +463,6 @@ app.get("/admin/tracker", verifyToken, async (req, res) => {
     }
 });
 
-
  // TENANT PAGES ROUTES
 app.get("/tenant/dashboard", verifyTenantToken, (req, res) => {
     res.render("ten-Dashboard", { title: "Hive", styles: ["ten-dashboard"] });

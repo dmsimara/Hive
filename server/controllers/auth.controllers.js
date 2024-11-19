@@ -1006,3 +1006,22 @@ export const editEvent = async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };
+
+export const deleteEvent = async (req, res) => {
+    const { eventId } = req.params;
+
+    try {
+        const result = await Calendar.destroy({
+            where: { event_id: eventId }
+        });
+
+        if (result > 0) {
+            return res.json({ success: true, message: 'Event deleted successfully' });
+        } else {
+            return res.status(404).json({ success: false, message: 'Event not found' });
+        }
+    } catch (error) {
+        console.error('Error deleting event:', error);
+        return res.status(500).json({ success: false, message: 'Failed to delete event' });
+    }
+};
