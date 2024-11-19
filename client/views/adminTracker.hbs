@@ -184,10 +184,9 @@
             console.log(eventsData);
         } catch (error) {
             console.error('Error parsing events data:', error);
-            eventsData = []; // Fallback to an empty array
+            eventsData = []; 
         }
 
-        // Initialize the FullCalendar
         const calendar = new FullCalendar.Calendar(calendarEl, {
             headerToolbar: {
                 left: 'prev today next',
@@ -195,7 +194,7 @@
                 right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
             },
             initialView: 'dayGridMonth',
-            editable: true, // Enable drag-and-drop and resizing
+            editable: true,
             selectable: true,
             select: function (info) {
                 const selectedDate = info.startStr;
@@ -206,7 +205,6 @@
             },
             events: eventsData,
 
-            // Handle Event Click
             eventClick: function (info) {
                 const event = info.event;
                 document.getElementById('overview_event_name').value = event.title || '';
@@ -220,7 +218,6 @@
                 modal.show();
             },
 
-            // Drag-and-Drop Event Update
             eventDrop: async function (info) {
                 const event = info.event;
 
@@ -242,19 +239,18 @@
                         alert('Event updated successfully!');
                     } else {
                         alert(`Error updating event: ${result.message}`);
-                        info.revert(); // Revert to original position on error
+                        info.revert();
                     }
                 } catch (error) {
                     console.error('Error updating event:', error);
                     alert('An error occurred while updating the event. Please try again.');
-                    info.revert(); // Revert to original position on error
+                    info.revert(); 
                 }
             }
         });
 
         calendar.render();
 
-        // Handle saving a new event (in Add Event Modal)
         document.getElementById('saveEvent').addEventListener('click', async function (event) {
             event.preventDefault();
 
@@ -278,7 +274,7 @@
                     alert('Event added successfully!');
                     const modal = bootstrap.Modal.getInstance(document.getElementById('addEventModal'));
                     modal.hide();
-                    location.reload(); // Reload to fetch new events
+                    location.reload();
                 } else {
                     alert(`Error adding event: ${result.message}`);
                 }
@@ -304,7 +300,7 @@
                     alert('Event deleted successfully!');
                     const modal = bootstrap.Modal.getInstance(document.getElementById('eventOverviewModal'));
                     modal.hide();
-                    location.reload(); // Reload to reflect changes
+                    location.reload(); 
                 } else {
                     alert(`Error deleting event: ${result.message}`);
                 }

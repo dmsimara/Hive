@@ -16,7 +16,7 @@ import Admin from "./models/admin.models.js";
 import Room from "./models/room.models.js";
 import Tenant from "./models/tenant.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
-import { addTenant, addTenantView, addUnitView, editTenant, findDashTenants, findTenants, findUnits, getAvailableRooms, getOccupiedUnits, updateTenant, viewAdmins, viewEvents, viewTenants, viewUnits } from './controllers/auth.controllers.js';
+import { addTenant, addTenantView, addUnitView, editTenant, findDashTenants, findTenants, findUnits, getAvailableRooms, getEvents, getOccupiedUnits, updateTenant, viewAdmins, viewEvents, viewTenants, viewUnits } from './controllers/auth.controllers.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -72,10 +72,18 @@ app.engine("hbs", exphbs.engine({
         },
         json: function(context) {
             return JSON.stringify(context);
+        },
+        statusColor: function (status) {
+            switch (status) {
+                case "Not Started": return "secondary";
+                case "In Progress": return "info";
+                case "On Hold": return "warning";
+                case "Completed": return "success";
+                default: return "light";
+            }
         }
     }
 }));
-
 
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "../client/views")); 
@@ -116,31 +124,27 @@ app.get("/tenant/login", (req, res) => {
 app.get("/admin/dashboard", verifyToken, async (req, res) => {
     try {
         const admins = await viewAdmins(req, res);
-        console.log('Fetched admin data:', admins);
+        console.log("Fetched admin data:", admins);
 
         const tenants = await viewTenants(req, res);
-        console.log('Tenants data:', tenants);
+        console.log("Tenants data:", tenants);
 
-        if (!tenants) {
-            return res.render("adminDashboard", {
-                title: "Hive",
-                styles: ["adminDashboard"],
-                admins: admins,
-                tenants: tenants || []  
-            });
-        }
+        const events = await getEvents(req, res); // Fetch events
+        console.log("Events data:", events);
 
         res.render("adminDashboard", {
             title: "Hive",
             styles: ["adminDashboard"],
             admins: admins,
-            tenants: tenants
+            tenants: tenants || [],
+            events: events || [], // Pass events to the template
         });
     } catch (error) {
-        console.error('Error fetching admin or tenant data:', error);
-        res.status(500).json({ success: false, message: 'Error fetching data' });
+        console.error("Error fetching data:", error);
+        res.status(500).json({ success: false, message: "Error fetching data" });
     }
 });
+
 
 app.post("/admin/dashboard", findDashTenants);
 

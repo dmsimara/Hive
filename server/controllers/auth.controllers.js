@@ -1025,3 +1025,50 @@ export const deleteEvent = async (req, res) => {
         return res.status(500).json({ success: false, message: 'Failed to delete event' });
     }
 };
+
+export const getEvents = async (req, res) => {
+    const establishmentId = req.establishmentId;
+
+    if (!establishmentId) {
+        console.error('Establishment ID is undefined.');
+        return null; 
+    }
+
+    try {
+        console.log('Fetching events for establishment ID:', establishmentId);
+
+        const rows = await Calendar.findAll({
+            where: {
+                establishment_id: establishmentId,  
+            },
+            order: [['start', 'ASC']] // Optional: Order events by start date
+        });
+
+        if (!rows.length) {
+            console.log('No events found for the establishment.');
+            return []; 
+        }
+
+        const plainRows = rows.map(row => {
+            const event = row.get({ plain: true });
+            event.status = formatEventStatus(event.status); // Format status if needed
+            return event;
+        });
+
+        return plainRows;  
+    } catch (error) {
+        console.error('Error fetching events:', error);
+        return []; 
+    }
+};
+
+// Helper function to format event status if necessary
+const formatEventStatus = (status) => {
+    switch (status) {
+        case 'Not Started': return 'Pending Start';
+        case 'Working in Progress': return 'In Progress';
+        case 'On Hold': return 'Paused';
+        case 'Done': return 'Completed';
+        default: return status;
+    }
+};
