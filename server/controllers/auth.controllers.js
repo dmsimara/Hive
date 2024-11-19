@@ -1008,6 +1008,8 @@ export const editEvent = async (req, res) => {
     }
 };
 
+
+
 export const deleteEvent = async (req, res) => {
     const { eventId } = req.params;
 
@@ -1038,14 +1040,12 @@ export const getEvents = async (req, res) => {
     try {
         console.log('Fetching events for establishment ID:', establishmentId);
 
-        // Get the current date and calculate the start and end of the current week
         const now = new Date();
-        const weekStart = startOfWeek(now, { weekStartsOn: 1 }); // Start of the week (Monday)
-        const weekEnd = endOfWeek(now, { weekStartsOn: 1 }); // End of the week (Sunday)
+        const weekStart = startOfWeek(now, { weekStartsOn: 1 }); 
+        const weekEnd = endOfWeek(now, { weekStartsOn: 1 }); 
 
-        // Adjust for timezone if your database stores times in UTC
-        const weekStartUTC = addHours(weekStart, -8); // Convert to UTC (adjust as needed)
-        const weekEndUTC = addHours(weekEnd, -8); // Convert to UTC (adjust as needed)
+        const weekStartUTC = addHours(weekStart, -8);
+        const weekEndUTC = addHours(weekEnd, -8); 
 
         console.log("Week start (UTC):", weekStartUTC);
         console.log("Week end (UTC):", weekEndUTC);
@@ -1054,11 +1054,11 @@ export const getEvents = async (req, res) => {
             where: {
                 establishment_id: establishmentId,
                 start: {
-                    [Op.gte]: weekStartUTC, // Events starting on or after the beginning of the week
-                    [Op.lte]: weekEndUTC,  // Events ending on or before the end of the week
+                    [Op.gte]: weekStartUTC, 
+                    [Op.lte]: weekEndUTC, 
                 },
             },
-            order: [['start', 'ASC']], // Order events by start date
+            order: [['start', 'ASC']], 
         });
 
         if (!rows.length) {
@@ -1068,9 +1068,8 @@ export const getEvents = async (req, res) => {
 
         const plainRows = rows.map(row => {
             const event = row.get({ plain: true });
-            event.status = formatEventStatus(event.status); // Format status if needed
+            event.status = formatEventStatus(event.status); 
             
-            // Format start and end dates using date-fns
             event.start = format(new Date(event.start), "EEE, MMM d, yyyy h:mm a");
             event.end = format(new Date(event.end), "EEE, MMM d, yyyy h:mm a");
             
@@ -1084,7 +1083,6 @@ export const getEvents = async (req, res) => {
     }
 };
 
-// Helper function to format event status if necessary
 const formatEventStatus = (status) => {
     switch (status) {
         case 'Not Started': return 'Pending Start';
@@ -1092,5 +1090,35 @@ const formatEventStatus = (status) => {
         case 'On Hold': return 'Paused';
         case 'Done': return 'Completed';
         default: return status;
+    }
+};
+
+export const updateEvent = async (req, res) => {
+    const { event_name, event_description, start, end, status } = req.body;
+    const eventId = req.params.eventId;  
+
+    try {
+        const connection = connectDB();
+
+        const updateQuery = `
+            UPDATE calendars 
+            SET event_name = ?, event_description = ?, start = ?, end = ?, status = ? 
+            WHERE event_id = ?
+        `;
+        const [updateResult] = await connection.promise().query(updateQuery, [
+            event_name, event_description, start, end, status, eventId
+        ]);
+
+        if (updateResult.affectedRows > 0) {
+            const [rows] = await connection.promise().query('SELECT * FROM calendars WHERE event_id = ?', [eventId]);
+            connection.end();
+            return res.json({ success: true, message: 'Event updated successfully', event: rows[0] });
+        } else {
+            connection.end();
+            return res.status(404).json({ success: false, message: "Event not found or no changes made." });
+        }
+    } catch (err) {
+        console.error('Error updating event:', err);
+        return res.status(500).json({ success: false, message: 'An error occurred while updating event data' });
     }
 };

@@ -163,7 +163,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary" id="saveEvent">Save Event</button>
+          <button type="submit" class="btn btn-primary" id="updateEvent">Update Event</button>
           <button type="button" class="btn btn-danger" id="deleteEvent">Delete Event</button>
         </div>
       </form>
@@ -180,11 +180,11 @@
 
         let eventsData;
         try {
-            eventsData = JSON.parse('{{{json events}}}');
+            eventsData = JSON.parse('{{{json events}}}');  
             console.log(eventsData);
         } catch (error) {
             console.error('Error parsing events data:', error);
-            eventsData = []; 
+            eventsData = [];  
         }
 
         const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -203,7 +203,7 @@
                 const modal = new bootstrap.Modal(document.getElementById('addEventModal'));
                 modal.show();
             },
-            events: eventsData,
+            events: eventsData,  
 
             eventClick: function (info) {
                 const event = info.event;
@@ -274,7 +274,7 @@
                     alert('Event added successfully!');
                     const modal = bootstrap.Modal.getInstance(document.getElementById('addEventModal'));
                     modal.hide();
-                    location.reload();
+                    location.reload();  
                 } else {
                     alert(`Error adding event: ${result.message}`);
                 }
@@ -284,29 +284,83 @@
             }
         });
 
-        // Handle deleting the event (in Event Overview Modal)
         document.getElementById('deleteEvent').addEventListener('click', async function (event) {
             event.preventDefault();
             const eventId = this.dataset.eventId;
 
-            try {
-                const response = await fetch(`/api/auth/delete/event/${eventId}`, {
-                    method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' }
-                });
+            const isConfirmed = confirm("Are you sure you want to delete this event? This action cannot be undone.");
+            
+            if (isConfirmed) {
+                try {
+                    const response = await fetch(`/api/auth/delete/event/${eventId}`, {
+                        method: 'DELETE',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
 
-                const result = await response.json();
-                if (result.success) {
-                    alert('Event deleted successfully!');
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('eventOverviewModal'));
-                    modal.hide();
-                    location.reload(); 
-                } else {
-                    alert(`Error deleting event: ${result.message}`);
+                    const result = await response.json();
+                    if (result.success) {
+                        alert('Event deleted successfully!');
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('eventOverviewModal'));
+                        modal.hide();
+                        location.reload();  
+                    } else {
+                        alert(`Error deleting event: ${result.message}`);
+                    }
+                } catch (error) {
+                    console.error('Error deleting event:', error);
+                    alert('An error occurred while deleting the event. Please try again.');
                 }
+            } else {
+                console.log('Event deletion was canceled');
+            }
+        });
+
+        document.getElementById('updateEvent').addEventListener('click', async function (event) {
+            event.preventDefault();
+            const eventId = document.getElementById('deleteEvent').dataset.eventId;
+
+            const eventName = document.getElementById('overview_event_name').value.trim();
+            const eventDescription = document.getElementById('overview_event_description').value.trim();
+            const start = document.getElementById('overview_start').value;
+            const end = document.getElementById('overview_end').value;
+            const status = document.getElementById('overview_status').value;
+
+            if (!eventName || !eventDescription || !start || !end || !status) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            const updatedEventData = {
+                event_id: eventId,
+                event_name: eventName,
+                event_description: eventDescription,
+                start: start,
+                end: end,
+                status: status
+            };
+
+            try {
+              const response = await fetch(`/api/auth/update/event/${eventId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedEventData)
+              });
+              
+              const textResponse = await response.text(); 
+              console.log('Response Text:', textResponse);
+              
+              const result = JSON.parse(textResponse);
+              if (result.success) {
+                alert('Event updated successfully!');
+                const modal = bootstrap.Modal.getInstance(document.getElementById('eventOverviewModal'));
+                modal.hide();
+                location.reload();  
+              } else {
+                alert(`Error updating event: ${result.message}`);
+              }
             } catch (error) {
-                console.error('Error deleting event:', error);
-                alert('An error occurred while deleting the event. Please try again.');
+              console.error('Error updating event:', error);
+              alert('An error occurred while updating the event. Please try again.');
             }
         });
     });

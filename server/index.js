@@ -16,7 +16,7 @@ import Admin from "./models/admin.models.js";
 import Room from "./models/room.models.js";
 import Tenant from "./models/tenant.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
-import { addTenant, addTenantView, addUnitView, editTenant, findDashTenants, findTenants, findUnits, getAvailableRooms, getEvents, getOccupiedUnits, updateTenant, viewAdmins, viewEvents, viewTenants, viewUnits } from './controllers/auth.controllers.js';
+import { addTenant, addTenantView, addUnitView, editTenant, findDashTenants, findTenants, findUnits, getAvailableRooms, getEvents, getOccupiedUnits, updateEvent, updateTenant, viewAdmins, viewEvents, viewTenants, viewUnits } from './controllers/auth.controllers.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -348,7 +348,6 @@ app.get("/admin/dashboard/userManagement/editTenant/:tenant_id", verifyToken, as
 app.put('/api/auth/updateTenant/:tenantId', updateTenant);
 app.get('/api/auth/getAvailableRooms', getAvailableRooms);
 
-
 // view and edit account
 app.get("/admin/dashboard/view/account", verifyToken, async (req, res) => {
     try {
@@ -466,6 +465,37 @@ app.get("/admin/tracker", verifyToken, async (req, res) => {
         res.status(500).json({ success: false, message: 'Error fetching data' });
     }
 });
+
+app.put('/api/auth/updateEvent/:eventId', async (req, res) => {
+    const eventId = req.params.eventId;
+    const { event_name, event_description, start, end, status } = req.body;
+  
+    try {
+      const updatedEvent = await Event.update(
+        {
+          event_name,
+          event_description,
+          start,
+          end,
+          status,
+        },
+        {
+          where: {
+            id: eventId,
+          },
+        }
+      );
+  
+      if (updatedEvent[0] === 0) {
+        return res.status(404).json({ success: false, message: "Event not found" });
+      }
+  
+      return res.status(200).json({ success: true, message: 'Event updated successfully' });
+    } catch (error) {
+      console.error('Error updating event:', error);
+      return res.status(500).json({ success: false, message: 'Error updating event' });
+    }
+  });
 
  // TENANT PAGES ROUTES
 app.get("/tenant/dashboard", verifyTenantToken, (req, res) => {
