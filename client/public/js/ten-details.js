@@ -45,3 +45,20 @@ editForm.addEventListener('submit', async (event) => {
         alert('An error occurred. Please try again.');
     }
 });
+
+// Logout button functionality
+document.querySelector('.logout-button').addEventListener('click', () => {
+    fetch('/logout', { method: 'GET' }) // Call backend logout endpoint
+        .then(() => {
+            sessionStorage.clear(); // Clear any client-side storage
+            window.location.href = '/login'; // Redirect to login page
+        });
+});
+
+// Modal functionality (optional)
+const modal = document.getElementById('editModal');
+const closeModalButton = document.querySelector('.close-modal');
+
+closeModalButton.addEventListener('click', () => {
+    modal.classList.add('hidden');
+});

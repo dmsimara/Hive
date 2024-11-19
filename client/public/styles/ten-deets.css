@@ -4,6 +4,71 @@
     padding: 0;
     box-sizing: border-box;
 }
+.sidebar {
+    background-color: #F4F4F4;
+    width: 20%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-card {
+    background-color: #FFFFFF;
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    margin-bottom: 20px;
+}
+
+.logo-img {
+    width: 140px;
+    height: auto;
+}
+
+.sidebar p {
+    font-size: 0.9em;
+    color: #666;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.menu ul, .tracker ul {
+    list-style: none;
+    padding: 0;
+}
+
+.menu ul li, .tracker ul li {
+    margin: 10px 0;
+}
+
+.menu ul li a, .tracker ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 1em;
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.menu ul li.active a {
+    background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
+    color: white;
+}
+
+.menu ul li a:hover, .tracker ul li a:hover {
+    background-color: #FFE3D5;
+    color: #A22F05;
+}
 
 /* Modal Styles */
 .modal {
@@ -77,4 +142,36 @@ form button:hover {
     display: flex;
     height: 100vh;
     width: 100vw;
+}
+/* Logout Container */
+.logout-container {
+    margin-top: auto;
+    padding: 20px;
+    text-align: left;
+}
+
+.logout-container {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.logout-button {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    font-size: 1em;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.logout-button i {
+    margin-right: 10px;
+    color: #A22F05;
+}
+
+.logout-button:hover {
+    background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
+    color: white;
 }

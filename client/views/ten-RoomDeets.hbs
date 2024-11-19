@@ -9,35 +9,48 @@
 </head>
 <body>
     <div class="dashboard-container">
-        <aside class="sidebar">
-            <div class="sidebar-card">
-                <div class="logo">
-                    <img src="/images/hiveLight.png" alt="Hive Logo" class="logo-img">
-                 </div>
-                <p class="menu-title">Menu</p>
-                <nav class="menu">
-                    <ul>
-                        <li class="active">
-                            <a href="/tenant/dashboard"><i class="fas fa-columns"></i> Dashboard</a>
-                        </li>
-                        <li>
-                            <a href="/tenant/room-details"><i class="fas fa-door-open"></i> Room Details</a>
-                        </li>
-                    </ul>
-                </nav>
-                <p class="menu-title">Tracker</p>
-                <div class="tracker">
-                    <ul>
-                        <li>
-                            <a href="ten-utilities.html"><i class="fas fa-lightbulb"></i> Utilities and Bills</a>
-                        </li>
-                        <li>
-                            <a href="/tenant/announcement"><i class="fas fa-bullhorn"></i> Announcement</a>
-                        </li>
-                </nav>
-            </div>
-        </aside>
+        <!-- Sidebar -->
+       <aside class="sidebar">
+    <div class="sidebar-card">
+        <div class="logo">
+            <a href="index.html">
+                <img src="/images/hiveLight.png" alt="Hive Logo" class="logo-img">
+            </a>
+        </div>
+        <p class="menu-title">Menu</p>
+        <nav class="menu">
+            <ul>
+                <li class="active">
+                    <a href="/tenant/dashboard"><i class="fas fa-columns"></i> Dashboard</a>
+                </li>
+                <li>
+                    <a href="/tenant/room-details"><i class="fas fa-door-open"></i> Room Details</a>
+                </li>
+            </ul>
+        </nav>
+        <p class="menu-title">Tracker</p>
+        <div class="tracker">
+            <ul>
+                <li>
+                    <a href="ten-utilities.html"><i class="fas fa-lightbulb"></i> Utilities and Bills</a>
+                </li>
+                <li>
+                    <a href="/tenant/announcement"><i class="fas fa-bullhorn"></i> Announcement</a>
+                </li>
+            </ul>
+        </div>
 
+        <!-- Logout Button -->
+        <div class="logout-container">
+            <a href="/logout" class="logout-link">
+                <i class="fas fa-sign-out-alt"></i> Log Out
+            </a>
+        </div>
+    </div>
+</aside>
+
+
+        <!-- Main Content -->
         <main class="main-content">
             <header class="header">
                 <div>
@@ -61,7 +74,6 @@
                                 <div class="tenant-avatar"></div>
                                 <p>NAME<br>Surname</p>
                             </div>
-                            <!-- Other tenant cards can go here -->
                         </div>
                     </div>
 
@@ -100,6 +112,8 @@
         </main>
     </div>
 
+    
+
     <!-- Modal for editing tenant info -->
     <div id="editModal" class="modal hidden">
         <div class="modal-content">
@@ -122,6 +136,6 @@
         </div>
     </div>
 
-    <script src="ten-details.js"></script>
+    <script src="room-details.js"></script>
 </body>
 </html>
