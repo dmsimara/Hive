@@ -1,0 +1,317 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <img class="navbar-brand" src="/images/hiveLight.png" alt="Hive Logo" width="100px" />
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-center">
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="/admin/dashboard">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/dashboard/userManagement">Manage Tenant</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/manage/unit">Manage Unit</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Announcements</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/admin/tracker">Tracker</a>
+        </li>
+      </ul>
+
+      {{#each admins}}
+      <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+        alt="Profile" class="user-pic" onclick="toggleMenu()" />
+      <div class="sub-menu-wrap" id="subMenu">
+        <div class="sub-menu">
+          <div class="user-info">
+            <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+              alt="Profile" width="40px" />
+            <h3>{{this.adminFirstName}} {{this.adminLastName}}</h3>
+          </div>
+          <hr />
+          <a href="/admin/dashboard/view/account" class="sub-menu-link">
+            <i class="material-icons">person</i>
+            <p>View Account</p>
+            <span>></span>
+          </a>
+          <a href="#" id="logoutButton" class="sub-menu-link">
+            <i class="material-icons">logout</i>
+            <p>Logout</p>
+            <span>></span>
+          </a>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+</nav>
+
+<div class="container pt-5 pb-5">
+  <!-- Calendar Header with Add Event Button -->
+  <div class="d-flex justify-content-between align-items-center">
+    <h3>Calendar</h3>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEventModal">Add Event</button>
+  </div>
+  <div id="calendar"></div>
+  </br>
+</div>
+
+<!-- Modal for Creating New Event -->
+<div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addEventModalLabel">Create an Event</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="addEventForm">
+        <div class="modal-body">
+          <!-- Event Title -->
+          <div class="mb-3">
+            <label for="event_name" class="form-label">Event Title</label>
+            <input type="text" id="event_name" name="event_name" class="form-control" placeholder="Enter event title" required>
+          </div>
+
+          <!-- Event Description -->
+          <div class="mb-3">
+            <label for="event_description" class="form-label">Event Description</label>
+            <textarea id="event_description" name="event_description" class="form-control" rows="3" placeholder="Enter event description" required></textarea>
+          </div>
+
+          <!-- Event Date & Time -->
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="start" class="form-label">Start Date & Time</label>
+              <input type="datetime-local" id="start" name="start" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label for="end" class="form-label">End Date & Time</label>
+              <input type="datetime-local" id="end" name="end" class="form-control" required>
+            </div>
+          </div>
+
+          <!-- Event Status -->
+          <div class="mb-3">
+            <label for="status" class="form-label">Status</label>
+            <select id="status" name="status" class="form-select" required>
+              <option value="Not Started">Not Started</option>
+              <option value="In Progress">In Progress</option>
+              <option value="On Hold">On Hold</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" id="saveEvent">Save Event</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Event Overview Modal -->
+<div class="modal fade" id="eventOverviewModal" tabindex="-1" aria-labelledby="eventOverviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="eventOverviewModalLabel">Event Overview</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="eventOverviewForm">
+        <div class="modal-body">
+          <!-- Event Title -->
+          <div class="mb-3">
+            <label for="overview_event_name" class="form-label">Event Title</label>
+            <input type="text" id="overview_event_name" name="event_name" class="form-control" placeholder="Enter event title" required>
+          </div>
+
+          <!-- Event Description -->
+          <div class="mb-3">
+            <label for="overview_event_description" class="form-label">Event Description</label>
+            <textarea id="overview_event_description" name="event_description" class="form-control" rows="3" placeholder="Enter event description" required></textarea>
+          </div>
+
+          <!-- Event Date & Time -->
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="overview_start" class="form-label">Start Date & Time</label>
+              <input type="datetime-local" id="overview_start" name="start" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label for="overview_end" class="form-label">End Date & Time</label>
+              <input type="datetime-local" id="overview_end" name="end" class="form-control" required>
+            </div>
+          </div>
+
+          <!-- Event Status -->
+          <div class="mb-3">
+            <label for="overview_status" class="form-label">Status</label>
+            <select id="overview_status" name="status" class="form-select" required>
+              <option value="Not Started">Not Started</option>
+              <option value="In Progress">In Progress</option>
+              <option value="On Hold">On Hold</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" id="saveEvent">Save Event</button>
+          <button type="button" class="btn btn-danger" id="deleteEvent">Delete Event</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+<script src="/js/adminTracker.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const calendarEl = document.getElementById('calendar');
+
+        let eventsData;
+        try {
+            eventsData = JSON.parse('{{{json events}}}');
+            console.log(eventsData);
+        } catch (error) {
+            console.error('Error parsing events data:', error);
+            eventsData = []; // Fallback to an empty array
+        }
+
+        // Initialize the FullCalendar
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            headerToolbar: {
+                left: 'prev today next',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+            },
+            initialView: 'dayGridMonth',
+            editable: true, // Enable drag-and-drop and resizing
+            selectable: true,
+            select: function (info) {
+                const selectedDate = info.startStr;
+                document.getElementById('start').value = `${selectedDate}T00:00`;
+                document.getElementById('end').value = `${selectedDate}T23:59`;
+                const modal = new bootstrap.Modal(document.getElementById('addEventModal'));
+                modal.show();
+            },
+            events: eventsData,
+
+            // Handle Event Click
+            eventClick: function (info) {
+                const event = info.event;
+                document.getElementById('overview_event_name').value = event.title || '';
+                document.getElementById('overview_event_description').value = event.extendedProps.description || '';
+                document.getElementById('overview_start').value = event.start.toISOString().slice(0, 16);
+                document.getElementById('overview_end').value = event.end ? event.end.toISOString().slice(0, 16) : '';
+                document.getElementById('overview_status').value = event.extendedProps.status || 'Not Started';
+                const deleteButton = document.getElementById('deleteEvent');
+                deleteButton.dataset.eventId = event.id;
+                const modal = new bootstrap.Modal(document.getElementById('eventOverviewModal'));
+                modal.show();
+            },
+
+            // Drag-and-Drop Event Update
+            eventDrop: async function (info) {
+                const event = info.event;
+
+                const updatedEventData = {
+                    event_id: event.id,
+                    start: event.start.toISOString(),
+                    end: event.end ? event.end.toISOString() : null,
+                };
+
+                try {
+                    const response = await fetch('/api/auth/edit/event', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(updatedEventData)
+                    });
+
+                    const result = await response.json();
+                    if (result.success) {
+                        alert('Event updated successfully!');
+                    } else {
+                        alert(`Error updating event: ${result.message}`);
+                        info.revert(); // Revert to original position on error
+                    }
+                } catch (error) {
+                    console.error('Error updating event:', error);
+                    alert('An error occurred while updating the event. Please try again.');
+                    info.revert(); // Revert to original position on error
+                }
+            }
+        });
+
+        calendar.render();
+
+        // Handle saving a new event (in Add Event Modal)
+        document.getElementById('saveEvent').addEventListener('click', async function (event) {
+            event.preventDefault();
+
+            const eventData = {
+                event_name: document.getElementById('event_name').value,
+                event_description: document.getElementById('event_description').value,
+                start: document.getElementById('start').value,
+                end: document.getElementById('end').value,
+                status: document.getElementById('status').value
+            };
+
+            try {
+                const response = await fetch('/api/auth/add/event', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(eventData)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('Event added successfully!');
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('addEventModal'));
+                    modal.hide();
+                    location.reload(); // Reload to fetch new events
+                } else {
+                    alert(`Error adding event: ${result.message}`);
+                }
+            } catch (error) {
+                console.error('Error saving event:', error);
+                alert('An error occurred while saving the event. Please try again.');
+            }
+        });
+
+        // Handle deleting the event (in Event Overview Modal)
+        document.getElementById('deleteEvent').addEventListener('click', async function (event) {
+            event.preventDefault();
+            const eventId = this.dataset.eventId;
+
+            try {
+                const response = await fetch(`/api/auth/delete/event/${eventId}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('Event deleted successfully!');
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('eventOverviewModal'));
+                    modal.hide();
+                    location.reload(); // Reload to reflect changes
+                } else {
+                    alert(`Error deleting event: ${result.message}`);
+                }
+            } catch (error) {
+                console.error('Error deleting event:', error);
+                alert('An error occurred while deleting the event. Please try again.');
+            }
+        });
+    });
+</script>

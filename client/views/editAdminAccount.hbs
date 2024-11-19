@@ -1,7 +1,6 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <img class="navbar-brand" src="/images/hiveLight.png" alt="Hive Logo" width="100px"/>
-    {{!-- <a class="navbar-brand" href="#">Navbar</a> --}}
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -11,16 +10,16 @@
           <a class="nav-link active" aria-current="page" href="/admin/dashboard">Dashboard</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Manage Tenant</a>
+            <a class="nav-link" href="/admin/dashboard/userManagement">Manage Tenant</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Manage Unit</a>
+            <a class="nav-link" href="/admin/manage/unit">Manage Unit</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="#">Announcements</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Tracker</a>
+            <a class="nav-link" href="/admin/tracker">Tracker</a>
         </li>
       </ul>
       {{#each rows}}
