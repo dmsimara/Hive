@@ -516,9 +516,9 @@ app.get("/tenant/announcement", verifyTenantToken, (req, res) => {
 // View Tenant Account
 app.get("/tenant/dashboard/view/account", verifyToken, async (req, res) => {
     try {
-        const tenants = await viewTenants(req, res); // Fetch tenant data instead of admin data
+        const tenants = await viewTenants(req, res); 
 
-        res.render("viewTenantAccount", { // Render tenant-related view
+        res.render("viewTenantAccount", { 
             title: "Hive",
             styles: ["viewTenantAccount"],
             rows: tenants
