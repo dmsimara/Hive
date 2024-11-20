@@ -1,0 +1,107 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <img class="navbar-brand" src="/images/hiveLight.png" alt="Hive Logo" width="100px" />
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-center">
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="/admin/dashboard">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/dashboard/userManagement">Manage Tenant</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/manage/unit">Manage Unit</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/admin/announcements">Announcements</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/tracker">Tracker</a>
+        </li>
+      </ul>
+
+      <!-- Admin Profile Display -->
+      {{#each admins}}
+      <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+        alt="Profile" class="user-pic" onclick="toggleMenu()" />
+      <div class="sub-menu-wrap" id="subMenu">
+        <div class="sub-menu">
+          <div class="user-info">
+            <img
+              src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+              alt="Profile" width="40px" />
+            <h3>{{this.adminFirstName}} {{this.adminLastName}}</h3>
+          </div>
+          <hr />
+          <a href="/admin/dashboard/view/account" class="sub-menu-link">
+            <i class="material-icons">person</i>
+            <p>View Account</p>
+            <span>></span>
+          </a>
+          <a href="#" id="logoutButton" class="sub-menu-link">
+            <i class="material-icons">logout</i>
+            <p>Logout</p>
+            <span>></span>
+          </a>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="header">
+    <i class="material-icons campaign">campaign</i>
+    <h1>Announcements</h1>
+    <a href="#" id="composeBtn" data-bs-toggle="modal" data-bs-target="#addNotice" class="compose-link">
+      <i class="material-icons edit">edit</i>
+      <span>Compose</span>
+    </a>
+  </div>
+
+  <div class="body">
+    <nav class="filter-nav">
+      <a href="#" id="all-notices-btn" class="filter-link active">All</a>
+      <a href="#" id="pinned-notices-btn" class="filter-link">Pinned</a>
+    </nav>
+    <div id="notices-container" class="notices-list">
+      <!-- Dynamic content will be inserted here -->
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addNotice" tabindex="-1" aria-labelledby="addNoticeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addNoticeModalLabel">Add Notice</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Modal body text goes here.</p>
+        <form>
+          <div class="mb-3">
+            <label for="noticeTitle" class="form-label">Title</label>
+            <input type="text" class="form-control" id="noticeTitle">
+          </div>
+          <div class="mb-3">
+            <label for="noticeDetails" class="form-label">Details</label>
+            <textarea class="form-control" id="noticeDetails" rows="3"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/announcements.js"></script>
