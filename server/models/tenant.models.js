@@ -83,10 +83,6 @@ const Tenant = sequelize.define('Tenant', {
     allowNull: true,
     defaultValue: DataTypes.NOW 
   },
-  tenantSchool: {
-    type: DataTypes.STRING(255),
-    allowNull: true
-  },
   tenantGuardianName: {
     type: DataTypes.STRING(200),
     allowNull: true

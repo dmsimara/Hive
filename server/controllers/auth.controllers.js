@@ -3,6 +3,7 @@ import Tenant from '../models/tenant.models.js';
 import Room from '../models/room.models.js';
 import Establishment from '../models/establishment.models.js';
 import Calendar from '../models/calendar.models.js';
+import Notice from '../models/notice.models.js';
 import bcryptjs from 'bcryptjs';
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
@@ -508,7 +509,6 @@ export const findDashTenants = async (req, res) => {
     }
 };
 
-
 export const findUnits = async (req, res) => {
     const searchTerm = req.body.searchUnits;
     console.log('Received search term:', searchTerm);
@@ -741,7 +741,6 @@ export const updateTenant = async (req, res) => {
     try {
         const connection = connectDB();
 
-        // Update tenant details
         const updateQuery = `
             UPDATE tenants 
             SET tenantFirstName = ?, tenantLastName = ?, tenantEmail = ?, mobileNum = ?, gender = ? 
@@ -1007,8 +1006,6 @@ export const editEvent = async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };
-
-
 
 export const deleteEvent = async (req, res) => {
     const { eventId } = req.params;

@@ -497,6 +497,23 @@ app.put('/api/auth/updateEvent/:eventId', async (req, res) => {
     }
   });
 
+// ANNOUNCEMENT PAGE ROUTES
+app.get("/admin/announcements", verifyToken, async (req, res) => {
+    try {
+        const admins = await viewAdmins(req);  
+
+        res.render("announcements", {
+            title: "Hive",
+            styles: ["announcements"],
+            admins: admins || []  
+        });
+    } catch (error) {
+        console.error('Error fetching data for admin tracker:', error);
+        res.status(500).json({ success: false, message: 'Error fetching data' });
+    }
+});
+
+
  // TENANT PAGES ROUTES
 app.get("/tenant/dashboard", verifyTenantToken, (req, res) => {
     res.render("tenantDashboard", { title: "Hive", styles: ["ten-dashboard"] });
