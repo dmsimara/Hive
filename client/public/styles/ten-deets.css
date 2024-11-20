@@ -1,196 +1,177 @@
+/* General reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-
-body, html {
-    font-family: 'Arial', sans-serif;
-    background-color: #F9F9F9;
-    color: #333;
-    height: 100%;
-}
-
-.dashboard-container {
-    display: flex;
-    height: 100vh;
-    width: 100vw;
-}
-
 .sidebar {
     background-color: #F4F4F4;
     width: 20%;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-card {
-    background-color: white;
-    padding: 20px;
-    border-radius: 12px;
-    height: 650px;
+    background-color: #FFFFFF;
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .logo {
-    margin-bottom: -15px;
-    margin-top: -30px;
+    margin-bottom: 20px;
 }
 
 .logo-img {
-    width: 100px;
+    width: 140px;
     height: auto;
 }
 
-.menu-title {
+.sidebar p {
+    font-size: 0.9em;
+    color: #666;
     font-weight: bold;
-    color: #0a0a0a;
-    margin-top: 20px;
+    margin: 10px 0;
 }
 
-.menu ul,
-.tracker ul {
+.menu ul, .tracker ul {
     list-style: none;
-    padding-left: 0;
+    padding: 0;
 }
 
-.menu ul li,
-.tracker ul li {
-    margin-bottom: 10px;
+.menu ul li, .tracker ul li {
+    margin: 10px 0;
 }
 
-.menu ul li a,
-.tracker ul li a {
+.menu ul li a, .tracker ul li a {
     text-decoration: none;
     color: #333;
+    font-size: 1em;
     padding: 10px;
-    display: block;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .menu ul li.active a {
     background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
     color: white;
+}
+
+.menu ul li a:hover, .tracker ul li a:hover {
+    background-color: #FFE3D5;
+    color: #A22F05;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.close-modal {
+    font-size: 24px;
+    background: none;
+    border: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    margin-top: 10px;
+}
+
+form input {
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
     border-radius: 8px;
 }
 
-.main-content {
-    flex: 1;
-    padding: 20px;
-}
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #DDD;
-}
-
-.header h1 {
-    font-weight: bold;
-    font-size: 1.5em;
-}
-
-.header-subtitle {
-    font-size: 1.2em;
-    color: #777;
-}
-
-.header-right {
-    display: flex;
-    align-items: center;
-}
-
-.date-picker {
-    padding: 5px;
-    margin-right: 20px;
-}
-
-.notification-icon {
-    font-size: 1.5em;
-}
-
-.room-overview {
-    display: flex;
-    justify-content: space-between;
-}
-
-.left-section {
-    width: 70%;
-}
-
-.right-section {
-    width: 28%;
-    background: #FFF;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.room-info {
-    padding: 10px;
-}
-
-.room-number {
-    display: flex;
-    justify-content: center;
-    margin-top: 40px;
-}
-
-.room-number-card {
-    background-color: white;
-    border-radius: 10px;
-    padding: 10px;
-    text-align: center;
-    width: 150px;
-    margin-bottom: 40px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.circle {
+form button {
     background-color: #A22F05;
     color: white;
-    border-radius: 50%;
-    width: 70px;
-    height: 70px;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #FF6B45;
+}
+
+/* Hide the modal by default */
+.hidden {
+    display: none;
+}
+
+/* Styles for the rest of the page */
+.dashboard-container {
     display: flex;
-    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+}
+/* Logout Container */
+.logout-container {
+    margin-top: auto;
+    padding: 20px;
+    text-align: left;
+}
+
+.logout-container {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.logout-button {
+    display: flex;
     align-items: center;
-    margin: 0 auto;
+    text-decoration: none;
+    color: #333;
+    font-size: 1em;
+    padding: 10px;
+    border-radius: 8px;
 }
 
-.room-details-list {
-    list-style: none;
-    padding-left: 0;
+.logout-button i {
+    margin-right: 10px;
+    color: #A22F05;
 }
 
-.room-details-list li {
-    margin-bottom: 10px;
-}
-
-.white-card {
-    background-color: white;
-    border-radius: 10px;
-    height: 180px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-}
-
-.penalty-section {
-    margin-top: 30px;
-}
-
-.tenants-title,
-.penalty-section h3 {
-    font-size: 1.5em;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
-
-.white-card {
-    background-color: white;
-    height: 180px;
-    border-radius: 12px;
-}
-
-.white-card {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+.logout-button:hover {
+    background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
+    color: white;
 }

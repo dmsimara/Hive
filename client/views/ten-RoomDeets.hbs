@@ -9,35 +9,48 @@
 </head>
 <body>
     <div class="dashboard-container">
-        <aside class="sidebar">
-            <div class="sidebar-card">
-                <div class="logo">
-                    <img src="/images/hiveLight.png" alt="Hive Logo" class="logo-img">
-                 </div>
-                <p class="menu-title">Menu</p>
-                <nav class="menu">
-                    <ul>
-                        <li class="active">
-                            <a href="/tenant/dashboard"><i class="fas fa-columns"></i> Dashboard</a>
-                        </li>
-                        <li>
-                            <a href="/tenant/room-details"><i class="fas fa-door-open"></i> Room Details</a>
-                        </li>
-                    </ul>
-                </nav>
-                <p class="menu-title">Tracker</p>
-                <div class="tracker">
-                    <ul>
-                        <li>
-                            <a href="ten-utilities.html"><i class="fas fa-lightbulb"></i> Utilities and Bills</a>
-                        </li>
-                        <li>
-                            <a href="/tenant/announcement"><i class="fas fa-bullhorn"></i> Announcement</a>
-                        </li>
-                </nav>
-            </div>
-        </aside>
+        <!-- Sidebar -->
+       <aside class="sidebar">
+    <div class="sidebar-card">
+        <div class="logo">
+            <a href="index.html">
+                <img src="/images/hiveLight.png" alt="Hive Logo" class="logo-img">
+            </a>
+        </div>
+        <p class="menu-title">Menu</p>
+        <nav class="menu">
+            <ul>
+                <li class="active">
+                    <a href="/tenant/dashboard"><i class="fas fa-columns"></i> Dashboard</a>
+                </li>
+                <li>
+                    <a href="/tenant/room-details"><i class="fas fa-door-open"></i> Room Details</a>
+                </li>
+            </ul>
+        </nav>
+        <p class="menu-title">Tracker</p>
+        <div class="tracker">
+            <ul>
+                <li>
+                    <a href="ten-utilities.html"><i class="fas fa-lightbulb"></i> Utilities and Bills</a>
+                </li>
+                <li>
+                    <a href="/tenant/announcement"><i class="fas fa-bullhorn"></i> Announcement</a>
+                </li>
+            </ul>
+        </div>
 
+        <!-- Logout Button -->
+        <div class="logout-container">
+            <a href="/logout" class="logout-link">
+                <i class="fas fa-sign-out-alt"></i> Log Out
+            </a>
+        </div>
+    </div>
+</aside>
+
+
+        <!-- Main Content -->
         <main class="main-content">
             <header class="header">
                 <div>
@@ -61,21 +74,6 @@
                                 <div class="tenant-avatar"></div>
                                 <p>NAME<br>Surname</p>
                             </div>
-                            <div class="tenant-card">
-                                <i class="fas fa-star star-icon"></i>
-                                <div class="tenant-avatar"></div>
-                                <p>NAME<br>Surname</p>
-                            </div>
-                            <div class="tenant-card">
-                                <i class="fas fa-star star-icon"></i>
-                                <div class="tenant-avatar"></div>
-                                <p>NAME<br>Surname</p>
-                            </div>
-                            <div class="tenant-card">
-                                <i class="fas fa-star star-icon"></i>
-                                <div class="tenant-avatar"></div>
-                                <p>NAME<br>Surname</p>
-                            </div>
                         </div>
                     </div>
 
@@ -93,41 +91,7 @@
                                         <p><strong>Email:</strong> name.surname@gmail.com</p>
                                     </div>
                                 </div>
-                                <div class="tenant-info-card">
-                                    <div class="avatar"></div>
-                                    <div class="tenant-details">
-                                        <p><strong>NAME SURNAME</strong></p>
-                                        <p><strong>Tenant ID:</strong> 2024-12345</p>
-                                        <p><strong>Contact Number:</strong> 0986 765 4321</p>
-                                        <p><strong>Email:</strong> name.surname@gmail.com</p>
-                                    </div>
-                                </div>
-                                <div class="tenant-info-card">
-                                    <div class="avatar"></div>
-                                    <div class="tenant-details">
-                                        <p><strong>NAME SURNAME</strong></p>
-                                        <p><strong>Tenant ID:</strong> 2024-12345</p>
-                                        <p><strong>Contact Number:</strong> 0986 765 4321</p>
-                                        <p><strong>Email:</strong> name.surname@gmail.com</p>
-                                    </div>
-                                </div>
-                                <div class="tenant-info-card">
-                                    <div class="avatar"></div>
-                                    <div class="tenant-details">
-                                        <p><strong>NAME SURNAME</strong></p>
-                                        <p><strong>Tenant ID:</strong> 2024-12345</p>
-                                        <p><strong>Contact Number:</strong> 0986 765 4321</p>
-                                        <p><strong>Email:</strong> name.surname@gmail.com</p>
-                                    </div>
-                                </div>
                             </div>
-                        </div>
-
-                        <div class="penalty-section">
-                            <h3><i class="fas fa-shield-alt"></i> Penalty</h3>
-                            <div class="penalty-box white-card"></div>
-                            <h3><i class="fas fa-key"></i> Keycard Code</h3>
-                            <div class="keycard-box white-card"></div>
                         </div>
                     </div>
                 </div>
@@ -142,19 +106,36 @@
                                 <p>Room No.</p>
                             </div>
                         </div>
-                        <ul class="room-details-list">
-                            <li><strong>Room Status:</strong> Occupied</li>
-                            <li><strong>Room Type:</strong> Shared Room</li>
-                            <li><strong>Floor Location:</strong> 1st Floor</li>
-                            <li><strong>Room Capacity:</strong> 4 tenants</li>
-                            <li><strong>Furniture:</strong> Bunk Bed, Desk, Chair, Wardrobe</li>
-                            <li><strong>Room Size:</strong> 25 sqm</li>
-                            <li><strong>Amenities:</strong> Shared bathroom, Kitchen, Laundry</li>
-                        </ul>
                     </div>
                 </div>
             </section>
         </main>
     </div>
+
+    
+
+    <!-- Modal for editing tenant info -->
+    <div id="editModal" class="modal hidden">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <form id="editForm">
+                <h2>Edit Tenant Info</h2>
+                <label for="tenantName">Name:</label>
+                <input type="text" id="tenantName" name="tenantName" value="John Doe" />
+
+                <label for="tenantContact">Contact:</label>
+                <input type="text" id="tenantContact" name="tenantContact" value="0987654321" />
+
+                <label for="tenantEmail">Email:</label>
+                <input type="email" id="tenantEmail" name="tenantEmail" value="john.doe@example.com" />
+
+                <input type="hidden" id="tenantId" name="tenantId" value="12345" />
+
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="room-details.js"></script>
 </body>
 </html>

@@ -513,7 +513,41 @@ app.get("/tenant/announcement", verifyTenantToken, (req, res) => {
 });
 
 
+// View Tenant Account
+app.get("/tenant/dashboard/view/account", verifyToken, async (req, res) => {
+    try {
+        const tenants = await viewTenants(req, res); // Fetch tenant data instead of admin data
+
+        res.render("viewTenantAccount", { // Render tenant-related view
+            title: "Hive",
+            styles: ["viewTenantAccount"],
+            rows: tenants
+        });
+    } catch (error) {
+        console.error('Error fetching tenant data:', error);
+        res.status(500).json({ success: false, message: 'Error fetching tenant data' });
+    }
+});
+
+// Edit Tenant Account
+app.get("/tenant/dashboard/edit/account", verifyToken, async (req, res) => {
+    try {
+        const tenants = await viewTenants(req, res); // Fetch tenant data instead of admin data
+
+        res.render("editTenantAccount", { // Render tenant-related edit page
+            title: "Hive",
+            styles: ["editTenantAccount"],
+            rows: tenants
+        });
+    } catch (error) {
+        console.error('Error fetching tenant data:', error);
+        res.status(500).json({ success: false, message: 'Error fetching tenant data' });
+    }
+});
+
+
 app.listen(PORT, () => {
     connectDB();
     console.log("Server is running on port: ", PORT);
 })
+
