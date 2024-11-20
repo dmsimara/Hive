@@ -10,6 +10,7 @@ import { generateTokenAndSetCookie, generateTokenAndSetTenantCookie } from '../u
 import { sendPasswordResetEmail, sendResetSuccessEmail, sendTenantVerificationEmail, sendVerificationEmail, sendWelcomeEmail } from '../mailtrap/emails.js';
 import { connectDB } from '../db/connectDB.js';
 import { Sequelize, Op } from 'sequelize';
+import { format, startOfWeek, endOfWeek, addHours } from 'date-fns';
 import { title } from 'process';
 
 
@@ -1007,6 +1008,8 @@ export const editEvent = async (req, res) => {
     }
 };
 
+
+
 export const deleteEvent = async (req, res) => {
     const { eventId } = req.params;
 
@@ -1023,5 +1026,99 @@ export const deleteEvent = async (req, res) => {
     } catch (error) {
         console.error('Error deleting event:', error);
         return res.status(500).json({ success: false, message: 'Failed to delete event' });
+    }
+};
+
+export const getEvents = async (req, res) => {
+    const establishmentId = req.establishmentId;
+
+    if (!establishmentId) {
+        console.error('Establishment ID is undefined.');
+        return null;
+    }
+
+    try {
+        console.log('Fetching events for establishment ID:', establishmentId);
+
+        const now = new Date();
+        const weekStart = startOfWeek(now, { weekStartsOn: 1 }); 
+        const weekEnd = endOfWeek(now, { weekStartsOn: 1 }); 
+
+        const weekStartUTC = addHours(weekStart, -8);
+        const weekEndUTC = addHours(weekEnd, -8); 
+
+        console.log("Week start (UTC):", weekStartUTC);
+        console.log("Week end (UTC):", weekEndUTC);
+
+        const rows = await Calendar.findAll({
+            where: {
+                establishment_id: establishmentId,
+                start: {
+                    [Op.gte]: weekStartUTC, 
+                    [Op.lte]: weekEndUTC, 
+                },
+            },
+            order: [['start', 'ASC']], 
+        });
+
+        if (!rows.length) {
+            console.log('No events found for this week.');
+            return [];
+        }
+
+        const plainRows = rows.map(row => {
+            const event = row.get({ plain: true });
+            event.status = formatEventStatus(event.status); 
+            
+            event.start = format(new Date(event.start), "EEE, MMM d, yyyy h:mm a");
+            event.end = format(new Date(event.end), "EEE, MMM d, yyyy h:mm a");
+            
+            return event;
+        });
+
+        return plainRows;  
+    } catch (error) {
+        console.error('Error fetching events:', error);
+        return [];
+    }
+};
+
+const formatEventStatus = (status) => {
+    switch (status) {
+        case 'Not Started': return 'Pending Start';
+        case 'Working in Progress': return 'In Progress';
+        case 'On Hold': return 'Paused';
+        case 'Done': return 'Completed';
+        default: return status;
+    }
+};
+
+export const updateEvent = async (req, res) => {
+    const { event_name, event_description, start, end, status } = req.body;
+    const eventId = req.params.eventId;  
+
+    try {
+        const connection = connectDB();
+
+        const updateQuery = `
+            UPDATE calendars 
+            SET event_name = ?, event_description = ?, start = ?, end = ?, status = ? 
+            WHERE event_id = ?
+        `;
+        const [updateResult] = await connection.promise().query(updateQuery, [
+            event_name, event_description, start, end, status, eventId
+        ]);
+
+        if (updateResult.affectedRows > 0) {
+            const [rows] = await connection.promise().query('SELECT * FROM calendars WHERE event_id = ?', [eventId]);
+            connection.end();
+            return res.json({ success: true, message: 'Event updated successfully', event: rows[0] });
+        } else {
+            connection.end();
+            return res.status(404).json({ success: false, message: "Event not found or no changes made." });
+        }
+    } catch (err) {
+        console.error('Error updating event:', err);
+        return res.status(500).json({ success: false, message: 'An error occurred while updating event data' });
     }
 };

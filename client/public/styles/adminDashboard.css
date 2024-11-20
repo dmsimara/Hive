@@ -184,3 +184,52 @@ html, body {
     height: 100%; 
     overflow-y: auto; 
   }
+
+/* middle part */
+.announce-title {
+    position: relative;
+    top: -12em;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    left: 17em;
+}
+
+.announcement-container {
+    border: 1px solid var(--orange);
+    height: 150px;
+    width: 40%;
+    position: relative;
+    top: -15em;
+    left: 22em;
+}
+
+.tracker-title {
+    position: relative;
+    top: -11.5em;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    left: 17em;
+}
+
+.tracker-container {
+    border: 1px solid var(--orange);
+    height: 150px;
+    width: 40%;
+    position: relative;
+    top: -14.5em;
+    left: 22em;
+}
+
+.event-card {
+    border: none;
+    /* padding: 10px; */
+    margin-bottom: 10px;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+.event-card h5 {
+    margin: 0 0 5px;
+}

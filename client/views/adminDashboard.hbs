@@ -30,7 +30,8 @@
       <div class="sub-menu-wrap" id="subMenu">
         <div class="sub-menu">
           <div class="user-info">
-            <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+            <img
+              src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
               alt="Profile" width="40px" />
             <h3>{{this.adminFirstName}} {{this.adminLastName}}</h3>
           </div>
@@ -62,43 +63,77 @@
         </a>
       </h3>
 
-<form class="d-flex" id="tenantSearchForm" role="search" method="POST" action="#" novalidate>
-    <input class="form-control me-2" type="search" placeholder="Search" name="searchTenants" aria-label="Search"
-      required id="searchTenantsInput">
-    <button class="btn btn-outline-success btn-sm" type="submit">Search</button>
-</form>
+      <form class="d-flex" id="tenantSearchForm" role="search" method="POST" action="#" novalidate>
+        <input class="form-control me-2" type="search" placeholder="Search" name="searchTenants" aria-label="Search"
+          required id="searchTenantsInput">
+        <button class="btn btn-outline-success btn-sm" type="submit">Search</button>
+      </form>
 
 
       <div class="tenant-cards" id="tenantCardsContainer">
         {{#if tenants.length}}
-          {{#each tenants}}
-          <a href="#" class="card-link" data-bs-toggle="modal" data-bs-target="#tenantModal">
-            <div class="card mb-3">
-              <div class="card-body">
-                <img src="{{#if this.tenantProfile}}/images/upload/{{this.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
-                  alt="Profile" width="40px" class="me-2" />
-                <h5 class="card-title d-inline">{{this.tenantFirstName}} {{this.tenantLastName}}</h5>
-              </div>
+        {{#each tenants}}
+        <a href="#" class="card-link" data-bs-toggle="modal" data-bs-target="#tenantModal">
+          <div class="card mb-3">
+            <div class="card-body">
+              <img
+                src="{{#if this.tenantProfile}}/images/upload/{{this.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+                alt="Profile" width="40px" class="me-2" />
+              <h5 class="card-title d-inline">{{this.tenantFirstName}} {{this.tenantLastName}}</h5>
             </div>
-          </a>
-          {{/each}}
+          </div>
+        </a>
+        {{/each}}
         {{else}}
-          <p>No active tenants found.</p>
+        <p>No active tenants found.</p>
         {{/if}}
       </div>
     </div>
 
     <!-- Admin Profile -->
     {{#each admins}}
-    <div class="col-4" id="middle" style="flex: 0 0 35%; max-width: 35%;">
+    <div class="col-4" id="middle" style="flex: 0 0 40%; max-width: 40%;">
       <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
         alt="Profile" class="user-pic" />
       <h2>Hi, {{this.adminFirstName}}</h2>
+      <h6>Here's an overview of your properties</h6>
     </div>
     {{/each}}
 
+    <h3 class="announce-title">Announcements
+      <a href="#">
+        <i class="material-icons">open_in_new</i>
+      </a>
+    </h3>
+    <div class="announcement-container"></div>
+
+    <h3 class="tracker-title">Tracker
+      <a href="/admin/tracker">
+        <i class="material-icons">open_in_new</i>
+      </a>
+    </h3>
+    <div class="tracker-container" id="tracker-container">
+      {{#if events.length}}
+      {{#each events}}
+      <div class="event-card">
+        <h5>{{this.event_name}}</h5>
+        <p><strong>Start:</strong> {{this.start}}</p>
+        <p><strong>End:</strong> {{this.end}}</p>
+        <p><strong>Description:</strong> {{this.event_description}}</p>
+        <p><strong>Status:</strong> {{this.status}}</p>
+      </div>
+      {{/each}}
+      {{else}}
+      <p>No events available at the moment.</p>
+      {{/if}}
+    </div>
+
+
+
+
+
     <!-- Links and Navigation -->
-    <div class="col-4 right" id="right" style="flex: 0 0 35%; max-width: 35%;">
+    <div class="col-4 right" id="right" style="flex: 0 0 30%; max-width: 30%;">
       <h1>Analytics dito</h1>
     </div>
   </div>
