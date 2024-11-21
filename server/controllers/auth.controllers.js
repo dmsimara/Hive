@@ -1119,3 +1119,162 @@ export const updateEvent = async (req, res) => {
         return res.status(500).json({ success: false, message: 'An error occurred while updating event data' });
     }
 };
+
+export const viewNotices = async (req, res) => {
+    console.log('Entering viewNotices...');
+    const { establishmentId } = req;
+  
+    if (!establishmentId) {
+      console.error('Establishment ID is undefined.');
+      return { success: false, message: 'Establishment ID is required.' };
+    }
+  
+    try {
+      const rows = await Notice.findAll({
+        where: { establishment_id: establishmentId },
+        order: [['pinned', 'DESC'], ['permanent', 'DESC'], ['updated_at', 'DESC']],
+      });
+  
+      const formattedNotices = rows.map(row => ({
+        ...row.get({ plain: true }),
+        updated_at: format(new Date(row.updated_at), 'MMMM dd, yyyy'),
+      }));
+  
+      return { success: true, notices: formattedNotices }; 
+  
+    } catch (error) {
+      console.error('Error fetching notices:', error);
+      return { success: false, message: 'Error fetching notices.' };
+    }
+  };
+  
+export const pinnedNotices = async (req, res) => {
+    const { establishmentId } = req;
+    if (!establishmentId) return res.status(400).json({ success: false, message: 'Establishment ID is required.' });
+  
+    try {
+      const rows = await Notice.findAll({
+        where: { establishment_id: establishmentId, pinned: true },
+        order: [['updated_at', 'DESC']],
+      });
+  
+      if (rows.length === 0) {
+        return res.json({
+          success: true,
+          notices: [{
+            title: 'No pinned notices yet',
+            content: 'There are no pinned notices at the moment. Please check back later.',
+            updated_at: 'Just now',
+            pinned: false,
+            permanent: false
+          }]
+        });
+      }
+  
+      const notices = rows.map(row => ({
+        ...row.get({ plain: true }),
+        updated_at: format(new Date(row.updated_at), 'MMMM dd, yyyy'),
+      }));
+  
+      res.json({ success: true, notices });
+    } catch (error) {
+      console.error('Error fetching pinned notices:', error);
+      res.status(500).json({ success: false, message: 'Error fetching pinned notices.' });
+    }
+};
+  
+export const permanentNotices = async (req, res) => {
+    const { establishmentId } = req;
+    if (!establishmentId) return res.status(400).json({ success: false, message: 'Establishment ID is required.' });
+  
+    try {
+      const rows = await Notice.findAll({
+        where: { establishment_id: establishmentId, permanent: true },
+        order: [['updated_at', 'DESC']],
+      });
+  
+      if (rows.length === 0) {
+        return res.json({
+          success: true,
+          notices: [{
+            title: 'No permanent notices yet',
+            content: 'There are no permanent notices at the moment. Please check back later.',
+            updated_at: 'Just now',
+            pinned: false,
+            permanent: false
+          }]
+        });
+      }
+  
+      const notices = rows.map(row => ({
+        ...row.get({ plain: true }),
+        updated_at: format(new Date(row.updated_at), 'MMMM dd, yyyy'),
+      }));
+  
+      res.json({ success: true, notices });
+    } catch (error) {
+      console.error('Error fetching permanent notices:', error);
+      res.status(500).json({ success: false, message: 'Error fetching permanent notices.' });
+    }
+};
+
+export const addNotice = async (req, res) => {
+    const { title, content, pinned, permanent } = req.body;
+
+    try {
+        // Validate that the necessary fields are present
+        if (!title || !content || pinned === undefined || permanent === undefined) {
+            return res.status(400).json({ success: false, message: "All fields are required." });
+        }
+
+        // Get the establishmentId from the token (assuming JWT token is passed via cookies)
+        const token = req.cookies.token;
+        if (!token) {
+            return res.status(401).json({ success: false, message: "Unauthorized. No token provided." });
+        }
+
+        let establishmentId;
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            establishmentId = decoded.establishmentId;
+        } catch (err) {
+            return res.status(401).json({ success: false, message: "Invalid or expired token." });
+        }
+
+        // Check if the notice already exists for the given establishment
+        const existingNotice = await Notice.findOne({ 
+            where: { 
+                title,
+                establishmentId 
+            } 
+        });
+
+        if (existingNotice) {
+            return res.status(400).json({ success: false, message: "Notice with this title already exists." });
+        }
+
+        // Create a new notice record in the database
+        const newNotice = await Notice.create({
+            title,
+            content,
+            pinned,     // Set pinned based on user interaction
+            permanent,  // Set permanent based on user interaction
+            establishmentId,
+        });
+
+        return res.status(201).json({
+            success: true,
+            message: "Notice added successfully",
+            notice: {
+                notice_id: newNotice.notice_id,
+                title: newNotice.title,
+                content: newNotice.content,
+                pinned: newNotice.pinned,
+                permanent: newNotice.permanent,
+                updated_at: newNotice.updated_at,  // Optional: Adjust if needed
+            }
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: 'Failed to add notice', error: error.message });
+    }
+};
