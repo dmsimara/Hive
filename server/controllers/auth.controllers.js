@@ -3,6 +3,7 @@ import Tenant from '../models/tenant.models.js';
 import Room from '../models/room.models.js';
 import Establishment from '../models/establishment.models.js';
 import Calendar from '../models/calendar.models.js';
+import Notice from '../models/notice.models.js';
 import bcryptjs from 'bcryptjs';
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
@@ -15,12 +16,12 @@ import { title } from 'process';
 
 
 export const adminRegister = async (req, res) => {
-    const {adminFirstName, adminLastName, adminEmail, adminPassword, eName} = req.body;
-   
+    const { adminFirstName, adminLastName, adminEmail, adminPassword, eName } = req.body;
+
     try {
         if (!adminFirstName || !adminLastName || !adminEmail || !adminPassword || !eName) {
             throw new Error("All fields are required");
-        } 
+        }
 
         const adminAlreadyExists = await Admin.findOne({
             where: { adminEmail }
@@ -29,7 +30,7 @@ export const adminRegister = async (req, res) => {
         console.log("adminAlreadyExists", adminAlreadyExists);
 
         if (adminAlreadyExists) {
-            return res.status(400).json({success: false, message: "Admin already exists"});
+            return res.status(400).json({ success: false, message: "Admin already exists" });
         }
 
         let establishment = await Establishment.findOne({
@@ -37,29 +38,25 @@ export const adminRegister = async (req, res) => {
         });
 
         if (!establishment) {
-            establishment = await Establishment.create({
-                eName
-            });
+            establishment = await Establishment.create({ eName });
+            console.log('Created new establishment:', establishment);
         }
 
         const hashedPassword = await bcryptjs.hash(adminPassword, 10);
         const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
-        const admin = new Admin({
+
+        const admin = await Admin.create({
             adminFirstName,
             adminLastName,
             adminEmail,
             adminPassword: hashedPassword,
-            establishment_id: establishment.establishment_id,
+            establishmentId: establishment.establishment_id, 
             verificationToken,
             verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000
         });
 
-        await admin.save();
-        
-        generateTokenAndSetCookie(res, admin.admin_id, admin.establishment_id);
-        
         await sendVerificationEmail(admin.adminEmail, verificationToken);
-        
+
         res.status(201).json({
             success: true,
             message: "Admin created successfully",
@@ -69,9 +66,10 @@ export const adminRegister = async (req, res) => {
             },
         });
     } catch (error) {
-        res.status(400).json({ success: false, message: error.message});
+        console.error("Error registering admin:", error);
+        res.status(400).json({ success: false, message: error.message });
     }
-}
+};
 
 export const verifyEmail = async (req, res) => {
     const {code} = req.body;
@@ -130,10 +128,8 @@ export const adminLogin = async (req, res) => {
         
         req.session.adminFirstName = admin.adminFirstName;
 
-        // Log the entire admin object to inspect its properties
         console.log("Admin Object:", JSON.stringify(admin, null, 2));
 
-        // Check establishment_id directly
         if (!admin.establishment_id) {
             return res.status(400).json({ success: false, message: "Establishment ID is required." });
         }
@@ -508,7 +504,6 @@ export const findDashTenants = async (req, res) => {
     }
 };
 
-
 export const findUnits = async (req, res) => {
     const searchTerm = req.body.searchUnits;
     console.log('Received search term:', searchTerm);
@@ -741,7 +736,6 @@ export const updateTenant = async (req, res) => {
     try {
         const connection = connectDB();
 
-        // Update tenant details
         const updateQuery = `
             UPDATE tenants 
             SET tenantFirstName = ?, tenantLastName = ?, tenantEmail = ?, mobileNum = ?, gender = ? 
@@ -849,7 +843,7 @@ export const getOccupiedUnits = async (req, res) => {
 export const getAvailableRooms = async (req, res) => {
     try {
       const rooms = await Room.findAll({
-        where: { roomRemainingSlot: { [Op.gt]: 0 } },  // This can be your "available" condition
+        where: { roomRemainingSlot: { [Op.gt]: 0 } },  
         attributes: ['room_id', 'roomNumber', 'roomType', 'floorNumber'],
       });
   
@@ -860,19 +854,16 @@ export const getAvailableRooms = async (req, res) => {
     }
   };
 
-// auth.controllers.js
 export const addEvent = async (req, res) => {
     const { event_name, event_description, start, end, status } = req.body;
 
     try {
         console.log('Incoming request data:', req.body);
 
-        // Validate input fields
         if (!event_name || !start || !status) {
             return res.status(400).json({ success: false, message: "Event name, start date, and status are required." });
         }
 
-        // Validate date fields
         const isStartValid = Date.parse(start);
         const isEndValid = Date.parse(end);
 
@@ -890,7 +881,6 @@ export const addEvent = async (req, res) => {
             return res.status(400).json({ success: false, message: "End date cannot be before start date." });
         }
 
-        // Verify the user's authentication token
         const token = req.cookies.token;
         if (!token) {
             return res.status(401).json({ success: false, message: "Unauthorized. No token provided." });
@@ -907,11 +897,9 @@ export const addEvent = async (req, res) => {
             return res.status(401).json({ success: false, message: "Invalid or expired token." });
         }
 
-        // Convert dates to UTC before saving them to the database
-        const startDateUTC = new Date(start).toISOString();  // Converts start to UTC ISO string
-        const endDateUTC = end ? new Date(end).toISOString() : null;  // Converts end to UTC ISO string
+        const startDateUTC = new Date(start).toISOString();  
+        const endDateUTC = end ? new Date(end).toISOString() : null;  
 
-        // Create new event with UTC dates
         const newEvent = await Calendar.create({
             event_name,
             event_description,
@@ -1007,8 +995,6 @@ export const editEvent = async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };
-
-
 
 export const deleteEvent = async (req, res) => {
     const { eventId } = req.params;
@@ -1120,5 +1106,271 @@ export const updateEvent = async (req, res) => {
     } catch (err) {
         console.error('Error updating event:', err);
         return res.status(500).json({ success: false, message: 'An error occurred while updating event data' });
+    }
+};
+
+export const viewNotices = async (req, res) => {
+    console.log('Entering viewNotices...');
+    const { establishmentId } = req;
+  
+    if (!establishmentId) {
+      console.error('Establishment ID is undefined.');
+      return { success: false, message: 'Establishment ID is required.' };
+    }
+  
+    try {
+      const rows = await Notice.findAll({
+        where: { establishment_id: establishmentId },
+        order: [['pinned', 'DESC'], ['permanent', 'DESC'], ['updated_at', 'DESC']],
+      });
+  
+      const formattedNotices = rows.map(row => ({
+        ...row.get({ plain: true }),
+        updated_at: format(new Date(row.updated_at), 'MMMM dd, yyyy'),
+      }));
+  
+      return { success: true, notices: formattedNotices }; 
+  
+    } catch (error) {
+      console.error('Error fetching notices:', error);
+      return { success: false, message: 'Error fetching notices.' };
+    }
+  };
+  
+export const pinnedNotices = async (req, res) => {
+    const { establishmentId } = req;
+    if (!establishmentId) return res.status(400).json({ success: false, message: 'Establishment ID is required.' });
+  
+    try {
+      const rows = await Notice.findAll({
+        where: { establishment_id: establishmentId, pinned: true },
+        order: [['updated_at', 'DESC']],
+      });
+  
+      if (rows.length === 0) {
+        return res.json({
+          success: true,
+          notices: [{
+            title: 'No pinned notices yet',
+            content: 'There are no pinned notices at the moment. Please check back later.',
+            updated_at: 'Just now',
+            pinned: false,
+            permanent: false
+          }]
+        });
+      }
+  
+      const notices = rows.map(row => ({
+        ...row.get({ plain: true }),
+        updated_at: format(new Date(row.updated_at), 'MMMM dd, yyyy'),
+      }));
+  
+      res.json({ success: true, notices });
+    } catch (error) {
+      console.error('Error fetching pinned notices:', error);
+      res.status(500).json({ success: false, message: 'Error fetching pinned notices.' });
+    }
+};
+  
+export const permanentNotices = async (req, res) => {
+    const { establishmentId } = req;
+    if (!establishmentId) return res.status(400).json({ success: false, message: 'Establishment ID is required.' });
+  
+    try {
+      const rows = await Notice.findAll({
+        where: { establishment_id: establishmentId, permanent: true },
+        order: [['updated_at', 'DESC']],
+      });
+  
+      if (rows.length === 0) {
+        return res.json({
+          success: true,
+          notices: [{
+            title: 'No permanent notices yet',
+            content: 'There are no permanent notices at the moment. Please check back later.',
+            updated_at: 'Just now',
+            pinned: false,
+            permanent: false
+          }]
+        });
+      }
+  
+      const notices = rows.map(row => ({
+        ...row.get({ plain: true }),
+        updated_at: format(new Date(row.updated_at), 'MMMM dd, yyyy'),
+      }));
+  
+      res.json({ success: true, notices });
+    } catch (error) {
+      console.error('Error fetching permanent notices:', error);
+      res.status(500).json({ success: false, message: 'Error fetching permanent notices.' });
+    }
+};
+
+export const addNotice = async (req, res) => {
+    const { title, content, pinned, permanent } = req.body;
+
+    try {
+        if (!title || !content || typeof pinned !== 'boolean' || typeof permanent !== 'boolean') {
+            return res.status(400).json({ success: false, message: "All fields are required and 'pinned' and 'permanent' must be boolean." });
+        }
+
+        const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ success: false, message: "Unauthorized. No token provided." });
+        }
+
+        let establishmentId, adminId;
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            establishmentId = decoded.establishmentId;  
+            adminId = decoded.adminId; 
+        } catch (err) {
+            return res.status(401).json({ success: false, message: "Invalid or expired token." });
+        }
+
+        const existingNotice = await Notice.findOne({
+            where: {
+                title,
+                establishment_id: establishmentId 
+            }
+        });
+
+        if (existingNotice) {
+            return res.status(400).json({ success: false, message: "Notice with this title already exists." });
+        }
+
+        const newNotice = await Notice.create({
+            title,
+            content,
+            pinned,
+            permanent,
+            admin_id: adminId, 
+            establishment_id: establishmentId,
+        });
+
+        return res.status(201).json({
+            success: true,
+            message: "Notice added successfully",
+            notice: {
+                notice_id: newNotice.notice_id,
+                title: newNotice.title,
+                content: newNotice.content,
+                pinned: newNotice.pinned,
+                permanent: newNotice.permanent,
+                updated_at: newNotice.updated_at,
+            }
+        });
+    } catch (error) {
+        console.error('Error adding notice:', error);
+        return res.status(500).json({
+            success: false, 
+            message: 'Failed to add notice',
+            error: error.message || 'Unknown error',
+            stack: process.env.NODE_ENV === 'development' ? error.stack : null  
+        });
+    }
+};
+
+export const togglePinned = async (req, res) => {
+    const { noticeId } = req.params;
+    let establishmentId;
+
+    try {
+        const token = req.cookies.token;
+        if (!token) {
+            return res.status(401).json({ success: false, message: "Unauthorized. No token provided." });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        establishmentId = decoded.establishmentId;
+
+        // Find the notice
+        const notice = await Notice.findOne({
+            where: { notice_id: noticeId, establishment_id: establishmentId },
+        });
+
+        if (!notice) {
+            return res.status(404).json({ success: false, message: "Notice not found." });
+        }
+
+        // Toggle pinned status
+        notice.pinned = notice.pinned ? 0 : 1;
+
+        // Save the changes to the database
+        await notice.save();
+
+        return res.status(200).json({
+            success: true,
+            isPinned: notice.pinned === 1,
+            message: notice.pinned ? "Notice pinned successfully" : "Notice unpinned successfully",
+        });
+    } catch (error) {
+        console.error("Error in togglePinned:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to update pinned status.",
+        });
+    }
+};
+
+export const togglePermanent = async (req, res) => {
+    const { noticeId } = req.params;
+    let establishmentId;
+
+    try {
+        const token = req.cookies.token;
+        if (!token) {
+            return res.status(401).json({ success: false, message: "Unauthorized. No token provided." });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        establishmentId = decoded.establishmentId;
+
+        // Find the notice
+        const notice = await Notice.findOne({
+            where: { notice_id: noticeId, establishment_id: establishmentId },
+        });
+
+        if (!notice) {
+            return res.status(404).json({ success: false, message: "Notice not found." });
+        }
+
+        // Toggle permanent status
+        notice.permanent = notice.permanent ? 0 : 1;
+
+        // Save the changes to the database
+        await notice.save();
+
+        return res.status(200).json({
+            success: true,
+            isPermanent: notice.permanent === 1,
+            message: notice.permanent ? "Notice marked as permanent" : "Notice unmarked as permanent",
+        });
+    } catch (error) {
+        console.error("Error in togglePermanent:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to update permanent status.",
+        });
+    }
+};
+
+export const deleteNotice = async (req, res) => {
+    const { noticeId } = req.params;
+
+    try {
+        const result = await Notice.destroy({
+            where: { notice_id: noticeId } 
+        });
+
+        if (result > 0) {
+            return res.json({ success: true, message: 'Notice deleted successfully' });
+        } else {
+            return res.status(404).json({ success: false, message: 'Notice not found' });
+        }
+    } catch (error) {
+        console.error('Error deleting notice:', error);
+        return res.status(500).json({ success: false, message: 'Failed to delete notice' });
     }
 };

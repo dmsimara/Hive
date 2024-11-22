@@ -15,8 +15,9 @@ import cors from 'cors';
 import Admin from "./models/admin.models.js";
 import Room from "./models/room.models.js";
 import Tenant from "./models/tenant.models.js";
+import Notice from "./models/notice.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
-import { addTenant, addTenantView, addUnitView, editTenant, findDashTenants, findTenants, findUnits, getAvailableRooms, getEvents, getOccupiedUnits, updateEvent, updateTenant, viewAdmins, viewEvents, viewTenants, viewUnits } from './controllers/auth.controllers.js';
+import { addTenant, addTenantView, addUnitView, editTenant, findDashTenants, findTenants, findUnits, getAvailableRooms, getEvents, getOccupiedUnits, updateEvent, updateTenant, viewAdmins, viewEvents, viewNotices, viewTenants, viewUnits } from './controllers/auth.controllers.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -497,6 +498,82 @@ app.put('/api/auth/updateEvent/:eventId', async (req, res) => {
     }
   });
 
+// ANNOUNCEMENT PAGE ROUTES
+app.get("/admin/announcements", verifyToken, async (req, res) => {
+    try {
+      const { filter } = req.query; // Get the filter from query parameters
+      const admins = await viewAdmins(req);
+
+      let notices = [];
+
+      // Fetch notices based on filter (pinned, permanent, or all)
+      switch (filter) {
+        case "pinned":
+          notices = await Notice.findAll({
+            where: {
+              establishment_id: req.establishmentId,
+              pinned: true
+            },
+            order: [['updated_at', 'DESC']]
+          });
+          break;
+
+        case "permanent":
+          notices = await Notice.findAll({
+            where: {
+              establishment_id: req.establishmentId,
+              permanent: true
+            },
+            order: [['updated_at', 'DESC']]
+          });
+          break;
+
+        default:
+          // Fetch all notices if no filter or 'all' is specified
+          const response = await viewNotices(req, res);
+          notices = response.notices || []; // Ensure notices is an array
+          break;
+      }
+
+      // If no notices are found for the given filter, send a default message
+      if (notices.length === 0) {
+        const message = filter === 'pinned'
+          ? "There are no pinned notices at the moment. Please check back later."
+          : "There are no permanent notices at the moment. Please check back later.";
+
+        notices = [{
+          title: filter === 'pinned' ? "No pinned notices yet" : "No permanent notices yet",
+          content: message,
+          pinned: false,
+          permanent: false,
+          updated_at: new Date().toLocaleString() // Or set a static time, e.g., "Just now"
+        }];
+      }
+
+      const plainNotices = notices.map(notice => notice.get ? notice.get({ plain: true }) : notice);
+
+      // If this is an API call (AJAX), return JSON
+      if (req.headers['accept'] === 'application/json') {
+        return res.json({ success: true, notices: plainNotices });
+      }
+
+      // Otherwise, render the view (HTML)
+      res.render("announcements", {
+        title: "Hive",
+        styles: ["announcements"],
+        admins: admins || [],
+        notices: plainNotices || [] // Pass notices to the template
+      });
+
+    } catch (error) {
+      console.error('Error fetching data for admin tracker:', error);
+      if (!res.headersSent) {
+        res.status(500).json({ success: false, message: 'Error fetching data' });
+      }
+    }
+});
+  
+  
  // TENANT PAGES ROUTES
 app.get("/tenant/dashboard", verifyTenantToken, (req, res) => {
     res.render("tenantDashboard", { title: "Hive", styles: ["ten-dashboard"] });
