@@ -35,38 +35,86 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Ensure elements are in the DOM before adding event listeners
-    const closeModalButton = document.getElementById('closeModal');
-    const openModalButton = document.getElementById('openModal');
-
-    if (closeModalButton) {
-        closeModalButton.onclick = function() {
-            document.getElementById('myModal').style.display = 'none'; 
-            document.body.style.overflow = 'auto';
-        };
-    }
-
-    if (openModalButton) {
-        openModalButton.onclick = function() {
-            document.getElementById('myModal').style.display = 'block'; 
-            document.body.style.overflow = 'hidden';
-        };
-    }
-});
-
-  
 document.addEventListener("DOMContentLoaded", function () {
     const pinnedButton = document.getElementById("pinned-notices-btn");
     const permanentButton = document.getElementById("permanent-notices-btn");
     const allButton = document.getElementById("all-notices-btn");
     const submitNoticeButton = document.getElementById("submitNotice");
     const addNoticeForm = document.getElementById("addNoticeForm");
+    const closeModalButton = document.getElementById('closeModal');
+    const openModalButton = document.getElementById('openModal');
     const noticesContainer = document.getElementById("notices-container");
 
-    pinnedButton.addEventListener("click", () => fetchFilteredNotices("/admin/announcements?filter=pinned"));
-    permanentButton.addEventListener("click", () => fetchFilteredNotices("/admin/announcements?filter=permanent"));
-    allButton.addEventListener("click", () => fetchFilteredNotices("/admin/announcements"));
+    const addNoticeModal = new bootstrap.Modal(document.getElementById('addNotice'));
+
+    if (closeModalButton) {
+        closeModalButton.onclick = function() {
+            addNoticeModal.hide(); 
+            document.body.style.overflow = 'auto';
+        };
+    }
+
+    if (openModalButton) {
+        openModalButton.onclick = function() {
+            addNoticeModal.show(); 
+            document.body.style.overflow = 'hidden';
+        };
+    }
+
+    const buttons = [allButton, pinnedButton, permanentButton];
+    let currentFilter = "/admin/announcements";
+
+    function setActiveButton(activeButton) {
+        buttons.forEach((button) => button.classList.remove("active"));
+        activeButton.classList.add("active");
+    }
+
+    async function fetchFilteredNotices(url) {
+        try {
+            const response = await fetch(url, { headers: { Accept: "application/json" } });
+            if (!response.ok) throw new Error("Failed to fetch notices");
+
+            const { notices } = await response.json();
+            noticesContainer.innerHTML = notices.length
+                ? notices
+                      .map(
+                          (n) => `
+                    <div data-id="${n.notice_id}" class="notice-item">
+                        <h3>${n.title}</h3>
+                        <p>${n.content}</p>
+                        <i class="material-icons pinned" data-id="${n.notice_id}" onclick="togglePinned(${n.notice_id}, ${n.pinned})">
+                            ${n.pinned ? 'book' : 'bookmark'}
+                        </i>
+                        <i class="material-icons permanent" data-id="${n.notice_id}" onclick="togglePermanent(${n.notice_id}, ${n.permanent})">
+                            ${n.permanent ? 'note_add' : 'description'}
+                        </i>
+                        <i class="material-icons delete" data-id="${n.notice_id}" onclick="deleteNotice(${n.notice_id})">delete</i>
+                    </div>
+                `).join("")
+                : "<p>No notices found</p>";
+        } catch (error) {
+            console.error("Error fetching notices:", error);
+            alert("Failed to fetch notices.");
+        }
+    }
+
+    pinnedButton.addEventListener("click", () => {
+        setActiveButton(pinnedButton);
+        currentFilter = "/admin/announcements?filter=pinned";
+        fetchFilteredNotices(currentFilter);
+    });
+
+    permanentButton.addEventListener("click", () => {
+        setActiveButton(permanentButton);
+        currentFilter = "/admin/announcements?filter=permanent";
+        fetchFilteredNotices(currentFilter);
+    });
+
+    allButton.addEventListener("click", () => {
+        setActiveButton(allButton);
+        currentFilter = "/admin/announcements";
+        fetchFilteredNotices(currentFilter);
+    });
 
     submitNoticeButton.addEventListener("click", async () => {
         const title = document.getElementById("title").value;
@@ -81,123 +129,67 @@ document.addEventListener("DOMContentLoaded", function () {
                 body: JSON.stringify({ title, content, pinned: false, permanent: false }),
             });
 
-            if (!response.ok) throw new Error("Failed to add notice");
+            if (!response.ok) throw new Error("Failed to add announcement");
 
-            const { success, message } = await response.json();
-            if (success) {
-                alert("Notice added successfully!");
-                addNoticeForm.reset();
-                fetchFilteredNotices("/admin/announcements");
-            } else alert(message);
+            alert("Announcement added successfully!");
+            addNoticeForm.reset();
+            setActiveButton(allButton);
+            fetchFilteredNotices("/admin/announcements");
+
+            addNoticeModal.hide();
+
+            console.log("Modal should be closed now!");
         } catch (error) {
             console.error("Error submitting notice:", error);
             alert("Error submitting notice.");
         }
     });
 
-    window.togglePinned = async (noticeId) => {
-        const noticeElement = document.querySelector(`[data-id="${noticeId}"]`);
-
-        const isPinned = noticeElement && noticeElement.dataset.pinned === "true"; 
-
-        const confirmationMessage = isPinned 
-            ? "Are you sure you want to unpin this notice?" 
-            : "Are you sure you want to pin this notice?";
-
-        const userConfirmed = confirm(confirmationMessage);
-        if (!userConfirmed) {
-        }
-
+    window.togglePinned = async (noticeId, isPinned) => {
+        const action = isPinned ? "unpin" : "pin";
+        if (!confirm(`Are you sure you want to ${action} this announcement?`)) return;
+    
         try {
             const response = await fetch(`/api/auth/view/notices/${noticeId}/toggle_pinned`, { method: "PATCH" });
-            const data = await response.json();
-            
-            if (data.success) {
-                const actionMessage = data.isPinned ? "Notice pinned!" : "Notice unpinned!";
-                alert(actionMessage);
-
-                if (noticeElement) {
-                    noticeElement.dataset.pinned = data.isPinned ? "true" : "false"; 
-                    noticeElement.querySelector(".material-icons.pinned").textContent = data.isPinned ? "push_pin" : "push_pin_outlined"; // Change icon based on pinned state
-                }
-
-                fetchFilteredNotices("/admin/announcements");  
-            } else {
-                alert("Failed to update pinned status.");
-            }
+            if (!response.ok) throw new Error("Failed to toggle pinned status");
+    
+            location.reload(); 
         } catch (error) {
             console.error("Error toggling pinned status:", error);
-            alert("Error toggling pinned status.");
         }
     };
-
-    window.togglePermanent = async (noticeId) => {
-        const isPermanent = document.querySelector(`[data-id="${noticeId}"].permanent`).textContent === "note";
-        const confirmationMessage = isPermanent 
-            ? "Are you sure you want to remove this notice from permanent?" 
-            : "Are you sure you want to mark this notice as permanent?";
-
-        const userConfirmed = confirm(confirmationMessage);
-        if (!userConfirmed) {
-            return; 
-        }
-
+    
+    window.togglePermanent = async (noticeId, isPermanent) => {
+        const action = isPermanent ? "unmark permanent" : "mark permanent";
+        if (!confirm(`Are you sure you want to ${action} this announcement?`)) return;
+    
         try {
             const response = await fetch(`/api/auth/view/notices/${noticeId}/toggle_permanent`, { method: "PATCH" });
-            const data = await response.json();
-            
-            if (data.success) {
-                const actionMessage = data.isPermanent ? "Notice marked as permanent!" : "Notice unmarked as permanent!";
-                alert(actionMessage);
-
-                const permanentButton = document.querySelector(`[data-id="${noticeId}"].permanent`);
-                if (permanentButton) {
-                    permanentButton.textContent = data.isPermanent ? "note" : "note_add"; 
-                }
-
-                fetchFilteredNotices("/admin/announcements");  
-            } else {
-                alert("Failed to update permanent status.");
-            }
+            if (!response.ok) throw new Error("Failed to toggle permanent status");
+    
+            location.reload(); 
         } catch (error) {
             console.error("Error toggling permanent status:", error);
-            alert("Error toggling permanent status.");
         }
     };
 
-    async function fetchFilteredNotices(url) {
+    window.deleteNotice = async (noticeId) => {
+        const confirmed = confirm("Are you sure you want to delete this announcement?");
+        if (!confirmed) return;
+
         try {
-            const response = await fetch(url, { headers: { Accept: "application/json" } });
-            if (!response.ok) throw new Error("Failed to fetch notices");
+            const response = await fetch(`/api/auth/view/notices/${noticeId}/delete`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" }
+            });
 
-            const { notices } = await response.json();
-            noticesContainer.innerHTML = notices.length
-                ? notices
-                      .map(
-                          (n) => `
-                    <div data-id="${n.notice_id}" data-pinned="${n.pinned}" class="notice-item ${n.pinned ? 'pinned' : ''} ${n.permanent ? 'permanent' : ''}">
-                        <h2 class="notice-title">${n.title}</h2>
-                        <p class="notice-content">${n.content}</p>
-                        <span class="notice-meta">
-                            ${n.pinned ? '<span class="badge pinned-badge">Pinned</span>' : ''}
-                            ${n.permanent ? '<span class="badge permanent-badge">Permanent</span>' : ''}
-                            <span class="notice-date">${new Date(n.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                        </span>
-                        <i class="material-icons pinned" onclick="togglePinned(${n.notice_id})">
-                            ${n.pinned ? "push_pin" : "push_pin_outlined"}
-                        </i>
-                        <i class="material-icons permanent" onclick="togglePermanent(${n.notice_id})">
-                            ${n.permanent ? "note" : "note_add"}
-                        </i>
-                    </div>
-                `
-                      )
-                      .join("")
-                : "<p>No notices available.</p>";
+            if (!response.ok) throw new Error("Failed to delete announcement");
+
+            alert("Announcement deleted successfully!");
+            fetchFilteredNotices("/admin/announcements"); 
         } catch (error) {
-            console.error("Error fetching notices:", error);
+            console.error("Error deleting notice:", error);
+            alert("Error deleting notice.");
         }
-    }
-
-    fetchFilteredNotices("/admin/announcements");
+    };
 });
