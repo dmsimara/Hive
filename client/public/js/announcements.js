@@ -5,35 +5,54 @@ function toggleMenu() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    // Select the "Logout" button and "View Account" link
     const logoutButton = document.getElementById("logoutButton");
+    const viewAccountButton = document.querySelector(".sub-menu-link[href='/admin/dashboard/view/account']");
 
-    logoutButton.addEventListener("click", async () => {
-        const isConfirmed = confirm("Are you sure you want to log out?");
-        
-        if (!isConfirmed) return;
+    // Check if the elements are found
+    console.log("logoutButton:", logoutButton);
+    console.log("viewAccountButton:", viewAccountButton);
 
-        try {
-            const response = await fetch("/api/auth/adminLogout", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
+    if (logoutButton) {
+        logoutButton.addEventListener("click", async () => {
+            const isConfirmed = confirm("Are you sure you want to log out?");
+            
+            if (!isConfirmed) return;
 
-            const data = await response.json();
+            try {
+                const response = await fetch("/api/auth/adminLogout", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
 
-            if (response.ok) {
-                alert(data.message);
-                window.location.href = "/";
-            } else {
-                alert(data.message || "Logout failed. Please try again.");
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert(data.message);
+                    window.location.href = "/";
+                } else {
+                    alert(data.message || "Logout failed. Please try again.");
+                }
+            } catch (error) {
+                alert("An error occurred during logout. Please try again later.");
+                console.error("Error:", error);
             }
-        } catch (error) {
-            alert("An error occurred during logout. Please try again later.");
-            console.error("Error:", error);
-        }
-    });
+        });
+    } else {
+        console.log("logoutButton not found");
+    }
+
+    if (viewAccountButton) {
+        viewAccountButton.addEventListener("click", () => {
+            console.log("View Account button clicked");
+        });
+    } else {
+        console.log("viewAccountButton not found");
+    }
 });
+
 
 document.addEventListener("DOMContentLoaded", function () {
     const pinnedButton = document.getElementById("pinned-notices-btn");
