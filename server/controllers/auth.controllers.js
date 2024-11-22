@@ -1284,7 +1284,7 @@ export const addNotice = async (req, res) => {
 
 export const togglePinned = async (req, res) => {
     const { noticeId } = req.params;
-    let establishmentId, adminId;
+    let establishmentId;
 
     try {
         const token = req.cookies.token;
@@ -1293,46 +1293,40 @@ export const togglePinned = async (req, res) => {
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        establishmentId = decoded.establishmentId;  
-        adminId = decoded.adminId;
+        establishmentId = decoded.establishmentId;
 
+        // Find the notice
         const notice = await Notice.findOne({
-            where: {
-                notice_id: noticeId, 
-                establishment_id: establishmentId 
-            },
+            where: { notice_id: noticeId, establishment_id: establishmentId },
         });
 
         if (!notice) {
             return res.status(404).json({ success: false, message: "Notice not found." });
         }
 
-        console.log("Current pinned status:", notice.pinned);
+        // Toggle pinned status
+        notice.pinned = notice.pinned ? 0 : 1;
 
-        notice.pinned = notice.pinned === 1 ? 0 : 1;
-
+        // Save the changes to the database
         await notice.save();
-
-        console.log("Updated pinned status:", notice.pinned);
 
         return res.status(200).json({
             success: true,
-            isPinned: notice.pinned,
+            isPinned: notice.pinned === 1,
             message: notice.pinned ? "Notice pinned successfully" : "Notice unpinned successfully",
         });
     } catch (error) {
-        console.error("Error in togglePinned:", error.message);
+        console.error("Error in togglePinned:", error);
         return res.status(500).json({
             success: false,
-            message: "Failed to update pinned status",
-            error: error.message,
+            message: "Failed to update pinned status.",
         });
     }
 };
 
 export const togglePermanent = async (req, res) => {
     const { noticeId } = req.params;
-    let establishmentId, adminId;
+    let establishmentId;
 
     try {
         const token = req.cookies.token;
@@ -1341,34 +1335,52 @@ export const togglePermanent = async (req, res) => {
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        establishmentId = decoded.establishmentId;  
-        adminId = decoded.adminId;
+        establishmentId = decoded.establishmentId;
 
+        // Find the notice
         const notice = await Notice.findOne({
-            where: {
-                notice_id: noticeId, 
-                establishment_id: establishmentId 
-            },
+            where: { notice_id: noticeId, establishment_id: establishmentId },
         });
 
         if (!notice) {
             return res.status(404).json({ success: false, message: "Notice not found." });
         }
 
-        notice.permanent = notice.permanent === 1 ? 0 : 1;
+        // Toggle permanent status
+        notice.permanent = notice.permanent ? 0 : 1;
+
+        // Save the changes to the database
         await notice.save();
 
         return res.status(200).json({
             success: true,
-            isPermanent: notice.permanent,
+            isPermanent: notice.permanent === 1,
             message: notice.permanent ? "Notice marked as permanent" : "Notice unmarked as permanent",
         });
     } catch (error) {
-        console.error("Error in togglePermanent:", error.message);
+        console.error("Error in togglePermanent:", error);
         return res.status(500).json({
             success: false,
-            message: "Failed to update permanent status",
-            error: error.message,
+            message: "Failed to update permanent status.",
         });
+    }
+};
+
+export const deleteNotice = async (req, res) => {
+    const { noticeId } = req.params;
+
+    try {
+        const result = await Notice.destroy({
+            where: { notice_id: noticeId } 
+        });
+
+        if (result > 0) {
+            return res.json({ success: true, message: 'Notice deleted successfully' });
+        } else {
+            return res.status(404).json({ success: false, message: 'Notice not found' });
+        }
+    } catch (error) {
+        console.error('Error deleting notice:', error);
+        return res.status(500).json({ success: false, message: 'Failed to delete notice' });
     }
 };
