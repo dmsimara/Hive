@@ -1282,107 +1282,100 @@ export const addNotice = async (req, res) => {
     }
 };
 
+// Toggle pinned status
 export const togglePinned = async (req, res) => {
-    const { notice_id } = req.params;
+    const { noticeId } = req.params;
+    let establishmentId, adminId;
 
     try {
-        // Get the token from cookies
         const token = req.cookies.token;
         if (!token) {
             return res.status(401).json({ success: false, message: "Unauthorized. No token provided." });
         }
 
-        // Decode the token to get the establishment_id
-        let establishment_id;
-        try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            establishment_id = decoded.establishment_id;  // Adjusted to match the column name in the table
-        } catch (err) {
-            return res.status(401).json({ success: false, message: "Invalid or expired token." });
-        }
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        establishmentId = decoded.establishmentId;  
+        adminId = decoded.adminId;
 
-        // Find the notice by notice_id and ensure it belongs to the current establishment
         const notice = await Notice.findOne({
             where: {
-                notice_id,           // Use notice_id here
-                establishment_id,  // Adjusted to match the column name in the table
-            }
+                notice_id: noticeId, 
+                establishment_id: establishmentId 
+            },
         });
 
         if (!notice) {
             return res.status(404).json({ success: false, message: "Notice not found." });
         }
 
-        // Toggle the pinned status
-        notice.pinned = !notice.pinned;
+        // Log the current pinned status for debugging purposes
+        console.log("Current pinned status:", notice.pinned);
+
+        // Toggle pinned status and ensure it is 1 or 0 (true or false)
+        notice.pinned = notice.pinned === 1 ? 0 : 1;
+
+        // Save the updated status to the database
         await notice.save();
+
+        // Log the new pinned status for debugging purposes
+        console.log("Updated pinned status:", notice.pinned);
 
         return res.status(200).json({
             success: true,
-            message: "Notice pinned status updated successfully",
-            notice: {
-                notice_id: notice.notice_id,
-                title: notice.title,
-                content: notice.content,
-                pinned: notice.pinned,
-                permanent: notice.permanent,
-                updated_at: notice.updated_at,  // Optional: Adjust if needed
-            }
+            isPinned: notice.pinned,
+            message: notice.pinned ? "Notice pinned successfully" : "Notice unpinned successfully",
         });
     } catch (error) {
-        return res.status(500).json({ success: false, message: 'Failed to update pinned status', error: error.message });
+        console.error("Error in togglePinned:", error.message);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to update pinned status",
+            error: error.message,
+        });
     }
 };
 
 // Toggle permanent status
 export const togglePermanent = async (req, res) => {
-    const { notice_id } = req.params;
+    const { noticeId } = req.params;
+    let establishmentId, adminId;
 
     try {
-        // Get the token from cookies
         const token = req.cookies.token;
         if (!token) {
             return res.status(401).json({ success: false, message: "Unauthorized. No token provided." });
         }
 
-        // Decode the token to get the establishment_id
-        let establishment_id;
-        try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            establishment_id = decoded.establishment_id;  // Adjusted to match the column name in the table
-        } catch (err) {
-            return res.status(401).json({ success: false, message: "Invalid or expired token." });
-        }
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        establishmentId = decoded.establishmentId;  
+        adminId = decoded.adminId;
 
-        // Find the notice by notice_id and ensure it belongs to the current establishment
         const notice = await Notice.findOne({
             where: {
-                notice_id,           // Use notice_id here
-                establishment_id,  // Adjusted to match the column name in the table
-            }
+                notice_id: noticeId, 
+                establishment_id: establishmentId 
+            },
         });
 
         if (!notice) {
             return res.status(404).json({ success: false, message: "Notice not found." });
         }
 
-        // Toggle the permanent status
-        notice.permanent = !notice.permanent;
+        // Toggle permanent status and ensure it is 1 or 0 (true or false)
+        notice.permanent = notice.permanent === 1 ? 0 : 1;
         await notice.save();
 
         return res.status(200).json({
             success: true,
-            message: "Notice permanent status updated successfully",
-            notice: {
-                notice_id: notice.notice_id,
-                title: notice.title,
-                content: notice.content,
-                pinned: notice.pinned,
-                permanent: notice.permanent,
-                updated_at: notice.updated_at,  // Optional: Adjust if needed
-            }
+            isPermanent: notice.permanent,
+            message: notice.permanent ? "Notice marked as permanent" : "Notice unmarked as permanent",
         });
     } catch (error) {
-        return res.status(500).json({ success: false, message: 'Failed to update permanent status', error: error.message });
+        console.error("Error in togglePermanent:", error.message);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to update permanent status",
+            error: error.message,
+        });
     }
 };
