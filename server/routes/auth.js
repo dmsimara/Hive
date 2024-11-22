@@ -1,5 +1,5 @@
 import express from "express";
-import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, deleteTenant, viewAdmins, viewUnits, findUnits, addUnitView, addUnit, deleteUnit, getOccupiedUnits, editTenant, updateTenant, findDashTenants, addEvent, viewEvents, editEvent, deleteEvent, getEvents, updateEvent, viewNotices, pinnedNotices, permanentNotices, addNotice } from "../controllers/auth.controllers.js";
+import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, deleteTenant, viewAdmins, viewUnits, findUnits, addUnitView, addUnit, deleteUnit, getOccupiedUnits, editTenant, updateTenant, findDashTenants, addEvent, viewEvents, editEvent, deleteEvent, getEvents, updateEvent, viewNotices, pinnedNotices, permanentNotices, addNotice, togglePinned, togglePermanent } from "../controllers/auth.controllers.js";
 import { verifyTenantToken, verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
@@ -29,6 +29,8 @@ router.get("/view/notices", viewNotices);
 router.get("/view/notices/pinned", pinnedNotices);
 router.get("/view/notices/permanent", permanentNotices);
 router.post("/view/notices/add", addNotice);
+router.patch("/view/notices/:noticeId/toggle_pinned", togglePinned);
+router.patch("/view/notices/:noticeId/toggle_permanent", togglePermanent);
 
 
 // tenants

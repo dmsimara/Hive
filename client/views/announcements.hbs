@@ -66,28 +66,27 @@
 
 <div class="body">
     <nav class="filter-nav">
-      <a href="#" id="all-notices-btn" class="filter-link active">All</a>
-      <a href="#" id="pinned-notices-btn" class="filter-link">Pinned</a>
-      <a href="#" id="permanent-notices-btn" class="filter-link">Permanent</a>
+        <a href="#" id="all-notices-btn" class="filter-link active">All</a>
+        <a href="#" id="pinned-notices-btn" class="filter-link">Pinned</a>
+        <a href="#" id="permanent-notices-btn" class="filter-link">Permanent</a>
     </nav>
 
     <div id="notices-container" class="notices-list">
-      {{#each notices}}
-      <div class="notice-item {{#if pinned}}pinned{{/if}} {{#if permanent}}permanent{{/if}}">
-        <h2 class="notice-title">{{title}}</h2>
-        <p class="notice-content">{{content}}</p>
-        <span class="notice-meta">
-          {{#if pinned}}<span class="badge pinned-badge">Pinned</span>{{/if}}
-          {{#if permanent}}<span class="badge permanent-badge">Permanent</span>{{/if}}
-          <span class="notice-date">{{updated_at}}</span>
-        </span>
-        <!-- Toggle pinned and permanent icons -->
-        <i class="material-icons pinned" data-id="{{notice_id}}" onclick="togglePinned({{notice_id}})">push_pin</i>
-        <i class="material-icons permanent" data-id="{{notice_id}}" onclick="togglePermanent({{notice_id}})">note</i>
-      </div>
-      {{else}}
-      <p>No notices available at the moment.</p>
-      {{/each}}
+        {{#each notices}}
+        <div class="notice-item {{#if pinned}}pinned{{/if}} {{#if permanent}}permanent{{/if}}">
+            <h2 class="notice-title">{{title}}</h2>
+            <p class="notice-content">{{content}}</p>
+            <span class="notice-meta">
+                {{#if pinned}}<span class="badge pinned-badge">Pinned</span>{{/if}}
+                {{#if permanent}}<span class="badge permanent-badge">Permanent</span>{{/if}}
+                <span class="notice-date">{{updated_at}}</span>
+            </span>
+            <i class="material-icons pinned" data-id="{{notice_id}}" onclick="togglePinned({{notice_id}})">push_pin</i>
+            <i class="material-icons permanent" data-id="{{notice_id}}" onclick="togglePermanent({{notice_id}})">note</i>
+        </div>
+        {{else}}
+        <p>No notices available at the moment.</p>
+        {{/each}}
     </div>
 </div>
 
@@ -119,5 +118,4 @@
     </div>
 </div>
 
-
-  <script src="/js/announcements.js"></script>
+<script src="/js/announcements.js"></script>

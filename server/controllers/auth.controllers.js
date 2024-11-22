@@ -859,7 +859,6 @@ export const getAvailableRooms = async (req, res) => {
     }
   };
 
-// auth.controllers.js
 export const addEvent = async (req, res) => {
     const { event_name, event_description, start, end, status } = req.body;
 
@@ -1222,44 +1221,42 @@ export const addNotice = async (req, res) => {
     const { title, content, pinned, permanent } = req.body;
 
     try {
-        // Validate that the necessary fields are present
-        if (!title || !content || pinned === undefined || permanent === undefined) {
-            return res.status(400).json({ success: false, message: "All fields are required." });
+        if (!title || !content || typeof pinned !== 'boolean' || typeof permanent !== 'boolean') {
+            return res.status(400).json({ success: false, message: "All fields are required and 'pinned' and 'permanent' must be boolean." });
         }
 
-        // Get the establishmentId from the token (assuming JWT token is passed via cookies)
-        const token = req.cookies.token;
+        const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
         if (!token) {
             return res.status(401).json({ success: false, message: "Unauthorized. No token provided." });
         }
 
-        let establishmentId;
+        let establishmentId, adminId;
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            establishmentId = decoded.establishmentId;
+            establishmentId = decoded.establishmentId;  
+            adminId = decoded.adminId; 
         } catch (err) {
             return res.status(401).json({ success: false, message: "Invalid or expired token." });
         }
 
-        // Check if the notice already exists for the given establishment
-        const existingNotice = await Notice.findOne({ 
-            where: { 
+        const existingNotice = await Notice.findOne({
+            where: {
                 title,
-                establishmentId 
-            } 
+                establishment_id: establishmentId 
+            }
         });
 
         if (existingNotice) {
             return res.status(400).json({ success: false, message: "Notice with this title already exists." });
         }
 
-        // Create a new notice record in the database
         const newNotice = await Notice.create({
             title,
             content,
-            pinned,     // Set pinned based on user interaction
-            permanent,  // Set permanent based on user interaction
-            establishmentId,
+            pinned,
+            permanent,
+            admin_id: adminId, 
+            establishment_id: establishmentId,
         });
 
         return res.status(201).json({
@@ -1271,10 +1268,121 @@ export const addNotice = async (req, res) => {
                 content: newNotice.content,
                 pinned: newNotice.pinned,
                 permanent: newNotice.permanent,
-                updated_at: newNotice.updated_at,  // Optional: Adjust if needed
+                updated_at: newNotice.updated_at,
             }
         });
     } catch (error) {
-        return res.status(500).json({ success: false, message: 'Failed to add notice', error: error.message });
+        console.error('Error adding notice:', error);
+        return res.status(500).json({
+            success: false, 
+            message: 'Failed to add notice',
+            error: error.message || 'Unknown error',
+            stack: process.env.NODE_ENV === 'development' ? error.stack : null  
+        });
+    }
+};
+
+export const togglePinned = async (req, res) => {
+    const { notice_id } = req.params;
+
+    try {
+        // Get the token from cookies
+        const token = req.cookies.token;
+        if (!token) {
+            return res.status(401).json({ success: false, message: "Unauthorized. No token provided." });
+        }
+
+        // Decode the token to get the establishment_id
+        let establishment_id;
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            establishment_id = decoded.establishment_id;  // Adjusted to match the column name in the table
+        } catch (err) {
+            return res.status(401).json({ success: false, message: "Invalid or expired token." });
+        }
+
+        // Find the notice by notice_id and ensure it belongs to the current establishment
+        const notice = await Notice.findOne({
+            where: {
+                notice_id,           // Use notice_id here
+                establishment_id,  // Adjusted to match the column name in the table
+            }
+        });
+
+        if (!notice) {
+            return res.status(404).json({ success: false, message: "Notice not found." });
+        }
+
+        // Toggle the pinned status
+        notice.pinned = !notice.pinned;
+        await notice.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Notice pinned status updated successfully",
+            notice: {
+                notice_id: notice.notice_id,
+                title: notice.title,
+                content: notice.content,
+                pinned: notice.pinned,
+                permanent: notice.permanent,
+                updated_at: notice.updated_at,  // Optional: Adjust if needed
+            }
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: 'Failed to update pinned status', error: error.message });
+    }
+};
+
+// Toggle permanent status
+export const togglePermanent = async (req, res) => {
+    const { notice_id } = req.params;
+
+    try {
+        // Get the token from cookies
+        const token = req.cookies.token;
+        if (!token) {
+            return res.status(401).json({ success: false, message: "Unauthorized. No token provided." });
+        }
+
+        // Decode the token to get the establishment_id
+        let establishment_id;
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            establishment_id = decoded.establishment_id;  // Adjusted to match the column name in the table
+        } catch (err) {
+            return res.status(401).json({ success: false, message: "Invalid or expired token." });
+        }
+
+        // Find the notice by notice_id and ensure it belongs to the current establishment
+        const notice = await Notice.findOne({
+            where: {
+                notice_id,           // Use notice_id here
+                establishment_id,  // Adjusted to match the column name in the table
+            }
+        });
+
+        if (!notice) {
+            return res.status(404).json({ success: false, message: "Notice not found." });
+        }
+
+        // Toggle the permanent status
+        notice.permanent = !notice.permanent;
+        await notice.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Notice permanent status updated successfully",
+            notice: {
+                notice_id: notice.notice_id,
+                title: notice.title,
+                content: notice.content,
+                pinned: notice.pinned,
+                permanent: notice.permanent,
+                updated_at: notice.updated_at,  // Optional: Adjust if needed
+            }
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: 'Failed to update permanent status', error: error.message });
     }
 };
