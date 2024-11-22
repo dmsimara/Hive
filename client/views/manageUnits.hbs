@@ -24,17 +24,15 @@
         </li>
       </ul>
 
-      <!-- Admin Profile Display -->
-      {{#each admins}}
-      <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+      <img src="{{#if admin.adminProfile}}/images/upload/{{admin.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
         alt="Profile" class="user-pic" onclick="toggleMenu()" />
       <div class="sub-menu-wrap" id="subMenu">
         <div class="sub-menu">
           <div class="user-info">
             <img
-              src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+              src="{{#if admin.adminProfile}}/images/upload/{{admin.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
               alt="Profile" width="40px" />
-            <h3>{{this.adminFirstName}} {{this.adminLastName}}</h3>
+            <h3>{{admin.adminFirstName}} {{admin.adminLastName}}</h3>
           </div>
           <hr />
           <a href="/admin/dashboard/view/account" class="sub-menu-link">
@@ -49,7 +47,6 @@
           </a>
         </div>
       </div>
-      {{/each}}
     </div>
   </div>
 </nav>
@@ -146,6 +143,5 @@
     </div>
   </div>
 </div>
-
 
 <script src="/js/manageUnits.js"></script>

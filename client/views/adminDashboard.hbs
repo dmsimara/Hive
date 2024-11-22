@@ -24,16 +24,15 @@
         </li>
       </ul>
 
-      {{#each admins}}
-      <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+      <img src="{{#if admin.adminProfile}}/images/upload/{{admin.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
         alt="Profile" class="user-pic" onclick="toggleMenu()" />
       <div class="sub-menu-wrap" id="subMenu">
         <div class="sub-menu">
           <div class="user-info">
             <img
-              src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+              src="{{#if admin.adminProfile}}/images/upload/{{admin.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
               alt="Profile" width="40px" />
-            <h3>{{this.adminFirstName}} {{this.adminLastName}}</h3>
+            <h3>{{admin.adminFirstName}} {{admin.adminLastName}}</h3>
           </div>
           <hr />
           <a href="/admin/dashboard/view/account" class="sub-menu-link">
@@ -48,7 +47,6 @@
           </a>
         </div>
       </div>
-      {{/each}}
     </div>
   </div>
 </nav>
@@ -69,36 +67,33 @@
         <button class="btn btn-outline-success btn-sm" type="submit">Search</button>
       </form>
 
-
       <div class="tenant-cards" id="tenantCardsContainer">
         {{#if tenants.length}}
-        {{#each tenants}}
-        <a href="#" class="card-link" data-bs-toggle="modal" data-bs-target="#tenantModal">
-          <div class="card mb-3">
-            <div class="card-body">
-              <img
-                src="{{#if this.tenantProfile}}/images/upload/{{this.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
-                alt="Profile" width="40px" class="me-2" />
-              <h5 class="card-title d-inline">{{this.tenantFirstName}} {{this.tenantLastName}}</h5>
+          {{#each tenants}}
+          <a href="#" class="card-link" data-bs-toggle="modal" data-bs-target="#tenantModal">
+            <div class="card mb-3">
+              <div class="card-body">
+                <img
+                  src="{{#if this.tenantProfile}}/images/upload/{{this.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+                  alt="Profile" width="40px" class="me-2" />
+                <h5 class="card-title d-inline">{{this.tenantFirstName}} {{this.tenantLastName}}</h5>
+              </div>
             </div>
-          </div>
-        </a>
-        {{/each}}
+          </a>
+          {{/each}}
         {{else}}
-        <p>No active tenants found.</p>
+          <p>No active tenants found.</p>
         {{/if}}
       </div>
     </div>
 
     <!-- Admin Profile -->
-    {{#each admins}}
     <div class="col-4" id="middle" style="flex: 0 0 40%; max-width: 40%;">
-      <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+      <img src="{{#if admin.adminProfile}}/images/upload/{{admin.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
         alt="Profile" class="user-pic" />
-      <h2>Hi, {{this.adminFirstName}}</h2>
+      <h2>Hi, {{admin.adminFirstName}}</h2>
       <h6>Here's an overview of your properties</h6>
     </div>
-    {{/each}}
 
     <h3 class="announce-title">Announcements
       <a href="#">
@@ -114,31 +109,26 @@
     </h3>
     <div class="tracker-container" id="tracker-container">
       {{#if events.length}}
-      {{#each events}}
-      <div class="event-card">
-        <h5>{{this.event_name}}</h5>
-        <p><strong>Start:</strong> {{this.start}}</p>
-        <p><strong>End:</strong> {{this.end}}</p>
-        <p><strong>Description:</strong> {{this.event_description}}</p>
-        <p><strong>Status:</strong> {{this.status}}</p>
-      </div>
-      {{/each}}
+        {{#each events}}
+        <div class="event-card">
+          <h5>{{this.event_name}}</h5>
+          <p><strong>Start:</strong> {{this.start}}</p>
+          <p><strong>End:</strong> {{this.end}}</p>
+          <p><strong>Description:</strong> {{this.event_description}}</p>
+          <p><strong>Status:</strong> {{this.status}}</p>
+        </div>
+        {{/each}}
       {{else}}
-      <p>No events available at the moment.</p>
+        <p>No events available at the moment.</p>
       {{/if}}
     </div>
 
-
-
-
-
     <!-- Links and Navigation -->
     <div class="col-4 right" id="right" style="flex: 0 0 30%; max-width: 30%;">
-      <h1>Analytics dito</h1>
+      <h1>Analytics Section</h1>
     </div>
   </div>
 </div>
-
 
 <!-- Modal Structure -->
 <div class="modal" id="tenantModal" tabindex="-1">

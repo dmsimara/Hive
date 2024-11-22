@@ -124,21 +124,21 @@ app.get("/tenant/login", (req, res) => {
 // ADMIN PAGES ROUTES
 app.get("/admin/dashboard", verifyToken, async (req, res) => {
     try {
-        const admins = await viewAdmins(req, res);
-        console.log("Fetched admin data:", admins);
+        const admin = await viewAdmins(req, res); 
+        console.log("Fetched admin data:", admin);
 
         const tenants = await viewTenants(req, res);
         console.log("Tenants data:", tenants);
 
-        const events = await getEvents(req, res); // Fetch events
+        const events = await getEvents(req, res);
         console.log("Events data:", events);
 
         res.render("adminDashboard", {
             title: "Hive",
             styles: ["adminDashboard"],
-            admins: admins,
+            admin: admin, 
             tenants: tenants || [],
-            events: events || [], // Pass events to the template
+            events: events || [], 
         });
     } catch (error) {
         console.error("Error fetching data:", error);
@@ -146,14 +146,13 @@ app.get("/admin/dashboard", verifyToken, async (req, res) => {
     }
 });
 
-
 app.post("/admin/dashboard", findDashTenants);
 
-// manage room routes
+// Manage unit routes
 app.get("/admin/manage/unit", verifyToken, async (req, res) => {
     try {
-        const admins = await viewAdmins(req, res);
-        console.log('Fetched admin data:', admins);
+        const admin = await viewAdmins(req); 
+        console.log('Fetched admin data for unit management:', admin);
 
         const units = await viewUnits(req, res);
         console.log('Units:', units);
@@ -162,17 +161,18 @@ app.get("/admin/manage/unit", verifyToken, async (req, res) => {
             return res.render("manageUnits", {
                 title: "Hive",
                 styles: ["manageUnits"],
-                admins: admins, 
-                units: []
+                admin: admin, 
+                units: [] 
             });
         }
 
         const occupiedUnits = await getOccupiedUnits(req, res);
+        console.log('Occupied Units:', occupiedUnits);
 
         res.render("manageUnits", {
             title: "Hive",
             styles: ["manageUnits"],
-            admins: admins,  
+            admin: admin, 
             units: units,
             occupiedUnits: occupiedUnits
         });
@@ -182,80 +182,82 @@ app.get("/admin/manage/unit", verifyToken, async (req, res) => {
     }
 });
 
-
+// Get tenants by roomId
 const getTenantsByRoomId = async (roomId) => {
     try {
-      const tenants = await Tenant.findAll({
-        where: {
-          room_id: roomId
-        }
-      });
-      return tenants;
+        const tenants = await Tenant.findAll({
+            where: {
+                room_id: roomId
+            }
+        });
+        return tenants;
     } catch (error) {
-      console.error('Error fetching tenants:', error);
-      return [];
+        console.error('Error fetching tenants:', error);
+        return [];
     }
-  };
-  
-  
-  const getRoomDetails = async (roomId) => {
+};
+
+// Get room details
+const getRoomDetails = async (roomId) => {
     try {
-      const room = await Room.findOne({
-        where: {
-          room_id: roomId
-        }
-      });
-      return room ? room : {};  
+        const room = await Room.findOne({
+            where: {
+                room_id: roomId
+            }
+        });
+        return room ? room : {};  
     } catch (error) {
-      console.error('Error fetching room details:', error);
-      return {};
+        console.error('Error fetching room details:', error);
+        return {};
     }
-  };
-  
-  
-  app.get('/admin/manage/unit/tenants/:room_id', async (req, res) => {
+};
+
+// Get tenants for specific room
+app.get('/admin/manage/unit/tenants/:room_id', async (req, res) => {
     const { room_id } = req.params;
     try {
-      const tenants = await getTenantsByRoomId(room_id);
-      console.log('Tenants:', tenants); 
-      res.json({ tenants });
+        const tenants = await getTenantsByRoomId(room_id);
+        console.log('Tenants:', tenants); 
+        res.json({ tenants });
     } catch (error) {
-      console.error('Error fetching tenants:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  });
-  
-  app.get('/admin/manage/unit/tenants', async (req, res) => {
-    const roomId = req.query.room_id;
-    try {
-      const tenants = await getTenantsByRoomId(roomId);
-      const roomDetails = await getRoomDetails(roomId);
-
-      if (roomDetails) {
-        const rented = roomDetails.roomTotalSlot - roomDetails.roomRemainingSlot;
-        
-        res.json({
-          tenants,
-          roomTotalSlot: roomDetails.roomTotalSlot,  
-          roomRemainingSlot: roomDetails.roomRemainingSlot,  
-          rented: rented
-        });
-      } else {
-        res.status(404).json({ error: "Room not found" });
-      }
-    } catch (error) {
-      res.status(500).json({ error: "Error fetching room details" });
+        console.error('Error fetching tenants:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
+// Get tenants and room details for specific room
+app.get('/admin/manage/unit/tenants', async (req, res) => {
+    const roomId = req.query.room_id;
+    try {
+        const tenants = await getTenantsByRoomId(roomId);
+        const roomDetails = await getRoomDetails(roomId);
+
+        if (roomDetails) {
+            const rented = roomDetails.roomTotalSlot - roomDetails.roomRemainingSlot;
+
+            res.json({
+                tenants,
+                roomTotalSlot: roomDetails.roomTotalSlot,  
+                roomRemainingSlot: roomDetails.roomRemainingSlot,  
+                rented: rented
+            });
+        } else {
+            res.status(404).json({ error: "Room not found" });
+        }
+    } catch (error) {
+        res.status(500).json({ error: "Error fetching room details" });
+    }
+});
+
+// Post route for managing units
 app.post("/admin/manage/unit", findUnits, async (req, res) => {
     try {
-        const admins = await viewAdmins(req, res);
+        const admin = await viewAdmins(req);
 
         res.render("manageUnits", {
             title: "Hive",
             styles: ["manageUnits"],
-            rows: admins,
+            rows: admin,
             units: req.units
         });
     } catch (error) {
@@ -267,13 +269,13 @@ app.post("/admin/manage/unit", findUnits, async (req, res) => {
 // userManagement routes
 app.post("/admin/dashboard/userManagement", findTenants, async (req, res) => {
     try {
-        const admins = await viewAdmins(req, res); 
+        const admin = await viewAdmins(req, res); 
 
         res.render("userManagement", { 
             title: "Hive", 
             styles: ["userManagement"], 
             tenants: req.tenants,
-            admin: admins 
+            admin: admin
         });
     } catch (error) {
         console.error('Error fetching tenant or admin data:', error);
@@ -352,12 +354,12 @@ app.get('/api/auth/getAvailableRooms', getAvailableRooms);
 // view and edit account
 app.get("/admin/dashboard/view/account", verifyToken, async (req, res) => {
     try {
-        const admins = await viewAdmins(req, res);
+        const admin = await viewAdmins(req);  
 
         res.render("viewAdminAccount", {
             title: "Hive",
             styles: ["viewAdminAccount"],
-            rows: admins
+            admin: admin 
         });
     } catch (error) {
         console.error('Error fetching admin data:', error);
@@ -367,12 +369,12 @@ app.get("/admin/dashboard/view/account", verifyToken, async (req, res) => {
 
 app.get("/admin/dashboard/edit/account", verifyToken, async (req, res) => {
     try {
-        const admins = await viewAdmins(req, res);
+        const admin = await viewAdmins(req);  
 
         res.render("editAdminAccount", {
             title: "Hive",
             styles: ["editAdminAccount"],
-            rows: admins
+            admin: admin  
         });
     } catch (error) {
         console.error('Error fetching admin data:', error);
@@ -382,8 +384,8 @@ app.get("/admin/dashboard/edit/account", verifyToken, async (req, res) => {
 
 app.post("/admin/dashboard/edit/account", verifyToken, async (req, res) => {
     try {
-        let adminProfile = req.body.adminProfile;  
-        
+        let adminProfile = req.body.adminProfile;
+
         if (req.files && Object.keys(req.files).length > 0) {
             const sampleFile = req.files.sampleFile;
             const uploadDir = path.join(__dirname, '..', 'client', 'public', 'images', 'upload');
@@ -397,14 +399,14 @@ app.post("/admin/dashboard/edit/account", verifyToken, async (req, res) => {
                 sampleFile.mv(uploadPath, async (err) => {
                     if (err) return res.status(500).json({ success: false, message: err });
 
-                    adminProfile = sampleFile.name;
+                    adminProfile = sampleFile.name;  
 
-                    await updateAdminDetails(req.body, adminProfile);
+                    await updateAdminDetails(req.body, adminProfile);  
                     return res.json({ success: true, message: 'Admin details updated successfully.' });
                 });
             });
         } else {
-            await updateAdminDetails(req.body, adminProfile);
+            await updateAdminDetails(req.body, adminProfile);  
             return res.json({ success: true, message: 'Admin details updated successfully.' });
         }
     } catch (error) {
@@ -421,10 +423,9 @@ const updateAdminDetails = async (body, adminProfile) => {
         adminLastName: body.adminLastName,
         eName: body.eName,
     };
-    const adminId = body.admin_id; 
+    const adminId = body.admin_id;
     await Admin.update(adminDetails, { where: { admin_id: adminId } });
 };
-
 
 app.get('/api/auth/admin/totalUnits', async (req, res) => {
     try {
@@ -445,12 +446,8 @@ app.get('/api/auth/admin/totalUnits', async (req, res) => {
 app.get("/admin/tracker", verifyToken, async (req, res) => {
     try {
         const events = await viewEvents(req);  
-        const admins = await viewAdmins(req);  
-        const tenants = await viewTenants(req);  
-
-        console.log('Fetched event data:', events);
-        console.log('Fetched admin data:', admins);
-        console.log('Fetched tenants data:', tenants);
+        const admin = await viewAdmins(req); 
+        const tenants = await viewTenants(req);
 
         const eventsData = events.success ? events.events : [];
 
@@ -458,7 +455,7 @@ app.get("/admin/tracker", verifyToken, async (req, res) => {
             title: "Hive",
             styles: ["adminTracker"],
             events: eventsData,  
-            admins: admins || [],  
+            admin: admin || [],  
             tenants: tenants || []  
         });
     } catch (error) {
@@ -501,75 +498,70 @@ app.put('/api/auth/updateEvent/:eventId', async (req, res) => {
 // ANNOUNCEMENT PAGE ROUTES
 app.get("/admin/announcements", verifyToken, async (req, res) => {
     try {
-      const { filter } = req.query; // Get the filter from query parameters
-      const admins = await viewAdmins(req);
+        const { filter } = req.query; 
+        const admin = await viewAdmins(req);
 
-      let notices = [];
+        let notices = [];
 
-      // Fetch notices based on filter (pinned, permanent, or all)
-      switch (filter) {
-        case "pinned":
-          notices = await Notice.findAll({
-            where: {
-              establishment_id: req.establishmentId,
-              pinned: true
-            },
-            order: [['updated_at', 'DESC']]
-          });
-          break;
+        switch (filter) {
+            case "pinned":
+                notices = await Notice.findAll({
+                    where: {
+                        establishment_id: req.establishmentId,
+                        pinned: true,
+                    },
+                    order: [['updated_at', 'DESC']],
+                });
+                break;
 
-        case "permanent":
-          notices = await Notice.findAll({
-            where: {
-              establishment_id: req.establishmentId,
-              permanent: true
-            },
-            order: [['updated_at', 'DESC']]
-          });
-          break;
+            case "permanent":
+                notices = await Notice.findAll({
+                    where: {
+                        establishment_id: req.establishmentId,
+                        permanent: true,
+                    },
+                    order: [['updated_at', 'DESC']],
+                });
+                break;
 
-        default:
-          // Fetch all notices if no filter or 'all' is specified
-          const response = await viewNotices(req, res);
-          notices = response.notices || []; // Ensure notices is an array
-          break;
-      }
+            default:
+                const response = await viewNotices(req, res);
+                notices = response.notices || []; 
+                break;
+        }
 
-      // If no notices are found for the given filter, send a default message
-      if (notices.length === 0) {
-        const message = filter === 'pinned'
-          ? "There are no pinned notices at the moment. Please check back later."
-          : "There are no permanent notices at the moment. Please check back later.";
+        if (notices.length === 0) {
+            const message = filter === 'pinned'
+                ? "There are no pinned notices at the moment. Please check back later."
+                : "There are no permanent notices at the moment. Please check back later.";
 
-        notices = [{
-          title: filter === 'pinned' ? "No pinned notices yet" : "No permanent notices yet",
-          content: message,
-          pinned: false,
-          permanent: false,
-          updated_at: new Date().toLocaleString() // Or set a static time, e.g., "Just now"
-        }];
-      }
+            notices = [{
+                title: filter === 'pinned' ? "No pinned notices yet" : "No permanent notices yet",
+                content: message,
+                pinned: false,
+                permanent: false,
+                updated_at: new Date().toLocaleString(), 
+            }];
+        }
 
-      const plainNotices = notices.map(notice => notice.get ? notice.get({ plain: true }) : notice);
+        const plainNotices = notices.map(notice => notice.get ? notice.get({ plain: true }) : notice);
 
-      // If this is an API call (AJAX), return JSON
-      if (req.headers['accept'] === 'application/json') {
-        return res.json({ success: true, notices: plainNotices });
-      }
+        if (req.headers['accept'] === 'application/json') {
+            return res.json({ success: true, notices: plainNotices });
+        }
 
-      // Otherwise, render the view (HTML)
-      res.render("announcements", {
-        title: "Hive",
-        styles: ["announcements"],
-        admins: admins || [],
-        notices: plainNotices || [] // Pass notices to the template
-      });
+        res.render("announcements", {
+            title: "Hive",
+            styles: ["announcements"],
+            admin: admin || [],  
+            notices: plainNotices || [], 
+        });
 
     } catch (error) {
-      console.error('Error fetching data for admin tracker:', error);
-      if (!res.headersSent) {
-        res.status(500).json({ success: false, message: 'Error fetching data' });
-      }
+        console.error('Error fetching data for admin tracker:', error);
+        if (!res.headersSent) {
+            res.status(500).json({ success: false, message: 'Error fetching data' });
+        }
     }
 });
   
@@ -609,9 +601,9 @@ app.get("/tenant/dashboard/view/account", verifyToken, async (req, res) => {
 // Edit Tenant Account
 app.get("/tenant/dashboard/edit/account", verifyToken, async (req, res) => {
     try {
-        const tenants = await viewTenants(req, res); // Fetch tenant data instead of admin data
+        const tenants = await viewTenants(req, res); 
 
-        res.render("editTenantAccount", { // Render tenant-related edit page
+        res.render("editTenantAccount", { 
             title: "Hive",
             styles: ["editTenantAccount"],
             rows: tenants

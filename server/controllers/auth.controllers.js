@@ -380,31 +380,35 @@ export const viewUnits = async (req, res) => {
     }
 };
 
-export const viewAdmins = async (req, res) => {
+export const viewAdmins = async (req) => {
     try {
-        const rows = await Admin.findAll({
+        const adminId = req.adminId;
+
+        const row = await Admin.findOne({
+            where: { admin_id: adminId },
             include: {
                 model: Establishment,
-                attributes: ['eName'], 
+                attributes: ['eName'],
             },
         });
 
-        const plainRows = rows.map(row => {
-            const admin = row.get({ plain: true });
-            return {
-                admin_id: admin.admin_id,
-                adminFirstName: admin.adminFirstName,
-                adminLastName: admin.adminLastName,
-                adminEmail: admin.adminEmail,
-                eName: admin.Establishment ? admin.Establishment.eName : null,
-                adminProfile: admin.adminProfile,
-            };
-        });
+        if (!row) {
+            throw new Error('Admin not found');
+        }
 
-        return plainRows;
+        const admin = row.get({ plain: true });
+
+        return {
+            admin_id: admin.admin_id,
+            adminFirstName: admin.adminFirstName,
+            adminLastName: admin.adminLastName,
+            adminEmail: admin.adminEmail,
+            eName: admin.Establishment ? admin.Establishment.eName : null,
+            adminProfile: admin.adminProfile,
+        };
     } catch (error) {
-        console.error('Error fetching admins:', error);
-        return res.status(500).json({ success: false, message: 'Error fetching admins' });
+        console.error('Error fetching admin:', error);
+        throw error; 
     }
 };
 
@@ -429,13 +433,13 @@ export const findTenants = async (req, res) => {
 
         const rows = tenants.map(tenant => tenant.get({ plain: true }));
 
-        const admins = await viewAdmins(req, res); 
+        const admin = await viewAdmins(req, res); 
 
         res.render('userManagement', {
             title: "Hive",
             styles: ["userManagement"],
             rows,
-            admin: admins 
+            admin: admin
         });
     } catch (error) {
         console.error('Error in findTenants:', error); 
@@ -513,6 +517,12 @@ export const findUnits = async (req, res) => {
         return res.status(400).json({ success: false, message: 'Search term is required' });
     }
 
+    const adminId = req.adminId;  
+    if (!adminId) {
+        console.log('No adminId provided.');
+        return res.status(400).json({ success: false, message: 'Admin ID is required' });
+    }
+
     try {
         const rooms = await Room.findAll({
             where: {
@@ -528,7 +538,7 @@ export const findUnits = async (req, res) => {
         const rows = rooms.map(room => room.get({ plain: true }));
         console.log('Rooms Data:', rows);
 
-        const admins = await viewAdmins(req, res);  
+        const admins = await viewAdmins(adminId);  
 
         res.render('manageUnits', {
             title: "Hive",
@@ -542,6 +552,7 @@ export const findUnits = async (req, res) => {
         res.status(500).json({ success: false, message: 'An error occurred while searching for units.' });
     }
 };
+
 
 export const addTenant = async (req, res) => {
     const { tenantFirstName, tenantLastName, tenantEmail, gender, mobileNum, tenantPassword, tenantConfirmPassword, stayTo, stayFrom, room_id } = req.body;
@@ -656,7 +667,7 @@ export const addTenant = async (req, res) => {
     }
 };
 
-  export const addUnit = async (req, res) => {
+export const addUnit = async (req, res) => {
     try {
         const { roomNumber, roomType, roomTotalSlot, roomRemainingSlot, floorNumber } = req.body;
 

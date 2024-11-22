@@ -10,8 +10,10 @@ document.addEventListener("DOMContentLoaded", () => {
     logoutButton.addEventListener("click", async () => {
         const isConfirmed = confirm("Are you sure you want to log out?");
         
-        if (!isConfirmed) return;
-
+        if (!isConfirmed) {
+            return;
+        }
+        
         try {
             const response = await fetch("/api/auth/adminLogout", {
                 method: "POST",
@@ -23,8 +25,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
 
             if (response.ok) {
-                alert(data.message);
-                window.location.href = "/";
+                alert(data.message); 
+                window.location.href = "/"; 
             } else {
                 alert(data.message || "Logout failed. Please try again.");
             }
@@ -35,119 +37,65 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-function deleteUnit(roomId) {
-    const confirmation = confirm("Are you sure you want to delete this room?");
-    
-    if (confirmation) {
-        fetch(`/api/auth/deleteUnit/${roomId}`, {
-            method: 'DELETE'
-        })
-        .then(response => {
-            if (response.ok) {
-                alert('Room successfully deleted');
-                location.reload();
-            } else {
-                alert('Error deleting room');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while deleting the room.');
-        });
-    } else {
-        alert('Deletion canceled.');
-    }
-}
-
-function formatDate(date) {
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    return new Date(date).toLocaleDateString('en-GB', options);
-}
-
-function calculateRemainingPeriod(stayTo) {
-    if (!stayTo) return null;
-    
-    const today = new Date();
-    const endDate = new Date(stayTo);
-
-    const timeDiff = endDate - today; 
-    const remainingDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
-    
-    return remainingDays >= 0 ? remainingDays : 0; 
-}
-
+// Function to load tenants for a specific room
 function loadTenants(roomId) {
-    const tenantList = document.getElementById("tenantList");
-    tenantList.innerHTML = "<tr><td colspan='6' class='text-center'>Loading tenants...</td></tr>";
+    fetch(`/admin/manage/unit/tenants/${roomId}`)
+        .then(response => response.json())
+        .then(data => {
+            const tenantList = document.getElementById("tenantList");
+            const totalSlot = document.getElementById("totalSlot");
+            const rentedSlot = document.getElementById("rentedSlot");
+            const remainingSlot = document.getElementById("remainingSlot");
 
-    fetch(`/admin/manage/unit/tenants?room_id=${roomId}`)
-      .then(response => {
-          if (!response.ok) throw new Error('Network response was not ok');
-          return response.json();
-      })
-      .then(data => {
-        const totalSlot = data.roomTotalSlot || 0;
-        const remainingSlot = data.roomRemainingSlot || 0;
-        const rentedSlot = data.rented || 0;
+            tenantList.innerHTML = ''; // Clear previous data
 
-        document.getElementById("totalSlot").innerText = totalSlot;
-        document.getElementById("rentedSlot").innerText = rentedSlot;
-        document.getElementById("remainingSlot").innerText = remainingSlot;
+            // Populate total, rented, and remaining slots
+            totalSlot.textContent = data.totalSlot;
+            rentedSlot.textContent = data.rentedSlot;
+            remainingSlot.textContent = data.remainingSlot;
 
-        tenantList.innerHTML = ""; // Clear loading message
-
-        if (data.tenants && data.tenants.length > 0) {
+            // Create table rows for tenants
             data.tenants.forEach(tenant => {
                 const row = document.createElement("tr");
 
-                const formattedStayFrom = tenant.stayFrom ? formatDate(tenant.stayFrom) : '';
-                const formattedStayTo = tenant.stayTo ? formatDate(tenant.stayTo) : '';
-                const periodRemaining = calculateRemainingPeriod(tenant.stayTo);
-
                 row.innerHTML = `
-                  <th scope="row">${tenant.tenant_id}</th>
-                  <td>${tenant.tenantFirstName} ${tenant.tenantLastName}</td>
-                  <td>${formattedStayFrom}</td>
-                  <td>${formattedStayTo}</td>
-                  <td>${periodRemaining} days</td>
-                  <td class="text-end">
-                    <a href="#" onclick="checkoutTenant('${tenant.tenant_id}')" class="btn btn-light btn-small">Check Out</a>
-                  </td>
+                    <td>${tenant.tenant_id}</td>
+                    <td>${tenant.name}</td>
+                    <td>${tenant.rent_from}</td>
+                    <td>${tenant.rent_until}</td>
+                    <td>${tenant.period_remaining}</td>
+                    <td class="text-end">
+                        <button class="btn btn-danger btn-small" onclick="removeTenant('${tenant.tenant_id}', '${roomId}')">Remove</button>
+                    </td>
                 `;
+
                 tenantList.appendChild(row);
             });
-        } else {
-            tenantList.innerHTML = `<tr><td colspan="6" class="text-center">No tenants assigned</td></tr>`;
-        }
-      })
-      .catch(error => {
-          console.error('Error loading tenant data:', error);
-          alert("Error loading tenant data. Please try again.");
-      });
+        })
+        .catch(error => console.error('Error loading tenants:', error));
 }
 
-function checkoutTenant(tenantId) {
-    console.log('tenantId passed:', tenantId);
+// Function to remove a tenant
+function removeTenant(tenantId, roomId) {
+    // Add logic to remove tenant here
+    console.log(`Remove tenant ${tenantId} from room ${roomId}`);
+}
 
-    if (!tenantId) {
-        alert("Tenant ID is missing");
-        return;
-    }
-
-    if (!confirm("Are you sure you want to check out this tenant?")) return;
-
-    fetch(`/api/auth/deleteTenant/${tenantId}`, { method: 'DELETE' })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Tenant successfully checked out');
-                location.reload();
-            } else {
-                alert('Error checking out tenant: ' + (data.message || 'Unknown error'));
-            }
+// Function to delete a unit
+function deleteUnit(roomId) {
+    if (confirm("Are you sure you want to delete this room?")) {
+        fetch(`/admin/manage/unit/delete/${roomId}`, {
+            method: 'DELETE'
         })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while checking out the tenant: ' + error.message);
-        });
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Room deleted successfully");
+                    location.reload(); // Reload the page to reflect changes
+                } else {
+                    alert("Error deleting room");
+                }
+            })
+            .catch(error => console.error('Error deleting room:', error));
+    }
 }
