@@ -1282,7 +1282,6 @@ export const addNotice = async (req, res) => {
     }
 };
 
-// Toggle pinned status
 export const togglePinned = async (req, res) => {
     const { noticeId } = req.params;
     let establishmentId, adminId;
@@ -1308,16 +1307,12 @@ export const togglePinned = async (req, res) => {
             return res.status(404).json({ success: false, message: "Notice not found." });
         }
 
-        // Log the current pinned status for debugging purposes
         console.log("Current pinned status:", notice.pinned);
 
-        // Toggle pinned status and ensure it is 1 or 0 (true or false)
         notice.pinned = notice.pinned === 1 ? 0 : 1;
 
-        // Save the updated status to the database
         await notice.save();
 
-        // Log the new pinned status for debugging purposes
         console.log("Updated pinned status:", notice.pinned);
 
         return res.status(200).json({
@@ -1335,7 +1330,6 @@ export const togglePinned = async (req, res) => {
     }
 };
 
-// Toggle permanent status
 export const togglePermanent = async (req, res) => {
     const { noticeId } = req.params;
     let establishmentId, adminId;
@@ -1361,7 +1355,6 @@ export const togglePermanent = async (req, res) => {
             return res.status(404).json({ success: false, message: "Notice not found." });
         }
 
-        // Toggle permanent status and ensure it is 1 or 0 (true or false)
         notice.permanent = notice.permanent === 1 ? 0 : 1;
         await notice.save();
 

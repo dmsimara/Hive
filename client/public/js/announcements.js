@@ -95,12 +95,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Function to toggle pinned status
     window.togglePinned = async (noticeId) => {
         const noticeElement = document.querySelector(`[data-id="${noticeId}"]`);
 
-        // Check the current pinned state directly from the data attributes
-        const isPinned = noticeElement && noticeElement.dataset.pinned === "true"; // data-pinned attribute will be set as true/false
+        const isPinned = noticeElement && noticeElement.dataset.pinned === "true"; 
 
         const confirmationMessage = isPinned 
             ? "Are you sure you want to unpin this notice?" 
@@ -108,7 +106,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const userConfirmed = confirm(confirmationMessage);
         if (!userConfirmed) {
-            return;  // If user cancels, do nothing
         }
 
         try {
@@ -119,13 +116,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 const actionMessage = data.isPinned ? "Notice pinned!" : "Notice unpinned!";
                 alert(actionMessage);
 
-                // Update the UI accordingly
                 if (noticeElement) {
-                    noticeElement.dataset.pinned = data.isPinned ? "true" : "false";  // Update data-pinned attribute
+                    noticeElement.dataset.pinned = data.isPinned ? "true" : "false"; 
                     noticeElement.querySelector(".material-icons.pinned").textContent = data.isPinned ? "push_pin" : "push_pin_outlined"; // Change icon based on pinned state
                 }
 
-                fetchFilteredNotices("/admin/announcements");  // Refresh the list of notices
+                fetchFilteredNotices("/admin/announcements");  
             } else {
                 alert("Failed to update pinned status.");
             }
@@ -135,7 +131,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-    // Function to toggle permanent status
     window.togglePermanent = async (noticeId) => {
         const isPermanent = document.querySelector(`[data-id="${noticeId}"].permanent`).textContent === "note";
         const confirmationMessage = isPermanent 
@@ -144,7 +139,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const userConfirmed = confirm(confirmationMessage);
         if (!userConfirmed) {
-            return;  // If user cancels, do nothing
+            return; 
         }
 
         try {
@@ -155,13 +150,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 const actionMessage = data.isPermanent ? "Notice marked as permanent!" : "Notice unmarked as permanent!";
                 alert(actionMessage);
 
-                // Update the UI accordingly
                 const permanentButton = document.querySelector(`[data-id="${noticeId}"].permanent`);
                 if (permanentButton) {
-                    permanentButton.textContent = data.isPermanent ? "note" : "note_add"; // Change icon based on permanent state
+                    permanentButton.textContent = data.isPermanent ? "note" : "note_add"; 
                 }
 
-                fetchFilteredNotices("/admin/announcements");  // Refresh the list of notices
+                fetchFilteredNotices("/admin/announcements");  
             } else {
                 alert("Failed to update permanent status.");
             }
@@ -171,7 +165,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-    // Function to fetch filtered notices
     async function fetchFilteredNotices(url) {
         try {
             const response = await fetch(url, { headers: { Accept: "application/json" } });
@@ -206,6 +199,5 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Initial fetch for all notices
     fetchFilteredNotices("/admin/announcements");
 });
