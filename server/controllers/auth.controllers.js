@@ -16,12 +16,12 @@ import { title } from 'process';
 
 
 export const adminRegister = async (req, res) => {
-    const {adminFirstName, adminLastName, adminEmail, adminPassword, eName} = req.body;
-   
+    const { adminFirstName, adminLastName, adminEmail, adminPassword, eName } = req.body;
+
     try {
         if (!adminFirstName || !adminLastName || !adminEmail || !adminPassword || !eName) {
             throw new Error("All fields are required");
-        } 
+        }
 
         const adminAlreadyExists = await Admin.findOne({
             where: { adminEmail }
@@ -30,7 +30,7 @@ export const adminRegister = async (req, res) => {
         console.log("adminAlreadyExists", adminAlreadyExists);
 
         if (adminAlreadyExists) {
-            return res.status(400).json({success: false, message: "Admin already exists"});
+            return res.status(400).json({ success: false, message: "Admin already exists" });
         }
 
         let establishment = await Establishment.findOne({
@@ -38,29 +38,25 @@ export const adminRegister = async (req, res) => {
         });
 
         if (!establishment) {
-            establishment = await Establishment.create({
-                eName
-            });
+            establishment = await Establishment.create({ eName });
+            console.log('Created new establishment:', establishment);
         }
 
         const hashedPassword = await bcryptjs.hash(adminPassword, 10);
         const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
-        const admin = new Admin({
+
+        const admin = await Admin.create({
             adminFirstName,
             adminLastName,
             adminEmail,
             adminPassword: hashedPassword,
-            establishment_id: establishment.establishment_id,
+            establishmentId: establishment.establishment_id, 
             verificationToken,
             verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000
         });
 
-        await admin.save();
-        
-        generateTokenAndSetCookie(res, admin.admin_id, admin.establishment_id);
-        
         await sendVerificationEmail(admin.adminEmail, verificationToken);
-        
+
         res.status(201).json({
             success: true,
             message: "Admin created successfully",
@@ -70,9 +66,10 @@ export const adminRegister = async (req, res) => {
             },
         });
     } catch (error) {
-        res.status(400).json({ success: false, message: error.message});
+        console.error("Error registering admin:", error);
+        res.status(400).json({ success: false, message: error.message });
     }
-}
+};
 
 export const verifyEmail = async (req, res) => {
     const {code} = req.body;
@@ -131,10 +128,8 @@ export const adminLogin = async (req, res) => {
         
         req.session.adminFirstName = admin.adminFirstName;
 
-        // Log the entire admin object to inspect its properties
         console.log("Admin Object:", JSON.stringify(admin, null, 2));
 
-        // Check establishment_id directly
         if (!admin.establishment_id) {
             return res.status(400).json({ success: false, message: "Establishment ID is required." });
         }
@@ -848,7 +843,7 @@ export const getOccupiedUnits = async (req, res) => {
 export const getAvailableRooms = async (req, res) => {
     try {
       const rooms = await Room.findAll({
-        where: { roomRemainingSlot: { [Op.gt]: 0 } },  // This can be your "available" condition
+        where: { roomRemainingSlot: { [Op.gt]: 0 } },  
         attributes: ['room_id', 'roomNumber', 'roomType', 'floorNumber'],
       });
   
@@ -865,12 +860,10 @@ export const addEvent = async (req, res) => {
     try {
         console.log('Incoming request data:', req.body);
 
-        // Validate input fields
         if (!event_name || !start || !status) {
             return res.status(400).json({ success: false, message: "Event name, start date, and status are required." });
         }
 
-        // Validate date fields
         const isStartValid = Date.parse(start);
         const isEndValid = Date.parse(end);
 
@@ -888,7 +881,6 @@ export const addEvent = async (req, res) => {
             return res.status(400).json({ success: false, message: "End date cannot be before start date." });
         }
 
-        // Verify the user's authentication token
         const token = req.cookies.token;
         if (!token) {
             return res.status(401).json({ success: false, message: "Unauthorized. No token provided." });
@@ -905,11 +897,9 @@ export const addEvent = async (req, res) => {
             return res.status(401).json({ success: false, message: "Invalid or expired token." });
         }
 
-        // Convert dates to UTC before saving them to the database
-        const startDateUTC = new Date(start).toISOString();  // Converts start to UTC ISO string
-        const endDateUTC = end ? new Date(end).toISOString() : null;  // Converts end to UTC ISO string
+        const startDateUTC = new Date(start).toISOString();  
+        const endDateUTC = end ? new Date(end).toISOString() : null;  
 
-        // Create new event with UTC dates
         const newEvent = await Calendar.create({
             event_name,
             event_description,
