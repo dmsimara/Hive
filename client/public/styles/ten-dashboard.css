@@ -361,3 +361,69 @@ body, html {
     background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
     color: white;
 }
+@media (max-width: 1024px) {
+    .dashboard-container {
+        flex-direction: column;
+        overflow-x: hidden;
+        align-items: center; /* Center align items */
+    }
+
+    .sidebar {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 20px; /* Add space below sidebar */
+    }
+
+    .main-content {
+        padding: 15px; /* Slightly increase padding for better spacing */
+        width: 100%; /* Ensure main content spans full width */
+    }
+}
+
+@media (max-width: 768px) {
+    .utilities-cards {
+        grid-template-columns: repeat(1, 1fr);
+        gap: 15px; /* Add more space between cards */
+    }
+
+    .dashboard-header, .room-header {
+        text-align: center;
+        padding: 15px; /* Increase padding for more spacing */
+        font-size: 1.2em; /* Slightly increase text size for visibility */
+    }
+
+    .preview-section {
+        margin: 20px 0; /* Add more spacing above and below */
+    }
+
+    .preview-card {
+        max-width: 100%;
+        margin: 0 auto; /* Center preview cards */
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Add subtle shadow for better visibility */
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        display: none; /* Hide sidebar for smaller screens */
+    }
+
+    .dashboard-container {
+        padding: 10px;
+    }
+
+    .dashboard-header, .room-header {
+        font-size: 1.1em; /* Slightly smaller font for very small screens */
+    }
+
+    .utilities-cards {
+        gap: 20px; /* Increase spacing for better usability */
+    }
+
+    .main-content {
+        padding: 10px;
+    }
+}
+
+
+

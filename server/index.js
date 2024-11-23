@@ -575,12 +575,16 @@ app.get("/tenant/room-details", verifyTenantToken, (req, res) => {
     res.render("ten-RoomDeets", { title: "Hive", styles: ["ten-deets"] });
 });
 
-app.post("/api/auth/addTenant", verifyToken, addTenant);
 
 app.get("/tenant/announcement", verifyTenantToken, (req, res) => {
     res.render("ten-announcement", { title: "Hive", styles: ["ten-announce"]});
 });
 
+app.get("/tenant/utilities", verifyTenantToken, (req, res) => {
+    res.render("ten-utilities", { title: "Hive", styles: ["ten-utilities"]});
+});
+
+app.post("/api/auth/addTenant", verifyToken, addTenant); 
 
 // View Tenant Account
 app.get("/tenant/dashboard/view/account", verifyToken, async (req, res) => {
