@@ -1,111 +1,102 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Utilities and Bills</title>
-  <link rel="stylesheet" href="ten-utilities.css">
-</head>
-<body>
-  <div class="container">
-    <!-- Sidebar -->
-   <aside class="sidebar">
-            <div class="sidebar-card">
-                <div class="logo">
-                    <a href="index.html">
-                        <img src="/images/hiveLight.png" alt="Hive Logo" class="logo-img">
-                    </a>
-                </div>
-                <p class="menu-title">Menu</p>
-                <nav class="menu">
-                    <br>
-                    <ul>
-                        <li class="active">
-                            <a href="/tenant/dashboard"><i class="fas fa-columns"></i> DashBoard</a>
-                        </li>
-                        <li>
-                            <a href="/tenant/room-details"><i class="fas fa-door-open"></i> Room Details</a>
-                        </li>
-                    </ul>
-                </nav>
-                <br>
-                <p class="menu-title">Tracker</p>
-                <div class="tracker">
-                    <br>
-                    <ul>
-                        <li>
-                            <a href="/tenant/utilities"><i class="fas fa-lightbulb"></i> Utilities and Bills</a>
-                        </li>
-                        <li>
-                            <a href="/tenant/announcement"><i class="fas fa-bullhorn"></i> Announcement</a>
-                        </li>
-                    </ul>
-                </div>  
-    <!-- Main Content -->
-    <main>
-      <header class="header">
-        <h1>Welcome to Hive <span>Utilities and Bills</span></h1>
-        <div class="date-picker">
-          <input type="text" placeholder="MM/DD/YYYY">
-          <button>🔔</button>
-        </div>
-      </header>
-      
-      <section class="content">
-        <!-- Monthly Utilities Bills -->
-        <div class="utilities-section">
-          <h2>Monthly Utilities Bills</h2>
-          <div class="utilities-header">
-            <p>Sept 2024 - Oct 2024</p>
-            <button>⬇ Download</button>
+<div class="container">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-card">
+      <div class="logo">
+        <a href="index.html">
+          <img src="/images/hiveLight.png" alt="Hive Logo" class="logo-img">
+        </a>
+      </div>
+      <p class="menu-title">Menu</p>
+      <nav class="menu">
+        <br>
+        <ul>
+          <li class="active">
+            <a href="/tenant/dashboard"><i class="fas fa-columns"></i> DashBoard</a>
+          </li>
+          <li>
+            <a href="/tenant/room-details"><i class="fas fa-door-open"></i> Room Details</a>
+          </li>
+        </ul>
+      </nav>
+      <br>
+      <p class="menu-title">Tracker</p>
+      <div class="tracker">
+        <br>
+        <ul>
+          <li>
+            <a href="/tenant/utilities"><i class="fas fa-lightbulb"></i> Utilities and Bills</a>
+          </li>
+          <li>
+            <a href="/tenant/announcement"><i class="fas fa-bullhorn"></i> Announcement</a>
+          </li>
+        </ul>
+      </div>
+      <!-- Main Content -->
+      <main>
+        <header class="header">
+          <h1>Welcome to Hive <span>Utilities and Bills</span></h1>
+          <div class="date-picker">
+            <input type="text" placeholder="MM/DD/YYYY">
+            <button>🔔</button>
           </div>
-          <div class="bills">
-            <div class="bill">
-              <p>Unit Rental</p>
-              <p>Php 8,000 (Php 2,000 per tenant)</p>
-              <p><small>Due: Oct 23, 2024</small></p>
-            </div>
-            <div class="bill">
-              <p>Electricity Consumption</p>
-              <p>Php 2,345.67 (Php 586.42 per tenant)</p>
-              <p><small>Disconnection: Oct 23, 2024</small></p>
-            </div>
-            <div class="bill">
-              <p>Water Usage</p>
-              <p>Php 345.67 (Php 86.42 per tenant)</p>
-              <p><small>Disconnection: Oct 23, 2024</small></p>
-            </div>
-            <div class="bill">
-              <p>Internet Connection</p>
-              <p>Php 1,499 (Php 374.75 per tenant)</p>
-              <p><small>Disconnection: Oct 23, 2024</small></p>
-            </div>
-            <div class="bill">
-              <p>Maintenance Fees</p>
-              <p>Php 600 (Php 150 per tenant)</p>
-              <p><small>Service Suspension: Oct 23, 2024</small></p>
-            </div>
-          </div>
-        </div>
+        </header>
 
-        <!-- Right Panel -->
-        <div class="summary">
-          <div class="balance">
-            <h2>Room #1 Total Balance</h2>
-            <p>Php 12,479.34</p>
-            <p><small>Shared Balance: Php 3,119.84</small></p>
-            <button>Paid</button>
-          </div>
-          <div class="usage-summary">
-            <h2>Usage Summary</h2>
-            <div class="circle">
-              <p>50 Mbps</p>
+        <section class="content">
+          <!-- Monthly Utilities Bills -->
+          <div class="utilities-section">
+            <h2>Monthly Utilities Bills</h2>
+            <div class="utilities-header">
+              <p>Sept 2024 - Oct 2024</p>
+              <button>⬇ Download</button>
             </div>
-            <p>Your Subscription is Internet Only</p>
+            <div class="bills">
+              <div class="bill">
+                <p>Unit Rental</p>
+                <p>Php 8,000 (Php 2,000 per tenant)</p>
+                <p><small>Due: Oct 23, 2024</small></p>
+              </div>
+              <div class="bill">
+                <p>Electricity Consumption</p>
+                <p>Php 2,345.67 (Php 586.42 per tenant)</p>
+                <p><small>Disconnection: Oct 23, 2024</small></p>
+              </div>
+              <div class="bill">
+                <p>Water Usage</p>
+                <p>Php 345.67 (Php 86.42 per tenant)</p>
+                <p><small>Disconnection: Oct 23, 2024</small></p>
+              </div>
+              <div class="bill">
+                <p>Internet Connection</p>
+                <p>Php 1,499 (Php 374.75 per tenant)</p>
+                <p><small>Disconnection: Oct 23, 2024</small></p>
+              </div>
+              <div class="bill">
+                <p>Maintenance Fees</p>
+                <p>Php 600 (Php 150 per tenant)</p>
+                <p><small>Service Suspension: Oct 23, 2024</small></p>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
-    </main>
-  </div>
-</body>
-</html>
+
+          <!-- Right Panel -->
+          <div class="summary">
+            <div class="balance">
+              <h2>Room #1 Total Balance</h2>
+              <p>Php 12,479.34</p>
+              <p><small>Shared Balance: Php 3,119.84</small></p>
+              <button>Paid</button>
+            </div>
+            <div class="usage-summary">
+              <h2>Usage Summary</h2>
+              <div class="circle">
+                <p>50 Mbps</p>
+              </div>
+              <p>Your Subscription is Internet Only</p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </aside>
+</div>

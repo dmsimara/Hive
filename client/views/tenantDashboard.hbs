@@ -1,172 +1,163 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-<body>
-    <div class="dashboard-container">
-        <aside class="sidebar">
-            <div class="sidebar-card">
-                <div class="logo">
-                    <a href="index.html">
-                        <img src="/images/hiveLight.png" alt="Hive Logo" class="logo-img">
-                    </a>
-                </div>
-                <p class="menu-title">Menu</p>
-                <nav class="menu">
-                    <br>
-                    <ul>
-                        <li class="active">
-                            <a href="/tenant/dashboard"><i class="fas fa-columns"></i> DashBoard</a>
-                        </li>
-                        <li>
-                            <a href="/tenant/room-details"><i class="fas fa-door-open"></i> Room Details</a>
-                        </li>
-                    </ul>
-                </nav>
+<div class="dashboard-container">
+    <aside class="sidebar">
+        <div class="sidebar-card">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="/images/hiveLight.png" alt="Hive Logo" class="logo-img">
+                </a>
+            </div>
+            <p class="menu-title">Menu</p>
+            <nav class="menu">
                 <br>
-                <p class="menu-title">Tracker</p>
-                <div class="tracker">
-                    <br>
-                    <ul>
-                        <li>
-                            <a href="/tenant/utilities"><i class="fas fa-lightbulb"></i> Utilities and Bills</a>
-                        </li>
-                        <li>
-                            <a href="/tenant/announcement"><i class="fas fa-bullhorn"></i> Announcement</a>
-                        </li>
-                    </ul>
-                </div>  
-                
-                <!-- Logout button -->
-                <div class="logout-container">
-                    <a href="#" id="logoutButton" class="logout-button">
-                        <i class="fas fa-sign-out-alt"></i> Log Out
-                    </a>
+                <ul>
+                    <li class="active">
+                        <a href="/tenant/dashboard"><i class="fas fa-columns"></i> DashBoard</a>
+                    </li>
+                    <li>
+                        <a href="/tenant/room-details"><i class="fas fa-door-open"></i> Room Details</a>
+                    </li>
+                </ul>
+            </nav>
+            <br>
+            <p class="menu-title">Tracker</p>
+            <div class="tracker">
+                <br>
+                <ul>
+                    <li>
+                        <a href="/tenant/utilities"><i class="fas fa-lightbulb"></i> Utilities and Bills</a>
+                    </li>
+                    <li>
+                        <a href="/tenant/announcement"><i class="fas fa-bullhorn"></i> Announcement</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Logout button -->
+            <div class="logout-container">
+                <a href="#" id="logoutButton" class="logout-button">
+                    <i class="fas fa-sign-out-alt"></i> Log Out
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="dashboard-header">
+            <div class="header-left">
+                <h3>Welcome to Hive</h3>
+                <h1>Dashboard</h1>
+            </div>
+            <div class="header-right">
+                <input type="date" class="date-picker" value="2024-10-15">
+                <i class="fa fa-bell notification-icon"></i>
+            </div>
+        </header>
+
+        <div class="room-header">
+            <p class="room-greeting">Hello There,</p>
+            <h1 class="room-number">Room 01</h1>
+        </div>
+
+        <section class="overview-preview-section">
+            <div class="overview-preview-container">
+                <!-- Utilities Overview Section -->
+                <div class="utilities-overview">
+                    <div class="overview-header">
+                        <h2>Overview for Monthly Utilities Bills</h2>
+                        <div class="date-card">
+                            <p class="date-range">Sept 2024 - Oct 2024 <span class="calendar-icon">📅</span></p>
+                        </div>
+                    </div>
+                    <div class="utilities-cards">
+                        <div class="card card-large">
+                            <div class="card-content">
+                                <i class="fas fa-bolt"></i>
+                                <h3>Electricity</h3>
+                            </div>
+                            <p>Php 2345.67</p>
+                            <span class="status pending">Pending</span>
+                        </div>
+                        <div class="card card-medium">
+                            <div class="card-content">
+                                <i class="fas fa-tint"></i>
+                                <h3>Water</h3>
+                            </div>
+                            <p>Php 345.67</p>
+                            <span class="status paid">Paid</span>
+                        </div>
+                        <div class="card card-small">
+                            <div class="card-content">
+                                <i class="fas fa-wifi"></i>
+                                <h3>WiFi/Internet</h3>
+                            </div>
+                            <p>Php 1500</p>
+                            <span class="status overdue">Overdue</span>
+                        </div>
+                        <div class="card card-large">
+                            <div class="card-content">
+                                <i class="fas fa-home"></i>
+                                <h3>Unit Rent</h3>
+                            </div>
+                            <p>Php 8000</p>
+                        </div>
+                        <div class="card card-medium">
+                            <div class="card-content">
+                                <i class="fas fa-tools"></i>
+                                <h3>Maintenance Fees</h3>
+                            </div>
+                            <p>Php 300</p>
+                        </div>
+                        <div class="card card-medium dorm-amenities">
+                            <div class="card-content">
+                                <i class="fas fa-bed"></i>
+                                <h3>Dorm Amenities</h3>
+                            </div>
+                            <p>Included</p>
+                        </div>
+                        <div class="card card-small">
+                            <div class="card-content">
+                                <i class="fas fa-calendar"></i>
+                                <h3>Due Date</h3>
+                            </div>
+                            <p>October 15, 2024</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preview Section -->
+                <div class="preview-section white-card-background">
+                    <h2 class="preview-title">Preview</h2>
+                    <div class="preview-top">
+                        <div class="preview-card tenant-card">
+                            <i class="fas fa-users"></i>
+                            <div class="card-info">
+                                <h3>4</h3>
+                                <p>Tenants</p>
+                            </div>
+                        </div>
+                        <div class="preview-card penalty-card">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div class="card-info">
+                                <h3>0</h3>
+                                <p>Penalty</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="preview-bottom">
+                        <div class="preview-card announcement-card full-width">
+                            <i class="fas fa-bell"></i>
+                            <div class="card-info">
+                                <h3>2</h3>
+                                <p>New Announcement</p>
+                            </div>
+                        </div>
+                        <div class="announcement-gradient-line"></div>
+                    </div>
                 </div>
             </div>
-        </aside>
+        </section>
+    </main>
+</div>
 
-        <main class="main-content">
-            <header class="dashboard-header">
-                <div class="header-left">
-                    <h3>Welcome to Hive</h3>
-                    <h1>Dashboard</h1>
-                </div>
-                <div class="header-right">
-                    <input type="date" class="date-picker" value="2024-10-15">
-                    <i class="fa fa-bell notification-icon"></i>
-                </div>
-            </header>
-
-            <div class="room-header">
-                <p class="room-greeting">Hello There,</p>
-                <h1 class="room-number">Room 01</h1>
-            </div>            
-
-            <section class="overview-preview-section">
-                <div class="overview-preview-container">
-                    <!-- Utilities Overview Section -->
-                    <div class="utilities-overview">
-                        <div class="overview-header">
-                            <h2>Overview for Monthly Utilities Bills</h2>
-                            <div class="date-card">
-                                <p class="date-range">Sept 2024 - Oct 2024 <span class="calendar-icon">📅</span></p>
-                            </div>
-                        </div>
-                        <div class="utilities-cards">
-                            <div class="card card-large">
-                                <div class="card-content">
-                                    <i class="fas fa-bolt"></i>
-                                    <h3>Electricity</h3>
-                                </div>
-                                <p>Php 2345.67</p>
-                                <span class="status pending">Pending</span>
-                            </div>
-                            <div class="card card-medium">
-                                <div class="card-content">
-                                    <i class="fas fa-tint"></i>
-                                    <h3>Water</h3>
-                                </div>
-                                <p>Php 345.67</p>
-                                <span class="status paid">Paid</span>
-                            </div>
-                            <div class="card card-small">
-                                <div class="card-content">
-                                    <i class="fas fa-wifi"></i>
-                                    <h3>WiFi/Internet</h3>
-                                </div>
-                                <p>Php 1500</p>
-                                <span class="status overdue">Overdue</span>
-                            </div>
-                            <div class="card card-large">
-                                <div class="card-content">
-                                    <i class="fas fa-home"></i>
-                                    <h3>Unit Rent</h3>
-                                </div>
-                                <p>Php 8000</p>
-                            </div>
-                            <div class="card card-medium">
-                                <div class="card-content">
-                                    <i class="fas fa-tools"></i>
-                                    <h3>Maintenance Fees</h3>
-                                </div>
-                                <p>Php 300</p>
-                            </div>
-                            <div class="card card-medium dorm-amenities">
-                                <div class="card-content">
-                                    <i class="fas fa-bed"></i>
-                                    <h3>Dorm Amenities</h3>
-                                </div>
-                                <p>Included</p>
-                            </div>
-                            <div class="card card-small">
-                                <div class="card-content">
-                                    <i class="fas fa-calendar"></i>
-                                    <h3>Due Date</h3>
-                                </div>
-                                <p>October 15, 2024</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Preview Section -->
-                    <div class="preview-section white-card-background">
-                        <h2 class="preview-title">Preview</h2>
-                        <div class="preview-top">
-                            <div class="preview-card tenant-card">
-                                <i class="fas fa-users"></i>
-                                <div class="card-info">
-                                    <h3>4</h3>
-                                    <p>Tenants</p>
-                                </div>
-                            </div>
-                            <div class="preview-card penalty-card">
-                                <i class="fas fa-exclamation-triangle"></i>
-                                <div class="card-info">
-                                    <h3>0</h3>
-                                    <p>Penalty</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="preview-bottom">
-                            <div class="preview-card announcement-card full-width">
-                                <i class="fas fa-bell"></i>
-                                <div class="card-info">
-                                    <h3>2</h3>
-                                    <p>New Announcement</p>
-                                </div>
-                            </div>
-                            <div class="announcement-gradient-line"></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
-</body>
-</html>
 
 <script src="/js/tenantDashboard.js"></script>
