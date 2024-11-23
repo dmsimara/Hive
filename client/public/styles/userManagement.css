@@ -5,7 +5,7 @@
     --orange: rgb(254, 127, 66);   /* #FE7F42 */
     --maroon: rgb(179, 44, 26);    /* #B32C1A */
     --gray: rgb(122, 75, 71);      /* #7A4B47 */
-    --dark-gray: rgb(42, 22, 23);  /* #2A1617 */
+    --dark-gray: rgb(42, 24, 22);  /* #2A1617 */
     --background-color: rgb(245, 245, 245);
 }
 
@@ -54,7 +54,7 @@ html, body {
 
 .nav-link:hover, .nav-link.active {
     color: var(--orange) !important;
-    background-color: rgba(255, 158, 0, 0.18);
+    background-color: rgba(255, 38, 0, 0.18);
     transform: scale(1.05);
 }
 
@@ -149,3 +149,351 @@ html, body {
 .sub-menu-link:hover p {
     font-weight: 600;
 }
+
+/* Tenant Management Table */
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: var(--background-color);
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+  }
+  
+  
+  header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  
+  header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--dark-gray);
+  }
+  
+  
+  header p {
+    font-size: 16px;
+    color: var(--orange);
+    font-weight: 600;
+  }
+  
+  
+  .search-bar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 15px;
+  }
+  
+  
+  .search-bar input {
+    width: 250px;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid var(--gray);
+    border-radius: 8px;
+    transition: box-shadow 0.3s;
+  }
+  
+  
+  .search-bar input:focus {
+    box-shadow: 0px 0px 8px rgba(254, 127, 66, 0.5);
+    outline: none;
+  }
+  
+  
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--yellow); /* Set background color for the table */
+    border-radius: 10px;
+    overflow: hidden;
+    border: none; /* Remove table border */
+  }
+  
+  
+  /* Header Row (First Row) */
+  table th {
+    background-color: var(--maroon) !important;
+    color: white !important;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 15px;
+  }
+  
+  
+  /* Table Rows */
+  /* Table Rows */
+  table td {
+    text-align: left;
+    padding: 15px;
+    font-size: 14px;
+    color: var(--dark-gray); /* Dark text for readability */
+  }
+  
+  
+  /* Alternate row colors */
+  table tr:nth-child(odd) td {
+    background-color: rgb(245, 245, 220); /* Teal background for odd rows */
+  }
+  
+  
+  table tr:nth-child(even) td {
+    background-color: rgb(255, 255, 255); /* Lavender background for even rows */
+  }
+  
+  
+  /* Status Badge */
+  .status-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    font-weight: 600;
+    color: var(--orange);
+    background-color: rgba(254, 127, 66, 0.18); /* Orange background */
+    border-radius: 20px;
+  }
+  
+  
+  /* Action Button - Edit */
+  .action-button.edit {
+    background-color: var(--orange); /* Orange color for Edit button */
+    color: white;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  
+  .action-button.edit:hover {
+    background-color: var(--dark-gray); /* Hover effect for Edit button */
+  }
+  
+  
+  /* Action Button - Delete */
+  .action-button.delete {
+    background-color: var(--red); /* Red color for Delete button */
+    color: white;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  
+  .action-button.delete:hover {
+    background-color: var(--dark-gray); /* Hover effect for Delete button */
+  }
+  
+  
+  /* Pagination */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  
+  .pagination a {
+    text-decoration: none;
+    padding: 8px 16px;
+    margin: 0 5px;
+    border-radius: 8px;
+    font-weight: 600;
+    color: var(--dark-gray);
+    border: 1px solid var(--gray);
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  
+  .pagination a:hover,
+  .pagination a.active {
+    background-color: var(--orange);
+    color: white;
+    border-color: var(--orange);
+  }
+  
+  
+  /* Orange Edit Button */
+  .btn-orange {
+    background-color: var(--orange); /* Apply your orange color */
+    color: white;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  
+  .btn-orange:hover {
+    background-color: darkorange; /* Darken on hover */
+  }
+  
+  
+  /* Red Delete Button */
+  .btn-red {
+    background-color: red; /* Red color for delete button */
+    color: white;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  
+  .btn-red:hover {
+    background-color: darkred; /* Darken on hover */
+  }
+  
+  
+  .tenant-management-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  
+  .tenant-management-icon {
+    width: 30px;
+    height: 30px;
+    background-color: #000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  
+  .tenant-management-icon > div {
+    width: 10px;
+    height: 10px;
+    background-color: #000;
+    border-radius: 50%;
+    margin: 2px;
+  }
+  
+  
+  .tenant-management-text {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  
+  .tenant-management-progress {
+    width: 100px;
+    height: 5px;
+    background-color: #fff;
+    border-radius: 50px;
+    overflow: hidden;
+  }
+  
+  
+  .tenant-management-progress-bar {
+    width: 50%;
+    height: 100%;
+    background-color: linear-gradient(to right, #ff0000, #ffff00);
+  }
+  
+  
+  /* Base button style (always orange border and font color) */
+  .hover-orange {
+    background-color: white; /* Set the background color to white */
+    color: orange; /* Make the font color orange */
+    border: 2px solid orange; /* Set orange border on all sides */
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s; /* Transition for smooth color change */
+  }
+  
+  
+  /* Hover effect */
+  .hover-orange:hover {
+    background-color: rgb(253, 99, 10); /* Change background to orange on hover */
+    color: white; /* Change text color to white to maintain contrast */
+    border-color: rgb(253, 99, 10); /* Change border to match the background color */
+  }
+  
+  /* General Form Styling */
+form input,
+form select {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 14px;
+  color: #333;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+form input::placeholder,
+form select::placeholder {
+  color: #bbb;
+}
+
+/* Modal Button Styles */
+button.btn-secondary {
+  background-color: transparent;
+  border: 1px solid #ff4d4d;
+  color: #ff4d4d;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+button.btn-secondary:hover {
+  background-color: #ff4d4d;
+  color: #fff;
+}
+
+button.btn-primary {
+  background: linear-gradient(90deg, #ff7e5f, #ff3d3d);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-weight: 600;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+button.btn-primary:hover {
+  opacity: 0.9;
+  cursor: pointer;
+}
+
+/* Modal Alignment */
+.modal-body {
+  padding: 20px;
+}
+
+.modal-content {
+  border-radius: 10px;
+}
+
+.modal-header .btn-close {
+  font-size: 18px;
+}
+
+label {
+  font-size: 13px;
+  color: #666;
+}
+
+.row {
+  margin-bottom: 10px;
+}
+  
