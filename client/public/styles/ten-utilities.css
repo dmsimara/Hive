@@ -1,0 +1,153 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Container Layout */
+  .container {
+    display: flex;
+    height: 100vh;
+    background: #f9f9f9;
+  }
+  
+  /* Sidebar */
+  .sidebar {
+    background-color: #3a3a3a;
+    color: #fff;
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+  }
+  
+  .sidebar .logo img {
+    width: 100px;
+    margin-bottom: 20px;
+  }
+  
+  .sidebar nav ul {
+    list-style: none;
+  }
+  
+  .sidebar nav ul li {
+    margin: 15px 0;
+  }
+  
+  .sidebar nav ul li a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 16px;
+  }
+  
+  .sidebar nav ul li.active a {
+    color: orange;
+    font-weight: bold;
+  }
+  
+  .logout {
+    margin-top: auto;
+    text-align: center;
+  }
+  
+  .logout a {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  /* Main Content */
+  main {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .header h1 {
+    font-size: 24px;
+  }
+  
+  .header h1 span {
+    color: orange;
+  }
+  
+  .date-picker {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .date-picker input {
+    padding: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  /* Utilities Section */
+  .utilities-section {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .utilities-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .bills .bill {
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .bills .bill:last-child {
+    border-bottom: none;
+  }
+  
+  /* Right Panel */
+  .summary {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .balance, .usage-summary {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
+  .balance h2, .usage-summary h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .balance button {
+    background: orange;
+    border: none;
+    padding: 10px;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .usage-summary .circle {
+    width: 100px;
+    height: 100px;
+    background: orange;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    margin: 0 auto 10px;
+  }
+  
