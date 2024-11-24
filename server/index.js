@@ -74,15 +74,9 @@ app.engine("hbs", exphbs.engine({
         json: function(context) {
             return JSON.stringify(context);
         },
-        statusColor: function (status) {
-            switch (status) {
-                case "Not Started": return "secondary";
-                case "In Progress": return "info";
-                case "On Hold": return "warning";
-                case "Completed": return "success";
-                default: return "light";
-            }
-        }
+        isArrayEmpty: function(arr) {
+            return arr && arr.length === 0;
+          }
     }
 }));
 
@@ -90,8 +84,7 @@ app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "../client/views")); 
 console.log("Views Directory: ", path.join(__dirname, "../client/views"));
 
-app.use(express.static(path.join(__dirname, "../client/public"))); // Serve static files from the public folder
-// app.use('/images/upload', express.static(path.join(__dirname, 'client/public/images/upload')));
+app.use(express.static(path.join(__dirname, "../client/public"))); 
 
 app.use("/api/auth", authRoutes);
 
@@ -124,65 +117,63 @@ app.get("/tenant/login", (req, res) => {
 // ADMIN PAGES ROUTES
 app.get("/admin/dashboard", verifyToken, async (req, res) => {
     try {
-        const admin = await viewAdmins(req, res); 
-        console.log("Fetched admin data:", admin);
-
-        const tenants = await viewTenants(req, res);
-        console.log("Tenants data:", tenants);
-
+        const admin = await viewAdmins(req, res);
+        const establishmentId = req.establishmentId;  
+        const tenantsData = await viewTenants(req); 
         const events = await getEvents(req, res);
-        console.log("Events data:", events);
+
+        console.log("Admin:", admin);
+        console.log("Tenants:", tenantsData);
+        console.log("Events:", events);
+
+        if (req.xhr || req.headers.accept.includes('application/json')) {
+            return res.json({
+                success: true,
+                tenants: tenantsData.tenants || [],
+                establishmentId: establishmentId,
+            });
+        }
 
         res.render("adminDashboard", {
             title: "Hive",
             styles: ["adminDashboard"],
-            admin: admin, 
-            tenants: tenants || [],
-            events: events || [], 
+            admin: admin || {}, 
+            tenants: tenantsData.tenants || [],
+            events: events || [],
+            establishmentId: establishmentId, 
         });
     } catch (error) {
-        console.error("Error fetching data:", error);
-        res.status(500).json({ success: false, message: "Error fetching data" });
+        console.error("Error fetching admin dashboard data:", error);
+        res.status(500).json({ success: false, message: "Error fetching admin dashboard data" });
     }
 });
 
 app.post("/admin/dashboard", findDashTenants);
 
-// Manage unit routes
+
 app.get("/admin/manage/unit", verifyToken, async (req, res) => {
     try {
-        const admin = await viewAdmins(req); 
-        console.log('Fetched admin data for unit management:', admin);
-
-        const units = await viewUnits(req, res);
-        console.log('Units:', units);
-
-        if (!units) {
-            return res.render("manageUnits", {
-                title: "Hive",
-                styles: ["manageUnits"],
-                admin: admin, 
-                units: [] 
-            });
-        }
-
-        const occupiedUnits = await getOccupiedUnits(req, res);
-        console.log('Occupied Units:', occupiedUnits);
-
-        res.render("manageUnits", {
-            title: "Hive",
-            styles: ["manageUnits"],
-            admin: admin, 
-            units: units,
-            occupiedUnits: occupiedUnits
-        });
+      const admin = await viewAdmins(req);
+      console.log("Fetched admin data for unit management:", admin);
+  
+      const unitsData = await viewUnits(req, res);
+      console.log("Units Data:", unitsData);
+  
+      const occupiedUnits = unitsData.success ? await getOccupiedUnits(req, res) : [];
+  
+      res.render("manageUnits", {
+        title: "Hive",
+        styles: ["manageUnits"],
+        admin: admin,
+        units: unitsData.units || [],
+        occupiedUnits: occupiedUnits
+      });
     } catch (error) {
-        console.error('Error fetching admin or unit data:', error);
-        res.status(500).json({ success: false, message: 'Error fetching data' });
+      console.error("Error fetching admin or unit data:", error);
+      res.status(500).json({ success: false, message: "Error fetching data" });
     }
-});
-
-// Get tenants by roomId
+  });
+  
 const getTenantsByRoomId = async (roomId) => {
     try {
         const tenants = await Tenant.findAll({
@@ -197,7 +188,6 @@ const getTenantsByRoomId = async (roomId) => {
     }
 };
 
-// Get room details
 const getRoomDetails = async (roomId) => {
     try {
         const room = await Room.findOne({
@@ -205,14 +195,19 @@ const getRoomDetails = async (roomId) => {
                 room_id: roomId
             }
         });
-        return room ? room : {};  
+        
+        if (room) {
+            const roomTotalSlot = parseInt(room.roomTotalSlot, 10) || 0; 
+            const roomRemainingSlot = parseInt(room.roomRemainingSlot, 10) || 0; 
+            return { roomTotalSlot, roomRemainingSlot };
+        }
+        return {};  
     } catch (error) {
         console.error('Error fetching room details:', error);
         return {};
     }
 };
 
-// Get tenants for specific room
 app.get('/admin/manage/unit/tenants/:room_id', async (req, res) => {
     const { room_id } = req.params;
     try {
@@ -225,14 +220,13 @@ app.get('/admin/manage/unit/tenants/:room_id', async (req, res) => {
     }
 });
 
-// Get tenants and room details for specific room
 app.get('/admin/manage/unit/tenants', async (req, res) => {
     const roomId = req.query.room_id;
     try {
         const tenants = await getTenantsByRoomId(roomId);
         const roomDetails = await getRoomDetails(roomId);
 
-        if (roomDetails) {
+        if (roomDetails && roomDetails.roomTotalSlot != null && roomDetails.roomRemainingSlot != null) {
             const rented = roomDetails.roomTotalSlot - roomDetails.roomRemainingSlot;
 
             res.json({
@@ -242,14 +236,13 @@ app.get('/admin/manage/unit/tenants', async (req, res) => {
                 rented: rented
             });
         } else {
-            res.status(404).json({ error: "Room not found" });
+            res.status(404).json({ error: "Room not found or invalid data" });
         }
     } catch (error) {
         res.status(500).json({ error: "Error fetching room details" });
     }
 });
 
-// Post route for managing units
 app.post("/admin/manage/unit", findUnits, async (req, res) => {
     try {
         const admin = await viewAdmins(req);
@@ -266,6 +259,8 @@ app.post("/admin/manage/unit", findUnits, async (req, res) => {
     }
 });
 
+
+  
 // userManagement routes
 app.post("/admin/dashboard/userManagement", findTenants, async (req, res) => {
     try {
@@ -289,11 +284,15 @@ app.get("/admin/manage/unit/add", verifyToken, addUnitView);
 // user management routes
 app.get("/admin/dashboard/userManagement", verifyToken, async (req, res) => {
     try {
-        const tenants = await viewTenants(req, res);  
+        const { tenants, success } = await viewTenants(req);  
         const admins = await viewAdmins(req, res);  
 
         console.log('Fetched tenant data:', tenants);
         console.log('Fetched admin data:', admins);
+
+        if (!success) {
+            return res.status(500).json({ success: false, message: 'Error fetching tenant data' });
+        }
 
         const tenantId = req.query.tenantId;  
         let tenantToEdit = null;
@@ -318,6 +317,7 @@ app.get("/admin/dashboard/userManagement", verifyToken, async (req, res) => {
         res.status(500).json({ success: false, message: 'Error fetching data' });
     }
 });
+
 
 app.post("/admin/dashboard/userManagement", findTenants, (req, res) => {
      res.render("userManagement", { title: "Hive", styles: ["userManagement"], tenants: req.tenants });
@@ -349,7 +349,7 @@ app.get("/admin/dashboard/userManagement/editTenant/:tenant_id", verifyToken, as
 });
 
 app.put('/api/auth/updateTenant/:tenantId', updateTenant);
-app.get('/api/auth/getAvailableRooms', getAvailableRooms);
+app.get('/api/auth/getAvailableRooms', verifyToken, getAvailableRooms);
 
 // view and edit account
 app.get("/admin/dashboard/view/account", verifyToken, async (req, res) => {

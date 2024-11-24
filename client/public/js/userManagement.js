@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const editTenantForm = document.getElementById("editForm"); // updated form ID
     const roomDropdown = document.getElementById("roomSelection");
 
+    // Logout button click event
     logoutButton.addEventListener("click", async () => {
         const isConfirmed = confirm("Are you sure you want to log out?");
         if (!isConfirmed) return;
@@ -30,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // Fetch available rooms when the "Add Tenant" modal is shown
     document.getElementById("addTenantModal").addEventListener("show.bs.modal", async () => {
         try {
             const response = await fetch('/api/auth/getAvailableRooms');
@@ -49,6 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // Tenant form submission for adding new tenant
     tenantForm.addEventListener("submit", async function(event) {
         event.preventDefault();
         const tenantData = {
@@ -62,24 +65,28 @@ document.addEventListener("DOMContentLoaded", () => {
             stayFrom: document.getElementById("stayFrom").value.trim(),
             stayTo: document.getElementById("stayTo").value.trim(),
             room_id: document.getElementById("roomSelection").value.trim(),
+            tenantGuardianName: document.getElementById("tenantGuardianName").value.trim(),
+            tenantAddress: document.getElementById("tenantAddress").value.trim(),
+            tenantGuardianNum: document.getElementById("tenantGuardianNum").value.trim(),
             dateJoined: new Date().toISOString()
         };
-    
+
+        // Validate tenant data
         if (!validateTenantData(tenantData)) {
             alert("Please fill in all required fields.");
             return;
         }
-    
+
         if (tenantData.tenantPassword !== tenantData.tenantConfirmPassword) {
             alert("Passwords do not match!");
             return;
         }
-    
+
         if (new Date(tenantData.stayTo) < new Date(tenantData.stayFrom)) {
             alert("End date cannot be before start date.");
             return;
         }
-    
+
         try {
             const response = await fetch('/api/auth/addTenant', {
                 method: 'POST',
@@ -100,40 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    async function loadTenantData(tenantId) {
-        try {
-            const response = await fetch(`/api/auth/editTenant/${tenantId}`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-    
-            const data = await response.json();
-            console.log('Fetched Tenant Data:', data);
-    
-            if (data.tenant) {
-                document.getElementById("tenantId").value = data.tenant.tenant_id;
-                document.getElementById("editFirstName").value = data.tenant.tenantFirstName;
-                document.getElementById("editLastName").value = data.tenant.tenantLastName;
-                document.getElementById("editEmail").value = data.tenant.tenantEmail;
-                document.getElementById("editMobile").value = data.tenant.mobileNum;
-                document.getElementById("editGender").value = data.tenant.gender;
-            } else {
-                alert('Tenant not found.');
-            }
-        } catch (error) {
-            console.error('Error loading tenant data:', error);
-            alert('Failed to load tenant data.');
-        }
-    }
-
-    document.querySelectorAll(".edit-tenant-button").forEach(button => {
-        button.addEventListener("click", function() {
-            const tenantId = this.getAttribute("data-tenant-id");  
-            console.log("Tenant ID for editing:", tenantId);  
-            loadTenantData(tenantId); 
-        });
-    });
-
+    // Edit tenant form submission
     editTenantForm.addEventListener("submit", async function(event) {
         event.preventDefault();
         const tenantId = document.getElementById("tenantId").value;
@@ -142,7 +116,10 @@ document.addEventListener("DOMContentLoaded", () => {
             tenantLastName: document.getElementById("editLastName").value.trim(),
             tenantEmail: document.getElementById("editEmail").value.trim(),
             mobileNum: document.getElementById("editMobile").value.trim(),
-            gender: document.getElementById("editGender").value.trim()
+            gender: document.getElementById("editGender").value.trim(),
+            tenantGuardianName: document.getElementById("editTenantGuardianName").value.trim(),
+            tenantAddress: document.getElementById("editTenantAddress").value.trim(),
+            tenantGuardianNum: document.getElementById("editTenantGuardianNum").value.trim()
         };
 
         if (!validateTenantData(tenantData)) {
@@ -171,7 +148,14 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function validateTenantData(tenantData) {
-    return Object.values(tenantData).every(value => value);
+    const requiredFields = ['tenantGuardianName', 'tenantAddress', 'tenantGuardianNum'];
+    for (let field of requiredFields) {
+        if (!tenantData[field] || tenantData[field].trim() === '') {
+            alert(`Please fill in the ${field.replace('tenant', '').replace(/([A-Z])/g, ' $1').toLowerCase()}.`);
+            return false;
+        }
+    }
+    return true;
 }
 
 function deleteTenant(tenantId) {

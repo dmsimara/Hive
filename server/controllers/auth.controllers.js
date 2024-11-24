@@ -43,19 +43,14 @@ export const adminRegister = async (req, res) => {
         }
 
         const hashedPassword = await bcryptjs.hash(adminPassword, 10);
-        const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
 
         const admin = await Admin.create({
             adminFirstName,
             adminLastName,
             adminEmail,
             adminPassword: hashedPassword,
-            establishmentId: establishment.establishment_id, 
-            verificationToken,
-            verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000
+            establishmentId: establishment.establishment_id,
         });
-
-        await sendVerificationEmail(admin.adminEmail, verificationToken);
 
         res.status(201).json({
             success: true,
@@ -319,12 +314,12 @@ export const checkTenantAuth = async (req, res) => {
     }
 };
 
-export const viewTenants = async (req, res) => {
-    const establishmentId = req.establishmentId;
+export const viewTenants = async (req) => {
+    const establishmentId = req.establishmentId; 
 
     if (!establishmentId) {
-        console.error('Establishment ID is undefined.');
-        return null; 
+        console.error('Establishment ID is undefined. Ensure the user is correctly associated with an establishment.');
+        throw new Error("Establishment ID is missing"); 
     }
 
     try {
@@ -338,7 +333,8 @@ export const viewTenants = async (req, res) => {
         });
 
         if (!rows.length) {
-            return []; 
+            console.log('No tenants found for establishment ID:', establishmentId);
+            return { success: true, tenants: [] }; 
         }
 
         const plainRows = rows.map(row => {
@@ -347,10 +343,11 @@ export const viewTenants = async (req, res) => {
             return tenant;
         });
 
-        return plainRows;  
+        return { success: true, tenants: plainRows };  
+
     } catch (error) {
         console.error('Error fetching tenants:', error);
-        return []; 
+        throw new Error('Error fetching tenants'); 
     }
 };
 
@@ -359,7 +356,7 @@ export const viewUnits = async (req, res) => {
 
     if (!establishmentId) {
         console.error('Establishment ID is undefined.');
-        return res.status(400).json({ success: false, message: 'Establishment ID is required.' });
+        return { success: false, message: 'Establishment ID is required.' };
     }
 
     try {
@@ -370,13 +367,14 @@ export const viewUnits = async (req, res) => {
         });
 
         if (!rooms.length) {
-            return null;  
+            return { success: true, units: [] };  
         }
 
-        return rooms.map(room => room.get({ plain: true }));
+        const roomData = rooms.map(room => room.get({ plain: true }));
+        return { success: true, units: roomData };  
     } catch (error) {
         console.error('Error fetching rooms:', error);
-        throw error; 
+        return { success: false, message: 'Error fetching rooms.' };
     }
 };
 
@@ -509,65 +507,51 @@ export const findDashTenants = async (req, res) => {
 };
 
 export const findUnits = async (req, res) => {
-    const searchTerm = req.body.searchUnits;
-    console.log('Received search term:', searchTerm);
-
-    if (!searchTerm) {
-        console.log('No search term provided.');
-        return res.status(400).json({ success: false, message: 'Search term is required' });
-    }
-
-    const adminId = req.adminId;  
+    const adminId = req.user?.admin_id; 
     if (!adminId) {
-        console.log('No adminId provided.');
         return res.status(400).json({ success: false, message: 'Admin ID is required' });
     }
 
     try {
+        const searchTerm = req.body.searchUnits || ''; 
         const rooms = await Room.findAll({
             where: {
-                [Op.or]: [
-                    { roomNumber: { [Op.like]: `%${searchTerm}%` } },
-                    { roomType: { [Op.like]: `%${searchTerm}%` } }
-                ]
+                roomNumber: {
+                    [Op.like]: `%${searchTerm}%` 
+                }
             }
         });
 
-        console.log('Found rooms:', rooms.length);
-
-        const rows = rooms.map(room => room.get({ plain: true }));
-        console.log('Rooms Data:', rows);
-
-        const admins = await viewAdmins(adminId);  
-
-        res.render('manageUnits', {
-            title: "Hive",
-            styles: ["manageUnits"],
-            units: rows,
-            lastSearchTerm: searchTerm,
-            admins: admins 
+        const adminData = await viewAdmins(adminId); 
+        res.json({
+            success: true,
+            units: rooms,
+            admins: adminData
         });
+
     } catch (error) {
-        console.error('Error in findUnits:', error);
-        res.status(500).json({ success: false, message: 'An error occurred while searching for units.' });
+        console.error("Error in findUnits:", error);
+        res.status(500).json({ success: false, message: 'An error occurred while processing the request.' });
     }
 };
 
-
 export const addTenant = async (req, res) => {
-    const { tenantFirstName, tenantLastName, tenantEmail, gender, mobileNum, tenantPassword, tenantConfirmPassword, stayTo, stayFrom, room_id } = req.body;
+    const { tenantFirstName, tenantLastName, tenantEmail, gender, mobileNum, tenantPassword, tenantConfirmPassword, stayTo, stayFrom, room_id, tenantGuardianName, tenantAddress, tenantGuardianNum } = req.body;
 
     try {
         console.log('Incoming request data:', req.body);
 
-        if (!tenantFirstName || !tenantLastName || !tenantEmail || !gender || !mobileNum || !tenantPassword || !tenantConfirmPassword || !stayTo || !stayFrom || !room_id) {
+        // Ensure all required fields are provided
+        if (!tenantFirstName || !tenantLastName || !tenantEmail || !gender || !mobileNum || !tenantPassword || !tenantConfirmPassword || !stayTo || !stayFrom || !room_id || !tenantGuardianName || !tenantAddress || !tenantGuardianNum) {
             return res.status(400).json({ success: false, message: "All fields are required." });
         }
 
+        // Check if passwords match
         if (tenantPassword !== tenantConfirmPassword) {
             return res.status(400).json({ success: false, message: "Passwords do not match." });
         }
 
+        // Validate date format
         const isStayFromValid = Date.parse(stayFrom);
         const isStayToValid = Date.parse(stayTo);
 
@@ -577,10 +561,12 @@ export const addTenant = async (req, res) => {
             return res.status(400).json({ success: false, message: "Invalid date format." });
         }
 
+        // Ensure end date is after start date
         if (new Date(stayTo) < new Date(stayFrom)) {
             return res.status(400).json({ success: false, message: "End date cannot be before start date." });
         }
 
+        // Ensure the request includes a valid token
         const token = req.cookies.token;
         if (!token) {
             return res.status(401).json({ success: false, message: "Unauthorized. No token provided." });
@@ -596,6 +582,7 @@ export const addTenant = async (req, res) => {
             return res.status(401).json({ success: false, message: "Invalid or expired token." });
         }
 
+        // Check if there are available rooms for the establishment
         const availableRooms = await Room.findAll({
             where: {
                 establishmentId,
@@ -607,20 +594,24 @@ export const addTenant = async (req, res) => {
             return res.status(400).json({ success: false, message: "No available rooms for this establishment." });
         }
 
+        // Check if the tenant already exists
         const existingTenant = await Tenant.findOne({ where: { tenantEmail, establishmentId } });
         if (existingTenant) {
             return res.status(400).json({ success: false, message: "Tenant already exists in this establishment." });
         }
 
+        // Hash the password
         const hashedPassword = await bcryptjs.hash(tenantPassword, 10);
         console.log('Hashed Password:', hashedPassword);
 
+        // Get the room selected by the tenant
         const room = await Room.findOne({ where: { room_id, establishmentId } });
 
         if (!room) {
             return res.status(400).json({ success: false, message: "Room not found." });
         }
 
+        // Create the new tenant in the database
         const newTenant = await Tenant.create({
             tenantFirstName,
             tenantLastName,
@@ -631,16 +622,22 @@ export const addTenant = async (req, res) => {
             stayFrom,
             tenantPassword: hashedPassword,
             establishmentId,
-            room_id: room.room_id
+            room_id: room.room_id,
+            tenantGuardianName,
+            tenantAddress, // tenantAddress is now required
+            tenantGuardianNum
         });
 
         console.log('New Tenant Created:', newTenant);
 
+        // Decrease the available slots in the room
         room.roomRemainingSlot -= 1;
         await room.save();  
 
+        // Generate the token and set it in the response cookie
         generateTokenAndSetTenantCookie(res, newTenant.tenant_id, establishmentId);
 
+        // Respond with success message and tenant details
         return res.status(201).json({
             success: true,
             message: "Tenant added successfully",
@@ -652,7 +649,10 @@ export const addTenant = async (req, res) => {
                 mobileNum: newTenant.mobileNum,
                 stayTo: newTenant.stayTo,
                 stayFrom: newTenant.stayFrom,
-                room_id: newTenant.room_id 
+                room_id: newTenant.room_id,
+                tenantGuardianName: newTenant.tenantGuardianName,
+                tenantAddress: newTenant.tenantAddress,  // included in response
+                tenantGuardianNum: newTenant.tenantGuardianNum
             },
             availableRooms: availableRooms.map(room => ({
                 room_id: room.room_id,
@@ -666,6 +666,7 @@ export const addTenant = async (req, res) => {
         return res.status(500).json({ success: false, message: 'Failed to add tenant', error: error.message });
     }
 };
+
 
 export const addUnit = async (req, res) => {
     try {
@@ -741,7 +742,7 @@ export const editTenant = async (req, res) => {
 };
 
 export const updateTenant = async (req, res) => {
-    const { tenantFirstName, tenantLastName, tenantEmail, mobileNum, gender } = req.body;
+    const { tenantFirstName, tenantLastName, tenantEmail, mobileNum, gender, tenantGuardianName, tenantAddress, tenantGuardianNum } = req.body;
     const tenantId = req.params.tenantId;
 
     try {
@@ -749,11 +750,11 @@ export const updateTenant = async (req, res) => {
 
         const updateQuery = `
             UPDATE tenants 
-            SET tenantFirstName = ?, tenantLastName = ?, tenantEmail = ?, mobileNum = ?, gender = ? 
+            SET tenantFirstName = ?, tenantLastName = ?, tenantEmail = ?, mobileNum = ?, gender = ?, tenantGuardianName = ?, tenantAddress = ?, tenantGuardianNum = ? 
             WHERE tenant_id = ?
         `;
         const [updateResult] = await connection.promise().query(updateQuery, [
-            tenantFirstName, tenantLastName, tenantEmail, mobileNum, gender, tenantId
+            tenantFirstName, tenantLastName, tenantEmail, mobileNum, gender, tenantGuardianName, tenantAddress, tenantGuardianNum, tenantId
         ]);
 
         if (updateResult.affectedRows > 0) {
@@ -808,18 +809,15 @@ export const deleteUnit = (req, res) => {
 
         if (err) {
             console.error('Error deleting room data:', err);
-            return res.status(500).send("Error deleting room data");
+            return res.status(500).json({ success: false, message: "Error deleting room data" });
         }
 
         if (result.affectedRows === 0) {
-            return res.status(404).send("Room not found");
+            return res.status(404).json({ success: false, message: "Room not found" });
         }
 
-        res.render('manageUnits', {
-            title: "Hive",
-            message: "Room successfully removed",
-            rows: [],
-        });
+        // Return a success message in JSON format
+        res.json({ success: true, message: "Room successfully removed" });
     });
 };
 
