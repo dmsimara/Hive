@@ -643,13 +643,12 @@ const getTenantsDashboard = async (roomId) => {
 };
 
 app.get("/tenant/room-details", verifyTenantToken, async (req, res) => {
-    const tenantId = req.tenantId; 
+    const tenantId = req.tenantId;
     if (!tenantId) {
         return res.status(400).send("Tenant ID not found in the token.");
     }
 
     try {
-        // Fetch tenant using tenantId
         const tenant = await Tenant.findOne({
             where: { tenant_id: tenantId }
         });
@@ -658,11 +657,9 @@ app.get("/tenant/room-details", verifyTenantToken, async (req, res) => {
             return res.status(404).send("Tenant not found");
         }
 
-        const roomId = tenant.get('room_id'); 
+        const roomId = tenant.get('room_id');
 
         const tenants = await getTenantsDashboard(roomId);
-
-        const plainTenants = tenants.map(tenant => tenant.get({ plain: true }));
 
         const room = await Room.findOne({
             where: { room_id: roomId }
@@ -673,6 +670,7 @@ app.get("/tenant/room-details", verifyTenantToken, async (req, res) => {
         }
 
         const roomNumber = room.get('roomNumber');
+        const plainTenants = tenants.map(tenant => tenant.get({ plain: true }));
 
         res.render("ten-RoomDeets", {
             title: "Hive",
@@ -686,6 +684,7 @@ app.get("/tenant/room-details", verifyTenantToken, async (req, res) => {
     }
 });
 
+
 app.get("/tenant/announcement", verifyTenantToken, (req, res) => {
     res.render("ten-announcement", { title: "Hive", styles: ["ten-announce"]});
 });
@@ -697,7 +696,6 @@ app.get("/tenant/utilities", verifyTenantToken, async (req, res) => {
     }
 
     try {
-        // Fetch the tenant's information using the tenant ID
         const tenant = await Tenant.findOne({
             where: { tenant_id: tenantId }
         });
@@ -706,7 +704,6 @@ app.get("/tenant/utilities", verifyTenantToken, async (req, res) => {
             return res.status(404).send("Tenant not found");
         }
 
-        // Fetch the room ID associated with the tenant
         const roomId = tenant.get('room_id');
 
         const room = await Room.findOne({
@@ -717,15 +714,12 @@ app.get("/tenant/utilities", verifyTenantToken, async (req, res) => {
             return res.status(404).send("Room not found");
         }
 
-        // Fetch room number
         const roomNumber = room.get('roomNumber');
 
-        // Fetch all tenants in the room
         const tenants = await getTenantsDashboard(roomId);
 
         const plainTenants = tenants.map(tenant => tenant.get({ plain: true }));
 
-        // Render the tenant utilities page with roomNumber
         res.render("ten-utilities", {
             title: "Hive",
             styles: ["ten-utilities"],
@@ -740,38 +734,105 @@ app.get("/tenant/utilities", verifyTenantToken, async (req, res) => {
 
 app.post("/api/auth/addTenant", verifyToken, addTenant); 
 
-// View Tenant Account
-app.get("/tenant/dashboard/view/account", verifyToken, async (req, res) => {
-    try {
-        const tenants = await viewTenants(req, res); 
+// view and edit account
+app.get("/tenant/room-details/view/account", verifyTenantToken, async (req, res) => {
+    const tenantId = req.tenantId;
 
-        res.render("viewTenantAccount", { 
+    if (!tenantId) {
+        return res.status(400).send("Tenant ID not found in the token.");
+    }
+
+    try {
+        const tenant = await Tenant.findOne({
+            where: { tenant_id: tenantId },
+        });
+
+        if (!tenant) {
+            return res.status(404).send("Tenant not found");
+        }
+
+        const roomId = tenant.get("room_id");
+
+        const tenants = await getTenantsDashboard(roomId);
+
+        const plainTenants = tenants.map((tenant) => tenant.get({ plain: true }));
+
+        res.render("viewTenantAccount", {
             title: "Hive",
             styles: ["viewTenantAccount"],
-            rows: tenants
+            tenant: plainTenants, 
         });
     } catch (error) {
-        console.error('Error fetching tenant data:', error);
-        res.status(500).json({ success: false, message: 'Error fetching tenant data' });
+        console.error("Error fetching tenant data:", error);
+        res.status(500).json({ success: false, message: "Error fetching tenant data" });
     }
 });
 
-// Edit Tenant Account
-app.get("/tenant/dashboard/edit/account", verifyToken, async (req, res) => {
-    try {
-        const tenants = await viewTenants(req, res); 
 
-        res.render("editTenantAccount", { 
+app.get("/tenant/room-details/edit/account", verifyTenantToken, async (req, res) => {
+    try {
+        const tenant = await Tenant.findOne({ where: { tenant_id: req.tenantId } });
+        if (!tenant) {
+            return res.status(404).send("Tenant not found");
+        }
+
+        res.render("editTenantAccount", {
             title: "Hive",
             styles: ["editTenantAccount"],
-            rows: tenants
+            tenant: tenant.get({ plain: true }),
         });
     } catch (error) {
-        console.error('Error fetching tenant data:', error);
-        res.status(500).json({ success: false, message: 'Error fetching tenant data' });
+        console.error("Error fetching tenant data:", error);
+        res.status(500).json({ success: false, message: "Error fetching tenant data" });
     }
 });
 
+app.post("/tenant/room-details/edit/account", verifyTenantToken, async (req, res) => {
+    try {
+        let tenantProfile = req.body.tenantProfile;
+
+        if (req.files && req.files.sampleFile) {
+            const sampleFile = req.files.sampleFile;
+            const uploadDir = path.join(__dirname, "..", "client", "public", "images", "upload");
+            const uploadPath = path.join(uploadDir, sampleFile.name);
+
+            fs.mkdirSync(uploadDir, { recursive: true });
+
+            sampleFile.mv(uploadPath, async (err) => {
+                if (err) {
+                    console.error("Error moving file:", err);
+                    return res.status(500).json({ success: false, message: "File upload failed." });
+                }
+
+                tenantProfile = sampleFile.name; 
+                await updateTenantDetails(req.body, tenantProfile);
+                return res.json({ success: true, message: "Tenant details updated successfully." });
+            });
+        } else {
+            await updateTenantDetails(req.body, tenantProfile);
+            return res.json({ success: true, message: "Tenant details updated successfully." });
+        }
+    } catch (error) {
+        console.error("Error updating tenant account:", error);
+        res.status(500).json({ success: false, message: "Failed to update tenant account." });
+    }
+});
+
+const updateTenantDetails = async (body, tenantProfile) => {
+    const tenantDetails = {
+        tenantProfile: tenantProfile,
+        tenantEmail: body.tenantEmail,
+        tenantFirstName: body.tenantFirstName,
+        tenantLastName: body.tenantLastName,
+        gender: body.gender,
+        mobileNum: body.mobileNum,
+        tenantGuardianName: body.tenantGuardianName,
+        tenantGuardianNum: body.tenantGuardianNum,
+    };
+
+    const tenantId = body.tenant_id;
+    await Tenant.update(tenantDetails, { where: { tenant_id: tenantId } });
+};
 
 app.listen(PORT, () => {
     connectDB();
