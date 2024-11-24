@@ -1,6 +1,7 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import dotenv from 'dotenv';
 import Establishment from './establishment.models.js';
+import Room from './room.models.js';
 
 dotenv.config();
 
@@ -97,14 +98,19 @@ const Tenant = sequelize.define('Tenant', {
   }
 }, { timestamps: false });
 
+// Associations
 Establishment.hasMany(Tenant, { foreignKey: 'establishment_id' });
 Tenant.belongsTo(Establishment, { foreignKey: 'establishment_id' });
 
-  
-  sequelize.sync()
-    .then(() => {
-      console.log('Tenants table has been created.');
-    })
-    .catch(err => console.error('Error creating table:', err));
-  
-  export default Tenant;
+Room.hasMany(Tenant, { foreignKey: 'room_id' });
+Tenant.belongsTo(Room, { foreignKey: 'room_id' });
+
+// Sync the model with the database
+sequelize.sync()
+  .then(() => {
+    console.log('Tenants table has been created.');
+  })
+  .catch(err => console.error('Error creating table:', err));
+
+// Export the Tenant model
+export default Tenant;
