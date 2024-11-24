@@ -1,21 +1,23 @@
-/* Remove default body margin and padding */
+/* Remove default body and html margin and padding */
 body, html {
     font-family: 'Arial', sans-serif;
     height: 100%;
-    margin: 0;
-    padding: 0;
+    margin: 0; /* Ensures no extra margins */
+    padding: 0; /* Ensures no extra paddings */
+    overflow: hidden; /* Prevents unwanted scrolling */
+    box-sizing: border-box;
 }
 
 /* Adjust the container */
 .container {
     display: grid;
     grid-template-columns: 1fr 3fr 1.8fr; /* Adjust the column layout */
-    gap: 20px;
-    padding: 0; /* Remove padding */
-    width: 100%; /* Ensure full width */
-    height: 100vh;
-    overflow: hidden;
-    background-color: #F5F5F5;
+    gap: 20px; /* Space between columns */
+    padding: 0; /* Remove internal padding */
+    width: 100%; /* Take the full width of the page */
+    height: 100vh; /* Full viewport height */
+    box-sizing: border-box; /* Ensures padding and borders are included in dimensions */
+    background-color: #F5F5F5; 
 }
 
 

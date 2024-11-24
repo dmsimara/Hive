@@ -44,6 +44,7 @@
     transform: scale(1.1); /* Slightly enlarge the day box on hover */
   }
   
+  
   .calendar .selected-day {
     background-color: var(--orange); /* Highlight selected day with orange */
     color: white; /* White text for selected day */
@@ -59,6 +60,8 @@
     border-radius: 5px;
     margin-bottom: 10px;
   }
+
+
 
 .navbar {
   padding: 0 10px;
@@ -400,21 +403,48 @@
     color: #7A4B47; /* Orange text color */
     font-weight: bold; /* Optional: Makes the weekday names bold */
   }
-  
-/* Add Event Button - Base Styles */
+ /* Add Event Button - Base Styles */
 .add-event-button {
-    background-color: transparent; /* Transparent background */
-    color: var(--orange); /* Orange text */
-    font-weight: 600; /* Bold font */
-    padding: 8px 12px; /* Padding for spacing */
-    border: 2px solid var(--orange); /* Orange border */
-    border-radius: 8px; /* Rounded corners */
-    cursor: pointer; /* Pointer on hover */
-    transition: background-color 0.3s, color 0.3s, transform 0.3s; /* Smooth transition */
-    outline: none; /* Remove default focus outline */
-    box-shadow: none; /* Remove any box-shadow applied by the browser */
-  }
-  
+  background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
+  color: #FFFFFF; /* White text */
+  font-weight: 600; /* Bold font */
+  padding: 8px 12px; /* Padding for spacing */
+  border: 2px solid var(--orange); /* Orange border */
+  border-radius: 8px; /* Rounded corners */
+  cursor: pointer; /* Pointer on hover */
+  transition: background-color 0.3s, color 0.3s, transform 0.3s; /* Smooth transition */
+  outline: none; /* Remove default focus outline */
+  box-shadow: none; /* Remove any box-shadow applied by the browser */
+  position: relative; /* Needed for icon positioning */
+  display: inline-flex; /* Align icon with text */
+  align-items: center;
+  gap: 8px; /* Space between icon and text */
+}
+
+.add-event-button::before {
+  content: "+";
+  display: inline-block;
+  font-size: 1.2em; /* Adjust icon size */
+  color: #FFFFFF; /* Icon color matches text */
+}
+
+/* Hover State */
+.add-event-button:hover {
+  background-color: var(--orange); /* Orange background on hover */
+  color: white;
+  transform: scale(1.05);
+  border: 2px solid var(--orange);
+  outline: none;
+  box-shadow: none;
+}
+
+/* Focus State */
+.add-event-button:focus {
+  border: 2px solid var(--orange);
+  outline: none;
+  box-shadow: 0 0 5px rgba(254, 127, 66, 0.5); 
+}
+
   
  /* Hover State - Close Button */
 .btn-close-red:hover {
@@ -493,8 +523,5 @@
     outline: none; /* Prevent default blue outline on focus */
     box-shadow: 0 0 5px rgba(255, 165, 0, 0.5); /* Optional glow effect */
   }
-  
-  
-  
   
   
