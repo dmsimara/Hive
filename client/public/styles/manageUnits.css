@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
 
+
+
+
 :root {
     --yellow: rgb(255, 251, 151);  /* #FFFB97 */
     --orange: rgb(254, 127, 66);   /* #FE7F42 */
@@ -9,14 +12,20 @@
     --background-color: rgb(245, 245, 245);
 }
 
+
+
+
 html, body {
     margin: 0;
     padding: 0;
     height: 100vh;
     width: 100%;
-    font-family: 'Raleway', 'Inter', sans-serif; 
+    font-family: 'Raleway', 'Inter', sans-serif;
     background-color: var(--background-color);
-} 
+}
+
+
+
 
 .navbar {
     padding: 0 10px;
@@ -24,15 +33,24 @@ html, body {
     background-color: var(--background-color) !important;
 }
 
+
+
+
 .navbar-brand {
     padding: 0 8px;
     margin: 0;
     transition: opacity 0.3s ease;
 }
 
+
+
+
 .navbar-brand:hover {
     opacity: 0.8;
 }
+
+
+
 
 .navbar-nav {
     display: flex;
@@ -40,6 +58,9 @@ html, body {
     width: 100%;
     gap: 30px;
 }
+
+
+
 
 .nav-link {
     font-weight: 600;
@@ -50,11 +71,17 @@ html, body {
     transition: color 0.3s ease, background-color 0.3s ease;
 }
 
+
+
+
 .nav-link:hover, .nav-link.active {
     color: var(--orange) !important;
     background-color: rgba(255, 158, 0, 0.18);
     transform: scale(1.05);
 }
+
+
+
 
 .active-tab {
     color: var(--orange) !important;
@@ -62,11 +89,17 @@ html, body {
     transform: scale(1.05);
 }
 
+
+
+
 .nav-link.active-tab {
     color: var(--orange) !important;
     background-color: rgba(255, 158, 0, 0.18);
     transform: scale(1.05);
 }
+
+
+
 
 .user-pic {
     width: 40px;
@@ -74,19 +107,28 @@ html, body {
     cursor: pointer;
 }
 
+
+
+
 .sub-menu-wrap {
     position: absolute;
     top: 100%;
-    right: 1%; 
+    right: 1%;
     width: 320px;
     max-height: 0px;
     overflow: hidden;
     transition: max-height 0.5s;
 }
 
+
+
+
 .sub-menu-wrap.open-menu {
     max-height: 400px;
 }
+
+
+
 
 .sub-menu {
     background: white;
@@ -95,22 +137,34 @@ html, body {
     border-radius: 1em;
 }
 
+
+
+
 .user-info {
     display: flex;
     align-items: center;
 }
 
+
+
+
 .user-info h3 {
-    font-weight: 500; 
+    font-weight: 500;
     color: var(--gray);
     font-size: 20px;
 }
+
+
+
 
 .user-info img {
     width: 60px;
     border-radius: 50%;
     margin-right: 15px;
 }
+
+
+
 
 .sub-menu hr {
     border: 0;
@@ -120,6 +174,9 @@ html, body {
     margin: 15px 0 10px;
 }
 
+
+
+
 .sub-menu-link {
     display: flex;
     align-items: center;
@@ -128,12 +185,18 @@ html, body {
     margin: 12px 0;
 }
 
+
+
+
 .sub-menu-link p {
     width: 100%;
     line-height: 40px;
     margin: 0;
     flex: 1;
 }
+
+
+
 
 .sub-menu-link .material-icons {
     background: rgb(210, 209, 209);
@@ -143,15 +206,137 @@ html, body {
     margin-right: 15px;
 }
 
+
+
+
 .sub-menu-link span {
     font-size: 22px;
     transition: transform 0.5s;
 }
 
+
+
+
 .sub-menu-link:hover span {
     transform: translateX(5px);
 }
 
+
+
+
 .sub-menu-link:hover p {
     font-weight: 600;
 }
+/* Manage Button - Orange */
+.manage-button {
+    background-color: var(--orange); /* Orange color */
+    color: white;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+
+
+
+.manage-button:hover {
+    background-color: darkorange; /* Darken on hover */
+    transform: scale(1.05); /* Add scale effect */
+}
+
+
+
+
+/* Delete Button - Red */
+.delete-button {
+    background-color: red; /* Red color */
+    color: white;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+
+
+
+.delete-button:hover {
+    background-color: darkred; /* Darken on hover */
+    transform: scale(1.05); /* Add scale effect */
+}
+
+
+
+
+/* Add Room Button - Orange with Black Blend */
+.add-room-button {
+    background: linear-gradient(to right, var(--orange), rgba(0, 0, 0, 0.5)); /* Orange and black blend */
+    color: white;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+
+
+
+.add-room-button:hover {
+    background: linear-gradient(to right, darkorange, rgba(0, 0, 0, 0.7)); /* Darker blend on hover */
+    transform: scale(1.05); /* Add scale effect */
+}
+
+
+
+
+/* Table Rows */
+/* Table Rows */
+table td {
+    text-align: left;
+    padding: 15px;
+    font-size: 14px;
+    color: var(--dark-gray); /* Dark text for readability */
+  }
+ 
+ 
+  /* Alternate row colors */
+  table tr:nth-child(odd) td {
+    background-color: rgba(245, 245, 220,8); /* Teal background for odd rows */
+  }
+ 
+ 
+  table tr:nth-child(even) td {
+    background-color: rgb(255, 255, 255); /* Lavender background for even rows */
+  }
+ 
+  /* Table Header - Maroon Color */
+thead.maroon-header th {
+    background-color: var(--maroon); /* Use the defined maroon color */
+    color: white; /* White text for contrast */
+    text-align: center; /* Center-align text for better appearance */
+    padding: 10px; /* Add some padding for spacing */
+    font-weight: bold; /* Bold text for emphasis */
+    border: 1px solid var(--gray); /* Optional: border to match the theme */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

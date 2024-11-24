@@ -24,6 +24,7 @@
         </li>
       </ul>
 
+
       <img src="{{#if admin.adminProfile}}/images/upload/{{admin.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
         alt="Profile" class="user-pic" onclick="toggleMenu()" />
       <div class="sub-menu-wrap" id="subMenu">
@@ -51,11 +52,12 @@
   </div>
 </nav>
 
+
 <div class="container pt-5 pb-5">
   <div class="row">
     <div class="row align-items-center">
       <div class="col-6">
-        <h1>Tenants</h1>
+        <h1>Tenant Management</h1>
       </div>
       <div class="col-6 d-flex justify-content-end gap-2">
         <form class="d-flex" role="search" method="POST" action="/admin/dashboard/userManagement" novalidate>
@@ -63,50 +65,62 @@
             aria-label="Search" required value="{{lastSearchTerm}}">
           <button class="btn btn-outline-success btn-sm" type="submit">Search</button>
         </form>
-        <a href="#" data-bs-toggle="modal" data-bs-target="#addTenantModal" class="btn btn-light btn-sm">+ Add
-          Tenant</a>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#addTenantModal" class="btn btn-light btn-sm hover-orange">
+  + Add Tenant
+</a>
+
+
       </div>
     </div>
   </div>
 
+
   <table class="table table-bordered">
-    <thead class="table-dark">
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">First Name</th>
-        <th scope="col">Last Name</th>
-        <th scope="col">Email</th>
-        <th scope="col">Gender</th>
-        <th scope="col">Mobile Number</th>
-        <th scope="col" class="text-end">Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#if rows.length}}
+  <thead class="table-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">First Name</th>
+      <th scope="col">Last Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Gender</th>
+      <th scope="col">Mobile Number</th>
+      <th scope="col" class="text-end">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#if rows.length}}
       {{#each rows}}
-      <tr>
-        <th scope="row">{{this.tenant_id}}</th>
-        <td>{{this.tenantFirstName}}</td>
-        <td>{{this.tenantLastName}}</td>
-        <td>{{this.tenantEmail}}</td>
-        <td>{{this.gender}}</td>
-        <td>{{this.mobileNum}}</td>
-        <td class="text-end">
-          <a href="/admin/dashboard/userManagement/editTenant/{{this.tenant_id}}" class="btn btn-light btn-sm"><i class="material-icons">edit</i> Edit</a>
-          <a href="#" onclick="deleteTenant({{this.tenant_id}})" class="btn btn-light btn-sm">
-            <i class="material-icons">person_remove</i> Delete
-          </a>
-        </td>
-      </tr>
+        <tr>
+          <th scope="row">{{this.tenant_id}}</th>
+          <td>{{this.tenantFirstName}}</td>
+          <td>{{this.tenantLastName}}</td>
+          <td>{{this.tenantEmail}}</td>
+          <td>{{this.gender}}</td>
+          <td>{{this.mobileNum}}</td>
+          <td class="text-end">
+            <!-- Apply the edit button with the orange style -->
+            <a href="/admin/dashboard/userManagement/editTenant/{{this.tenant_id}}" class="btn btn-orange btn-sm">
+              <i class="material-icons">edit</i> Edit
+            </a>
+            <!-- Apply the delete button with the red style -->
+            <a href="#" onclick="deleteTenant({{this.tenant_id}})" class="btn btn-red btn-sm">
+              <i class="material-icons">person_remove</i> Delete
+            </a>
+          </td>
+        </tr>
       {{/each}}
-      {{else}}
+    {{else}}
       <tr>
         <td colspan="7" class="text-center">No tenants found</td>
       </tr>
-      {{/if}}
-    </tbody>
-  </table>
-</div>
+    {{/if}}
+  </tbody>
+</table>
+
+
+
+
+
 
 <!-- Add Tenant Modal -->
 <div class="modal fade" id="addTenantModal" tabindex="-1" aria-labelledby="addTenantModalLabel" aria-hidden="true">
@@ -119,6 +133,7 @@
       <div class="modal-body">
         <form id="tenantForm" method="POST" action="/api/auth/addTenant">
           <input type="hidden" name="establishmentId" value="{{establishmentId}}">
+
 
           <!-- First and Last Name Row -->
           <div class="row mb-3">
@@ -134,11 +149,13 @@
             </div>
           </div>
 
+
           <!-- Email Input -->
           <div class="mb-3">
             <label for="tenantEmail" class="form-label">Email</label>
             <input type="email" class="form-control form-control-sm" id="tenantEmail" name="tenantEmail" required>
           </div>
+
 
           <!-- Gender and Mobile Row -->
           <div class="row mb-3">
@@ -157,6 +174,7 @@
             </div>
           </div>
 
+
           <!-- Room Selection Dropdown -->
           <div class="mb-3">
             <label for="roomSelection" class="form-label">Assign Room</label>
@@ -165,6 +183,7 @@
               <!-- Options will be populated dynamically -->
             </select>
           </div>
+
 
           <!-- Stay Dates Row -->
           <div class="row mb-3">
@@ -177,6 +196,7 @@
               <input type="date" class="form-control form-control-sm" id="stayTo" name="stayTo" required>
             </div>
           </div>
+
 
           <!-- Password Row -->
           <div class="row mb-3">
@@ -192,6 +212,7 @@
             </div>
           </div>
 
+
           <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
           <button id="addTenantButton" type="submit" class="btn btn-primary btn-sm">Add</button>
         </form>
@@ -199,6 +220,7 @@
     </div>
   </div>
 </div>
+
 
 {{!-- Edit Tenant Modal --}}
 {{!-- <div class="modal fade" id="editTenantModal" tabindex="-1" aria-labelledby="editTenantModalLabel" aria-hidden="true">
