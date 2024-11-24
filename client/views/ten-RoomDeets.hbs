@@ -10,10 +10,10 @@
             <p class="menu-title">Menu</p>
             <nav class="menu">
                 <ul>
-                    <li class="active">
+                    <li>
                         <a href="/tenant/dashboard"><i class="fas fa-columns"></i> Dashboard</a>
                     </li>
-                    <li>
+                    <li class="active">
                         <a href="/tenant/room-details"><i class="fas fa-door-open"></i> Room Details</a>
                     </li>
                 </ul>
@@ -40,67 +40,71 @@
     </aside>
 
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <header class="header">
-            <div>
-                <h1>Room Details</h1>
-                <h2 class="header-subtitle">Welcome to Hive</h2>
-            </div>
-            <div class="header-right">
-                <input type="date" class="date-picker" value="2024-10-15">
-                <i class="fa fa-bell notification-icon"></i>
-            </div>
-        </header>
+<!-- Main Content -->
+<main class="main-content">
+    <header class="header">
+        <div>
+            <h1>Room Details</h1>
+            <h2 class="header-subtitle">Welcome to Hive</h2>
+        </div>
+        <div class="header-right">
+            <input type="date" class="date-picker" value="2024-10-15">
+            <i class="fa fa-bell notification-icon"></i>
+        </div>
+    </header>
 
-        <section class="room-overview">
-            <div class="left-section">
-                <div class="tenants-section">
-                    <h3 class="tenants-title"><i class="fas fa-users"></i> Tenants</h3>
-                    <button class="edit-info-btn top-right">Edit Info</button>
-                    <div class="tenant-cards">
+    <section class="room-overview">
+        <div class="left-section">
+            <div class="tenants-section">
+                <h3 class="tenants-title"><i class="fas fa-users"></i> Tenants</h3>
+                <button class="edit-info-btn top-right">Edit Info</button>
+                <div class="tenant-cards">
+                    {{#each tenants}}
                         <div class="tenant-card">
                             <i class="fas fa-star star-icon"></i>
                             <div class="tenant-avatar"></div>
-                            <p>NAME<br>Surname</p>
+                            <p>{{tenantFirstName}} {{tenantLastName}}</p>
                         </div>
-                    </div>
+                    {{/each}}
                 </div>
+            </div>
 
-                <div class="tenant-info-wrapper">
-                    <div class="tenants-info">
-                        <h3><i class="fas fa-info-circle"></i> Tenants Info</h3>
-                        <button class="edit-info-btn top-right">Edit Info</button>
-                        <div class="tenant-info-cards">
+            <div class="tenant-info-wrapper">
+                <div class="tenants-info">
+                    <h3><i class="fas fa-info-circle"></i> Tenants Info</h3>
+                    <button class="edit-info-btn top-right">Edit Info</button>
+                    <div class="tenant-info-cards">
+                        {{#each tenants}}
                             <div class="tenant-info-card">
                                 <div class="avatar"></div>
                                 <div class="tenant-details">
-                                    <p><strong>NAME SURNAME</strong></p>
-                                    <p><strong>Tenant ID:</strong> 2024-12345</p>
-                                    <p><strong>Contact Number:</strong> 0986 765 4321</p>
-                                    <p><strong>Email:</strong> name.surname@gmail.com</p>
+                                    <p><strong>{{tenantFirstName}} {{tenantLastName}}</strong></p>
+                                    <p><strong>Tenant ID:</strong> {{tenant_id}}</p>
+                                    <p><strong>Contact Number:</strong> {{mobileNum}}</p>
+                                    <p><strong>Email:</strong> {{tenantEmail}}</p>
                                 </div>
                             </div>
-                        </div>
+                        {{/each}}
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="right-section">
-                <div class="room-info">
-                    <div class="room-number">
-                        <div class="room-number-card">
-                            <div class="circle">
-                                <h1>01</h1>
-                            </div>
-                            <p>Room No.</p>
+        <div class="right-section">
+            <div class="room-info">
+                <div class="room-number">
+                    <div class="room-number-card">
+                        <div class="circle">
+                            <h1>{{roomNumber}}</h1>
                         </div>
+                        <p>Room No.</p>
                     </div>
                 </div>
             </div>
-        </section>
-    </main>
-</div>
+        </div>
+    </section>
+</main>
+
 
 
 

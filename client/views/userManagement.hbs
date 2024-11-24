@@ -66,8 +66,8 @@
           <button class="btn btn-outline-success btn-sm" type="submit">Search</button>
         </form>
         <a href="#" data-bs-toggle="modal" data-bs-target="#addTenantModal" class="btn btn-light btn-sm hover-orange">
-  + Add Tenant
-</a>
+          + Add Tenant
+        </a>
 
 
       </div>
@@ -76,19 +76,19 @@
 
 
   <table class="table table-bordered">
-  <thead class="table-dark">
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">First Name</th>
-      <th scope="col">Last Name</th>
-      <th scope="col">Email</th>
-      <th scope="col">Gender</th>
-      <th scope="col">Mobile Number</th>
-      <th scope="col" class="text-end">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#if rows.length}}
+    <thead class="table-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">First Name</th>
+        <th scope="col">Last Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Gender</th>
+        <th scope="col">Mobile Number</th>
+        <th scope="col" class="text-end">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#if rows.length}}
       {{#each rows}}
       <tr>
         <th scope="row">{{this.tenant_id}}</th>
@@ -106,131 +106,129 @@
         </td>
       </tr>
       {{/each}}
-    {{else}}
+      {{else}}
       <tr>
         <td colspan="7" class="text-center">No tenants found</td>
       </tr>
-    {{/if}}
-  </tbody>
-</table>
+      {{/if}}
+    </tbody>
+  </table>
 
 
 
 
 
 
-<!-- Add Tenant Modal -->
-<div class="modal fade" id="addTenantModal" tabindex="-1" aria-labelledby="addTenantModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addTenantModalLabel">Add Tenant</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="tenantForm" method="POST" action="/api/auth/addTenant">
-          <input type="hidden" id="establishmentId" name="establishmentId" value="{{establishmentId}}">
+  <!-- Add Tenant Modal -->
+  <div class="modal fade" id="addTenantModal" tabindex="-1" aria-labelledby="addTenantModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addTenantModalLabel">Add Tenant</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="tenantForm" method="POST" action="/api/auth/addTenant">
+            <input type="hidden" id="establishmentId" name="establishmentId" value="{{establishmentId}}">
 
-          <!-- First Name, Last Name, and Email in one column -->
-          <div class="row mb-3">
-            <div class="col">
-              <label for="tenantFirstName" class="form-label">First Name</label>
-              <input type="text" class="form-control form-control-sm" id="tenantFirstName" name="tenantFirstName" required>
+            <!-- First Name, Last Name, and Email in one column -->
+            <div class="row mb-3">
+              <div class="col">
+                <label for="tenantFirstName" class="form-label">First Name</label>
+                <input type="text" class="form-control form-control-sm" id="tenantFirstName" name="tenantFirstName"
+                  required>
+              </div>
+              <div class="col">
+                <label for="tenantLastName" class="form-label">Last Name</label>
+                <input type="text" class="form-control form-control-sm" id="tenantLastName" name="tenantLastName"
+                  required>
+              </div>
+              <div class="col">
+                <label for="tenantEmail" class="form-label">Email</label>
+                <input type="email" class="form-control form-control-sm" id="tenantEmail" name="tenantEmail" required>
+              </div>
             </div>
-            <div class="col">
-              <label for="tenantLastName" class="form-label">Last Name</label>
-              <input type="text" class="form-control form-control-sm" id="tenantLastName" name="tenantLastName" required>
+            
+            <!-- Gender and Mobile Row -->
+            <div class="row mb-3">
+              <div class="col">
+                <label for="gender" class="form-label">Gender</label>
+                <select class="form-select form-select-sm" name="gender" id="gender" required>
+                  <option value="" disabled>Select Gender</option>
+                  <option value="F" {{#if (eq gender "Female" )}}selected{{/if}}>Female</option>
+                  <option value="M" {{#if (eq gender "Male" )}}selected{{/if}}>Male</option>
+                  <option value="Other" {{#if (eq gender "Other" )}}selected{{/if}}>Other</option>
+                </select>
+              </div>
+              <div class="col">
+                <label for="mobileNum" class="form-label">Mobile Number</label>
+                <input type="number" class="form-control form-control-sm" id="mobileNum" name="mobileNum" required>
+              </div>
             </div>
-          </div>
 
 
-          <!-- Email Input -->
-          <div class="mb-3">
-            <label for="tenantEmail" class="form-label">Email</label>
-            <input type="email" class="form-control form-control-sm" id="tenantEmail" name="tenantEmail" required>
-            <div class="col">
-              <label for="tenantEmail" class="form-label">Email</label>
-              <input type="email" class="form-control form-control-sm" id="tenantEmail" name="tenantEmail" required>
+            <!-- Guardian Name and Number Row -->
+            <div class="row mb-3">
+              <div class="col">
+                <label for="tenantGuardianName" class="form-label">Guardian Name</label>
+                <input type="text" class="form-control form-control-sm" id="tenantGuardianName"
+                  name="tenantGuardianName" required>
+              </div>
+              <div class="col">
+                <label for="tenantGuardianNum" class="form-label">Guardian Mobile Number</label>
+                <input type="number" class="form-control form-control-sm" id="tenantGuardianNum"
+                  name="tenantGuardianNum" required>
+              </div>
             </div>
-          </div>
 
-
-          <!-- Gender and Mobile Row -->
-          <div class="row mb-3">
-            <div class="col">
-              <label for="gender" class="form-label">Gender</label>
-              <select class="form-select form-select-sm" name="gender" id="gender" required>
-                <option value="" disabled>Select Gender</option>
-                <option value="F" {{#if (eq gender "Female" )}}selected{{/if}}>Female</option>
-                <option value="M" {{#if (eq gender "Male" )}}selected{{/if}}>Male</option>
-                <option value="Other" {{#if (eq gender "Other" )}}selected{{/if}}>Other</option>
-              </select>
+            <!-- Tenant Address -->
+            <div class="mb-3">
+              <label for="tenantAddress" class="form-label">Tenant Address</label>
+              <input type="text" class="form-control form-control-sm" id="tenantAddress" name="tenantAddress" required>
             </div>
-            <div class="col">
-              <label for="mobileNum" class="form-label">Mobile Number</label>
-              <input type="number" class="form-control form-control-sm" id="mobileNum" name="mobileNum" required>
+
+            <!-- Assign Room, Start Date, and End Date in one column -->
+            <div class="row mb-3">
+              <div class="col">
+                <label for="roomSelection" class="form-label">Assign Room</label>
+                <select class="form-select form-select-sm" id="roomSelection" name="roomId" required>
+                  <option value="" disabled selected>Select a room</option>
+                  <!-- Options will be populated dynamically -->
+                </select>
+              </div>
+              <div class="col">
+                <label for="stayFrom" class="form-label">Start Date</label>
+                <input type="date" class="form-control form-control-sm" id="stayFrom" name="stayFrom" required>
+              </div>
+              <div class="col">
+                <label for="stayTo" class="form-label">End Date</label>
+                <input type="date" class="form-control form-control-sm" id="stayTo" name="stayTo" required>
+              </div>
             </div>
-          </div>
 
 
-          <!-- Guardian Name and Number Row -->
-          <div class="row mb-3">
-            <div class="col">
-              <label for="tenantGuardianName" class="form-label">Guardian Name</label>
-              <input type="text" class="form-control form-control-sm" id="tenantGuardianName" name="tenantGuardianName" required>
+            <!-- Password Row -->
+            <div class="row mb-3">
+              <div class="col">
+                <label for="tenantPassword" class="form-label">Password</label>
+                <input type="password" class="form-control form-control-sm" id="tenantPassword" name="tenantPassword"
+                  required>
+              </div>
+              <div class="col">
+                <label for="tenantConfirmPassword" class="form-label">Confirm Password</label>
+                <input type="password" class="form-control form-control-sm" id="tenantConfirmPassword"
+                  name="tenantConfirmPassword" required>
+              </div>
             </div>
-            <div class="col">
-              <label for="tenantGuardianNum" class="form-label">Guardian Mobile Number</label>
-              <input type="number" class="form-control form-control-sm" id="tenantGuardianNum" name="tenantGuardianNum" required>
-            </div>
-          </div>
-
-          <!-- Tenant Address -->
-          <div class="mb-3">
-            <label for="tenantAddress" class="form-label">Tenant Address</label>
-            <input type="text" class="form-control form-control-sm" id="tenantAddress" name="tenantAddress" required>
-          </div>
-
-          <!-- Assign Room, Start Date, and End Date in one column -->
-          <div class="row mb-3">
-            <div class="col">
-              <label for="roomSelection" class="form-label">Assign Room</label>
-              <select class="form-select form-select-sm" id="roomSelection" name="roomId" required>
-                <option value="" disabled selected>Select a room</option>
-                <!-- Options will be populated dynamically -->
-              </select>
-            </div>
-            <div class="col">
-              <label for="stayFrom" class="form-label">Start Date</label>
-              <input type="date" class="form-control form-control-sm" id="stayFrom" name="stayFrom" required>
-            </div>
-            <div class="col">
-              <label for="stayTo" class="form-label">End Date</label>
-              <input type="date" class="form-control form-control-sm" id="stayTo" name="stayTo" required>
-            </div>
-          </div>
 
 
-          <!-- Password Row -->
-          <div class="row mb-3">
-            <div class="col">
-              <label for="tenantPassword" class="form-label">Password</label>
-              <input type="password" class="form-control form-control-sm" id="tenantPassword" name="tenantPassword" required>
-            </div>
-            <div class="col">
-              <label for="tenantConfirmPassword" class="form-label">Confirm Password</label>
-              <input type="password" class="form-control form-control-sm" id="tenantConfirmPassword" name="tenantConfirmPassword" required>
-            </div>
-          </div>
-
-
-          <button type="submit" class="btn btn-primary">Add Tenant</button>
-        </form>
+            <button type="submit" class="btn btn-primary">Add Tenant</button>
+          </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
 
 
-<script src="/js/userManagement.js"></script>
+  <script src="/js/userManagement.js"></script>
