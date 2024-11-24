@@ -24,6 +24,9 @@
         </li>
       </ul>
 
+
+
+
       <img src="{{#if admin.adminProfile}}/images/upload/{{admin.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
         alt="Profile" class="user-pic" onclick="toggleMenu()" />
       <div class="sub-menu-wrap" id="subMenu">
@@ -51,6 +54,9 @@
   </div>
 </nav>
 
+
+
+
 <div class="container pt-5 pb-5">
   <h1>Unit Management</h1>
   <div class="row align-items-center">
@@ -63,12 +69,16 @@
           value="{{lastSearchTerm}}">
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
-      <a href="/admin/manage/unit/add" class="btn btn-primary align-self-center">+ Add Room</a>
+      <!-- Add Room Button with custom class -->
+      <a href="/admin/manage/unit/add" type="button" class="btn add-room-button align-self-center">+ Add Room</a>
     </div>
   </div>
 
+
+
+
   <table class="table table-bordered">
-    <thead class="thead-dark">
+    <thead class="maroon-header">
       <tr>
         <th>#</th>
         <th>Floor Number</th>
@@ -91,9 +101,10 @@
         <td>{{this.roomRemainingSlot}}</td>
         <td class="text-end">
           <a href="#" data-bs-toggle="modal" data-bs-target="#manageUnitModal" onclick="loadTenants('{{this.room_id}}')"
-            class="btn btn-light btn-small">Manage</a>
+            class="btn manage-button btn-small">Manage</a>
+
           <a href="#" type="button" onclick="deleteUnit('{{this.room_id}}')" class="btn btn-light btn-small"><i
-            class="material-icons">person_remove</i>Delete</a>
+              class="material-icons">person_remove</i>Delete</a>
         </td>
       </tr>
       {{/each}}
@@ -106,7 +117,6 @@
   </table>
 </div>
 
-<!-- Tenant Modal -->
 <div class="modal fade" id="manageUnitModal" tabindex="-1" aria-labelledby="manageUnitModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content">
@@ -117,27 +127,32 @@
         <p>Remaining: <span id="remainingSlot"></span></p>
       </div>
       <div class="modal-body">
-        <table class="table table-bordered">
-          <thead class="thead-dark">
-            <tr>
-              <th scope="col">Tenant ID#</th>
-              <th scope="col">Tenant Name</th>
-              <th scope="col">Rent From</th>
-              <th scope="col">Rent Until</th>
-              <th scope="col">Period Remaining</th>
-              <th scope="col" class="text-end">Action</th>
-            </tr>
-          </thead>
-          <tbody id="tenantList">
-            <!-- JavaScript will insert tenant rows here -->
-          </tbody>
-        </table>
-      </div>
+  <table class="table table-bordered">
+    <thead class="maroon-header">
+      <tr>
+        <th scope="col">Tenant ID#</th>
+        <th scope="col">Tenant Name</th>
+        <th scope="col">Rent From</th>
+        <th scope="col">Rent Until</th>
+        <th scope="col">Period Remaining</th>
+        <th scope="col" class="text-end">Action</th>
+      </tr>
+    </thead>
+    <tbody id="tenantList">
+      <!-- JavaScript will insert tenant rows here -->
+    </tbody>
+  </table>
+</div>
+
+
+
+
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
 </div>
+
 
 <script src="/js/manageUnits.js"></script>

@@ -24,6 +24,7 @@
         </li>
       </ul>
 
+
       <img src="{{#if admin.adminProfile}}/images/upload/{{admin.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
         alt="Profile" class="user-pic" onclick="toggleMenu()" />
       <div class="sub-menu-wrap" id="subMenu">
@@ -51,11 +52,12 @@
   </div>
 </nav>
 
+
 <div class="container pt-5 pb-5">
   <div class="row">
     <div class="row align-items-center">
       <div class="col-6">
-        <h1>Tenants</h1>
+        <h1>Tenant Management</h1>
       </div>
       <div class="col-6 d-flex justify-content-end gap-2">
         <form class="d-flex" role="search" method="POST" action="/admin/dashboard/userManagement" novalidate>
@@ -63,26 +65,30 @@
             aria-label="Search" required value="{{lastSearchTerm}}">
           <button class="btn btn-outline-success btn-sm" type="submit">Search</button>
         </form>
-        <a href="#" data-bs-toggle="modal" data-bs-target="#addTenantModal" class="btn btn-light btn-sm">+ Add
-          Tenant</a>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#addTenantModal" class="btn btn-light btn-sm hover-orange">
+  + Add Tenant
+</a>
+
+
       </div>
     </div>
   </div>
 
+
   <table class="table table-bordered">
-    <thead class="table-dark">
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">First Name</th>
-        <th scope="col">Last Name</th>
-        <th scope="col">Email</th>
-        <th scope="col">Gender</th>
-        <th scope="col">Mobile Number</th>
-        <th scope="col" class="text-end">Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#if rows.length}}
+  <thead class="table-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">First Name</th>
+      <th scope="col">Last Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Gender</th>
+      <th scope="col">Mobile Number</th>
+      <th scope="col" class="text-end">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#if rows.length}}
       {{#each rows}}
       <tr>
         <th scope="row">{{this.tenant_id}}</th>
@@ -100,14 +106,18 @@
         </td>
       </tr>
       {{/each}}
-      {{else}}
+    {{else}}
       <tr>
         <td colspan="7" class="text-center">No tenants found</td>
       </tr>
-      {{/if}}
-    </tbody>
-  </table>
-</div>
+    {{/if}}
+  </tbody>
+</table>
+
+
+
+
+
 
 <!-- Add Tenant Modal -->
 <div class="modal fade" id="addTenantModal" tabindex="-1" aria-labelledby="addTenantModalLabel" aria-hidden="true">
@@ -131,11 +141,19 @@
               <label for="tenantLastName" class="form-label">Last Name</label>
               <input type="text" class="form-control form-control-sm" id="tenantLastName" name="tenantLastName" required>
             </div>
+          </div>
+
+
+          <!-- Email Input -->
+          <div class="mb-3">
+            <label for="tenantEmail" class="form-label">Email</label>
+            <input type="email" class="form-control form-control-sm" id="tenantEmail" name="tenantEmail" required>
             <div class="col">
               <label for="tenantEmail" class="form-label">Email</label>
               <input type="email" class="form-control form-control-sm" id="tenantEmail" name="tenantEmail" required>
             </div>
           </div>
+
 
           <!-- Gender and Mobile Row -->
           <div class="row mb-3">
@@ -153,6 +171,7 @@
               <input type="number" class="form-control form-control-sm" id="mobileNum" name="mobileNum" required>
             </div>
           </div>
+
 
           <!-- Guardian Name and Number Row -->
           <div class="row mb-3">
@@ -191,6 +210,7 @@
             </div>
           </div>
 
+
           <!-- Password Row -->
           <div class="row mb-3">
             <div class="col">
@@ -203,12 +223,14 @@
             </div>
           </div>
 
+
           <button type="submit" class="btn btn-primary">Add Tenant</button>
         </form>
       </div>
     </div>
   </div>
 </div>
+
 
 
 <script src="/js/userManagement.js"></script>

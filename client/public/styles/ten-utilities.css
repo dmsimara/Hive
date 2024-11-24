@@ -1,153 +1,154 @@
 /* General Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-  }
-  
-  /* Container Layout */
-  .container {
-    display: flex;
-    height: 100vh;
-    background: #f9f9f9;
-  }
-  
-  /* Sidebar */
-  .sidebar {
-    background-color: #3a3a3a;
-    color: #fff;
-    width: 20%;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-  }
-  
-  .sidebar .logo img {
-    width: 100px;
-    margin-bottom: 20px;
-  }
-  
-  .sidebar nav ul {
-    list-style: none;
-  }
-  
-  .sidebar nav ul li {
-    margin: 15px 0;
-  }
-  
-  .sidebar nav ul li a {
-    text-decoration: none;
-    color: #fff;
-    font-size: 16px;
-  }
-  
-  .sidebar nav ul li.active a {
-    color: orange;
-    font-weight: bold;
-  }
-  
-  .logout {
-    margin-top: auto;
-    text-align: center;
-  }
-  
-  .logout a {
-    color: #fff;
-    text-decoration: none;
-  }
-  
-  /* Main Content */
-  main {
-    flex: 1;
-    padding: 20px;
-  }
-  
-  /* Header */
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .header h1 {
-    font-size: 24px;
-  }
-  
-  .header h1 span {
-    color: orange;
-  }
-  
-  .date-picker {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .date-picker input {
-    padding: 5px;
-    border: 1px solid #ccc;
-  }
-  
-  /* Utilities Section */
-  .utilities-section {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-  }
-  
-  .utilities-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-  
-  .bills .bill {
-    padding: 10px 0;
-    border-bottom: 1px solid #ccc;
-  }
-  
-  .bills .bill:last-child {
-    border-bottom: none;
-  }
-  
-  /* Right Panel */
-  .summary {
-    display: flex;
-    gap: 20px;
-  }
-  
-  .balance, .usage-summary {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-  }
-  
-  .balance h2, .usage-summary h2 {
-    font-size: 20px;
-    margin-bottom: 10px;
-  }
-  
-  .balance button {
-    background: orange;
-    border: none;
-    padding: 10px;
-    color: #fff;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .usage-summary .circle {
-    width: 100px;
-    height: 100px;
-    background: orange;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
-    margin: 0 auto 10px;
-  }
-  
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+
+.container { 
+  display: flex; 
+  height: 100vh; 
+  width: 100%;
+  overflow: hidden; /* Ensures no unintended horizontal scrolling */
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px; /* Adjust width as needed */
+  background-color: #fff; /* Set to white */
+  color: #333;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  position: fixed; /* Fixed to the left side */
+  height: 100%;
+  top: 0;
+  left: 0;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Optional: Shadow effect */
+}
+
+/* Sidebar content (logo, menu, etc.) */
+.sidebar .logo img { width: 120px; margin-bottom: 20px; }
+
+
+.menu-title { font-size: 14px; text-transform: uppercase; margin: 20px 0 10px; color: #a0a0a0; }
+
+.menu ul li a {
+  color: #333; 
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.menu ul li a:hover { color: #ff7e5f; }
+
+.tracker ul li a {
+  color: #333;
+}
+
+.tracker ul li a:hover { color: #ff7e5f; }
+
+/* Main Content */
+main {
+  margin-left: 250px; /* Adjust this to match sidebar width */
+  flex: 1;
+  padding: 0 0 0 20px; /* Adjust the padding to make sure there's no gap on the left */
+  overflow-y: auto; /* Enable vertical scrolling */
+  height: 100vh; /* Ensure content fills the full height */
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header h1 { font-size: 28px; color: #333; }
+
+/* Utilities Section */
+.row { 
+  display: flex; 
+  justify-content: space-between; 
+  gap: 20px; 
+}
+
+.utilities-section {
+  width: 65%;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  border: 2px solid orange; /* Orange border added */
+}
+
+.balance-section {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.total-balance {
+  background: linear-gradient(to right, #ff7e5f, #feb47b);
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+  border-radius: 8px;
+}
+
+.usage-summary {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid #ddd; /* Added border to make usage summary visible */
+}
+
+.utilities-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.controls i {
+  font-size: 24px;
+  color: #feb47b;
+  cursor: pointer;
+}
+
+.bills {
+  margin-top: 10px;
+}
+
+.bill {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.utilities-history {
+  margin-top: 30px;
+}
+
+.utilities-history table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.utilities-history th, .utilities-history td {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+.utilities-history th {
+  background-color: #f4f4f4;
+}
+
+.date-picker {
+  display: flex;
+  gap: 15px;
+  font-size: 18px;
+}
+

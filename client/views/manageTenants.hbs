@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenant Management</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="/">Dashboard</a>
+        <a href="/manage-tenants" class="active">Manage Tenant</a>
+        <a href="/manage-units">Manage Unit</a>
+        <a href="/announcements">Announcements</a>
+        <a href="/tracker">Tracker</a>
+    </div>
+
+    <!-- Container -->
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>Tenant Management</h1>
+            <p>All Users: {{tenantCount}}</p>
+        </header>
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input type="text" placeholder="Search...">
+        </div>
+
+        <!-- Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Tenant ID#</th>
+                    <th>Tenant Name</th>
+                    <th>Room Type</th>
+                    <th>Rent From</th>
+                    <th>Rent Until</th>
+                    <th>Period Remaining</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each tenants}}
+                <tr>
+                    <td>{{this.id}}</td>
+                    <td>{{this.name}}</td>
+                    <td>
+                        Room Number: {{this.roomNumber}}<br>
+                        Room Type: {{this.roomType}}
+                    </td>
+                    <td>{{this.rentFrom}}</td>
+                    <td>{{this.rentUntil}}</td>
+                    <td><span class="status-badge">{{this.periodRemaining}} Days Left</span></td>
+                    <td><button class="action-button">Delete</button></td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <a href="#" class="active">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+            <a href="#">4</a>
+            <a href="#">5</a>
+        </div>
+    </div>
+</body>
+</html>
