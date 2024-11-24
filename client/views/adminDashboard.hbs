@@ -69,20 +69,20 @@
 
       <div class="tenant-cards" id="tenantCardsContainer">
         {{#if tenants.length}}
-          {{#each tenants}}
-          <a href="#" class="card-link" data-bs-toggle="modal" data-bs-target="#tenantModal">
-            <div class="card mb-3">
-              <div class="card-body">
-                <img
-                  src="{{#if this.tenantProfile}}/images/upload/{{this.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
-                  alt="Profile" width="40px" class="me-2" />
-                <h5 class="card-title d-inline">{{this.tenantFirstName}} {{this.tenantLastName}}</h5>
-              </div>
+        {{#each tenants}}
+        <a href="#" class="card-link" data-id="{{tenant_id}}" onclick="openTenantModal({{tenant_id}})">
+          <div class="card mb-3">
+            <div class="card-body">
+              <img
+                src="{{#if this.tenantProfile}}/images/upload/{{this.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+                alt="Profile" width="40px" class="me-2" />
+              <h5 class="card-title d-inline">{{this.tenantFirstName}} {{this.tenantLastName}}</h5>
             </div>
-          </a>
-          {{/each}}
+          </div>
+        </a>
+        {{/each}}
         {{else}}
-          <p>No active tenants found.</p>
+        <p>No active tenants found.</p>
         {{/if}}
       </div>
     </div>
@@ -109,17 +109,17 @@
     </h3>
     <div class="tracker-container" id="tracker-container">
       {{#if events.length}}
-        {{#each events}}
-        <div class="event-card">
-          <h5>{{this.event_name}}</h5>
-          <p><strong>Start:</strong> {{this.start}}</p>
-          <p><strong>End:</strong> {{this.end}}</p>
-          <p><strong>Description:</strong> {{this.event_description}}</p>
-          <p><strong>Status:</strong> {{this.status}}</p>
-        </div>
-        {{/each}}
+      {{#each events}}
+      <div class="event-card">
+        <h5>{{this.event_name}}</h5>
+        <p><strong>Start:</strong> {{this.start}}</p>
+        <p><strong>End:</strong> {{this.end}}</p>
+        <p><strong>Description:</strong> {{this.event_description}}</p>
+        <p><strong>Status:</strong> {{this.status}}</p>
+      </div>
+      {{/each}}
       {{else}}
-        <p>No events available at the moment.</p>
+      <p>No events available at the moment.</p>
       {{/if}}
     </div>
 
@@ -130,22 +130,25 @@
   </div>
 </div>
 
-<!-- Modal Structure -->
-<div class="modal" id="tenantModal" tabindex="-1">
+<div class="modal" id="tenantModal" tabindex="-1" aria-labelledby="tenantModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-right">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Tenant Details</h5>
+        <h5 class="modal-title" id="tenantModalLabel">Tenant Details</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+        <!-- Tenant details will be dynamically inserted here by JavaScript -->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>
 </div>
 
+
 <script src="/js/adminDashboard.js"></script>
+<script>
+    window.establishmentId = {{ establishmentId }};
+</script>

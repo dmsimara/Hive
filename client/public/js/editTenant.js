@@ -35,9 +35,20 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Error:", error);
         }
     });
+
+    const closeButton = document.getElementById("closeButton");  
+    
+    closeButton.addEventListener("click", (e) => {
+        const isConfirmed = confirm("Your changes will not be saved. Are you sure you want to close?");
+        
+        if (isConfirmed) {
+            window.location.href = '/admin/dashboard/userManagement';
+        } else {
+            e.preventDefault();
+        }
+    });
 });
 
-// editTenant.js
 
 document.getElementById('editForm').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -49,6 +60,9 @@ document.getElementById('editForm').addEventListener('submit', async (e) => {
         tenantEmail: document.getElementById('editEmail').value,
         mobileNum: document.getElementById('editMobile').value,
         gender: document.getElementById('editGender').value,
+        tenantGuardianName: document.getElementById('editTenantGuardianName').value,
+        tenantAddress: document.getElementById('editTenantAddress').value,
+        tenantGuardianNum: document.getElementById('editTenantGuardianNum').value
     };
 
     await handleEditTenant(formData);
@@ -70,10 +84,8 @@ async function handleEditTenant(formData) {
             const data = await response.json();
             console.log('Tenant updated successfully:', data);
 
-            // Show success alert
             alert('Tenant updated successfully!');
 
-            // Redirect to user management page after successful update
             window.location.href = '/admin/dashboard/userManagement';
         } else {
             const error = await response.text();

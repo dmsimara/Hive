@@ -52,40 +52,38 @@
 </nav>
 
 <div class="container pt-5 pb-5">
-  <div class="col-6">
-    <h1>Unit Management</h1>
-  </div>
+  <h1>Unit Management</h1>
   <div class="row align-items-center">
     <div class="col-6">
       <h3>Occupied Units: {{occupiedUnits}}</h3>
     </div>
     <div class="col-6 d-flex justify-content-end gap-2">
-      <form class="d-flex" role="search" method="POST" action="/admin/manage/unit" novalidate>
-        <input class="form-control me-2" type="search" placeholder="Search" name="searchUnits" aria-label="Search"
-          required value="{{lastSearchTerm}}">
+      <form class="d-flex" role="search" method="POST" action="/api/auth/find-units" novalidate>
+        <input class="form-control me-2" type="search" placeholder="Search" name="searchUnits"
+          value="{{lastSearchTerm}}">
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
-      <a href="/admin/manage/unit/add" type="button" class="btn btn-primary align-self-center">+ Add Room</a>
+      <a href="/admin/manage/unit/add" class="btn btn-primary align-self-center">+ Add Room</a>
     </div>
   </div>
 
   <table class="table table-bordered">
     <thead class="thead-dark">
       <tr>
-        <th scope="col">#</th>
-        <th scope="col">Floor Number</th>
-        <th scope="col">Room Number</th>
-        <th scope="col">Room Type</th>
-        <th scope="col">Room Total Slot</th>
-        <th scope="col">Remaining Slot</th>
-        <th scope="col" class="text-end">Action</th>
+        <th>#</th>
+        <th>Floor Number</th>
+        <th>Room Number</th>
+        <th>Room Type</th>
+        <th>Room Total Slot</th>
+        <th>Remaining Slot</th>
+        <th class="text-end">Action</th>
       </tr>
     </thead>
     <tbody>
       {{#if units.length}}
       {{#each units}}
       <tr>
-        <th scope="row">{{this.room_id}}</th>
+        <th>{{this.room_id}}</th>
         <td>{{this.floorNumber}}</td>
         <td>{{this.roomNumber}}</td>
         <td>{{this.roomType}}</td>
@@ -94,9 +92,8 @@
         <td class="text-end">
           <a href="#" data-bs-toggle="modal" data-bs-target="#manageUnitModal" onclick="loadTenants('{{this.room_id}}')"
             class="btn btn-light btn-small">Manage</a>
-
           <a href="#" type="button" onclick="deleteUnit('{{this.room_id}}')" class="btn btn-light btn-small"><i
-              class="material-icons">person_remove</i>Delete</a>
+            class="material-icons">person_remove</i>Delete</a>
         </td>
       </tr>
       {{/each}}
@@ -109,8 +106,7 @@
   </table>
 </div>
 
-<!-- Modal -->
-
+<!-- Tenant Modal -->
 <div class="modal fade" id="manageUnitModal" tabindex="-1" aria-labelledby="manageUnitModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content">
