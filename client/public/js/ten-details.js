@@ -1,4 +1,3 @@
-// Select elements
 const editInfoButton = document.querySelector('.edit-info-btn'); // The "Edit Info" button
 const editModal = document.getElementById('editModal'); // The modal
 const closeButton = document.querySelector('.close-modal'); // Close button in modal
@@ -9,7 +8,6 @@ editInfoButton.addEventListener('click', () => {
     editModal.classList.remove('hidden');
 });
 
-// Close the modal when "×" is clicked
 closeButton.addEventListener('click', () => {
     editModal.classList.add('hidden');
 });
@@ -44,15 +42,6 @@ editForm.addEventListener('submit', async (event) => {
         console.error('Error:', error);
         alert('An error occurred. Please try again.');
     }
-});
-
-// Logout button functionality
-document.querySelector('.logout-button').addEventListener('click', () => {
-    fetch('/logout', { method: 'GET' }) // Call backend logout endpoint
-        .then(() => {
-            sessionStorage.clear(); // Clear any client-side storage
-            window.location.href = '/login'; // Redirect to login page
-        });
 });
 
 // Modal functionality (optional)

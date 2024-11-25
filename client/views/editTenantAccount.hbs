@@ -1,0 +1,130 @@
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-card">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="/images/hiveLight.png" alt="Hive Logo" class="logo-img">
+                </a>
+            </div>
+            <p class="menu-title">Menu</p>
+            <nav class="menu">
+                <ul>
+                    <li>
+                        <a href="/tenant/dashboard"><i class="fas fa-columns"></i> Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <a href="/tenant/room-details"><i class="fas fa-door-open"></i> Room Details</a>
+                    </li>
+                </ul>
+            </nav>
+            <p class="menu-title">Tracker</p>
+            <div class="tracker">
+                <ul>
+                    <li>
+                        <a href="/tenant/utilities"><i class="fas fa-lightbulb"></i> Utilities and Bills</a>
+                    </li>
+                    <li>
+                        <a href="/tenant/announcement"><i class="fas fa-bullhorn"></i> Announcement</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Logout Button -->
+            <div class="logout-container">
+                <a href="#" id="logoutButton" class="logout-button">
+                    <i class="fas fa-sign-out-alt"></i> Log Out
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <div class="main-content">
+        <h3><i class="material-icons dots">more_horiz</i>Edit Profile</h3>
+        <div class="card">
+            <div class="card__left">
+                {{#if tenant.tenantProfile}}
+                <img class="card__profile" src="/images/upload/{{tenant.tenantProfile}}"
+                    alt="{{tenant.tenantFirstName}}'s Profile" id="profileImage" width="100px">
+                {{else}}
+                <img class="card__profile" src="/images/defaultUser.webp" alt="Default Profile" id="profileImage"
+                    width="100px">
+                {{/if}}
+            </div>
+
+            <div class="card__right">
+                <form id="updateTenantForm" action="/tenant/room-details/edit/account" method="POST"
+                    enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <label for="tenantFirstName" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="tenantFirstName" name="tenantFirstName"
+                                    value="{{tenant.tenantFirstName}}" placeholder="{{tenant.tenantFirstName}}"
+                                    required>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label for="tenantLastName" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="tenantLastName" name="tenantLastName"
+                                    value="{{tenant.tenantLastName}}" placeholder="{{tenant.tenantLastName}}" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tenantEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="tenantEmail" name="tenantEmail"
+                            value="{{tenant.tenantEmail}}" placeholder="{{tenant.tenantEmail}}" required>
+                    </div>
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <label for="gender" class="form-label">Gender</label>
+                                <select class="form-select" name="gender" id="gender" required>
+                                    <option value="" disabled>Select Gender</option>
+                                    <option value="Female" {{#if (eq tenant.gender "Female" )}}selected{{/if}}>Female
+                                    </option>
+                                    <option value="Male" {{#if (eq tenant.gender "Male" )}}selected{{/if}}>Male</option>
+                                    <option value="Other" {{#if (eq tenant.gender "Other" )}}selected{{/if}}>Other
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label for="mobileNum" class="form-label">Mobile Number</label>
+                                <input type="number" class="form-control" id="mobileNum" name="mobileNum"
+                                    value="{{tenant.mobileNum}}" placeholder="{{tenant.mobileNum}}" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <label for="tenantGuardianName" class="form-label">Guardian Name</label>
+                                <input class="form-control" id="tenantGuardianName" name="tenantGuardianName"
+                                    value="{{tenant.tenantGuardianName}}" placeholder="{{tenant.tenantGuardianName}}"
+                                    required>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label for="tenantGuardianNum" class="form-label">Guardian Mobile Number</label>
+                                <input type="number" class="form-control" id="tenantGuardianNum"
+                                    name="tenantGuardianNum" value="{{tenant.tenantGuardianNum}}"
+                                    placeholder="{{tenant.tenantGuardianNum}}" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <input type="file" name="sampleFile" accept="image/*" class="upload-input" id="fileInput"
+                            style="display: none;" />
+                        <input type="hidden" name="tenant_id" value="{{tenant.tenant_id}}" />
+                        <div class="button-group">
+                            <a class="cancel" type="button">Cancel</a>
+                            <input type="submit" class="btn btn-primary" value="Save" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/js/editTenantAccount.js"></script>

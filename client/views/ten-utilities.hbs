@@ -1,109 +1,122 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hive Dashboard</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="/css/dashboard.css">
-</head>
-<body>
-  <div class="container">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="logo">
-        <a href="#">
-          <img src="/images/hiveLight.png" alt="Hive Logo">
-        </a>
+<div class="container">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <a href="#">
+        <img src="/images/hiveLight.png" alt="Hive Logo">
+      </a>
+    </div>
+
+    <p class="menu-title">Menu</p>
+    <nav class="menu">
+      <ul>
+        <li><a href="/tenant/dashboard"><i class="fas fa-columns"></i> Dashboard</a></li>
+        <li><a href="/tenant/room-details"><i class="fas fa-door-open"></i> Room Details</a></li>
+      </ul>
+    </nav>
+    <p class="menu-title">Tracker</p>
+    <div class="tracker">
+      <ul>
+        <li class="active"><a href="/tenant/utilities"><i class="fas fa-lightbulb"></i> Utilities and Bills</a></li>
+        <li><a href="/tenant/announcement"><i class="fas fa-bullhorn"></i> Announcement</a></li>
+      </ul>
+    </div>
+    <div class="logout-container">
+      <a href="#" id="logoutButton" class="logout-button">
+        <i class="fas fa-sign-out-alt"></i> Log Out
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main>
+    <header class="header">
+      <h1>Welcome to Hive</h1>
+      <p class="subtitle">Utilities and Bills</p>
+      <div class="date-picker">
+        <i class="fas fa-calendar-alt"></i>
+        <i class="fas fa-bell"></i>
       </div>
+    </header>
 
-      <p class="menu-title">Menu</p>
-      <nav class="menu">
-        <ul>
-          <li><a href="/tenant/dashboard"><i class="fas fa-columns"></i> Dashboard</a></li>
-          <li><a href="/tenant/room-details"><i class="fas fa-door-open"></i> Room Details</a></li>
-        </ul>
-      </nav>
-      <p class="menu-title">Tracker</p>
-      <div class="tracker">
-        <ul>
-          <li class="active"><a href="/tenant/utilities"><i class="fas fa-lightbulb"></i> Utilities and Bills</a></li>
-          <li><a href="/tenant/announcement"><i class="fas fa-bullhorn"></i> Announcement</a></li>
-        </ul>
+    <div class="main-content">
+      <!-- Monthly Utilities Bills and Room Total Balance -->
+      <div class="row">
+        <!-- Monthly Utilities Bills -->
+        <section class="utilities-section">
+          <div class="utilities-header">
+            <h2>Monthly Utilities Bills</h2>
+            <div class="controls">
+              <i class="fas fa-download"></i>
+            </div>
+          </div>
+          <div class="bills">
+            <div class="bill">
+              <p>Unit Rental</p>
+              <p>Php 8,000</p>
+            </div>
+            <div class="bill">
+              <p>Electricity Consumption</p>
+              <p>Php 2,345.67</p>
+            </div>
+            <div class="bill">
+              <p>Water Usage</p>
+              <p>Php 345.67</p>
+            </div>
+            <div class="bill">
+              <p>Internet Connection</p>
+              <p>Php 1,499</p>
+            </div>
+            <div class="bill">
+              <p>Maintenance Fees</p>
+              <p>Php 600</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Room Total Balance -->
+        <aside class="balance-section">
+          <div class="total-balance">
+            <h2>Room #{{roomNumber}} Total Balance</h2>
+            <p>Php 12,479.34</p>
+            <small>Shared Balance: Php 3,119.84</small>
+          </div>
+          <div class="usage-summary">
+            <h3>Usage Summary</h3>
+            <p>Internet: 50 Mbps</p>
+            <p>Electricity: 345 kWh</p>
+            <p>Water: 25 m³</p>
+          </div>
+        </aside>
       </div>
-      <div class="logout">
-        <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
-      </div>
-    </aside>
+    </div>
 
-    <!-- Main Content -->
-    <main>
-      <header class="header">
-        <h1>Welcome to Hive</h1>
-        <p class="subtitle">Utilities and Bills</p>
-        <div class="date-picker">
-          <i class="fas fa-calendar-alt"></i>
-          <i class="fas fa-bell"></i>
-        </div>
-      </header>
+    <!-- Utilities History -->
+    <section class="utilities-history">
+      <h2>Utilities History</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Total Balance</th>
+            <th>Shared Balance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Aug 2024 - Sept 2024</td>
+            <td>Php 13,178.89</td>
+            <td>Php 3,294.73</td>
+          </tr>
+          <tr>
+            <td>July 2024 - Aug 2024</td>
+            <td>Php 12,592.12</td>
+            <td>Php 3,148.03</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</div>
 
-      <div class="main-content">
-        <!-- Monthly Utilities Bills and Room Total Balance -->
-        <div class="row">
-          <!-- Monthly Utilities Bills -->
-          <section class="utilities-section">
-            <div class="utilities-header">
-              <h2>Monthly Utilities Bills</h2>
-              <div class="controls">
-                <i class="fas fa-download"></i>
-              </div>
-            </div>
-            <div class="bills">
-              <div class="bill"><p>Unit Rental</p><p>Php 8,000</p></div>
-              <div class="bill"><p>Electricity Consumption</p><p>Php 2,345.67</p></div>
-              <div class="bill"><p>Water Usage</p><p>Php 345.67</p></div>
-              <div class="bill"><p>Internet Connection</p><p>Php 1,499</p></div>
-              <div class="bill"><p>Maintenance Fees</p><p>Php 600</p></div>
-            </div>
-          </section>
-
-          <!-- Room Total Balance -->
-          <aside class="balance-section">
-            <div class="total-balance">
-              <h2>Room #1 Total Balance</h2>
-              <p>Php 12,479.34</p>
-              <small>Shared Balance: Php 3,119.84</small>
-            </div>
-            <div class="usage-summary">
-              <h3>Usage Summary</h3>
-              <p>Internet: 50 Mbps</p>
-              <p>Electricity: 345 kWh</p>
-              <p>Water: 25 m³</p>
-            </div>
-          </aside>
-        </div>
-      </div>
-
-      <!-- Utilities History -->
-      <section class="utilities-history">
-        <h2>Utilities History</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Month</th>
-              <th>Total Balance</th>
-              <th>Shared Balance</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>Aug 2024 - Sept 2024</td><td>Php 13,178.89</td><td>Php 3,294.73</td></tr>
-            <tr><td>July 2024 - Aug 2024</td><td>Php 12,592.12</td><td>Php 3,148.03</td></tr>
-          </tbody>
-        </table>
-      </section>
-    </main>
-  </div>
-</body>
-</html>
-
-
+<script src="/js/ten-utilities.js"></script>

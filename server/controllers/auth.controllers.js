@@ -541,17 +541,14 @@ export const addTenant = async (req, res) => {
     try {
         console.log('Incoming request data:', req.body);
 
-        // Ensure all required fields are provided
         if (!tenantFirstName || !tenantLastName || !tenantEmail || !gender || !mobileNum || !tenantPassword || !tenantConfirmPassword || !stayTo || !stayFrom || !room_id || !tenantGuardianName || !tenantAddress || !tenantGuardianNum) {
             return res.status(400).json({ success: false, message: "All fields are required." });
         }
 
-        // Check if passwords match
         if (tenantPassword !== tenantConfirmPassword) {
             return res.status(400).json({ success: false, message: "Passwords do not match." });
         }
 
-        // Validate date format
         const isStayFromValid = Date.parse(stayFrom);
         const isStayToValid = Date.parse(stayTo);
 
@@ -561,12 +558,10 @@ export const addTenant = async (req, res) => {
             return res.status(400).json({ success: false, message: "Invalid date format." });
         }
 
-        // Ensure end date is after start date
         if (new Date(stayTo) < new Date(stayFrom)) {
             return res.status(400).json({ success: false, message: "End date cannot be before start date." });
         }
 
-        // Ensure the request includes a valid token
         const token = req.cookies.token;
         if (!token) {
             return res.status(401).json({ success: false, message: "Unauthorized. No token provided." });
@@ -582,7 +577,6 @@ export const addTenant = async (req, res) => {
             return res.status(401).json({ success: false, message: "Invalid or expired token." });
         }
 
-        // Check if there are available rooms for the establishment
         const availableRooms = await Room.findAll({
             where: {
                 establishmentId,
@@ -594,24 +588,20 @@ export const addTenant = async (req, res) => {
             return res.status(400).json({ success: false, message: "No available rooms for this establishment." });
         }
 
-        // Check if the tenant already exists
         const existingTenant = await Tenant.findOne({ where: { tenantEmail, establishmentId } });
         if (existingTenant) {
             return res.status(400).json({ success: false, message: "Tenant already exists in this establishment." });
         }
 
-        // Hash the password
         const hashedPassword = await bcryptjs.hash(tenantPassword, 10);
         console.log('Hashed Password:', hashedPassword);
 
-        // Get the room selected by the tenant
         const room = await Room.findOne({ where: { room_id, establishmentId } });
 
         if (!room) {
             return res.status(400).json({ success: false, message: "Room not found." });
         }
 
-        // Create the new tenant in the database
         const newTenant = await Tenant.create({
             tenantFirstName,
             tenantLastName,
@@ -624,20 +614,17 @@ export const addTenant = async (req, res) => {
             establishmentId,
             room_id: room.room_id,
             tenantGuardianName,
-            tenantAddress, // tenantAddress is now required
+            tenantAddress,
             tenantGuardianNum
         });
 
         console.log('New Tenant Created:', newTenant);
 
-        // Decrease the available slots in the room
         room.roomRemainingSlot -= 1;
         await room.save();  
 
-        // Generate the token and set it in the response cookie
         generateTokenAndSetTenantCookie(res, newTenant.tenant_id, establishmentId);
 
-        // Respond with success message and tenant details
         return res.status(201).json({
             success: true,
             message: "Tenant added successfully",
@@ -651,7 +638,7 @@ export const addTenant = async (req, res) => {
                 stayFrom: newTenant.stayFrom,
                 room_id: newTenant.room_id,
                 tenantGuardianName: newTenant.tenantGuardianName,
-                tenantAddress: newTenant.tenantAddress,  // included in response
+                tenantAddress: newTenant.tenantAddress, 
                 tenantGuardianNum: newTenant.tenantGuardianNum
             },
             availableRooms: availableRooms.map(room => ({
@@ -666,7 +653,6 @@ export const addTenant = async (req, res) => {
         return res.status(500).json({ success: false, message: 'Failed to add tenant', error: error.message });
     }
 };
-
 
 export const addUnit = async (req, res) => {
     try {
