@@ -802,7 +802,6 @@ export const deleteUnit = (req, res) => {
             return res.status(404).json({ success: false, message: "Room not found" });
         }
 
-        // Return a success message in JSON format
         res.json({ success: true, message: "Room successfully removed" });
     });
 };
@@ -1105,32 +1104,31 @@ export const updateEvent = async (req, res) => {
 };
 
 export const viewNotices = async (req, res) => {
-    console.log('Entering viewNotices...');
     const { establishmentId } = req;
-  
+
     if (!establishmentId) {
-      console.error('Establishment ID is undefined.');
-      return { success: false, message: 'Establishment ID is required.' };
+        console.error('Establishment ID is undefined.');
+        return { success: false, message: 'Establishment ID is required.' };
     }
-  
+
     try {
-      const rows = await Notice.findAll({
-        where: { establishment_id: establishmentId },
-        order: [['pinned', 'DESC'], ['permanent', 'DESC'], ['updated_at', 'DESC']],
-      });
-  
-      const formattedNotices = rows.map(row => ({
-        ...row.get({ plain: true }),
-        updated_at: format(new Date(row.updated_at), 'MMMM dd, yyyy'),
-      }));
-  
-      return { success: true, notices: formattedNotices }; 
-  
+        const rows = await Notice.findAll({
+            where: { establishment_id: establishmentId },
+            order: [['pinned', 'DESC'], ['permanent', 'DESC'], ['updated_at', 'DESC']],
+        });
+
+        const formattedNotices = rows.map(row => ({
+            ...row.get({ plain: true }),
+            updated_at: format(new Date(row.updated_at), 'MMMM dd, yyyy'),
+        }));
+
+        return { success: true, notices: formattedNotices };
     } catch (error) {
-      console.error('Error fetching notices:', error);
-      return { success: false, message: 'Error fetching notices.' };
+        console.error('Error fetching notices:', error);
+        return { success: false, message: 'Error fetching notices.' };
     }
-  };
+};
+
   
 export const pinnedNotices = async (req, res) => {
     const { establishmentId } = req;
@@ -1331,10 +1329,8 @@ export const togglePermanent = async (req, res) => {
             return res.status(404).json({ success: false, message: "Notice not found." });
         }
 
-        // Toggle permanent status
         notice.permanent = notice.permanent ? 0 : 1;
 
-        // Save the changes to the database
         await notice.save();
 
         return res.status(200).json({
