@@ -127,7 +127,7 @@ function removeTenant(tenantId, roomId) {
 
 function deleteUnit(roomId) {
     if (confirm("Are you sure you want to delete this room?")) {
-        fetch(`/admin/manage/unit/delete/${roomId}`, {
+        fetch(`/api/auth/deleteUnit/${roomId}`, {
             method: 'DELETE'
         })
         .then(response => {
