@@ -348,40 +348,42 @@ table tr:nth-child(even) td {
 }
 
 
-/* Orange Edit Button */
-.btn-orange {
-  background-color: var(--orange); /* Apply your orange color */
+/* Edit Button */
+.btn-edit {
+  background-color: var(--orange); /* Orange color */
   color: white;
   font-weight: 600;
   padding: 8px 12px;
   border-radius: 8px;
   border: none;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease;
 }
 
 
-.btn-orange:hover {
-  background-color: darkorange; /* Darken on hover */
+.btn-edit:hover {
+  background-color: darkorange; /* Darker orange on hover */
 }
 
 
-/* Red Delete Button */
-.btn-red {
-  background-color: red; /* Red color for delete button */
+/* Delete Button */
+.btn-delete {
+  background-color: var(--maroon); /* Red color */
   color: white;
   font-weight: 600;
   padding: 8px 12px;
   border-radius: 8px;
   border: none;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease;
 }
 
 
-.btn-red:hover {
-  background-color: darkred; /* Darken on hover */
+.btn-delete:hover {
+  background-color: darkred; /* Darker red on hover */
 }
+
+
 
 
 .tenant-management-container {
@@ -538,19 +540,94 @@ label {
   margin-bottom: 10px;
 }
 
+
 .btn-add-room-inner {
-    background: linear-gradient(90deg, rgba(254, 127, 66, 1) 0%, rgba(0, 0, 0, 0.8) 100%) !important;
-    color: white !important;
-    font-weight: 600 !important;
-    padding: 10px 20px !important;
-    border-radius: 8px !important;
-    border: none !important;
-    cursor: pointer !important;
-    transition: background 0.3s, transform 0.3s !important;
-  }
-  
-  .btn-add-room-inner:hover {
-    background: linear-gradient(90deg, rgba(254, 127, 66, 1) 0%, rgba(0, 0, 0, 0.6) 100%) !important;
-    transform: scale(1.05) !important;
-  }
-  
+  background: linear-gradient(
+    90deg,
+    rgba(254, 127, 66, 1) 0%,
+    rgba(0, 0, 0, 0.8) 100%
+  ) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  padding: 10px 20px !important;
+  border-radius: 8px !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: background 0.3s, transform 0.3s !important;
+}
+
+
+.btn-add-room-inner:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(254, 127, 66, 1) 0%,
+    rgba(0, 0, 0, 0.6) 100%
+  ) !important;
+  transform: scale(1.05) !important;
+}
+
+
+/* Red Delete Button */
+.btn-red {
+  background-color: var(--maroon); /* Matches maroon theme */
+  color: white;
+  font-weight: 600;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+
+.btn-red:hover {
+  background-color: darkred; /* Darken on hover for better contrast */
+  transform: scale(1.1); /* Slightly enlarge on hover */
+}
+
+
+/* Pagination Active State */
+.pagination a.active {
+  background-color: var(--orange);
+  color: white;
+  border: none;
+  font-weight: bold;
+}
+/* Save Changes button */
+.btn-save-changes {
+  background-color: #28a745; /* Green background */
+  color: white; /* White text */
+  font-weight: bold;
+  border-radius: 6px;
+  border: none;
+  padding: 8px 12px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+
+.btn-save-changes:hover {
+  background-color: #218838; /* Darker green on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+
+/* Cancel button */
+.btn-cancel {
+  background-color: #dc3545; /* Red background */
+  color: white; /* White text */
+  font-weight: bold;
+  border-radius: 6px;
+  border: none;
+  padding: 8px 12px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+
+.btn-cancel:hover {
+  background-color: #c82333; /* Darker red on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+
+

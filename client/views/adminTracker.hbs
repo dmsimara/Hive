@@ -8,25 +8,27 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-center">
         <li class="nav-item">
-          <a class="nav-link text-light" aria-current="page" href="/admin/dashboard">Dashboard</a>
+          <a class="nav-link text-custom" aria-current="page" href="/admin/dashboard">Dashboard</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-light" href="/admin/dashboard/userManagement">Manage Tenant</a>
+          <a class="nav-link text-custom" href="/admin/dashboard/userManagement">Manage Tenant</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-light" href="/admin/manage/unit">Manage Unit</a>
+          <a class="nav-link text-custom" href="/admin/manage/unit">Manage Unit</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-light" href="/admin/announcements">Announcements</a>
+          <a class="nav-link text-custom" href="/admin/announcements">Announcements</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-light active" href="/admin/tracker">Tracker</a>
+          <a class="nav-link text-custom active" href="/admin/tracker">Tracker</a>
         </li>
       </ul>
+
 
       <!-- Admin Profile Picture -->
       <img src="{{#if admin.adminProfile}}/images/upload/{{admin.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
         alt="Profile" class="user-pic border border-light" onclick="toggleMenu()" />
+
 
       <div class="sub-menu-wrap" id="subMenu">
         <div class="sub-menu">
@@ -37,12 +39,12 @@
             <h3>{{admin.adminFirstName}} {{admin.adminLastName}}</h3>
           </div>
           <hr />
-          <a href="/admin/dashboard/view/account" class="sub-menu-link text-dark">
+          <a href="/admin/dashboard/view/account" class="sub-menu-link text-custom">
             <i class="material-icons">person</i>
             <p>View Account</p>
             <span>></span>
           </a>
-          <a href="#" id="logoutButton" class="sub-menu-link text-dark">
+          <a href="#" id="logoutButton" class="sub-menu-link text-custom">
             <i class="material-icons">logout</i>
             <p>Logout</p>
             <span>></span>
@@ -53,6 +55,7 @@
   </div>
 </nav>
 
+
 <div class="container pt-5 pb-5">
   <!-- Calendar Header with Add Event Button -->
   <div class="d-flex justify-content-between align-items-center">
@@ -61,6 +64,7 @@
   </div>
   <div id="calendar"></div>
 </div>
+
 
 <!-- Modal for Creating New Event -->
 <div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
@@ -74,14 +78,14 @@
         <div class="modal-body">
           <!-- Event Title -->
           <div class="mb-3">
-            <label for="event_name" class="form-label">Event Title</label>
+            <label for="event_name" class="form-label text-custom">Event Title</label>
             <input type="text" id="event_name" name="event_name" class="form-control" placeholder="Enter event title" required>
           </div>
 
 
           <!-- Event Description -->
           <div class="mb-3">
-            <label for="event_description" class="form-label">Event Description</label>
+            <label for="event_description" class="form-label text-custom">Event Description</label>
             <textarea id="event_description" name="event_description" class="form-control" rows="3" placeholder="Enter event description" required></textarea>
           </div>
 
@@ -89,11 +93,11 @@
           <!-- Event Date & Time -->
           <div class="row g-3">
             <div class="col-md-6">
-              <label for="start" class="form-label">Start Date & Time</label>
+              <label for="start" class="form-label text-custom">Start Date & Time</label>
               <input type="datetime-local" id="start" name="start" class="form-control" required>
             </div>
             <div class="col-md-6">
-              <label for="end" class="form-label">End Date & Time</label>
+              <label for="end" class="form-label text-custom">End Date & Time</label>
               <input type="datetime-local" id="end" name="end" class="form-control" required>
             </div>
           </div>
@@ -101,7 +105,7 @@
 
           <!-- Event Status -->
           <div class="mb-3">
-            <label for="status" class="form-label">Status</label>
+            <label for="status" class="form-label text-custom">Status</label>
             <select id="status" name="status" class="form-select" required>
               <option value="Not Started">Not Started</option>
               <option value="In Progress">In Progress</option>
@@ -111,18 +115,12 @@
           </div>
         </div>
         <div class="modal-footer">
-<button type="button" class="btn btn-close-red" data-bs-dismiss="modal">
-  Close
-</button>
-<button type="submit" class="btn btn-save-orange" id="saveEvent">
-  Save Event
-</button>
-
-
-
-
-
-
+          <button type="button" class="btn btn-close-red" data-bs-dismiss="modal">
+            Close
+          </button>
+          <button type="submit" class="btn btn-save-orange" id="saveEvent">
+            Save Event
+          </button>
         </div>
       </form>
     </div>
@@ -133,10 +131,10 @@
 <!-- Event Overview Modal -->
 <div class="modal fade" id="eventOverviewModal" tabindex="-1" aria-labelledby="eventOverviewModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content bg-dark text-light">
+    <div class="modal-content bg-dark text-light" style="background-color: rgba(0, 0, 0, 0.95);">
       <div class="modal-header">
         <h5 class="modal-title" id="eventOverviewModalLabel">Event Overview</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close text-light" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form id="eventOverviewForm">
         <div class="modal-body">
@@ -146,28 +144,31 @@
             <input type="text" id="overview_event_name" name="event_name" class="form-control bg-light text-dark" placeholder="Enter event title" required>
           </div>
 
+
           <!-- Event Description -->
           <div class="mb-3">
             <label for="overview_event_description" class="form-label">Event Description</label>
             <textarea id="overview_event_description" name="event_description" class="form-control bg-light text-dark" rows="3" placeholder="Enter event description" required></textarea>
           </div>
 
+
           <!-- Event Date & Time -->
           <div class="row g-3">
             <div class="col-md-6">
               <label for="overview_start" class="form-label">Start Date & Time</label>
-              <input type="datetime-local" id="overview_start" name="start" class="form-control" required>
+              <input type="datetime-local" id="overview_start" name="start" class="form-control bg-light text-dark" required>
             </div>
             <div class="col-md-6">
               <label for="overview_end" class="form-label">End Date & Time</label>
-              <input type="datetime-local" id="overview_end" name="end" class="form-control" required>
+              <input type="datetime-local" id="overview_end" name="end" class="form-control bg-light text-dark" required>
             </div>
           </div>
+
 
           <!-- Event Status -->
           <div class="mb-3">
             <label for="overview_status" class="form-label">Status</label>
-            <select id="overview_status" name="status" class="form-select" required>
+            <select id="overview_status" name="status" class="form-select bg-light text-dark" required>
               <option value="Not Started">Not Started</option>
               <option value="In Progress">In Progress</option>
               <option value="On Hold">On Hold</option>
@@ -185,10 +186,15 @@
   </div>
 </div>
 
+
+
+
 <script src="/js/adminTracker.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const calendarEl = document.getElementById('calendar');
+
+
 
 
         let eventsData;
@@ -199,6 +205,8 @@
             console.error('Error parsing events data:', error);
             eventsData = [];  
         }
+
+
 
 
         const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -220,6 +228,8 @@
             events: eventsData,  
 
 
+
+
             eventClick: function (info) {
                 const event = info.event;
                 document.getElementById('overview_event_name').value = event.title || '';
@@ -234,8 +244,12 @@
             },
 
 
+
+
             eventDrop: async function (info) {
                 const event = info.event;
+
+
 
 
                 const updatedEventData = {
@@ -245,12 +259,16 @@
                 };
 
 
+
+
                 try {
                     const response = await fetch('/api/auth/edit/event', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(updatedEventData)
                     });
+
+
 
 
                     const result = await response.json();
@@ -269,11 +287,17 @@
         });
 
 
+
+
         calendar.render();
+
+
 
 
         document.getElementById('saveEvent').addEventListener('click', async function (event) {
             event.preventDefault();
+
+
 
 
             const eventData = {
@@ -285,12 +309,16 @@
             };
 
 
+
+
             try {
                 const response = await fetch('/api/auth/add/event', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(eventData)
                 });
+
+
 
 
                 const result = await response.json();
@@ -309,9 +337,13 @@
         });
 
 
+
+
         document.getElementById('deleteEvent').addEventListener('click', async function (event) {
             event.preventDefault();
             const eventId = this.dataset.eventId;
+
+
 
 
             const isConfirmed = confirm("Are you sure you want to delete this event? This action cannot be undone.");
@@ -322,6 +354,8 @@
                         method: 'DELETE',
                         headers: { 'Content-Type': 'application/json' }
                     });
+
+
 
 
                     const result = await response.json();
@@ -343,9 +377,13 @@
         });
 
 
+
+
         document.getElementById('updateEvent').addEventListener('click', async function (event) {
             event.preventDefault();
             const eventId = document.getElementById('deleteEvent').dataset.eventId;
+
+
 
 
             const eventName = document.getElementById('overview_event_name').value.trim();
@@ -355,10 +393,14 @@
             const status = document.getElementById('overview_status').value;
 
 
+
+
             if (!eventName || !eventDescription || !start || !end || !status) {
                 alert('Please fill in all fields.');
                 return;
             }
+
+
 
 
             const updatedEventData = {
@@ -369,6 +411,8 @@
                 end: end,
                 status: status
             };
+
+
 
 
             try {
@@ -397,6 +441,4 @@
         });
     });
 </script>
-
-
 
