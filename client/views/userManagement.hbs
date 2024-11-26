@@ -1,4 +1,5 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav class="navbar navbar-expand-lg" style="background-color: #333;">
+  <!-- Adjust the color value to the one you prefer -->
   <div class="container-fluid">
     <img class="navbar-brand" src="/images/hiveLight.png" alt="Hive Logo" width="100px" />
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -23,7 +24,6 @@
           <a class="nav-link" href="/admin/tracker">Tracker</a>
         </li>
       </ul>
-
 
       <img src="{{#if admin.adminProfile}}/images/upload/{{admin.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
         alt="Profile" class="user-pic" onclick="toggleMenu()" />
@@ -68,12 +68,9 @@
         <a href="#" data-bs-toggle="modal" data-bs-target="#addTenantModal" class="btn btn-light btn-sm hover-orange">
           + Add Tenant
         </a>
-
-
       </div>
     </div>
   </div>
-
 
   <table class="table table-bordered">
     <thead class="table-dark">
@@ -98,11 +95,21 @@
         <td>{{this.gender}}</td>
         <td>{{this.mobileNum}}</td>
         <td class="text-end">
-          <a href="/admin/dashboard/userManagement/editTenant/{{this.tenant_id}}" class="btn btn-light btn-sm"><i
-              class="material-icons">edit</i> Edit</a>
-          <a href="#" onclick="deleteTenant({{this.tenant_id}})" class="btn btn-light btn-sm">
-            <i class="material-icons">person_remove</i> Delete
+          <!-- Edit Button -->
+          <a href="/admin/dashboard/userManagement/editTenant/{{this.tenant_id}}" 
+            class="btn btn-sm" 
+            style="background-color: orange; color: white; font-weight: 600; border-radius: 6px; border: none; padding: 8px 12px; transition: background-color 0.3s, transform 0.2s;"
+            onmouseover="this.style.backgroundColor='darkorange'; this.style.transform='scale(1.1)';"
+            onmouseout="this.style.backgroundColor='orange'; this.style.transform='scale(1)';">
+            <i class="material-icons">edit</i> Edit
           </a>
+          <!-- Delete Button -->
+          <button onclick="deleteTenant({{this.tenant_id}})" class="btn btn-sm" 
+            style="background-color: maroon; color: white; font-weight: 600; border-radius: 6px; border: none; padding: 8px 12px; transition: background-color 0.3s, transform 0.2s;"
+            onmouseover="this.style.backgroundColor='darkred'; this.style.transform='scale(1.1)';"
+            onmouseout="this.style.backgroundColor='maroon'; this.style.transform='scale(1)';">
+            <i class="material-icons">person_remove</i> Delete
+          </button>
         </td>
       </tr>
       {{/each}}
@@ -114,120 +121,136 @@
     </tbody>
   </table>
 
+  <!-- Pagination Section -->
+  <div class="pagination">
+    {{#each paginationLinks}}
+    <a href="{{this.url}}" 
+      class="pagination-link {{#if this.isActive}}active{{/if}}"
+      style="text-decoration: none; color: {{#if this.isActive}}white{{else}}var(--dark-grey){{/if}}; 
+             background-color: {{#if this.isActive}}orange{{else}}transparent{{/if}}; 
+             font-weight: {{#if this.isActive}}bold{{else}}normal{{/if}}; 
+             margin: 0 5px; padding: 6px 10px; border-radius: 4px; transition: background-color 0.3s;">
+      {{this.text}}
+    </a>
+    {{/each}}
+  </div>
 
-
-
-
-
-  <!-- Add Tenant Modal -->
-  <div class="modal fade" id="addTenantModal" tabindex="-1" aria-labelledby="addTenantModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="addTenantModalLabel">Add Tenant</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form id="tenantForm" method="POST" action="/api/auth/addTenant">
-            <input type="hidden" id="establishmentId" name="establishmentId" value="{{establishmentId}}">
-
-            <!-- First Name, Last Name, and Email in one column -->
-            <div class="row mb-3">
-              <div class="col">
-                <label for="tenantFirstName" class="form-label">First Name</label>
-                <input type="text" class="form-control form-control-sm" id="tenantFirstName" name="tenantFirstName"
-                  required>
-              </div>
-              <div class="col">
-                <label for="tenantLastName" class="form-label">Last Name</label>
-                <input type="text" class="form-control form-control-sm" id="tenantLastName" name="tenantLastName"
-                  required>
-              </div>
-              <div class="col">
-                <label for="tenantEmail" class="form-label">Email</label>
-                <input type="email" class="form-control form-control-sm" id="tenantEmail" name="tenantEmail" required>
-              </div>
-            </div>
-            
-            <!-- Gender and Mobile Row -->
-            <div class="row mb-3">
-              <div class="col">
-                <label for="gender" class="form-label">Gender</label>
-                <select class="form-select form-select-sm" name="gender" id="gender" required>
-                  <option value="" disabled>Select Gender</option>
-                  <option value="F" {{#if (eq gender "Female" )}}selected{{/if}}>Female</option>
-                  <option value="M" {{#if (eq gender "Male" )}}selected{{/if}}>Male</option>
-                  <option value="Other" {{#if (eq gender "Other" )}}selected{{/if}}>Other</option>
-                </select>
-              </div>
-              <div class="col">
-                <label for="mobileNum" class="form-label">Mobile Number</label>
-                <input type="number" class="form-control form-control-sm" id="mobileNum" name="mobileNum" required>
-              </div>
-            </div>
-
-
-            <!-- Guardian Name and Number Row -->
-            <div class="row mb-3">
-              <div class="col">
-                <label for="tenantGuardianName" class="form-label">Guardian Name</label>
-                <input type="text" class="form-control form-control-sm" id="tenantGuardianName"
-                  name="tenantGuardianName" required>
-              </div>
-              <div class="col">
-                <label for="tenantGuardianNum" class="form-label">Guardian Mobile Number</label>
-                <input type="number" class="form-control form-control-sm" id="tenantGuardianNum"
-                  name="tenantGuardianNum" required>
-              </div>
-            </div>
-
-            <!-- Tenant Address -->
-            <div class="mb-3">
-              <label for="tenantAddress" class="form-label">Tenant Address</label>
-              <input type="text" class="form-control form-control-sm" id="tenantAddress" name="tenantAddress" required>
-            </div>
-
-            <!-- Assign Room, Start Date, and End Date in one column -->
-            <div class="row mb-3">
-              <div class="col">
-                <label for="roomSelection" class="form-label">Assign Room</label>
-                <select class="form-select form-select-sm" id="roomSelection" name="roomId" required>
-                  <option value="" disabled selected>Select a room</option>
-                  <!-- Options will be populated dynamically -->
-                </select>
-              </div>
-              <div class="col">
-                <label for="stayFrom" class="form-label">Start Date</label>
-                <input type="date" class="form-control form-control-sm" id="stayFrom" name="stayFrom" required>
-              </div>
-              <div class="col">
-                <label for="stayTo" class="form-label">End Date</label>
-                <input type="date" class="form-control form-control-sm" id="stayTo" name="stayTo" required>
-              </div>
-            </div>
-
-
-            <!-- Password Row -->
-            <div class="row mb-3">
-              <div class="col">
-                <label for="tenantPassword" class="form-label">Password</label>
-                <input type="password" class="form-control form-control-sm" id="tenantPassword" name="tenantPassword"
-                  required>
-              </div>
-              <div class="col">
-                <label for="tenantConfirmPassword" class="form-label">Confirm Password</label>
-                <input type="password" class="form-control form-control-sm" id="tenantConfirmPassword"
-                  name="tenantConfirmPassword" required>
-              </div>
-            </div>
-
-
-            <button type="submit" class="btn btn-primary">Add Tenant</button>
-          </form>
-        </div>
+ <!-- Edit Tenant Modal -->
+<div class="modal fade" id="editTenantModal{{this.tenant_id}}" tabindex="-1" aria-labelledby="editTenantModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editTenantModalLabel">Edit Tenant</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+      <div class="modal-body">
+        <form id="tenantForm{{this.tenant_id}}" method="POST" action="/api/auth/updateTenant">
+          <input type="hidden" name="tenant_id" value="{{this.tenant_id}}">
+
+          <!-- First Name, Last Name, and Email in one column -->
+          <div class="row mb-3">
+            <div class="col">
+              <label for="tenantFirstName{{this.tenant_id}}" class="form-label">First Name</label>
+              <input type="text" class="form-control form-control-sm" id="tenantFirstName{{this.tenant_id}}"
+                name="tenantFirstName" value="{{this.tenantFirstName}}" required>
+            </div>
+            <div class="col">
+              <label for="tenantLastName{{this.tenant_id}}" class="form-label">Last Name</label>
+              <input type="text" class="form-control form-control-sm" id="tenantLastName{{this.tenant_id}}"
+                name="tenantLastName" value="{{this.tenantLastName}}" required>
+            </div>
+            <div class="col">
+              <label for="tenantEmail{{this.tenant_id}}" class="form-label">Email</label>
+              <input type="email" class="form-control form-control-sm" id="tenantEmail{{this.tenant_id}}"
+                name="tenantEmail" value="{{this.tenantEmail}}" required>
+            </div>
+          </div>
+
+          <!-- Gender and Mobile Row -->
+          <div class="row mb-3">
+            <div class="col">
+              <label for="gender{{this.tenant_id}}" class="form-label">Gender</label>
+              <select class="form-select form-select-sm" name="gender" id="gender{{this.tenant_id}}" required>
+                <option value="" disabled>Select Gender</option>
+                <option value="F" {{#if (eq this.gender "Female")}}selected{{/if}}>Female</option>
+                <option value="M" {{#if (eq this.gender "Male")}}selected{{/if}}>Male</option>
+                <option value="O" {{#if (eq this.gender "Other")}}selected{{/if}}>Other</option>
+              </select>
+            </div>
+            <div class="col">
+              <label for="mobileNum{{this.tenant_id}}" class="form-label">Mobile Number</label>
+              <input type="tel" class="form-control form-control-sm" id="mobileNum{{this.tenant_id}}"
+                name="mobileNum" value="{{this.mobileNum}}" required>
+            </div>
+          </div>
+
+          <!-- Guardian Name and Room Selection -->
+          <div class="row mb-3">
+            <div class="col">
+              <label for="guardianName{{this.tenant_id}}" class="form-label">Guardian Name (if applicable)</label>
+              <input type="text" class="form-control form-control-sm" id="guardianName{{this.tenant_id}}"
+                name="guardianName" value="{{this.guardianName}}">
+            </div>
+            <div class="col">
+              <label for="roomSelection{{this.tenant_id}}" class="form-label">Room</label>
+              <select class="form-select form-select-sm" name="roomSelection" id="roomSelection{{this.tenant_id}}"
+                required>
+                <option value="" disabled selected>Select Room</option>
+                {{#each availableRooms}}
+                <option value="{{this.room_id}}" {{#if (eq this.room_id ../room_id)}}selected{{/if}}>{{this.room_name}}</option>
+                {{/each}}
+              </select>
+            </div>
+          </div>
+
+          <!-- Start Date and End Date -->
+          <div class="row mb-3">
+            <div class="col">
+              <label for="startDate{{this.tenant_id}}" class="form-label">Start Date</label>
+              <input type="date" class="form-control form-control-sm" id="startDate{{this.tenant_id}}"
+                name="startDate" value="{{this.startDate}}" required>
+            </div>
+            <div class="col">
+              <label for="endDate{{this.tenant_id}}" class="form-label">End Date</label>
+              <input type="date" class="form-control form-control-sm" id="endDate{{this.tenant_id}}" name="endDate"
+                value="{{this.endDate}}" required>
+            </div>
+          </div>
+
+          <!-- Password and Confirm Password -->
+          <div class="row mb-3">
+            <div class="col">
+              <label for="tenantPassword{{this.tenant_id}}" class="form-label">Password</label>
+              <input type="password" class="form-control form-control-sm" id="tenantPassword{{this.tenant_id}}"
+                name="tenantPassword" required>
+            </div>
+            <div class="col">
+              <label for="confirmPassword{{this.tenant_id}}" class="form-label">Confirm Password</label>
+              <input type="password" class="form-control form-control-sm" id="confirmPassword{{this.tenant_id}}"
+                name="confirmPassword" required>
+            </div>
+          </div>
+
+      </div>
+   <!-- Edit Tenant Modal Footer -->
+<div class="modal-footer">
+  <!-- Cancel Button -->
+  <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">
+    Cancel
+  </button>
+  
+  <!-- Save Changes Button -->
+  <button type="submit" class="btn btn-save-changes">
+    Save Changes
+  </button>
+</div>
+      </form>
     </div>
   </div>
+</div>
+
+
 
 
 

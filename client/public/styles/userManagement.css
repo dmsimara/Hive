@@ -554,3 +554,60 @@ label {
     transform: scale(1.05) !important;
   }
   
+  /* Red Delete Button */
+.btn-red {
+  background-color: var(--maroon); /* Matches maroon theme */
+  color: white;
+  font-weight: 600;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-red:hover {
+  background-color: darkred; /* Darken on hover for better contrast */
+  transform: scale(1.1); /* Slightly enlarge on hover */
+}
+
+/* Pagination Active State */
+.pagination a.active {
+  background-color: var(--orange);
+  color: white;
+  border: none;
+  font-weight: bold;
+}
+/* Save Changes button */
+.btn-save-changes {
+  background-color: #28a745; /* Green background */
+  color: white; /* White text */
+  font-weight: bold;
+  border-radius: 6px;
+  border: none;
+  padding: 8px 12px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-save-changes:hover {
+  background-color: #218838; /* Darker green on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+/* Cancel button */
+.btn-cancel {
+  background-color: #dc3545; /* Red background */
+  color: white; /* White text */
+  font-weight: bold;
+  border-radius: 6px;
+  border: none;
+  padding: 8px 12px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-cancel:hover {
+  background-color: #c82333; /* Darker red on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
