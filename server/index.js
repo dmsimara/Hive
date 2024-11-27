@@ -739,6 +739,48 @@ app.get("/tenant/utilities", verifyTenantToken, async (req, res) => {
 
 app.post("/api/auth/addTenant", verifyToken, addTenant); 
 
+app.get("/tenant/room-details", verifyTenantToken, async (req, res) => {
+    const tenantId = req.tenantId;
+    if (!tenantId) {
+        return res.status(400).send("Tenant ID not found in the token.");
+    }
+
+    try {
+        const tenant = await Tenant.findOne({
+            where: { tenant_id: tenantId }
+        });
+
+        if (!tenant) {
+            return res.status(404).send("Tenant not found");
+        }
+
+        const roomId = tenant.get('room_id');
+
+        const tenants = await getTenantsDashboard(roomId);
+
+        const room = await Room.findOne({
+            where: { room_id: roomId }
+        });
+
+        if (!room) {
+            return res.status(404).send("Room not found");
+        }
+
+        const roomNumber = room.get('roomNumber');
+        const plainTenants = tenants.map(tenant => tenant.get({ plain: true }));
+
+        res.render("ten-RoomDeets", {
+            title: "Hive",
+            styles: ["ten-deets"],
+            tenants: plainTenants,
+            roomNumber: roomNumber
+        });
+    } catch (error) {
+        console.error('Error fetching tenant data:', error);
+        res.status(500).send("Error fetching tenant data.");
+    }
+});
+
 // view and edit account
 app.get("/tenant/room-details/view/account", verifyTenantToken, async (req, res) => {
     const tenantId = req.tenantId;
