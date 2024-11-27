@@ -11,31 +11,33 @@
 .sidebar {
   background-color: #F4F4F4;
   width: 20%;
-  padding: 20px 0; /* Removed horizontal padding for sagad alignment */
+  padding: 20px; /* Removed horizontal padding for sagad alignment */
   display: flex;
   flex-direction: column;
+  align-items: center; /* Centers the card horizontally */
   position: fixed; /* Fixed to ensure alignment to the left */
   left: 0;
   top: 0;
   height: 100%; /* Full height */
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   overflow-y: auto; /* Scrollable sidebar */
-  scrollbar-width: none; /* Hide scrollbar for Firefox */
-  -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+  
+ 
 }
 
 .sidebar::-webkit-scrollbar {
   display: none; /* Hide scrollbar for Chrome/Safari */
 }
 
+/* Sidebar Card */
 .sidebar-card {
   background-color: #FFFFFF;
   border-radius: 15px;
   padding: 15px;
-  display: flex;
-  flex-direction: column;
+  width: 100%; /* Adjust the card size */
+  margin: 20px 0; /* Add vertical spacing */
   height: 100%;
-  width: 70%;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .logo-img {
@@ -61,17 +63,35 @@
   border-radius: 8px;
 }
 
-.menu ul li.active a {
+.menu ul li.active > a {
   background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
-  color: white;
+  color: white !important; /* Ensure this overrides conflicting styles */
 }
 
-/* Logout Button */
+.menu ul li a:hover,
+.tracker ul li a:hover,
+.logout-button:hover {
+    color: #FF6B45; /* Dark orange text on hover */
+    transition: color 0.3s; /* Smooth color transition */
+}
+
+
 .logout-container {
-  margin-top: auto;
-  padding-top: 20px;
-  border-top: 1px solid #ddd;
-  text-align: center;
+  align-self: flex-start; /* Align it to the left edge */
+  margin: 20px; /* Add spacing from the edge */
+  text-align: left; /* Ensure text aligns to the left */
+  width: 90%; /* Adjust width to match sidebar content */
+}
+
+.logout-button {
+  display: flex;
+  align-items: center; /* Align the icon and text */
+  padding: 10px 15px; /* Add spacing inside the button */
+  text-decoration: none; /* Remove underline */
+  font-size: 1rem;
+  color: #A22F05;
+  border-radius: 8px;
+  transition: background 0.3s, color 0.3s; /* Smooth hover effect */
 }
 
 .logout-button i {
@@ -247,5 +267,3 @@ main {
   gap: 15px;
   font-size: 18px;
 }
-
-

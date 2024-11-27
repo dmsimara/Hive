@@ -77,6 +77,15 @@ body, html {
     color: white;
 }
 
+.menu ul li a:hover,
+.tracker ul li a:hover,
+.logout-button:hover {
+    color: #FF6B45; /* Dark orange text on hover */
+    transition: color 0.3s; /* Smooth color transition */
+}
+
+
+
 .tracker ul {
     list-style: none;
 }
