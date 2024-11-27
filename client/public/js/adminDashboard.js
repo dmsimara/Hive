@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     fetchTenants("", window.establishmentId);
 
-    // Fetch tenants when the search input changes
     searchInput.addEventListener("input", function () {
         const searchTerm = this.value.trim();
         fetchTenants(searchTerm, window.establishmentId);
@@ -111,7 +110,6 @@ function openTenantModal(tenant) {
     }
 
     if (tenant && tenant.tenantFirstName && tenant.tenantLastName) {
-        // Display tenant information
         modalBody.innerHTML = `
             <p><strong>Name:</strong> ${tenant.tenantFirstName} ${tenant.tenantLastName}</p>
             <p><strong>Email:</strong> ${tenant.tenantEmail || "N/A"}</p>

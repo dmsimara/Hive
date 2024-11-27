@@ -1,5 +1,5 @@
 import express from "express";
-import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, deleteTenant, viewAdmins, viewUnits, findUnits, addUnitView, addUnit, deleteUnit, getOccupiedUnits, editTenant, updateTenant, findDashTenants, addEvent, viewEvents, editEvent, deleteEvent, getEvents, updateEvent, viewNotices, pinnedNotices, permanentNotices, addNotice, togglePinned, togglePermanent, deleteNotice, getAvailableRooms } from "../controllers/auth.controllers.js";
+import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, deleteTenant, viewAdmins, viewUnits, findUnits, addUnitView, addUnit, deleteUnit, getOccupiedUnits, editTenant, updateTenant, findDashTenants, addEvent, viewEvents, editEvent, deleteEvent, getEvents, updateEvent, viewNotices, pinnedNotices, permanentNotices, addNotice, togglePinned, togglePermanent, deleteNotice, getAvailableRooms, getNotices } from "../controllers/auth.controllers.js";
 import { verifyTenantToken, verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
@@ -24,6 +24,7 @@ router.get("/view/events", viewEvents);
 router.post("/edit/event", editEvent);
 router.delete("/delete/event/:eventId", deleteEvent);
 router.get("/get/events", getEvents);
+router.get("/get/notices", getNotices);
 router.post("/update/event/:eventId", updateEvent);
 router.get("/view/notices", viewNotices);
 router.get("/view/notices/pinned", pinnedNotices);

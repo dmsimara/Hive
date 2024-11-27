@@ -1009,6 +1009,43 @@ export const deleteEvent = async (req, res) => {
     }
 };
 
+export const getNotices = async (req, res) => {
+    const establishmentId = req.establishmentId;
+  
+    if (!establishmentId) {
+      console.error('Establishment ID is undefined');
+      return [];
+    }
+  
+    try {
+      console.log('Fetching pinned notices for establishment ID:', establishmentId);
+  
+      const rows = await Notice.findAll({
+        where: {
+          establishment_id: establishmentId,
+          pinned: 1, 
+        },
+        order: [['updated_at', 'DESC']],
+      });
+  
+      if (!rows.length) {
+        console.log('No pinned notices found for this establishment.');
+        return [];
+      }
+  
+      const plainRows = rows.map(row => {
+        const notice = row.get({ plain: true });
+        notice.updated_at = format(new Date(notice.updated_at), 'MMMM do yyyy, h:mm:ss a');
+        return notice;
+      });
+  
+      return plainRows;  
+    } catch (error) {
+      console.error('Error fetching pinned notices:', error);
+      return [];
+    }
+  };
+
 export const getEvents = async (req, res) => {
     const establishmentId = req.establishmentId;
 

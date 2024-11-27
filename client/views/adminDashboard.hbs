@@ -96,11 +96,23 @@
     </div>
 
     <h3 class="announce-title">Announcements
-      <a href="#">
+      <a href="/admin/announcements">
         <i class="material-icons">open_in_new</i>
       </a>
     </h3>
-    <div class="announcement-container"></div>
+    <div class="announcement-container" id="announcement-container">
+      {{#if notices.length}}
+      {{#each notices}}
+      <div class="notice-card">
+        <h5>{{this.title}}</h5>
+        <p>{{this.content}}</p>
+        <p>{{this.updated_at}}</p>
+      </div>
+      {{/each}}
+      {{else}}
+      <p>No notices available at the moment.</p>
+      {{/if}}
+    </div>
 
     <h3 class="tracker-title">Tracker
       <a href="/admin/tracker">
@@ -122,6 +134,7 @@
       <p>No events available at the moment.</p>
       {{/if}}
     </div>
+
 
     <!-- Links and Navigation -->
     <div class="col-4 right" id="right" style="flex: 0 0 30%; max-width: 30%;">
@@ -150,5 +163,5 @@
 
 <script src="/js/adminDashboard.js"></script>
 <script>
-    window.establishmentId = {{ establishmentId }};
+  window.establishmentId = {{ establishmentId }};
 </script>

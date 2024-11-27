@@ -17,7 +17,7 @@ import Room from "./models/room.models.js";
 import Tenant from "./models/tenant.models.js";
 import Notice from "./models/notice.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
-import { addTenant, addTenantView, addUnitView, editTenant, findDashTenants, findTenants, findUnits, getAvailableRooms, getEvents, getOccupiedUnits, updateEvent, updateTenant, viewAdmins, viewEvents, viewNotices, viewTenants, viewUnits } from './controllers/auth.controllers.js';
+import { addTenant, addTenantView, addUnitView, editTenant, findDashTenants, findTenants, findUnits, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, updateEvent, updateTenant, viewAdmins, viewEvents, viewNotices, viewTenants, viewUnits } from './controllers/auth.controllers.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -117,37 +117,40 @@ app.get("/tenant/login", (req, res) => {
 // ADMIN PAGES ROUTES
 app.get("/admin/dashboard", verifyToken, async (req, res) => {
     try {
-        const admin = await viewAdmins(req, res);
-        const establishmentId = req.establishmentId;  
-        const tenantsData = await viewTenants(req); 
-        const events = await getEvents(req, res);
-
-        console.log("Admin:", admin);
-        console.log("Tenants:", tenantsData);
-        console.log("Events:", events);
-
-        if (req.xhr || req.headers.accept.includes('application/json')) {
-            return res.json({
-                success: true,
-                tenants: tenantsData.tenants || [],
-                establishmentId: establishmentId,
-            });
-        }
-
-        res.render("adminDashboard", {
-            title: "Hive",
-            styles: ["adminDashboard"],
-            admin: admin || {}, 
-            tenants: tenantsData.tenants || [],
-            events: events || [],
-            establishmentId: establishmentId, 
+      const admin = await viewAdmins(req, res);
+      const establishmentId = req.establishmentId;
+      const tenantsData = await viewTenants(req);
+      const events = await getEvents(req, res);
+      const notices = await getNotices(req, res); 
+  
+      console.log("Admin:", admin);
+      console.log("Tenants:", tenantsData);
+      console.log("Events:", events);
+      console.log("Notices:", notices);
+  
+      if (req.xhr || req.headers.accept.includes('application/json')) {
+        return res.json({
+          success: true,
+          tenants: tenantsData.tenants || [],
+          establishmentId: establishmentId,
         });
+      }
+  
+      res.render("adminDashboard", {
+        title: "Hive",
+        styles: ["adminDashboard"],
+        admin: admin || {},
+        tenants: tenantsData.tenants || [],
+        events: events || [],
+        notices: notices || [], 
+        establishmentId: establishmentId,
+      });
     } catch (error) {
-        console.error("Error fetching admin dashboard data:", error);
-        res.status(500).json({ success: false, message: "Error fetching admin dashboard data" });
+      console.error("Error fetching admin dashboard data:", error);
+      res.status(500).json({ success: false, message: "Error fetching admin dashboard data" });
     }
-});
-
+  });
+  
 app.post("/admin/dashboard", findDashTenants);
 
 
