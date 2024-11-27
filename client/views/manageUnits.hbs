@@ -54,21 +54,30 @@
 
 
 <div class="container pt-5 pb-5">
-  <h1>Unit Management</h1>
+  <div class="row">
   <div class="row align-items-center">
     <div class="col-6">
-      <h3>Occupied Units: {{occupiedUnits}}</h3>
+      <div class="header-content">
+        <i class="material-icons title-icon">lock_open</i>
+        <h1>Unit Management</h1>
+      </div>
+      <p>Occupied Units: <span style="color: rgb(122, 75, 71);">{{occupiedUnits}}</span></p>
     </div>
-    <div class="col-6 d-flex justify-content-end gap-2">
-      <form class="d-flex" role="search" method="POST" action="/api/auth/find-units" novalidate>
-        <input class="form-control me-2" type="search" placeholder="Search" name="searchUnits"
-          value="{{lastSearchTerm}}">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
-      <!-- Add Room Button with custom class -->
-      <a href="/admin/manage/unit/add" type="button" class="btn add-room-button align-self-center">+ Add Room</a>
+    <div class="col-6">
+      <div class="d-flex justify-content-end align-items-center gap-2">
+        <form class="d-flex" role="search" method="POST" action="/api/auth/find-units" novalidate>
+          <div class="search-bar">
+            <input class="form-control me-2" type="search" placeholder="Search" name="searchUnits" value="{{lastSearchTerm}}">
+            <span class="search-icon">
+              <i class="material-icons">search</i>
+            </span>
+          </div>
+        </form>
+        <a href="/admin/manage/unit/add" type="button" class="btn add-room-button">+ Add Room</a>
+      </div>
     </div>
   </div>
+</div>
 
 
   <table class="table table-bordered">
@@ -98,8 +107,7 @@
             class="btn manage-button btn-small">Manage</a>
 
 
-          <a href="#" type="button" onclick="deleteUnit('{{this.room_id}}')" class="btn delete-button btn-small">
-            <i class="material-icons">person_remove</i>Delete</a>
+          <a href="#" type="button" onclick="deleteUnit('{{this.room_id}}')" class="btn delete-button btn-small">Delete</a>
         </td>
       </tr>
       {{/each}}
@@ -110,9 +118,7 @@
       {{/if}}
     </tbody>
   </table>
-
-
-
+</div>
 
   <!-- Modal for Manage Unit -->
   <div class="modal fade" id="manageUnitModal" tabindex="-1" aria-labelledby="manageUnitModalLabel" aria-hidden="true">
@@ -120,9 +126,9 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="manageUnitModalLabel">Tenant List</h5>
-          <p>Total Slot: <span id="totalSlot"></span></p>
-          <p>Rented: <span id="rentedSlot"></span></p>
-          <p>Remaining: <span id="remainingSlot"></span></p>
+          <p class="totalSlot">Total Slot: <span id="totalSlot"></span></p>
+          <p class="rentedSlot">Rented: <span id="rentedSlot"></span></p>
+          <p class="remainingSlot">Remaining: <span id="remainingSlot"></span></p>
         </div>
         <div class="modal-body">
           <table class="table table-bordered">

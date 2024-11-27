@@ -54,138 +54,84 @@
 
 
 <div class="container pt-5 pb-5">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/admin/dashboard/userManagement">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Edit Tenant</li>
-        </ol>
-    </nav>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/admin/dashboard/userManagement">Manage Tenant</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Edit</li>
+    </ol>
+  </nav>
 
 
-    <div id="alertMessage" class="alert" style="display: none;"></div>
+  <div id="alertMessage" class="alert" style="display: none;"></div>
 
 
-    {{#each rows}}
-    <form action="/api/auth/editTenant/{{this.tenant_id}}" id="editForm" class="row g-3 needs-validation" method="POST">
-        <input type="hidden" name="tenantId" id="tenantId" value="{{this.tenant_id}}">
+  {{#each rows}}
+  <form action="/api/auth/editTenant/{{this.tenant_id}}" id="editForm" class="row g-3 needs-validation" method="POST">
+    <input type="hidden" name="tenantId" id="tenantId" value="{{this.tenant_id}}">
 
 
-        <div class="row mb-3">
-            <div class="col">
-                <label for="editFirstName" class="form-label">First Name</label>
-                <input type="text" class="form-control form-control-sm" id="editFirstName" name="tenantFirstName"
-                    value="{{this.tenantFirstName}}">
-            </div>
-            <div class="col">
-                <label for="editLastName" class="form-label">Last Name</label>
-                <input type="text" class="form-control form-control-sm" id="editLastName" name="tenantLastName"
-                    value="{{this.tenantLastName}}">
-            </div>
-        </div>
+    <div class="row mb-3">
+      <div class="col">
+        <label for="editFirstName" class="form-label">First Name</label>
+        <input type="text" class="form-control form-control-sm" id="editFirstName" name="tenantFirstName"
+          value="{{this.tenantFirstName}}">
+      </div>
+      <div class="col">
+        <label for="editLastName" class="form-label">Last Name</label>
+        <input type="text" class="form-control form-control-sm" id="editLastName" name="tenantLastName"
+          value="{{this.tenantLastName}}">
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col">
+        <label for="editEmail" class="form-label">Email</label>
+        <input type="email" class="form-control form-control-sm" id="editEmail" name="tenantEmail"
+          value="{{this.tenantEmail}}">
+      </div>
+      <div class="col">
+        <label for="editTenantAddress" class="form-label">Address</label>
+        <input type="text" class="form-control form-control-sm" id="editTenantAddress" name="tenantAddress"
+          value="{{this.tenantAddress}}">
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col">
+        <label for="editGender" class="form-label">Gender</label>
+        <select class="form-select form-select-sm" name="gender" id="editGender">
+          <option value="F" {{#if (eq this.gender "F" )}}selected{{/if}}>Female</option>
+          <option value="M" {{#if (eq this.gender "M" )}}selected{{/if}}>Male</option>
+          <option value="Other" {{#if (eq this.gender "Other" )}}selected{{/if}}>Other</option>
+        </select>
+      </div>
+      <div class="col">
+        <label for="editMobile" class="form-label">Mobile Number</label>
+        <input type="text" class="form-control form-control-sm" id="editMobile" name="mobileNum"
+          value="{{this.mobileNum}}">
+      </div>
+    </div>
 
 
-        <div class="mb-3">
-            <label for="editEmail" class="form-label">Email</label>
-            <input type="email" class="form-control form-control-sm" id="editEmail" name="tenantEmail"
-                value="{{this.tenantEmail}}">
-        </div>
-
-
-        <div class="row mb-3">
-            <div class="col">
-                <label for="editGender" class="form-label">Gender</label>
-                <select class="form-select form-select-sm" name="gender" id="editGender">
-                    <option value="F" {{#if (eq this.gender "F" )}}selected{{/if}}>Female</option>
-                    <option value="M" {{#if (eq this.gender "M" )}}selected{{/if}}>Male</option>
-                    <option value="Other" {{#if (eq this.gender "Other" )}}selected{{/if}}>Other</option>
-                </select>
-            </div>
-            <div class="col">
-                <label for="editMobile" class="form-label">Mobile Number</label>
-                <input type="text" class="form-control form-control-sm" id="editMobile" name="mobileNum"
-                    value="{{this.mobileNum}}">
-            </div>
-        </div>
-
-
-        <!-- Combined Guardian's Name and Mobile Number in a single row -->
-        <div class="row mb-3">
-            <div class="col">
-                <label for="editTenantGuardianName" class="form-label">Guardian's Name</label>
-                <input type="text" class="form-control form-control-sm" id="editTenantGuardianName" name="tenantGuardianName"
-                    value="{{this.tenantGuardianName}}">
-            </div>
-            <div class="col">
-                <label for="editTenantGuardianNum" class="form-label">Guardian's Mobile Number</label>
-                <input type="text" class="form-control form-control-sm" id="editTenantGuardianNum" name="tenantGuardianNum"
-                    value="{{this.tenantGuardianNum}}">
-            </div>
-        </div>
-
-
-        <div class="mb-3">
-            <label for="editTenantAddress" class="form-label">Address</label>
-            <input type="text" class="form-control form-control-sm" id="editTenantAddress" name="tenantAddress"
-                value="{{this.tenantAddress}}">
-        </div>
-
-
-<style>
-  /* Default styles for Save Changes button */
-  #editTenantButton {
-    background-color: #d7b414; /* Lighter orange */
-    border-color: #ffb347;
-    color: white;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-  }
-  /* Hover effect for Save Changes button */
-  #editTenantButton:hover {
-    background-color: orange; /* Darker orange */
-    border-color: orange;
-  }
-
-
-  /* Default styles for Close button */
-  #closeButton {
-    background-color: red;
-    border-color: red;
-    color: white;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-  }
-  /* Hover effect for Close button */
-  #closeButton:hover {
-    background-color: darkred;
-    border-color: darkred;
-  }
-</style>
-
-
-<button
-  type="button"
-  id="closeButton"
-  class="btn btn-secondary btn-sm"
->
-  Close
-</button>
-<button
-  id="editTenantButton"
-  type="submit"
-  class="btn btn-primary btn-sm"
->
-  Save changes
-</button>
-
-
-
-
-    </form>
-    {{/each}}
+    <!-- Combined Guardian's Name and Mobile Number in a single row -->
+    <div class="row mb-3">
+      <div class="col">
+        <label for="editTenantGuardianName" class="form-label">Guardian's Name</label>
+        <input type="text" class="form-control form-control-sm" id="editTenantGuardianName" name="tenantGuardianName"
+          value="{{this.tenantGuardianName}}">
+      </div>
+      <div class="col">
+        <label for="editTenantGuardianNum" class="form-label">Guardian's Mobile Number</label>
+        <input type="text" class="form-control form-control-sm" id="editTenantGuardianNum" name="tenantGuardianNum"
+          value="{{this.tenantGuardianNum}}">
+      </div>
+    </div>
+    <div class="d-flex justify-content-end mt-3">
+      <button type="button" id="closeButton" class="btn btn-secondary btn-sm me-2">Close</button>
+      <button id="editTenantButton" type="submit" class="btn btn-primary btn-sm">Save changes</button>
+    </div>
+  </form>
+  {{/each}}
 </div>
 
-
-
-
 <script src="/js/editTenant.js"></script>
-
-
-
