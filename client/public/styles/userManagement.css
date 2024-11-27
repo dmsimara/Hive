@@ -242,14 +242,19 @@ table {
 }
 
 
-/* Header Row (First Row) */
 thead tr:first-child th {
   background-color: var(--maroon) !important; /* Maroon color for first row */
   color: white !important; /* White text for contrast */
   text-transform: uppercase; /* Uppercase text */
   font-weight: 600; /* Bold font weight */
   padding: 15px; /* Padding for spacing */
+  position: sticky; /* Make the row sticky */
+  top: 0; /* Stick it to the top */
+  z-index: 10; /* Ensure it's above other rows */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow for better visibility */
 }
+
+
 
 
 /* Table Rows */
@@ -348,6 +353,8 @@ table tr:nth-child(even) td {
 }
 
 
+
+
 /* Edit Button */
 .btn-edit {
   background-color: var(--orange); /* Orange color */
@@ -379,9 +386,15 @@ table tr:nth-child(even) td {
 }
 
 
+
+
 .btn-delete:hover {
   background-color: darkred; /* Darker red on hover */
 }
+
+
+
+
 
 
 
@@ -541,6 +554,8 @@ label {
 }
 
 
+
+
 .btn-add-room-inner {
   background: linear-gradient(
     90deg,
@@ -557,6 +572,8 @@ label {
 }
 
 
+
+
 .btn-add-room-inner:hover {
   background: linear-gradient(
     90deg,
@@ -565,6 +582,8 @@ label {
   ) !important;
   transform: scale(1.05) !important;
 }
+
+
 
 
 /* Red Delete Button */
@@ -581,10 +600,14 @@ label {
 }
 
 
+
+
 .btn-red:hover {
   background-color: darkred; /* Darken on hover for better contrast */
   transform: scale(1.1); /* Slightly enlarge on hover */
 }
+
+
 
 
 /* Pagination Active State */
@@ -606,10 +629,14 @@ label {
 }
 
 
+
+
 .btn-save-changes:hover {
   background-color: #218838; /* Darker green on hover */
   transform: scale(1.05); /* Slightly enlarge on hover */
 }
+
+
 
 
 /* Cancel button */
@@ -624,10 +651,20 @@ label {
 }
 
 
+
+
 .btn-cancel:hover {
   background-color: #c82333; /* Darker red on hover */
   transform: scale(1.05); /* Slightly enlarge on hover */
 }
+
+
+
+
+
+
+
+
 
 
 

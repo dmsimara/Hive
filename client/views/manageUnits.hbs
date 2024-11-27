@@ -53,6 +53,10 @@
 
 
 
+
+
+
+
 <div class="container pt-5 pb-5">
   <h1>Unit Management</h1>
   <div class="row align-items-center">
@@ -71,45 +75,53 @@
   </div>
 
 
-<table class="table table-bordered">
-  <thead class="maroon-header">
-    <tr>
-      <th>#</th>
-      <th>Floor Number</th>
-      <th>Room Number</th>
-      <th>Room Type</th>
-      <th>Room Total Slot</th>
-      <th>Remaining Slot</th>
-      <th class="text-end">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#if units.length}}
-    {{#each units}}
-    <tr>
-      <th>{{this.room_id}}</th>
-      <td>{{this.floorNumber}}</td>
-      <td>{{this.roomNumber}}</td>
-      <td>{{this.roomType}}</td>
-      <td>{{this.roomTotalSlot}}</td>
-      <td>{{this.roomRemainingSlot}}</td>
-      <td class="text-end">
-        <a href="#" data-bs-toggle="modal" data-bs-target="#manageUnitModal" onclick="loadTenants('{{this.room_id}}')"
-          class="btn manage-button btn-small">Manage</a>
 
 
-        <a href="#" type="button" onclick="deleteUnit('{{this.room_id}}')" class="btn delete-button btn-small">
-          <i class="material-icons">person_remove</i>Delete</a>
-      </td>
-    </tr>
-    {{/each}}
-    {{else}}
-    <tr>
-      <td colspan="7" class="text-center">No rooms found</td>
-    </tr>
-    {{/if}}
-  </tbody>
-</table>
+<div class="table-container">
+  <table class="table table-bordered">
+    <thead class="maroon-header">
+      <tr>
+        <th>#</th>
+        <th>Floor Number</th>
+        <th>Room Number</th>
+        <th>Room Type</th>
+        <th>Room Total Slot</th>
+        <th>Remaining Slot</th>
+        <th class="text-end">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#if units.length}}
+      {{#each units}}
+      <tr>
+        <th>{{this.room_id}}</th>
+        <td>{{this.floorNumber}}</td>
+        <td>{{this.roomNumber}}</td>
+        <td>{{this.roomType}}</td>
+        <td>{{this.roomTotalSlot}}</td>
+        <td>{{this.roomRemainingSlot}}</td>
+        <td class="text-end">
+          <a href="#" data-bs-toggle="modal" data-bs-target="#manageUnitModal" onclick="loadTenants('{{this.room_id}}')"
+            class="btn manage-button btn-small">Manage</a>
+
+
+          <a href="#" type="button" onclick="deleteUnit('{{this.room_id}}')" class="btn delete-button btn-small">
+            <i class="material-icons">person_remove</i>Delete</a>
+        </td>
+      </tr>
+      {{/each}}
+      {{else}}
+      <tr>
+        <td colspan="7" class="text-center">No rooms found</td>
+      </tr>
+      {{/if}}
+    </tbody>
+  </table>
+</div>
+
+
+
+
 
 
 
@@ -149,6 +161,14 @@
 
 
 
+
+
+
+
+
+
+
+
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
@@ -159,5 +179,13 @@
 
 
 
+
+
+
+
 <script src="/js/manageUnits.js"></script>
+
+
+
+
 

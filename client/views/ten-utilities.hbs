@@ -26,6 +26,7 @@
         <div class="tracker">
             <ul>
                 <li>
+                  <li class="active"> 
                     <a href="/tenant/utilities"><i class="fas fa-lightbulb"></i> Utilities and Bills</a>
                 </li>
                 <li>
@@ -48,7 +49,7 @@
    <header class="dashboard-header">
     <div class="header-left">
         <h3 class="welcome-text">Welcome to Hive</h3>
-        <h1 class="dashboard-title">Dashboard</h1>
+        <h1 class="dashboard-title">Utilities and Bills</h1>
     </div>
     <div class="header-right">
         <input type="date" class="date-picker" value="2024-10-15">
@@ -59,80 +60,93 @@
     <div class="main-content">
       <!-- Monthly Utilities Bills and Room Total Balance -->
       <div class="row">
-        <!-- Monthly Utilities Bills -->
-        <section class="utilities-section">
-          <div class="utilities-header">
-            <h2>Monthly Utilities Bills</h2>
-            <div class="controls">
-              <i class="fas fa-download"></i>
-            </div>
-          </div>
-          <div class="bills">
-            <div class="bill">
-              <p>Unit Rental</p>
-              <p>Php 8,000</p>
-            </div>
-            <div class="bill">
-              <p>Electricity Consumption</p>
-              <p>Php 2,345.67</p>
-            </div>
-            <div class="bill">
-              <p>Water Usage</p>
-              <p>Php 345.67</p>
-            </div>
-            <div class="bill">
-              <p>Internet Connection</p>
-              <p>Php 1,499</p>
-            </div>
-            <div class="bill">
-              <p>Maintenance Fees</p>
-              <p>Php 600</p>
-            </div>
-          </div>
+  <!-- Monthly Utilities Bills -->
+  <section class="utilities-section">
+    <div class="utilities-header">
+      <h2>Monthly Utilities Bills</h2>
+      <div class="controls">
+        <i class="fas fa-download"></i>
+      </div>
+    </div>
+    <div class="bills">
+      <div class="bill">
+        <i class="fas fa-home"></i>
+        <p class="bill-title">Unit Rental</p>
+        <p class="bill-amount">Php 8,000</p>
+      </div>
+      <div class="bill">
+        <i class="fas fa-bolt"></i>
+        <p class="bill-title">Electricity Consumption</p>
+        <p class="bill-amount">Php 2,345.67</p>
+      </div>
+      <div class="bill">
+        <i class="fas fa-tint"></i>
+        <p class="bill-title">Water Usage</p>
+        <p class="bill-amount">Php 345.67</p>
+      </div>
+      <div class="bill">
+        <i class="fas fa-wifi"></i>
+        <p class="bill-title">Internet Connection</p>
+        <p class="bill-amount">Php 1,499</p>
+      </div>
+      <div class="bill">
+        <i class="fas fa-tools"></i>
+        <p class="bill-title">Maintenance Fees</p>
+        <p class="bill-amount">Php 600</p>
+      </div>
+    </div>
         </section>
 
-        <!-- Room Total Balance -->
-        <aside class="balance-section">
-          <div class="total-balance">
-            <h2>Room #{{roomNumber}} Total Balance</h2>
-            <p>Php 12,479.34</p>
-            <small>Shared Balance: Php 3,119.84</small>
-          </div>
-          <div class="usage-summary">
-            <h3>Usage Summary</h3>
-            <p>Internet: 50 Mbps</p>
-            <p>Electricity: 345 kWh</p>
-            <p>Water: 25 m³</p>
-          </div>
-        </aside>
+     <!-- Right Side Cards -->
+  <aside class="right-side">
+    <!-- Room Total Balance -->
+    <div class="total-balance-card">
+      <h2>Room #01 Total Balance</h2>
+      <p class="main-balance">Php 12,479.34</p>
+      <div class="shared-balance-card">
+        <h3>Shared Balance</h3>
+        <p>Php 3,119.84</p>
+        <!-- Paid Indicator -->
+        <span class="paid-indicator paid">Paid</span>
       </div>
     </div>
 
-    <!-- Utilities History -->
+    <!-- Usage Summary -->
+    <div class="usage-summary-card">
+      <h3>Usage Summary</h3>
+      <div class="usage-circle">
+        <p>50 Mbps</p>
+      </div>
+      <p>Your Subscription is Internet Only</p>
+    </div>
+  </aside>
+</div>
+
     <section class="utilities-history">
-      <h2>Utilities History</h2>
-      <table>
+    <h2>Utilities History</h2>
+    <table>
         <thead>
-          <tr>
-            <th>Month</th>
-            <th>Total Balance</th>
-            <th>Shared Balance</th>
-          </tr>
+            <tr>
+                <th>Month</th>
+                <th><i class="fas fa-wallet"></i> Total Balance</th>
+                <th><i class="fas fa-users"></i> Shared Balance</th>
+            </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Aug 2024 - Sept 2024</td>
-            <td>Php 13,178.89</td>
-            <td>Php 3,294.73</td>
-          </tr>
-          <tr>
-            <td>July 2024 - Aug 2024</td>
-            <td>Php 12,592.12</td>
-            <td>Php 3,148.03</td>
-          </tr>
+            <tr>
+                <td>Aug 2024 - Sept 2024</td>
+                <td>Php 13,178.89</td>
+                <td>Php 3,294.73</td>
+            </tr>
+            <tr>
+                <td>July 2024 - Aug 2024</td>
+                <td>Php 12,592.12</td>
+                <td>Php 3,148.03</td>
+            </tr>
         </tbody>
-      </table>
-    </section>
+    </table>
+</section>
+
   </main>
 </div>
 

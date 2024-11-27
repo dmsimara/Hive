@@ -1,9 +1,11 @@
 /* General reset */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
+
 
 .dashboard-container {
     display: flex;
@@ -11,6 +13,7 @@
     height: 100vh;
     width: 100vw;
 }
+
 
 .sidebar {
     background-color: #F4F4F4;
@@ -20,6 +23,7 @@
     flex-direction: column;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
+
 
 .sidebar-card {
     background-color: #FFFFFF;
@@ -31,14 +35,17 @@
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
+
 .logo {
     margin-bottom: 20px;
 }
+
 
 .logo-img {
     width: 140px;
     height: auto;
 }
+
 
 .sidebar p {
     font-size: 0.9em;
@@ -47,14 +54,17 @@
     margin: 10px 0;
 }
 
+
 .menu ul, .tracker ul {
     list-style: none;
     padding: 0;
 }
 
+
 .menu ul li, .tracker ul li {
     margin: 10px 0;
 }
+
 
 .menu ul li a, .tracker ul li a {
     text-decoration: none;
@@ -68,15 +78,18 @@
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+
 .menu ul li.active a {
     background: linear-gradient(90deg, #FF7F32 0%, #FFB548 100%);
     color: white;
 }
 
+
 .menu ul li a:hover, .tracker ul li a:hover {
     background-color: #FFE3D5;
     color: #FF7F32;
 }
+
 
 /* Main content layout */
 .main-content {
@@ -84,6 +97,7 @@
     padding: 20px;
     overflow: auto;
 }
+
 
 /* Header */
 .header {
@@ -93,21 +107,25 @@
     margin-bottom: 20px;
 }
 
+
 .header-right {
     display: flex;
     align-items: center;
 }
+
 
 .header-right input {
     padding: 10px;
     margin-right: 10px;
 }
 
+
 /* Room Overview */
 .room-overview {
     display: flex;
     justify-content: space-between;
 }
+
 
 /* Left Section */
 .left-section {
@@ -117,24 +135,26 @@
     gap: 20px;
 }
 
+
 /* Tenants Section */
 .tenants-section, .tenant-info-wrapper {
     flex: 1;
     display: flex;
     flex-direction: column;
 }
-
 /* Tenants Cards */
 .tenant-cards {
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* 4 columns */
     gap: 20px;
+    height: 325px;
     justify-content: flex-start;
     margin-top: 20px;
 }
 
+
 .tenant-card.tenants-template {
-    background: linear-gradient(to bottom, rgba(255, 127, 50, 1) 0%, rgba(0, 0, 0, 0.15) 100%); /* Main orange with a subtle black gradient */
+    background: linear-gradient(to bottom, rgba(10, 10, 10, 0.8) 0%, rgba(255, 127, 50, 1) 100%); /* Lighter dark side and orange bottom */
     color: white;
     padding: 30px;
     border-radius: 15px;
@@ -144,59 +164,45 @@
     gap: 15px;
     width: 260px;  /* Slightly larger tenant card */
     text-align: center;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, background 0.5s ease, color 0.3s ease; /* Added transition for smooth color change */
 }
+
 
 .tenant-card.tenants-template:hover {
     transform: scale(1.05);
+    background: linear-gradient(to bottom, rgba(255, 150, 80, 1) 0%, rgba(255, 127, 50, 1) 100%); /* Lighter orange and smoother gradient */
+    color: black; /* Change text color to black for better contrast */
 }
+
+
+
 
 .star-icon {
     font-size: 1.5em;
 }
 
+
 .tenant-avatar img {
     border-radius: 50%;
     width: 100px;
     height: 100px;
-}
-
-/* Tenant Info Section */
+}/* Tenant Info Section */
 .tenants-info {
     background-color: white;
-    border: 3px solid #FF7F32; /* Wider border for tenant info section */
-    padding: 15px;
+    border: 3px solid #FF7F32; /* Orange border */
+    padding: 20px;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
     font-size: 0.9em;
-    max-width: 400px;
+    max-width: 1000px;
     margin-bottom: 20px;
+    height: auto; /* Ensures the container expands based on its content */
+    box-sizing: border-box; /* Ensures padding doesn't affect the width/height */
 }
 
-.tenant-info-card {
-    display: flex;
-    gap: 20px;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    flex: 1;
-}
 
-.tenant-info-card:last-child {
-    border-bottom: none;
-}
-
-.avatar img {
-    border-radius: 50%;
-    width: 70px;
-    height: 70px;
-}
-
-.tenant-details p {
-    margin: 5px 0;
-}
-
-/* Layout for Tenant Info (2x2) */
+/* Tenant Info Cards */
 .tenant-info-cards {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* 2 columns */
@@ -204,39 +210,82 @@
     margin-top: 20px;
 }
 
+
 .tenant-info-card {
+    display: flex;
+    gap: 20px;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    flex: 1;
     background-color: #f9f9f9;
     padding: 15px;
     border-radius: 10px;
     border: 1px solid #ddd;
+    justify-content: flex-start; /* Align elements to the start */
+    align-items: center; /* Center align items vertically */
+}
+
+
+/* Adjust spacing between cards for appropriate visual flow */
+.tenant-info-card:last-child {
+    border-bottom: none; /* Remove bottom border from the last card */
+}
+
+
+.tenant-info-cards > .tenant-info-card {
+    margin-bottom: 20px; /* Ensure space between cards */
+}
+
+
+/* Avatar */
+.avatar {
     display: flex;
-    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    width: 70px; /* Set the width of the avatar */
+    height: 70px; /* Set the height of the avatar */
+    overflow: hidden; /* Ensure the avatar image stays within the bounds */
+    border-radius: 50%;
 }
 
-.tenant-info-card img {
-    width: 70px;
-    height: 70px;
+
+.avatar img {
+    width: 100%; /* Allow the image to take the full size of the container */
+    height: 100%; /* Ensure the image fills the container without escaping */
+    object-fit: cover; /* Maintain aspect ratio while filling the container */
 }
 
-.tenant-details {
-    flex: 1;
+
+/* Tenant Details */
+.tenant-details p {
+    margin: 5px 0;
 }
+
 
 /* Right Section */
 .right-section {
     flex: 1;
 }
 
-/* Room Info */
+
 .room-number-card {
-    background-color: #FF7F32;
-    color: white;
+    background-color: #6F4F27; /* Cacao (dark brown) background color */
+    color: white; /* Font color */
     padding: 30px;
-    border-radius: 10px;
+    border-radius: 10px; /* Rounded corners */
     text-align: center;
     width: 200px;
     margin: 0 auto;
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
 }
+
+
+.room-number-card:hover {
+    background-color: #8B5D33; /* Lighter brown on hover */
+}
+
+
+
 
 .circle {
     background-color: white;
@@ -250,6 +299,7 @@
     margin: 0 auto;
 }
 
+
 /* Button Styling */
 .edit-info-btn {
     background-color: #FF7F32;
@@ -259,6 +309,65 @@
     cursor: pointer;
 }
 
+
 .edit-info-btn:hover {
     background-color: #FFB548;
 }
+
+/* Tenant Name Font Style */
+.tenant-card.tenants-template p {
+    font-family: 'Inter', sans-serif;  /* Using Inter font */
+    font-weight: bold;                 /* Make the names bold */
+    font-size: 1.2em;                  /* Slightly larger font size */
+    text-transform: capitalize;        /* Capitalize the first letter of each word */
+    letter-spacing: 1px;               /* Add some space between letters for a clean look */
+    margin-top: 10px;                  /* Add some margin at the top for spacing */
+}
+
+/* Room Number Card (Rectangle) */
+.room-number-card {
+    background-color: white; /* Change background to white */
+    color: #6F4F27; /* Font color */
+    padding: 30px;
+    border-radius: 10px; /* Rounded corners */
+    text-align: center;
+    width: 400px;
+    height: 800px;
+    margin: 0 auto;
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Added shadow */
+}
+
+.room-number-card:hover {
+    background-color: #f0f0f0; /* Light gray on hover */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Darker shadow on hover */
+}
+
+/* Circle Template for Room Number */
+.circle {
+    background-color: #2a1617; /* Change background to brown */
+    color: white; /* Change text color to white */
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+/* Room Number Text inside Circle */
+.circle h1 {
+    font-size: 3em;
+    margin: 0;
+}
+
+/* Text for Room No. outside the Circle */
+.room-number-card p {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #6F4F27;
+    margin-top: 10px;
+}
+
+
