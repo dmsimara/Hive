@@ -151,7 +151,7 @@ app.get("/admin/dashboard", verifyToken, async (req, res) => {
     }
   });
   
-app.post("/admin/dashboard", findDashTenants);
+app.post("/admin/dashboard", verifyToken, findDashTenants);
 
 
 app.get("/admin/manage/unit", verifyToken, async (req, res) => {

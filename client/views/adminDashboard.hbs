@@ -61,11 +61,13 @@
         </a>
       </h3>
 
-      <form class="d-flex" id="tenantSearchForm" role="search" method="POST" action="#" novalidate>
+      <form class="d-flex" id="tenantSearchForm" role="search" method="POST" action="/admin/dashboard" novalidate>
         <input class="form-control me-2" type="search" placeholder="Search" name="searchTenants" aria-label="Search"
-          required id="searchTenantsInput">
+          required id="searchTenantsInput" value="{{lastSearchTerm}}" />
         <button class="btn btn-outline-success btn-sm" type="submit">Search</button>
       </form>
+
+
 
       <div class="tenant-cards" id="tenantCardsContainer">
         {{#if tenants.length}}
