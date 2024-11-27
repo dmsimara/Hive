@@ -106,45 +106,6 @@ document.addEventListener("DOMContentLoaded", () => {
             alert('There was an error adding the tenant.');
         }
     });
-
-    // Edit tenant form submission
-    editTenantForm.addEventListener("submit", async function(event) {
-        event.preventDefault();
-        const tenantId = document.getElementById("tenantId").value;
-        const tenantData = {
-            tenantFirstName: document.getElementById("editFirstName").value.trim(),
-            tenantLastName: document.getElementById("editLastName").value.trim(),
-            tenantEmail: document.getElementById("editEmail").value.trim(),
-            mobileNum: document.getElementById("editMobile").value.trim(),
-            gender: document.getElementById("editGender").value.trim(),
-            tenantGuardianName: document.getElementById("editTenantGuardianName").value.trim(),
-            tenantAddress: document.getElementById("editTenantAddress").value.trim(),
-            tenantGuardianNum: document.getElementById("editTenantGuardianNum").value.trim()
-        };
-
-        if (!validateTenantData(tenantData)) {
-            alert("Please fill in all required fields.");
-            return;
-        }
-
-        try {
-            const response = await fetch(`/api/auth/updateTenant/${tenantId}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(tenantData)
-            });
-            const data = await response.json();
-            if (data.success) {
-                alert("Tenant updated successfully!");
-                window.location.href = '/admin/dashboard/userManagement';
-            } else {
-                alert("Error updating tenant: " + data.message);
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('There was an error updating the tenant.');
-        }
-    });
 });
 
 function validateTenantData(tenantData) {

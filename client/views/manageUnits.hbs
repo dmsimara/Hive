@@ -71,93 +71,81 @@
   </div>
 
 
-<table class="table table-bordered">
-  <thead class="maroon-header">
-    <tr>
-      <th>#</th>
-      <th>Floor Number</th>
-      <th>Room Number</th>
-      <th>Room Type</th>
-      <th>Room Total Slot</th>
-      <th>Remaining Slot</th>
-      <th class="text-end">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#if units.length}}
-    {{#each units}}
-    <tr>
-      <th>{{this.room_id}}</th>
-      <td>{{this.floorNumber}}</td>
-      <td>{{this.roomNumber}}</td>
-      <td>{{this.roomType}}</td>
-      <td>{{this.roomTotalSlot}}</td>
-      <td>{{this.roomRemainingSlot}}</td>
-      <td class="text-end">
-        <a href="#" data-bs-toggle="modal" data-bs-target="#manageUnitModal" onclick="loadTenants('{{this.room_id}}')"
-          class="btn manage-button btn-small">Manage</a>
-
-
-        <a href="#" type="button" onclick="deleteUnit('{{this.room_id}}')" class="btn delete-button btn-small">
-          <i class="material-icons">person_remove</i>Delete</a>
-      </td>
-    </tr>
-    {{/each}}
-    {{else}}
-    <tr>
-      <td colspan="7" class="text-center">No rooms found</td>
-    </tr>
-    {{/if}}
-  </tbody>
-</table>
-
-
-
-
-<!-- Modal for Manage Unit -->
-<div class="modal fade" id="manageUnitModal" tabindex="-1" aria-labelledby="manageUnitModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="manageUnitModalLabel">Tenant List</h5>
-        <p>Total Slot: <span id="totalSlot"></span></p>
-        <p>Rented: <span id="rentedSlot"></span></p>
-        <p>Remaining: <span id="remainingSlot"></span></p>
-      </div>
-      <div class="modal-body">
   <table class="table table-bordered">
     <thead class="maroon-header">
       <tr>
-        <th scope="col">Tenant ID#</th>
-        <th scope="col">Tenant Name</th>
-        <th scope="col">Rent From</th>
-        <th scope="col">Rent Until</th>
-        <th scope="col">Period Remaining</th>
-        <th scope="col" class="text-end">Action</th>
+        <th>#</th>
+        <th>Floor Number</th>
+        <th>Room Number</th>
+        <th>Room Type</th>
+        <th>Room Total Slot</th>
+        <th>Remaining Slot</th>
+        <th class="text-end">Action</th>
       </tr>
     </thead>
-    <tbody id="tenantList">
-      <!-- JavaScript will insert tenant rows here -->
+    <tbody>
+      {{#if units.length}}
+      {{#each units}}
+      <tr>
+        <th>{{this.room_id}}</th>
+        <td>{{this.floorNumber}}</td>
+        <td>{{this.roomNumber}}</td>
+        <td>{{this.roomType}}</td>
+        <td>{{this.roomTotalSlot}}</td>
+        <td>{{this.roomRemainingSlot}}</td>
+        <td class="text-end">
+          <a href="#" data-bs-toggle="modal" data-bs-target="#manageUnitModal" onclick="loadTenants('{{this.room_id}}')"
+            class="btn manage-button btn-small">Manage</a>
+
+
+          <a href="#" type="button" onclick="deleteUnit('{{this.room_id}}')" class="btn delete-button btn-small">
+            <i class="material-icons">person_remove</i>Delete</a>
+        </td>
+      </tr>
+      {{/each}}
+      {{else}}
+      <tr>
+        <td colspan="7" class="text-center">No rooms found</td>
+      </tr>
+      {{/if}}
     </tbody>
   </table>
-</div>
 
 
 
 
-
-
-
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+  <!-- Modal for Manage Unit -->
+  <div class="modal fade" id="manageUnitModal" tabindex="-1" aria-labelledby="manageUnitModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="manageUnitModalLabel">Tenant List</h5>
+          <p>Total Slot: <span id="totalSlot"></span></p>
+          <p>Rented: <span id="rentedSlot"></span></p>
+          <p>Remaining: <span id="remainingSlot"></span></p>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered">
+            <thead class="maroon-header">
+              <tr>
+                <th scope="col">Tenant ID#</th>
+                <th scope="col">Tenant Name</th>
+                <th scope="col">Rent From</th>
+                <th scope="col">Rent Until</th>
+                <th scope="col">Period Remaining</th>
+                <th scope="col" class="text-end">Action</th>
+              </tr>
+            </thead>
+            <tbody id="tenantList">
+              <!-- JavaScript will insert tenant rows here -->
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-
-
-
-<script src="/js/manageUnits.js"></script>
-
+  <script src="/js/manageUnits.js"></script>
