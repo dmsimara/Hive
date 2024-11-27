@@ -180,36 +180,67 @@ main {
 .notification-icon:hover {
   color: #555; /* Slightly darker on hover */
 }
-
-/* Utilities Section */
-.row { 
-  display: flex; 
-  justify-content: space-between; 
-  gap: 20px; 
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 20px;
 }
 
+/* Left side: Utilities Section */
 .utilities-section {
   width: 65%;
   background: #fff;
   padding: 20px;
   border-radius: 8px;
-  border: 2px solid orange; /* Orange border added */
+  border: 2px solid #FFA45B; /* Orange border */
 }
 
-.balance-section {
+/* Right side: Room Balance and Usage */
+.right-side {
   width: 30%;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 15px; /* Space between the cards */
 }
 
-.total-balance {
-  background: linear-gradient(to right, #ff7e5f, #feb47b);
-  color: #fff;
-  padding: 20px;
+/* Room Total Balance Card */
+.total-balance-card {
+  background: linear-gradient(to right, #FF6B45, #FFAA44);
+  color: white;
+  padding: 15px;
   text-align: center;
   border-radius: 8px;
 }
+
+.total-balance-card h2 {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.total-balance-card .main-balance {
+  font-size: 1.8rem;
+  margin: 10px 0;
+}
+
+.shared-balance {
+  background: #ffffff;
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 8px;
+  color: #333;
+}
+
+.shared-balance-card {
+  background: #fff;
+  color: #333;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 1rem;
+}
+
 
 .usage-summary {
   background: #fff;
@@ -217,6 +248,35 @@ main {
   border-radius: 8px;
   text-align: center;
   border: 1px solid #ddd; /* Added border to make usage summary visible */
+}
+
+/* Usage Summary Card */
+.usage-summary-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.usage-summary-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+/* Gradient Circle for Usage */
+.usage-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: conic-gradient(#FF6B45 75%, #FFAA44 25%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+  color: white;
+  font-weight: bold;
+  font-size: 1.2rem;
 }
 
 .utilities-header {
@@ -232,38 +292,143 @@ main {
   cursor: pointer;
 }
 
+/* Utilities Bills Section */
 .bills {
-  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .bill {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
-}
-
-.utilities-history {
-  margin-top: 30px;
-}
-
-.utilities-history table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.utilities-history th, .utilities-history td {
-  padding: 12px;
-  text-align: center;
+  padding: 10px 15px;
   border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
 }
 
-.utilities-history th {
-  background-color: #f4f4f4;
+.bill i {
+  font-size: 1.5rem;
+  color: #FF6B45;
 }
 
-.date-picker {
+.bill-title {
+  flex: 1;
+  margin: 0 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.bill-amount {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #444;
+}
+
+/* Shared Balance Paid Indicator */
+.paid-indicator {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 5px 10px;
+  font-size: 0.8rem;
+  border-radius: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.paid {
+  background: #4CAF50; /* Green for Paid */
+  color: white;
+}
+
+.unpaid {
+  background: #FF6B45; /* Orange for Unpaid */
+  color: white;
+}
+
+/* Utilities History Section */
+.utilities-history-card {
+  background: #ffffff; /* White background for card clarity */
+  border: 1px solid #ddd; /* Subtle border */
+  border-radius: 8px; /* Rounded corners */
+  padding: 20px; /* Spacing inside the card */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+  margin-top: 20px; /* Spacing from other sections */
+}
+
+.utilities-history-header {
   display: flex;
-  gap: 15px;
-  font-size: 18px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px; /* Space between header and list */
+}
+
+.utilities-history-header h3 {
+  font-size: 1.5rem; /* Slightly larger text */
+  color: #333; /* Dark gray for emphasis */
+  font-weight: bold;
+}
+
+.utilities-history-header .year {
+  font-size: 1rem;
+  color: #777; /* Muted gray for a secondary focus */
+}
+
+.utilities-history-header i {
+  font-size: 1.8rem; /* Icon size slightly larger */
+  color: #FF6B45; /* Accent color for visibility */
+}
+
+.utilities-history-list {
+  margin-top: 10px; /* Add spacing from the header */
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px; /* Internal spacing */
+  border-bottom: 1px solid #ddd; /* Divider between items */
+  transition: background 0.3s ease; /* Smooth hover effect */
+}
+
+.history-item:last-child {
+  border-bottom: none; /* Remove the border for the last item */
+}
+
+.history-item:hover {
+  background: #f9f9f9; /* Light gray background on hover */
+}
+
+.history-item .title {
+  font-size: 1rem;
+  font-weight: 500; /* Medium weight for readability */
+  color: #444; /* Dark gray text */
+}
+
+.history-item .amount {
+  font-size: 1rem;
+  font-weight: bold; /* Highlight amounts */
+  color: #FF6B45; /* Accent color for visibility */
+}
+
+.history-item .status {
+  font-size: 0.9rem;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 15px;
+  text-align: center;
+}
+
+.history-item .status.paid {
+  background: #4CAF50; /* Green for Paid */
+  color: white;
+}
+
+.history-item .status.unpaid {
+  background: #FF6B45; /* Orange for Unpaid */
+  color: white;
 }

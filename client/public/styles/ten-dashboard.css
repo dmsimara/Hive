@@ -7,6 +7,7 @@
 body, html {
     font-family: 'Inter', sans-serif;
     height: 100%;
+
 }
 
 .dashboard-container {
@@ -148,6 +149,8 @@ body, html {
     border-radius: 15px;
     color: white;
     margin-top: 30px;
+    margin-bottom: 20px; /* Added space below the header */
+    
 }
 
 .room-header h1 {
@@ -164,7 +167,17 @@ body, html {
     padding: 20px;
     border-radius: 12px;
     border: 3px solid #FFA45B;
+    margin-top: 20px; /* Ensure space between sections */
 }
+
+.overview-header h2 {
+    font-size: 1.4em; /* Slightly smaller font size */
+    font-weight: 600;
+    white-space: nowrap; /* Prevents wrapping */
+    margin: 0; /* Removes unnecessary spacing */
+    overflow: hidden; /* Ensures no text overflows */
+}
+
 
 .overview-header {
     display: flex;
@@ -174,17 +187,23 @@ body, html {
 }
 
 .date-card {
-    background-color: white;
-    padding: 8px 15px;
-    border-radius: 25px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f8f8f8; /* Ensure background is subtle */
+    padding: 5px 10px; /* Adjust padding for a more compact design */
+    border-radius: 12px; /* Keep the oblong shape */
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1); /* Optional: light shadow for clarity */
+    display: inline-flex; /* Aligns content horizontally inside the oblong */
+    align-items: center; /* Centers the content vertically */
+}
+
+.date-card p {
+    font-size: 0.9em; /* Slightly smaller font to fit the layout */
+    margin: 0; /* Removes unnecessary margin */
     display: flex;
     align-items: center;
 }
 
-.date-card p {
-    font-size: 0.8em;
-    color: #666;
+.calendar-icon {
+    margin-left: 5px; /* Adds spacing between text and icon */
 }
 
 .utilities-cards {
@@ -435,6 +454,9 @@ body, html {
         padding: 10px;
     }
 }
+
+
+
 
 
 
