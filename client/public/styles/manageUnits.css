@@ -1,6 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
 
 
+
+
 :root {
   --yellow: rgb(255, 251, 151); /* #FFFB97 */
   --orange: rgb(254, 127, 66); /* #FE7F42 */
@@ -9,6 +11,8 @@
   --dark-gray: rgb(42, 22, 23); /* #2A1617 */
   --background-color: rgb(245, 245, 245);
 }
+
+
 
 
 html,
@@ -22,11 +26,15 @@ body {
 }
 
 
+
+
 .navbar {
   padding: 0 10px;
   border-bottom: 1px solid var(--orange);
   background-color: var(--background-color) !important;
 }
+
+
 
 
 .navbar-brand {
@@ -36,9 +44,13 @@ body {
 }
 
 
+
+
 .navbar-brand:hover {
   opacity: 0.8;
 }
+
+
 
 
 .navbar-nav {
@@ -47,6 +59,8 @@ body {
   width: 100%;
   gap: 30px;
 }
+
+
 
 
 .nav-link {
@@ -59,12 +73,16 @@ body {
 }
 
 
+
+
 .nav-link:hover,
 .nav-link.active {
   color: var(--orange) !important;
   background-color: rgba(255, 158, 0, 0.18);
   transform: scale(1.05);
 }
+
+
 
 
 .active-tab {
@@ -74,6 +92,8 @@ body {
 }
 
 
+
+
 .nav-link.active-tab {
   color: var(--orange) !important;
   background-color: rgba(255, 158, 0, 0.18);
@@ -81,11 +101,15 @@ body {
 }
 
 
+
+
 .user-pic {
   width: 40px;
   border-radius: 50%;
   cursor: pointer;
 }
+
+
 
 
 .sub-menu-wrap {
@@ -99,9 +123,13 @@ body {
 }
 
 
+
+
 .sub-menu-wrap.open-menu {
   max-height: 400px;
 }
+
+
 
 
 .sub-menu {
@@ -112,10 +140,14 @@ body {
 }
 
 
+
+
 .user-info {
   display: flex;
   align-items: center;
 }
+
+
 
 
 .user-info h3 {
@@ -125,11 +157,15 @@ body {
 }
 
 
+
+
 .user-info img {
   width: 60px;
   border-radius: 50%;
   margin-right: 15px;
 }
+
+
 
 
 .sub-menu hr {
@@ -141,6 +177,8 @@ body {
 }
 
 
+
+
 .sub-menu-link {
   display: flex;
   align-items: center;
@@ -150,12 +188,16 @@ body {
 }
 
 
+
+
 .sub-menu-link p {
   width: 100%;
   line-height: 40px;
   margin: 0;
   flex: 1;
 }
+
+
 
 
 .sub-menu-link .material-icons {
@@ -167,15 +209,21 @@ body {
 }
 
 
+
+
 .sub-menu-link span {
   font-size: 22px;
   transition: transform 0.5s;
 }
 
 
+
+
 .sub-menu-link:hover span {
   transform: translateX(5px);
 }
+
+
 
 
 .sub-menu-link:hover p {
@@ -194,10 +242,14 @@ body {
 }
 
 
+
+
 .manage-button:hover {
   background-color: darkorange; /* Darken on hover */
   transform: scale(1.05); /* Add scale effect */
 }
+
+
 
 
 /* Delete Button - Red */
@@ -213,9 +265,13 @@ body {
 }
 
 
+
+
 .delete-button i {
   color: white; /* White icon */
 }
+
+
 
 
 .delete-button:hover {
@@ -224,9 +280,13 @@ body {
 }
 
 
+
+
 .delete-button:hover i {
   color: black; /* Change icon color to black on hover */
 }
+
+
 
 
 /* Add Room Button - Orange with Black Blend */
@@ -246,9 +306,13 @@ body {
 }
 
 
+
+
 .add-room-button i {
   color: white; /* White icon */
 }
+
+
 
 
 .add-room-button:hover {
@@ -261,6 +325,8 @@ body {
 }
 
 
+
+
 /* Table Rows */
 table td {
   text-align: left;
@@ -270,15 +336,21 @@ table td {
 }
 
 
+
+
 /* Alternate row colors */
 table tr:nth-child(odd) td {
   background-color: rgba(245, 245, 220, 8); /* Teal background for odd rows */
 }
 
 
+
+
 table tr:nth-child(even) td {
   background-color: rgb(255, 255, 255); /* Lavender background for even rows */
 }
+
+
 
 
 /* Table Header - Maroon Color */
@@ -290,6 +362,35 @@ thead.maroon-header th {
   font-weight: bold; /* Bold text for emphasis */
   border: 1px solid var(--gray); /* Optional: border to match the theme */
 }
+
+
+/* Make the table body scrollable */
+.table-container {
+  max-height: 400px; /* Set the height for the scrollable area */
+  overflow-y: auto;  /* Enable vertical scrolling */
+}
+
+
+/* Table Styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+
+/* Table Header Styles */
+thead th {
+  background-color: var(--maroon);  /* Header background color */
+  color: white; /* Header text color */
+  text-align: center; /* Align text to the center */
+  padding: 10px;
+  font-weight: bold;
+  border: 1px solid var(--gray); /* Optional: border to match the theme */
+}
+
+
+
+
 
 
 
