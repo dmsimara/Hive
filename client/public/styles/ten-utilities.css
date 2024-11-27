@@ -5,40 +5,85 @@
   display: flex; 
   height: 100vh; 
   width: 100%;
-  overflow: hidden; /* Ensures no unintended horizontal scrolling */
+  overflow: hidden; /* Prevent unintended scrolling */
 }
 
-/* Sidebar */
 .sidebar {
-  width: 250px; /* Adjust width as needed */
-  background-color: #fff; /* Set to white */
-  color: #333;
-  padding: 20px;
+  background-color: #F4F4F4;
+  width: 20%;
+  padding: 20px 0; /* Removed horizontal padding for sagad alignment */
   display: flex;
   flex-direction: column;
-  position: fixed; /* Fixed to the left side */
-  height: 100%;
-  top: 0;
+  position: fixed; /* Fixed to ensure alignment to the left */
   left: 0;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Optional: Shadow effect */
+  top: 0;
+  height: 100%; /* Full height */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  overflow-y: auto; /* Scrollable sidebar */
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
 }
 
-/* Sidebar content (logo, menu, etc.) */
-.sidebar .logo img { width: 120px; margin-bottom: 20px; }
+.sidebar::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome/Safari */
+}
 
-
-.menu-title { font-size: 14px; text-transform: uppercase; margin: 20px 0 10px; color: #a0a0a0; }
-
-.menu ul li a {
-  color: #333; 
-  font-size: 16px;
+.sidebar-card {
+  background-color: #FFFFFF;
+  border-radius: 15px;
+  padding: 15px;
   display: flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
+  flex-direction: column;
+  height: 100%;
+  width: 70%;
 }
 
-.menu ul li a:hover { color: #ff7e5f; }
+.logo-img {
+  width: 120px; /* Reduced width for a smaller logo */
+  height: auto;
+}
+
+
+.menu ul, .tracker ul {
+  list-style: none; /* Remove bullets */
+  padding: 0;
+}
+
+.menu ul li, .tracker ul li {
+  margin: 10px 0;
+}
+
+.menu ul li a, .tracker ul li a {
+  text-decoration: none;
+  color: #333;
+  font-size: 1em;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.menu ul li.active a {
+  background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
+  color: white;
+}
+
+/* Logout Button */
+.logout-container {
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid #ddd;
+  text-align: center;
+}
+
+.logout-button i {
+  margin-right: 10px;
+  color: #A22F05;
+}
+
+.logout-button:hover {
+  background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
+  color: white;
+}
+
 
 .tracker ul li a {
   color: #333;
@@ -47,23 +92,74 @@
 .tracker ul li a:hover { color: #ff7e5f; }
 
 /* Main Content */
+
 main {
-  margin-left: 250px; /* Adjust this to match sidebar width */
-  flex: 1;
-  padding: 0 0 0 20px; /* Adjust the padding to make sure there's no gap on the left */
+  margin-left: 15%; /* Account for the sidebar width */
+  width: 85%; /* Align the right content to the edge */
+  padding: 0 20px; /* Ensure consistent spacing */
   overflow-y: auto; /* Enable vertical scrolling */
-  height: 100vh; /* Ensure content fills the full height */
+  height: 100vh;
+  scrollbar-width: thin; /* Optional: visible scrollbar styling */
 }
 
-/* Header */
-.header {
+.row { 
+  display: flex; 
+  justify-content: space-between; 
+  gap: 20px; 
+}
+/* General Header Styling */
+.dashboard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  background-color: #f9f9f9; /* Light background for contrast */
+  padding: 1.5rem;
+  border-bottom: 1px solid #ddd; /* Adds a subtle divider */
 }
 
-.header h1 { font-size: 28px; color: #333; }
+/* Left Section: Welcome Texts */
+.header-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.welcome-text {
+  font-size: 1.2rem;
+  color: #555; /* Muted color for a secondary focus */
+  margin: 0;
+}
+
+.dashboard-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333; /* Stronger emphasis color */
+  margin: 0.2rem 0 0 0; /* Adds slight spacing */
+}
+
+/* Right Section: Date Picker and Notification Icon */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.date-picker {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 0.3rem;
+  color: #333;
+}
+
+.notification-icon {
+  font-size: 1.5rem;
+  color: #888; /* Neutral color */
+  cursor: pointer;
+}
+
+.notification-icon:hover {
+  color: #555; /* Slightly darker on hover */
+}
 
 /* Utilities Section */
 .row { 
