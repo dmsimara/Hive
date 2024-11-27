@@ -1,43 +1,60 @@
 <div class="container">
-  <!-- Sidebar -->
   <aside class="sidebar">
-    <div class="logo">
-      <a href="#">
-        <img src="/images/hiveLight.png" alt="Hive Logo">
-      </a>
-    </div>
+    <div class="sidebar-card">
+        <!-- Logo Section -->
+        <div class="logo">
+            <a href="index.html">
+                <img src="/images/hiveLight.png" alt="Hive Logo" class="logo-img">
+            </a>
+        </div>
 
-    <p class="menu-title">Menu</p>
-    <nav class="menu">
-      <ul>
-        <li><a href="/tenant/dashboard"><i class="fas fa-columns"></i> Dashboard</a></li>
-        <li><a href="/tenant/room-details"><i class="fas fa-door-open"></i> Room Details</a></li>
-      </ul>
-    </nav>
-    <p class="menu-title">Tracker</p>
-    <div class="tracker">
-      <ul>
-        <li class="active"><a href="/tenant/utilities"><i class="fas fa-lightbulb"></i> Utilities and Bills</a></li>
-        <li><a href="/tenant/announcement"><i class="fas fa-bullhorn"></i> Announcement</a></li>
-      </ul>
-    </div>
-    <div class="logout-container">
-      <a href="#" id="logoutButton" class="logout-button">
-        <i class="fas fa-sign-out-alt"></i> Log Out
-      </a>
+        <!-- Menu Section -->
+        <p class="menu-title">Menu</p>
+        <nav class="menu">
+            <ul>
+                <li class="active">
+                    <a href="/tenant/dashboard"><i class="fas fa-columns"></i> Dashboard</a>
+                </li>
+                <li>
+                    <a href="/tenant/room-details"><i class="fas fa-door-open"></i> Room Details</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Tracker Section -->
+        <p class="menu-title">Tracker</p>
+        <div class="tracker">
+            <ul>
+                <li>
+                    <a href="/tenant/utilities"><i class="fas fa-lightbulb"></i> Utilities and Bills</a>
+                </li>
+                <li>
+                    <a href="/tenant/announcement"><i class="fas fa-bullhorn"></i> Announcement</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Logout Button in Sidebar -->
+        <div class="logout-container">
+            <a href="#" id="logoutButton" class="logout-button">
+                <i class="fas fa-sign-out-alt"></i> Log Out
+            </a>
+        </div>
     </div>
   </aside>
 
   <!-- Main Content -->
   <main>
-    <header class="header">
-      <h1>Welcome to Hive</h1>
-      <p class="subtitle">Utilities and Bills</p>
-      <div class="date-picker">
-        <i class="fas fa-calendar-alt"></i>
-        <i class="fas fa-bell"></i>
-      </div>
-    </header>
+   <header class="dashboard-header">
+    <div class="header-left">
+        <h3 class="welcome-text">Welcome to Hive</h3>
+        <h1 class="dashboard-title">Dashboard</h1>
+    </div>
+    <div class="header-right">
+        <input type="date" class="date-picker" value="2024-10-15">
+        <i class="fa fa-bell notification-icon"></i>
+    </div>
+</header>
 
     <div class="main-content">
       <!-- Monthly Utilities Bills and Room Total Balance -->
