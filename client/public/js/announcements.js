@@ -1,24 +1,22 @@
 let subMenu = document.getElementById("subMenu");
 
-function toggleMenu() {
-    subMenu.classList.toggle("open-menu");
+if (subMenu) {
+    function toggleMenu() {
+        subMenu.classList.toggle("open-menu");
+    }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Select the "Logout" button and "View Account" link
     const logoutButton = document.getElementById("logoutButton");
-    const viewAccountButton = document.querySelector(".sub-menu-link[href='/admin/dashboard/view/account']");
-
-    // Check if the elements are found
-    console.log("logoutButton:", logoutButton);
-    console.log("viewAccountButton:", viewAccountButton);
 
     if (logoutButton) {
         logoutButton.addEventListener("click", async () => {
             const isConfirmed = confirm("Are you sure you want to log out?");
             
-            if (!isConfirmed) return;
-
+            if (!isConfirmed) {
+                return;
+            }
+            
             try {
                 const response = await fetch("/api/auth/adminLogout", {
                     method: "POST",
@@ -40,19 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.error("Error:", error);
             }
         });
-    } else {
-        console.log("logoutButton not found");
-    }
-
-    if (viewAccountButton) {
-        viewAccountButton.addEventListener("click", () => {
-            console.log("View Account button clicked");
-        });
-    } else {
-        console.log("viewAccountButton not found");
     }
 });
-
 
 document.addEventListener("DOMContentLoaded", function () {
     const pinnedButton = document.getElementById("pinned-notices-btn");

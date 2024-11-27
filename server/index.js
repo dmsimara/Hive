@@ -258,8 +258,6 @@ app.post("/admin/manage/unit", findUnits, async (req, res) => {
         res.status(500).json({ success: false, message: 'Error fetching unit or admin data' });
     }
 });
-
-
   
 // userManagement routes
 app.post("/admin/dashboard/userManagement", findTenants, async (req, res) => {
@@ -317,7 +315,6 @@ app.get("/admin/dashboard/userManagement", verifyToken, async (req, res) => {
         res.status(500).json({ success: false, message: 'Error fetching data' });
     }
 });
-
 
 app.post("/admin/dashboard/userManagement", findTenants, (req, res) => {
      res.render("userManagement", { title: "Hive", styles: ["userManagement"], tenants: req.tenants });
@@ -567,6 +564,18 @@ app.get("/admin/announcements", verifyToken, async (req, res) => {
   
   
  // TENANT PAGES ROUTES
+ const getTenantsDashboard = async (roomId) => {
+    try {
+        const tenants = await Tenant.findAll({
+            where: { room_id: roomId }
+        });
+        return tenants; 
+    } catch (error) {
+        console.error('Error fetching tenants:', error);
+        return []; 
+    }
+};
+
  app.get("/tenant/dashboard", verifyTenantToken, async (req, res) => {
     const tenantId = req.tenantId; 
     if (!tenantId) {
@@ -630,63 +639,59 @@ app.get("/admin/announcements", verifyToken, async (req, res) => {
     }
 });
 
-const getTenantsDashboard = async (roomId) => {
+app.get("/tenant/announcement", verifyTenantToken, async (req, res) => {
     try {
-        const tenants = await Tenant.findAll({
-            where: { room_id: roomId }
-        });
-        return tenants; 
-    } catch (error) {
-        console.error('Error fetching tenants:', error);
-        return []; 
-    }
-};
+        const { filter } = req.query;
 
-app.get("/tenant/room-details", verifyTenantToken, async (req, res) => {
-    const tenantId = req.tenantId;
-    if (!tenantId) {
-        return res.status(400).send("Tenant ID not found in the token.");
-    }
-
-    try {
-        const tenant = await Tenant.findOne({
-            where: { tenant_id: tenantId }
-        });
-
+        // Fetch tenant and room information
+        const tenant = await Tenant.findOne({ where: { tenant_id: req.tenantId } });
         if (!tenant) {
-            return res.status(404).send("Tenant not found");
+            return res.status(404).json({ message: "Tenant not found" });
         }
 
-        const roomId = tenant.get('room_id');
+        const roomId = tenant.room_id;
+        const room = await Room.findOne({ where: { room_id: roomId } });
+        if (!room) {
+            return res.status(404).json({ message: "Room not found" });
+        }
 
-        const tenants = await getTenantsDashboard(roomId);
+        req.establishmentId = room.establishment_id;
 
-        const room = await Room.findOne({
-            where: { room_id: roomId }
+        const whereClause = { establishment_id: req.establishmentId };
+        if (filter === "pinned") whereClause.pinned = true;
+        if (filter === "permanent") whereClause.permanent = true;
+
+        let notices = await Notice.findAll({
+            where: whereClause,
+            order: [["updated_at", "DESC"]],
         });
 
-        if (!room) {
-            return res.status(404).send("Room not found");
+        if (notices.length === 0) {
+            notices = [{
+                title: filter === "pinned" ? "No pinned notices yet" : "No permanent notices yet",
+                content: "No notices available at the moment.",
+                pinned: false,
+                permanent: false,
+                updated_at: new Date().toLocaleString(),
+            }];
         }
 
-        const roomNumber = room.get('roomNumber');
-        const plainTenants = tenants.map(tenant => tenant.get({ plain: true }));
+        if (req.xhr) {
+            return res.json({
+                notices: notices.map(notice => notice.dataValues) 
+            });
+        }
 
-        res.render("ten-RoomDeets", {
+        res.render("ten-announcement", {
             title: "Hive",
-            styles: ["ten-deets"],
-            tenants: plainTenants,
-            roomNumber: roomNumber
+            styles: ["ten-announce"],
+            notices: notices.map(notice => notice.dataValues),  
         });
     } catch (error) {
-        console.error('Error fetching tenant data:', error);
-        res.status(500).send("Error fetching tenant data.");
+        console.error("Error fetching notices:", error);
+        
+        res.status(500).json({ message: "Internal server error" });
     }
-});
-
-
-app.get("/tenant/announcement", verifyTenantToken, (req, res) => {
-    res.render("ten-announcement", { title: "Hive", styles: ["ten-announce"]});
 });
 
 app.get("/tenant/utilities", verifyTenantToken, async (req, res) => {
@@ -768,7 +773,6 @@ app.get("/tenant/room-details/view/account", verifyTenantToken, async (req, res)
     }
 });
 
-
 app.get("/tenant/room-details/edit/account", verifyTenantToken, async (req, res) => {
     try {
         const tenant = await Tenant.findOne({ where: { tenant_id: req.tenantId } });
@@ -833,6 +837,9 @@ const updateTenantDetails = async (body, tenantProfile) => {
     const tenantId = body.tenant_id;
     await Tenant.update(tenantDetails, { where: { tenant_id: tenantId } });
 };
+
+
+
 
 app.listen(PORT, () => {
     connectDB();
