@@ -24,7 +24,7 @@
   
   .calendar .calendar-grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr); /* 7 columns for each day of the week */
+    grid-template-columns: repeat(7, 1fr); 
     gap: 5px;
     border: 1px solid var(--brown); /* Grid line color */
     padding: 10px;

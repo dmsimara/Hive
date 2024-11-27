@@ -848,6 +848,7 @@ export const getAvailableRooms = async (req, res) => {
     }
   };
 
+
 export const addEvent = async (req, res) => {
     const { event_name, event_description, start, end, status } = req.body;
 
@@ -1166,7 +1167,6 @@ export const viewNotices = async (req, res) => {
     }
 };
 
-  
 export const pinnedNotices = async (req, res) => {
     const { establishmentId } = req;
     if (!establishmentId) return res.status(400).json({ success: false, message: 'Establishment ID is required.' });

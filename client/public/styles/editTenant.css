@@ -12,12 +12,12 @@
 html, body {
     margin: 0;
     padding: 0;
-    height: 100%;
+    height: 100vh;
     width: 100%;
     font-family: 'Raleway', 'Inter', sans-serif; 
     background-color: var(--background-color);
-    overflow: hidden; 
     box-sizing: border-box;
+    overflow: hidden;
 } 
 
 .navbar {
@@ -53,6 +53,18 @@ html, body {
 }
 
 .nav-link:hover, .nav-link.active {
+    color: var(--orange) !important;
+    background-color: rgba(255, 158, 0, 0.18);
+    transform: scale(1.05);
+}
+
+.active-tab {
+    color: var(--orange) !important;
+    background-color: rgba(255, 158, 0, 0.18);
+    transform: scale(1.05);
+}
+
+.nav-link.active-tab {
     color: var(--orange) !important;
     background-color: rgba(255, 158, 0, 0.18);
     transform: scale(1.05);
@@ -102,10 +114,6 @@ html, body {
     margin-right: 15px;
 }
 
-.sub-menu-wrap {
-    z-index: 1000;
-}
-
 .sub-menu hr {
     border: 0;
     height: 1px;
@@ -148,4 +156,140 @@ html, body {
 
 .sub-menu-link:hover p {
     font-weight: 600;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 30px;
+    background-color: var(--background-color, #f9f9f9);
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+    border: 2px solid var(--maroon);
+}
+
+/* Breadcrumb Styling */
+.breadcrumb {
+    background-color: transparent;
+    padding: 10px 0;
+}
+
+.breadcrumb-item a {
+    color: #d7b414;
+    text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+    color: #ffb347;
+}
+
+.breadcrumb-item.active {
+    color: #d7b414;
+}
+
+.form-control-sm {
+    border-radius: 8px;
+}
+
+.form-label {
+    font-weight: 600;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+select {
+    border-radius: 8px;
+    box-shadow: none;
+    padding: 8px 12px;
+    font-size: 14px;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+select:focus {
+    border-color: #ffb347; 
+    box-shadow: 0 0 5px rgba(255, 180, 71, 0.6);
+}
+
+.row.mb-3 {
+    margin-bottom: 20px;
+}
+
+.row.mb-3 .col {
+    margin-bottom: 10px;
+}
+
+.row.mb-3 .col input {
+    padding: 8px;
+}
+
+/* Buttons Styling */
+#editTenantButton {
+    background-color: var(--orange);
+    border-color: var(--orange);
+    color: white;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    padding: 8px 16px;
+    border-radius: 8px;
+    margin-left: 10px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+#editTenantButton:hover {
+    background-color: white;
+    border-color: var(--orange);
+    color: var(--orange);
+}
+
+#closeButton {
+    background-color: var(--maroon);
+    border-color: var(--maroon);
+    color: white;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+#closeButton:hover {
+    background-color: white;
+    border-color: var(--maroon);
+    color: var(--maroon);
+}
+
+/* Flexbox for buttons alignment */
+.d-flex {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+/* Add space between buttons */
+.d-flex button {
+    margin-left: 10px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    .form-label {
+        font-size: 14px;
+    }
+
+    .row.mb-3 .col {
+        margin-bottom: 15px;
+    }
+
+    #editTenantButton, #closeButton {
+        padding: 6px 12px;
+    }
 }

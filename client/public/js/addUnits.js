@@ -7,8 +7,12 @@ form.addEventListener('submit', async (event) => {
 
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
+
+    // Ensure establishmentId input exists before accessing its value
     const establishmentIdInput = document.querySelector('input[name="establishmentId"]');
-    data.establishmentId = establishmentIdInput.value;
+    if (establishmentIdInput) {
+        data.establishmentId = establishmentIdInput.value;
+    }
 
     try {
         const response = await fetch('/api/auth/addUnit', {
@@ -18,9 +22,10 @@ form.addEventListener('submit', async (event) => {
         });
 
         if (response.ok) {
+            // Display success message, consider using a more user-friendly way to notify the user
             alert('Room added successfully!');
             form.reset();
-            window.location.href = '/admin/manage/unit'; // Redirect to manageUnit.hbs
+            window.location.href = '/admin/manage/unit'; // Redirect to the units page
         } else {
             const result = await response.json();
             alert(result.message || 'An error occurred. Please try again.');
@@ -40,32 +45,49 @@ function toggleMenu() {
 document.addEventListener("DOMContentLoaded", () => {
     const logoutButton = document.getElementById("logoutButton");
 
-    logoutButton.addEventListener("click", async () => {
-        const isConfirmed = confirm("Are you sure you want to log out?");
-        
-        if (!isConfirmed) {
-            return;
-        }
-
-        try {
-            const response = await fetch("/api/auth/adminLogout", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                alert(data.message); 
-                window.location.href = "/"; 
-            } else {
-                alert(data.message || "Logout failed. Please try again.");
+    // Ensure logoutButton exists before adding event listener
+    if (logoutButton) {
+        logoutButton.addEventListener("click", async () => {
+            const isConfirmed = confirm("Are you sure you want to log out?");
+            
+            if (!isConfirmed) {
+                return;
             }
-        } catch (error) {
-            alert("An error occurred during logout. Please try again later.");
-            console.error("Error during logout:", error);
-        }
-    });
+
+            try {
+                const response = await fetch("/api/auth/adminLogout", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert(data.message); 
+                    window.location.href = "/"; // Redirect to homepage after logout
+                } else {
+                    alert(data.message || "Logout failed. Please try again.");
+                }
+            } catch (error) {
+                alert("An error occurred during logout. Please try again later.");
+                console.error("Error during logout:", error);
+            }
+        });
+    }
+
+    const closeButton = document.getElementById("closeButton");  
+
+    if (closeButton) {
+        closeButton.addEventListener("click", (e) => {
+            const isConfirmed = confirm("Your changes will not be saved. Are you sure you want to close?");
+            
+            if (isConfirmed) {
+                window.location.href = '/admin/manage/unit';
+            } else {
+                e.preventDefault();
+            }
+        });
+    }
 });

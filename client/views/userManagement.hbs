@@ -85,13 +85,18 @@
   <div class="row">
     <div class="row align-items-center">
       <div class="col-6">
+        <i class="material-icons title-icon">groups</i>
         <h1>Tenant Management</h1>
       </div>
       <div class="col-6 d-flex justify-content-end gap-2">
         <form class="d-flex" role="search" method="POST" action="/admin/dashboard/userManagement" novalidate>
-          <input class="form-control form-control-sm me-2" type="search" placeholder="Search" name="search"
-            aria-label="Search" required value="{{lastSearchTerm}}">
-          <button class="btn btn-outline-success btn-sm" type="submit">Search</button>
+          <div class="search-bar">
+            <input class="form-control form-control-sm me-2" type="search" placeholder="Search" name="search"
+              aria-label="Search" required value="{{lastSearchTerm}}">
+            <span class="search-icon">
+              <i class="material-icons">search</i> <!-- Material Icons magnifying glass -->
+            </span>
+          </div>
         </form>
         <a href="#" data-bs-toggle="modal" data-bs-target="#addTenantModal" class="btn btn-light btn-sm hover-orange">
           + Add Tenant
@@ -186,7 +191,7 @@
                 <input type="email" class="form-control form-control-sm" id="tenantEmail" name="tenantEmail" required>
               </div>
             </div>
-           
+
             <!-- Gender and Mobile Row -->
             <div class="row mb-3">
               <div class="col">
