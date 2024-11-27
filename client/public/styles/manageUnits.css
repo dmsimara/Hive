@@ -9,6 +9,8 @@
     --background-color: rgb(245, 245, 245);
 }
 
+
+
 html, body {
     margin: 0;
     padding: 0;
@@ -301,6 +303,8 @@ p {
   color: var(--orange);
   transform: scale(1.02); 
 }
+
+
 
 
 /* Delete Button - Red */

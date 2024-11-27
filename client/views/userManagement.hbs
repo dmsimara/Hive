@@ -23,6 +23,22 @@
           <a class="nav-link" href="/admin/tracker">Tracker</a>
         </li>
       </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       <img src="{{#if admin.adminProfile}}/images/upload/{{admin.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
         alt="Profile" class="user-pic" onclick="toggleMenu()" />
       <div class="sub-menu-wrap" id="subMenu">
@@ -50,6 +66,21 @@
   </div>
 </nav>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div class="container pt-5 pb-5">
   <div class="row">
     <div class="row align-items-center">
@@ -74,6 +105,12 @@
     </div>
   </div>
 
+
+
+
+
+
+<div style="max-height: 400px; overflow-y: auto;">
   <table class="table table-bordered">
     <thead class="table-dark">
       <tr>
@@ -98,10 +135,10 @@
         <td>{{this.mobileNum}}</td>
         <td class="text-end">
           <a href="/admin/dashboard/userManagement/editTenant/{{this.tenant_id}}" class="btn btn-edit btn-sm">
-            <i class="material-icons edit-icon">edit</i> Edit
+            <i class="material-icons">edit</i> Edit
           </a>
           <a href="#" onclick="deleteTenant({{this.tenant_id}})" class="btn btn-delete btn-sm">
-            <i class="material-icons person-icon">person_remove</i> Delete
+            <i class="material-icons">person_remove</i> Delete
           </a>
         </td>
       </tr>
@@ -113,6 +150,9 @@
       {{/if}}
     </tbody>
   </table>
+</div>
+
+
 
 
   <!-- Add Tenant Modal -->
@@ -126,6 +166,13 @@
         <div class="modal-body">
           <form id="tenantForm" method="POST" action="/api/auth/addTenant">
             <input type="hidden" id="establishmentId" name="establishmentId" value="{{establishmentId}}">
+
+
+
+
+
+
+
 
             <!-- First Name, Last Name, and Email in one column -->
             <div class="row mb-3">
@@ -162,6 +209,21 @@
               </div>
             </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <!-- Guardian Name and Number Row -->
             <div class="row mb-3">
               <div class="col">
@@ -176,11 +238,25 @@
               </div>
             </div>
 
+
+
+
+
+
+
+
             <!-- Tenant Address -->
             <div class="mb-3">
               <label for="tenantAddress" class="form-label">Tenant Address</label>
               <input type="text" class="form-control form-control-sm" id="tenantAddress" name="tenantAddress" required>
             </div>
+
+
+
+
+
+
+
 
             <!-- Assign Room, Start Date, and End Date in one column -->
             <div class="row mb-3">
@@ -201,6 +277,21 @@
               </div>
             </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <!-- Password Row -->
             <div class="row mb-3">
               <div class="col">
@@ -214,6 +305,22 @@
                   name="tenantConfirmPassword" required>
               </div>
             </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <button type="submit" class="btn btn-primary">Add Tenant</button>
           </form>
         </div>
@@ -221,4 +328,32 @@
     </div>
   </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   <script src="/js/userManagement.js"></script>
+
+
+
+
+

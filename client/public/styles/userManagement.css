@@ -392,6 +392,8 @@ table tr:nth-child(even) td {
 }
 
 
+
+
 .btn-delete:hover {
   background-color: white;
   border: 1px solid var(--maroon);
@@ -562,6 +564,8 @@ label {
 }
 
 
+
+
 .btn-add-room-inner {
   background: linear-gradient(
     90deg,
@@ -578,6 +582,8 @@ label {
 }
 
 
+
+
 .btn-add-room-inner:hover {
   background: linear-gradient(
     90deg,
@@ -586,6 +592,8 @@ label {
   ) !important;
   transform: scale(1.05) !important;
 }
+
+
 
 
 /* Red Delete Button */
@@ -602,10 +610,14 @@ label {
 }
 
 
+
+
 .btn-red:hover {
   background-color: darkred; /* Darken on hover for better contrast */
   transform: scale(1.1); /* Slightly enlarge on hover */
 }
+
+
 
 
 /* Pagination Active State */
@@ -627,6 +639,8 @@ label {
 }
 
 
+
+
 .btn-save-changes:hover {
   background-color: #218838; /* Darker green on hover */
   transform: scale(1.05); /* Slightly enlarge on hover */
@@ -644,10 +658,20 @@ label {
 }
 
 
+
+
 .btn-cancel:hover {
   background-color: #c82333; /* Darker red on hover */
   transform: scale(1.05); /* Slightly enlarge on hover */
 }
+
+
+
+
+
+
+
+
 
 
 
