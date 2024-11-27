@@ -124,11 +124,12 @@
 .sub-menu-wrap {
   position: absolute;
   top: 100%;
-  right: 1%;
+  right: 1%; 
   width: 320px;
   max-height: 0px;
   overflow: hidden;
   transition: max-height 0.5s;
+  z-index: 1000;
 }
 
 .sub-menu-wrap.open-menu {
@@ -136,7 +137,7 @@
 }
 
 .sub-menu {
-  background: var(--yellow);
+  background: white;
   padding: 20px;
   margin: 10px;
   border-radius: 1em;
@@ -148,8 +149,8 @@
 }
 
 .user-info h3 {
-  font-weight: 500;
-  color: var(--brown);
+  font-weight: 500; 
+  color: var(--gray);
   font-size: 20px;
 }
 
@@ -183,7 +184,7 @@
 }
 
 .sub-menu-link .material-icons {
-  background: var(--yellow);
+  background: rgb(210, 209, 209);
   width: 40px;
   border-radius: 50%;
   padding: 8px;
