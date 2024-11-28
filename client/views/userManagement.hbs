@@ -23,22 +23,6 @@
           <a class="nav-link" href="/admin/tracker">Tracker</a>
         </li>
       </ul>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       <img src="{{#if admin.adminProfile}}/images/upload/{{admin.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
         alt="Profile" class="user-pic" onclick="toggleMenu()" />
       <div class="sub-menu-wrap" id="subMenu">
@@ -66,21 +50,6 @@
   </div>
 </nav>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <div class="container pt-5 pb-5">
   <div class="row">
     <div class="row align-items-center">
@@ -94,7 +63,7 @@
             <input class="form-control form-control-sm me-2" type="search" placeholder="Search" name="search"
               aria-label="Search" required value="{{lastSearchTerm}}">
             <span class="search-icon">
-              <i class="material-icons">search</i> <!-- Material Icons magnifying glass -->
+              <i class="material-icons">search</i> 
             </span>
           </div>
         </form>
@@ -104,11 +73,6 @@
       </div>
     </div>
   </div>
-
-
-
-
-
 
 <div style="max-height: 400px; overflow-y: auto;">
   <table class="table table-bordered">
@@ -152,9 +116,6 @@
   </table>
 </div>
 
-
-
-
   <!-- Add Tenant Modal -->
   <div class="modal fade" id="addTenantModal" tabindex="-1" aria-labelledby="addTenantModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -166,13 +127,6 @@
         <div class="modal-body">
           <form id="tenantForm" method="POST" action="/api/auth/addTenant">
             <input type="hidden" id="establishmentId" name="establishmentId" value="{{establishmentId}}">
-
-
-
-
-
-
-
 
             <!-- First Name, Last Name, and Email in one column -->
             <div class="row mb-3">
@@ -209,21 +163,6 @@
               </div>
             </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             <!-- Guardian Name and Number Row -->
             <div class="row mb-3">
               <div class="col">
@@ -238,25 +177,11 @@
               </div>
             </div>
 
-
-
-
-
-
-
-
             <!-- Tenant Address -->
             <div class="mb-3">
               <label for="tenantAddress" class="form-label">Tenant Address</label>
               <input type="text" class="form-control form-control-sm" id="tenantAddress" name="tenantAddress" required>
             </div>
-
-
-
-
-
-
-
 
             <!-- Assign Room, Start Date, and End Date in one column -->
             <div class="row mb-3">
@@ -277,21 +202,6 @@
               </div>
             </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             <!-- Password Row -->
             <div class="row mb-3">
               <div class="col">
@@ -305,51 +215,12 @@
                   name="tenantConfirmPassword" required>
               </div>
             </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             <button type="submit" class="btn btn-primary">Add Tenant</button>
           </form>
         </div>
       </div>
     </div>
   </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   <script src="/js/userManagement.js"></script>
 
