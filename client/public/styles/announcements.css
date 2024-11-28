@@ -173,27 +173,42 @@ body {
 .header {
     background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
     width: 100vw;
+    height: 250px;
     padding: 10px;
     margin: 0;
     color: white;
     display: flex;
-    justify-content: center; 
+    justify-content: center;
     align-items: center;
-    text-align: center; 
+    text-align: center;
     flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+.header img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 600px;
+    z-index: 1;
 }
 
 .campaign {
     font-size: 50px;
+    z-index: 10;
 }
 
 .header h1 {
     font-weight: 600;
     letter-spacing: 1px;
+    z-index: 10;
 }
 
 .edit {
     font-size: 15px;
+    z-index: 10;
 }
 
 .compose-link {
@@ -207,8 +222,9 @@ body {
     font-size: 14px;
     margin-bottom: 10px;
     position: relative;
-    z-index: 1060; 
+    z-index: 10;
 }
+
 
 .body {
     margin-left: 15em;
@@ -223,7 +239,7 @@ body {
 
 .filter-link {
     text-decoration: none;
-    color: #007bff;
+    color: var(--maroon);
     font-weight: bold;
     cursor: pointer;
     padding: 5px 10px;
@@ -235,22 +251,76 @@ body {
 }
 
 .filter-link.active {
-    color: #fff;
-    background-color: #007bff;
+    color: var(--maroon);
+    border-bottom: 3px solid var(--maroon);
+}
+
+#notices-container {
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 10px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
 }
 
 .notices-list {
     padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
 }
 
-.notice {
-    border: 1px solid #ccc;
-    padding: 15px;
-    margin-bottom: 10px;
+.notice-item {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: transparent;
+    border: 1px solid #eee;
     border-radius: 5px;
-    background-color: #f9f9f9;
+    position: relative;
+    z-index: 1; /* Ensure it's above any potential overlapping elements */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    pointer-events: auto; /* Allow click events */
 }
 
+.notice-time, .notice-details {
+    flex: 1;
+    text-align: left;
+    z-index: 1; /* Ensure time and details are beneath the icons */
+    pointer-events: none; /* Disable interaction with time and details */
+}
+
+.notice-icons {
+    flex: 0 0 auto;
+    width: auto;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    position: relative;
+    z-index: 9999; /* Make sure it's way above other elements */
+    pointer-events: auto; /* Allow interaction with icons */
+}
+
+.material-icons {
+    cursor: pointer;
+    position: relative;
+    pointer-events: auto;
+    z-index: 9999; /* Ensure the icons are on top */
+}
+
+.material-icons:focus {
+    outline: none; /* Remove focus outline */
+}
+
+/* Optional: Ensuring badges don't block */
 .notice .badge {
     font-size: 12px;
     background-color: gold;
@@ -261,26 +331,26 @@ body {
 }
 
 .modal {
-    position: fixed; 
-    top: 120px;      
-    left: 900px;   
-    z-index: 1050;  
-    margin: 0;      
-    padding: 0;     
-    display: block; 
-    height: auto;   
-    transform: none; 
+    position: fixed;
+    top: 200px;
+    left: 1050px;
+    z-index: 1050;
+    margin: 0;
+    padding: 0;
+    display: block;
+    height: auto;
+    transform: none;
 }
 
 .modal-dialog {
-    max-width: 450px; 
-    margin: 0;       
+    max-width: 450px;
+    margin: 0;
 }
 
 .modal-content {
-    border-radius: 8px; 
+    border-radius: 8px;
 }
 
 .modal-backdrop {
-    z-index: 1040; 
+    z-index: 1040;
 }

@@ -199,3 +199,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 });
+
+document.querySelectorAll('.material-icons').forEach(icon => {
+    icon.addEventListener('click', function () {
+        console.log("Icon clicked!");
+    });
+});

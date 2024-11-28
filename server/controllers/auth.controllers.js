@@ -411,39 +411,39 @@ export const viewAdmins = async (req) => {
 };
 
 export const findTenants = async (req, res) => {
-    const searchTerm = req.body.search;
+    const searchTerm = req.body.search?.trim();
+    const establishmentId = req.body.establishmentId;
 
-    console.log('Received search term:', searchTerm); 
+    console.log("Received search term:", searchTerm);
 
     if (!searchTerm) {
-        return res.status(400).json({ success: false, message: 'Search term is required' });
+        return res.status(400).json({ success: false, message: "Search term is required" });
     }
 
     try {
         const tenants = await Tenant.findAll({
             where: {
+                establishmentId: establishmentId, // Make sure this is set correctly
                 [Op.or]: [
-                    { tenantFirstName: { [Op.like]: `%${searchTerm}%` } },
-                    { tenantLastName: { [Op.like]: `%${searchTerm}%` } }
+                    Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('tenantFirstName')), { [Op.like]: '%working%' }),
+                    Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('tenantLastName')), { [Op.like]: '%working%' })
                 ]
             }
         });
+        console.log(tenants);
+        
 
-        const rows = tenants.map(tenant => tenant.get({ plain: true }));
+        const rows = tenants.map((tenant) => tenant.get({ plain: true }));
+        console.log("Fetched tenants:", rows);
 
-        const admin = await viewAdmins(req, res); 
-
-        res.render('userManagement', {
-            title: "Hive",
-            styles: ["userManagement"],
-            rows,
-            admin: admin
-        });
+        // Return JSON response for the frontend
+        return res.json({ success: true, tenants: rows });
     } catch (error) {
-        console.error('Error in findTenants:', error); 
-        res.status(500).json({ success: false, message: 'Unexpected error occurred' });
+        console.error("Error in findTenants:", error);
+        return res.status(500).json({ success: false, message: "Unexpected error occurred" });
     }
 };
+
 
 export const findDashTenants = async (req, res) => {
     const searchTerm = req.body.searchTenants?.trim();
