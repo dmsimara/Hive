@@ -1,434 +1,554 @@
-/* General Reset */
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+ /* General Reset */
+ * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
 
-.container { 
-  display: flex; 
-  height: 100vh; 
-  width: 100%;
-  overflow: hidden; /* Prevent unintended scrolling */
-}
 
-.sidebar {
-  background-color: #F4F4F4;
-  width: 20%;
-  padding: 20px; /* Removed horizontal padding for sagad alignment */
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Centers the card horizontally */
-  position: fixed; /* Fixed to ensure alignment to the left */
-  left: 0;
-  top: 0;
-  height: 100%; /* Full height */
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  overflow-y: auto; /* Scrollable sidebar */
-  
+ .container {
+   display: flex;
+   height: 100vh;
+   width: 100%;
+   overflow: hidden; /* Prevent unintended scrolling */
+ }
  
-}
-
-.sidebar::-webkit-scrollbar {
-  display: none; /* Hide scrollbar for Chrome/Safari */
-}
-
-/* Sidebar Card */
-.sidebar-card {
-  background-color: #FFFFFF;
-  border-radius: 15px;
-  padding: 15px;
-  width: 100%; /* Adjust the card size */
-  margin: 20px 0; /* Add vertical spacing */
-  height: 100%;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-}
-
-.logo-img {
-  width: 120px; /* Reduced width for a smaller logo */
-  height: auto;
-}
-
-
-.menu ul, .tracker ul {
-  list-style: none; /* Remove bullets */
-  padding: 0;
-}
-
-.menu ul li, .tracker ul li {
-  margin: 10px 0;
-}
-
-.menu ul li a, .tracker ul li a {
-  text-decoration: none;
-  color: #333;
-  font-size: 1em;
-  padding: 10px;
-  border-radius: 8px;
-}
-
-.menu ul li.active > a {
-  background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
-  color: white !important; /* Ensure this overrides conflicting styles */
-}
-
-.menu ul li a:hover,
-.tracker ul li a:hover,
-.logout-button:hover {
-    color: #FF6B45; /* Dark orange text on hover */
-    transition: color 0.3s; /* Smooth color transition */
-}
-
-
-.logout-container {
-  align-self: flex-start; /* Align it to the left edge */
-  margin: 20px; /* Add spacing from the edge */
-  text-align: left; /* Ensure text aligns to the left */
-  width: 90%; /* Adjust width to match sidebar content */
-}
-
-.logout-button {
-  display: flex;
-  align-items: center; /* Align the icon and text */
-  padding: 10px 15px; /* Add spacing inside the button */
-  text-decoration: none; /* Remove underline */
-  font-size: 1rem;
-  color: #A22F05;
-  border-radius: 8px;
-  transition: background 0.3s, color 0.3s; /* Smooth hover effect */
-}
-
-.logout-button i {
-  margin-right: 10px;
-  color: #A22F05;
-}
-
-.logout-button:hover {
-  background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
-  color: white;
-}
-
-
-.tracker ul li a {
-  color: #333;
-}
-
-.tracker ul li a:hover { color: #ff7e5f; }
-
-/* Main Content */
-
-main {
-  margin-left: 15%; /* Account for the sidebar width */
-  width: 85%; /* Align the right content to the edge */
-  padding: 0 20px; /* Ensure consistent spacing */
-  overflow-y: auto; /* Enable vertical scrolling */
-  height: 100vh;
-  scrollbar-width: thin; /* Optional: visible scrollbar styling */
-}
-
-.row { 
-  display: flex; 
-  justify-content: space-between; 
-  gap: 20px; 
-}
-/* General Header Styling */
-.dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #f9f9f9; /* Light background for contrast */
-  padding: 1.5rem;
-  border-bottom: 1px solid #ddd; /* Adds a subtle divider */
-}
-
-/* Left Section: Welcome Texts */
-.header-left {
-  display: flex;
-  flex-direction: column;
-}
-
-.welcome-text {
-  font-size: 1.2rem;
-  color: #555; /* Muted color for a secondary focus */
-  margin: 0;
-}
-
-.dashboard-title {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #333; /* Stronger emphasis color */
-  margin: 0.2rem 0 0 0; /* Adds slight spacing */
-}
-
-/* Right Section: Date Picker and Notification Icon */
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.date-picker {
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 0.3rem;
-  color: #333;
-}
-
-.notification-icon {
-  font-size: 1.5rem;
-  color: #888; /* Neutral color */
-  cursor: pointer;
-}
-
-.notification-icon:hover {
-  color: #555; /* Slightly darker on hover */
-}
-.row {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  margin-top: 20px;
-}
-
-/* Left side: Utilities Section */
-.utilities-section {
-  width: 65%;
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  border: 2px solid #FFA45B; /* Orange border */
-}
-
-/* Right side: Room Balance and Usage */
-.right-side {
-  width: 30%;
-  display: flex;
-  flex-direction: column;
-  gap: 15px; /* Space between the cards */
-}
-
-/* Room Total Balance Card */
-.total-balance-card {
-  background: linear-gradient(to right, #FF6B45, #FFAA44);
-  color: white;
-  padding: 15px;
-  text-align: center;
-  border-radius: 8px;
-}
-
-.total-balance-card h2 {
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
-.total-balance-card .main-balance {
-  font-size: 1.8rem;
-  margin: 10px 0;
-}
-
-.shared-balance {
-  background: #ffffff;
-  margin-top: 15px;
-  padding: 10px;
-  border-radius: 8px;
-  color: #333;
-}
-
-.shared-balance-card {
-  background: #fff;
-  color: #333;
-  padding: 10px;
-  border-radius: 8px;
-  text-align: center;
-  margin-top: 10px;
-  font-size: 1rem;
-}
-
-
-.usage-summary {
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  text-align: center;
-  border: 1px solid #ddd; /* Added border to make usage summary visible */
-}
-
-/* Usage Summary Card */
-.usage-summary-card {
-  background: #fff;
-  border: 1px solid #ddd;
-  padding: 20px;
-  border-radius: 8px;
-  text-align: center;
-}
-
-.usage-summary-card h3 {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-}
-
-/* Gradient Circle for Usage */
-.usage-circle {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background: conic-gradient(#FF6B45 75%, #FFAA44 25%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 10px;
-  color: white;
-  font-weight: bold;
-  font-size: 1.2rem;
-}
-
-.utilities-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.controls i {
-  font-size: 24px;
-  color: #feb47b;
-  cursor: pointer;
-}
-
-/* Utilities Bills Section */
-.bills {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.bill {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background: #fff;
-}
-
-.bill i {
-  font-size: 1.5rem;
-  color: #FF6B45;
-}
-
-.bill-title {
-  flex: 1;
-  margin: 0 10px;
-  font-size: 1rem;
-  font-weight: 500;
-  color: #333;
-}
-
-.bill-amount {
-  font-size: 1rem;
-  font-weight: bold;
-  color: #444;
-}
-
-/* Shared Balance Paid Indicator */
-.paid-indicator {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 5px 10px;
-  font-size: 0.8rem;
-  border-radius: 15px;
-  text-align: center;
-  font-weight: bold;
-}
-
-.paid {
-  background: #4CAF50; /* Green for Paid */
-  color: white;
-}
-
-.unpaid {
-  background: #FF6B45; /* Orange for Unpaid */
-  color: white;
-}
-
-/* Utilities History Section */
-.utilities-history-card {
-  background: #ffffff; /* White background for card clarity */
-  border: 1px solid #ddd; /* Subtle border */
-  border-radius: 8px; /* Rounded corners */
-  padding: 20px; /* Spacing inside the card */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
-  margin-top: 20px; /* Spacing from other sections */
-}
-
-.utilities-history-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px; /* Space between header and list */
-}
-
-.utilities-history-header h3 {
-  font-size: 1.5rem; /* Slightly larger text */
-  color: #333; /* Dark gray for emphasis */
-  font-weight: bold;
-}
-
-.utilities-history-header .year {
-  font-size: 1rem;
-  color: #777; /* Muted gray for a secondary focus */
-}
-
-.utilities-history-header i {
-  font-size: 1.8rem; /* Icon size slightly larger */
-  color: #FF6B45; /* Accent color for visibility */
-}
-
-.utilities-history-list {
-  margin-top: 10px; /* Add spacing from the header */
-}
-
-.history-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 15px; /* Internal spacing */
-  border-bottom: 1px solid #ddd; /* Divider between items */
-  transition: background 0.3s ease; /* Smooth hover effect */
-}
-
-.history-item:last-child {
-  border-bottom: none; /* Remove the border for the last item */
-}
-
-.history-item:hover {
-  background: #f9f9f9; /* Light gray background on hover */
-}
-
-.history-item .title {
-  font-size: 1rem;
-  font-weight: 500; /* Medium weight for readability */
-  color: #444; /* Dark gray text */
-}
-
-.history-item .amount {
-  font-size: 1rem;
-  font-weight: bold; /* Highlight amounts */
-  color: #FF6B45; /* Accent color for visibility */
-}
-
-.history-item .status {
-  font-size: 0.9rem;
-  font-weight: bold;
-  padding: 5px 10px;
-  border-radius: 15px;
-  text-align: center;
-}
-
-.history-item .status.paid {
-  background: #4CAF50; /* Green for Paid */
-  color: white;
-}
-
-.history-item .status.unpaid {
-  background: #FF6B45; /* Orange for Unpaid */
-  color: white;
-}
+ 
+ .sidebar {
+   background-color: #F4F4F4;
+   width: 20%;
+   padding: 20px; /* Removed horizontal padding for sagad alignment */
+   display: flex;
+   flex-direction: column;
+   align-items: center; /* Centers the card horizontally */
+   position: fixed; /* Fixed to ensure alignment to the left */
+   left: 0;
+   top: 0;
+   height: 100%; /* Full height */
+   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+   overflow-y: auto; /* Scrollable sidebar */
+  
+  
+ }
+ 
+ 
+ .sidebar::-webkit-scrollbar {
+   display: none; /* Hide scrollbar for Chrome/Safari */
+ }
+ 
+ 
+ /* Sidebar Card */
+ .sidebar-card {
+   background-color: #FFFFFF;
+   border-radius: 15px;
+   padding: 15px;
+   width: 100%; /* Adjust the card size */
+   margin: 20px 0; /* Add vertical spacing */
+   height: 100%;
+   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+ }
+ 
+ 
+ .logo-img {
+   width: 120px; /* Reduced width for a smaller logo */
+   height: auto;
+ }
+ 
+ 
+ 
+ 
+ .menu ul, .tracker ul {
+   list-style: none; /* Remove bullets */
+   padding: 0;
+ }
+ 
+ 
+ .menu ul li, .tracker ul li {
+   margin: 10px 0;
+ }
+ 
+ 
+ .menu ul li a, .tracker ul li a {
+   text-decoration: none;
+   color: #333;
+   font-size: 1em;
+   padding: 10px;
+   border-radius: 8px;
+ }
+ 
+ 
+ .menu ul li.active > a {
+   background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
+   color: white !important; /* Ensure this overrides conflicting styles */
+ }
+ 
+ 
+ .menu ul li a:hover,
+ .tracker ul li a:hover,
+ .logout-button:hover {
+     color: #FF6B45; /* Dark orange text on hover */
+     transition: color 0.3s; /* Smooth color transition */
+ }
+ 
+ 
+ 
+ 
+ .logout-container {
+   align-self: flex-start; /* Align it to the left edge */
+   margin: 20px; /* Add spacing from the edge */
+   text-align: left; /* Ensure text aligns to the left */
+   width: 90%; /* Adjust width to match sidebar content */
+ }
+ 
+ 
+ .logout-button {
+   display: flex;
+   align-items: center; /* Align the icon and text */
+   padding: 10px 15px; /* Add spacing inside the button */
+   text-decoration: none; /* Remove underline */
+   font-size: 1rem;
+   color: #A22F05;
+   border-radius: 8px;
+   transition: background 0.3s, color 0.3s; /* Smooth hover effect */
+ }
+ 
+ 
+ .logout-button i {
+   margin-right: 10px;
+   color: #A22F05;
+ }
+ 
+ 
+ .logout-button:hover {
+   background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
+   color: white;
+ }
+ 
+ 
+ 
+ 
+ .tracker ul li a {
+   color: #333;
+ }
+ 
+ 
+ .tracker ul li a:hover { color: #ff7e5f; }
+ 
+ 
+ /* Main Content */
+ 
+ 
+ main {
+   margin-left: 15%; /* Account for the sidebar width */
+   width: 85%; /* Align the right content to the edge */
+   padding: 0 20px; /* Ensure consistent spacing */
+   overflow-y: auto; /* Enable vertical scrolling */
+   height: 100vh;
+   scrollbar-width: thin; /* Optional: visible scrollbar styling */
+ }
+ 
+ 
+ .row {
+   display: flex;
+   justify-content: space-between;
+   gap: 20px;
+ }
+ /* General Header Styling */
+ .dashboard-header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   background-color: #f9f9f9; /* Light background for contrast */
+   padding: 1.5rem;
+   border-bottom: 1px solid #ddd; /* Adds a subtle divider */
+ }
+ 
+ 
+ /* Left Section: Welcome Texts */
+ .header-left {
+   display: flex;
+   flex-direction: column;
+ }
+ 
+ 
+ .welcome-text {
+   font-size: 1.2rem;
+   color: #555; /* Muted color for a secondary focus */
+   margin: 0;
+ }
+ 
+ 
+ .dashboard-title {
+   font-size: 2rem;
+   font-weight: bold;
+   color: #333; /* Stronger emphasis color */
+   margin: 0.2rem 0 0 0; /* Adds slight spacing */
+ }
+ 
+ 
+ /* Right Section: Date Picker and Notification Icon */
+ .header-right {
+   display: flex;
+   align-items: center;
+   gap: 1rem;
+ }
+ 
+ 
+ .date-picker {
+   padding: 0.5rem;
+   font-size: 1rem;
+   border: 1px solid #ddd;
+   border-radius: 0.3rem;
+   color: #333;
+ }
+ 
+ 
+ .notification-icon {
+   font-size: 1.5rem;
+   color: #888; /* Neutral color */
+   cursor: pointer;
+ }
+ 
+ 
+ .notification-icon:hover {
+   color: #555; /* Slightly darker on hover */
+ }
+ .row {
+   display: flex;
+   justify-content: space-between;
+   gap: 20px;
+   margin-top: 20px;
+ }
+ 
+ 
+ /* Left side: Utilities Section */
+ .utilities-section {
+   width: 65%;
+   background: #fff;
+   padding: 20px;
+   border-radius: 8px;
+   border: 3px solid #B62B1B; /* Orange border */
+ }
+ 
+ 
+ /* Right side: Room Balance and Usage */
+ .right-side {
+   width: 30%;
+   display: flex;
+   flex-direction: column;
+   gap: 15px; /* Space between the cards */
+ }
+ 
+ 
+ /* Room Total Balance Card */
+ .total-balance-card {
+   background: linear-gradient(to bottom, #B32C19, #FC8042); /* Orange to Red gradient (top to bottom) */
+   color: white;
+   padding: 15px;
+   text-align: center;
+   border-radius: 8px;
+ }
+ 
+ 
+ 
+ 
+ .total-balance-card h2 {
+   font-size: 1.2rem;
+   font-weight: bold;
+ }
+ 
+ 
+ .total-balance-card .main-balance {
+   font-size: 1.8rem;
+   margin: 10px 0;
+ }
+ 
+ 
+ .shared-balance {
+   background: #ffffff;
+   margin-top: 15px;
+   padding: 10px;
+   border-radius: 8px;
+   color: #333;
+ }
+ 
+ 
+ .shared-balance-card {
+   background: #fff;
+   color: #333;
+   padding: 10px;
+   border-radius: 8px;
+   text-align: center;
+   margin-top: 10px;
+   font-size: 1rem;
+ }
+ 
+ 
+ 
+ 
+ .usage-summary {
+   background: #fff;
+   padding: 20px;
+   border-radius: 8px;
+   text-align: center;
+   border: 1px solid #ddd; /* Added border to make usage summary visible */
+ }
+ 
+ 
+ /* Usage Summary Card */
+ .usage-summary-card {
+   background: #fff;
+   border: 1px solid #ddd;
+   padding: 20px;
+   border-radius: 8px;
+   text-align: center;
+ }
+ 
+ 
+ .usage-summary-card h3 {
+   font-size: 1.2rem;
+   margin-bottom: 10px;
+ }
+ 
+ 
+ /* Gradient Circle for Usage */
+ .usage-circle {
+   width: 100px;
+   height: 100px;
+   border-radius: 50%;
+   background: conic-gradient(#FF6B45 75%, #FFAA44 25%);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   margin: 0 auto 10px;
+   color: white;
+   font-weight: bold;
+   font-size: 1.2rem;
+ }
+ 
+ 
+ .utilities-header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   margin-bottom: 20px;
+ }
+ 
+ 
+ .controls i {
+   font-size: 24px;
+   color: #060606;
+   cursor: pointer;
+ }
+ /* Utilities Bills Section */
+ .bills {
+   display: flex;
+   flex-direction: column;
+   gap: 15px;
+ }
+ 
+ 
+ .bill {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   padding: 10px 15px;
+   background: #fff;
+   border-radius: 8px;
+   border: 1px solid #6F4F37; /* Solid orange border */
+ }
+ 
+ 
+ .bill i {
+   font-size: 1.5rem;
+   color: #FF6B45;
+ }
+ 
+ 
+ .bill-title {
+   flex: 1;
+   margin: 0 10px;
+   font-size: 1rem;
+   font-weight: 500;
+   color: #333;
+ }
+ 
+ 
+ .bill-amount {
+   font-size: 1rem;
+   font-weight: bold;
+   color: #444;
+ }
+ 
+ 
+ 
+ 
+ /* Shared Balance Paid Indicator */
+ .paid-indicator {
+   display: inline-block;
+   margin-top: 10px;
+   padding: 5px 10px;
+   font-size: 0.8rem;
+   border-radius: 15px;
+   text-align: center;
+   font-weight: bold;
+ }
+ 
+ 
+ .paid {
+   background: #4CAF50; /* Green for Paid */
+   color: white;
+ }
+ 
+ 
+ .unpaid {
+   background: #FF6B45; /* Orange for Unpaid */
+   color: white;
+ }
+ 
+ 
+ /* Utilities History Section */
+ .utilities-history {
+   padding: 20px; /* Padding around the section */
+   background-color: #fafafa; /* Light background color */
+   border-radius: 12px; /* Rounded corners for section */
+   margin-top: 30px;
+ }
+ 
+ 
+ .utilities-history h2 {
+   font-size: 24px; /* Larger heading font */
+   margin-bottom: 20px; /* Spacing below the heading */
+   color: #333; /* Dark text for clarity */
+ }
+ 
+ 
+ .utilities-history-card {
+   background: #ffffff; /* White background for card clarity */
+   border: 2px solid #ddd; /* Subtle border for definition */
+   border-radius: 12px; /* Rounded corners for the card */
+   padding: 20px; /* Spacing inside the card */
+   box-shadow: 0 4px 12px rgba(255, 249, 249, 0.1); /* Slight shadow for depth */
+   margin-top: 20px; /* Spacing from other sections */
+   display: flex; /* Flexbox for organized content inside the card */
+   flex-direction: column; /* Stack content vertically */
+   gap: 15px; /* Space between sections inside the card */
+ }
+ 
+ 
+ /* Table styles */
+ table {
+   width: 100%; /* Full width */
+   border-collapse: collapse; /* Collapse borders between cells */
+ }
+ 
+ 
+ th, td {
+   padding: 12px; /* Padding inside each cell */
+   text-align: left; /* Align text to the left */
+   border-bottom: 1px solid #ddd; /* Light border between rows */
+ }
+ 
+ 
+ th {
+   background-color: #f9f9f9; /* Light background for headers */
+   font-weight: bold; /* Make header text bold */
+ }
+ 
+ 
+ td {
+   background-color: #fafafa; /* Slight background for table data */
+ }
+ 
+ 
+ i {
+   margin-right: 8px; /* Spacing between icon and text */
+   color: #f39c12; /* Icon color for better contrast */
+ }
+ 
+ 
+ .utilities-history-header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   margin-bottom: 15px; /* Space between header and list */
+ }
+ 
+ 
+ .utilities-history-header h3 {
+   font-size: 1.5rem; /* Slightly larger text */
+   color: #333; /* Dark gray for emphasis */
+   font-weight: bold;
+ }
+ 
+ 
+ .utilities-history-header .year {
+   font-size: 1rem;
+   color: #777; /* Muted gray for a secondary focus */
+ }
+ 
+ 
+ .utilities-history-header i {
+   font-size: 1.8rem; /* Icon size slightly larger */
+   color: #FF6B45; /* Accent color for visibility */
+ }
+ 
+ 
+ .utilities-history-list {
+   margin-top: 10px; /* Add spacing from the header */
+ }
+ 
+ 
+ .history-item {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding: 10px 15px; /* Internal spacing */
+   border-bottom: 1px solid #ddd; /* Divider between items */
+   transition: background 0.3s ease; /* Smooth hover effect */
+ }
+ 
+ 
+ .history-item:last-child {
+   border-bottom: none; /* Remove the border for the last item */
+ }
+ 
+ 
+ .history-item:hover {
+   background: #f9f9f9; /* Light gray background on hover */
+ }
+ 
+ 
+ .history-item .title {
+   font-size: 1rem;
+   font-weight: 500; /* Medium weight for readability */
+   color: #444; /* Dark gray text */
+ }
+ 
+ 
+ .history-item .amount {
+   font-size: 1rem;
+   font-weight: bold; /* Highlight amounts */
+   color: #FF6B45; /* Accent color for visibility */
+ }
+ 
+ 
+ .history-item .status {
+   font-size: 0.9rem;
+   font-weight: bold;
+   padding: 5px 10px;
+   border-radius: 15px;
+   text-align: center;
+ }
+ 
+ 
+ .history-item .status.paid {
+   background: #4CAF50; /* Green for Paid */
+   color: white;
+ }
+ 
+ 
+ .history-item .status.unpaid {
+   background: #FF6B45; /* Orange for Unpaid */
+   color: white;
+ }
+ 
+ 
+ 
+ 
