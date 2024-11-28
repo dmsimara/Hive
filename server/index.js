@@ -263,13 +263,14 @@ app.post("/admin/manage/unit", findUnits, async (req, res) => {
 });
   
 // userManagement routes
-app.post("/admin/dashboard/userManagement", findTenants, async (req, res) => {
+app.post("/admin/dashboard/userManagement", verifyToken, findTenants, async (req, res) => {
     try {
-        const admin = await viewAdmins(req, res); 
+        const admin = await viewAdmins(req, res);
 
-        res.render("userManagement", { 
-            title: "Hive", 
-            styles: ["userManagement"], 
+        // Render the user management page
+        res.render("userManagement", {
+            title: "Hive",
+            styles: ["userManagement"],
             tenants: req.tenants,
             admin: admin
         });
@@ -278,6 +279,18 @@ app.post("/admin/dashboard/userManagement", findTenants, async (req, res) => {
         res.status(500).json({ success: false, message: 'Error fetching data' });
     }
 });
+
+app.post('/api/auth/find-tenants', async (req, res) => {
+    try {
+        const search = req.body.search || '';
+        const [results] = await db.query("SELECT * FROM tenants WHERE tenantFirstName LIKE ? OR tenantLastName LIKE ?", [`%${search}%`, `%${search}%`]);
+        res.json({ success: true, tenants: results });
+    } catch (error) {
+        console.error("Error fetching tenants:", error);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+});
+
 
 app.get("/admin/manage/unit/add", verifyToken, addUnitView);
 

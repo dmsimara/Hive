@@ -23,6 +23,7 @@
           <a class="nav-link" href="/admin/tracker">Tracker</a>
         </li>
       </ul>
+
       <img src="{{#if admin.adminProfile}}/images/upload/{{admin.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
         alt="Profile" class="user-pic" onclick="toggleMenu()" />
       <div class="sub-menu-wrap" id="subMenu">
@@ -52,6 +53,7 @@
 
 <div class="container">
   <div class="header">
+    <img src="/images/aura.png" alt="Aura">
     <i class="material-icons campaign">campaign</i>
     <h1>Announcements</h1>
     <a href="#" id="composeBtn" data-bs-toggle="modal" data-bs-target="#addNotice" class="compose-link">
@@ -72,21 +74,26 @@
       {{#each notices}}
       <div class="notice-item {{#if pinned}}pinned{{/if}} {{#if permanent}}permanent{{/if}}" data-id="{{notice_id}}"
         data-pinned="{{pinned}}" data-permanent="{{permanent}}">
-        <h2 class="notice-title">{{title}}</h2>
-        <p class="notice-content">{{content}}</p>
-        <span class="notice-meta">
-          {{#if pinned}}<span class="badge pinned-badge">Pinned</span>{{/if}}
-          {{#if permanent}}<span class="badge permanent-badge">Permanent</span>{{/if}}
+
+        <div class="notice-time">
           <span class="notice-date">{{updated_at}}</span>
-        </span>
-        <i class="material-icons pinned" data-id="{{notice_id}}" onclick="togglePinned({{notice_id}}, {{pinned}})">
-          {{#if pinned}}book{{else}}bookmark{{/if}}
-        </i>
-        <i class="material-icons permanent" data-id="{{notice_id}}"
-          onclick="togglePermanent({{notice_id}}, {{permanent}})">
-          {{#if permanent}}note_add{{else}}description{{/if}}
-        </i>
-        <i class="material-icons delete" data-id="{{notice_id}}" onclick="deleteNotice({{notice_id}})">delete</i>
+        </div>
+
+        <div class="notice-details">
+          <h2 class="notice-title">{{title}}</h2>
+          <p class="notice-content">{{content}}</p>
+        </div>
+
+        <div class="notice-icons">
+          <i class="material-icons pinned" data-id="{{notice_id}}" onclick="togglePinned({{notice_id}}, {{pinned}})">
+            {{#if pinned}}book{{else}}bookmark{{/if}}
+          </i>
+          <i class="material-icons permanent" data-id="{{notice_id}}"
+            onclick="togglePermanent({{notice_id}}, {{permanent}})">
+            {{#if permanent}}note_add{{else}}description{{/if}}
+          </i>
+          <i class="material-icons delete" data-id="{{notice_id}}" onclick="deleteNotice({{notice_id}})">delete</i>
+        </div>
       </div>
       {{/each}}
       {{else}}

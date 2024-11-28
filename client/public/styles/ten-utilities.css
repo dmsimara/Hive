@@ -1,6 +1,92 @@
- /* General Reset */
- * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
 
+:root {
+    --yellow: rgb(255, 251, 151);
+    /* #FFFB97 */
+    --orange: rgb(254, 127, 66);
+    /* #FE7F42 */
+    --maroon: rgb(179, 44, 26);
+    /* #B32C1A */
+    --gray: rgb(122, 75, 71);
+    /* #7A4B47 */
+    --dark-gray: rgb(42, 22, 23);
+    /* #2A1617 */
+    --background-color: rgb(245, 245, 245);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  font-family: 'Inter', sans-serif;
+  height: 100%;
+
+}
+
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: #F9F9F9;
+}
+
+
+.logo {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.logo-img {
+  width: 140px;
+  height: auto;
+}
+
+.sidebar p {
+  font-size: 0.9em;
+  color: #666;
+}
+
+
+.menu-title, .tracker-title {
+  font-weight: bold;
+  color: var(--dark-gray);
+  margin-bottom: 10px;
+}
+
+.menu ul, .tracker ul {
+  list-style: none;
+  padding: 0;
+}
+
+
+.menu ul li, .tracker ul li {
+  margin: 10px 0;
+}
+
+.menu ul li a, .tracker ul li a {
+  text-decoration: none;
+  color: #333;
+  font-size: 1em;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.menu ul li.active a, .tracker ul li.active a {
+  background: linear-gradient(90deg, var(--maroon) 0%, var(--orange) 100%);
+  color: #fff;
+}
+
+.menu ul li a:hover, .tracker ul li a:hover {
+  color: var(--orange);
+  transition: color 0.3s ease-in-out;
+}
 
  .container {
    display: flex;
@@ -11,21 +97,16 @@
  
  
  .sidebar {
-   background-color: #F4F4F4;
-   width: 20%;
-   padding: 20px; /* Removed horizontal padding for sagad alignment */
-   display: flex;
-   flex-direction: column;
-   align-items: center; /* Centers the card horizontally */
-   position: fixed; /* Fixed to ensure alignment to the left */
-   left: 0;
-   top: 0;
-   height: 100%; /* Full height */
-   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-   overflow-y: auto; /* Scrollable sidebar */
-  
-  
- }
+  background-color: #F4F4F4;
+  width: 20%;
+  height: 100vh;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  overflow-y: auto;
+}
  
  
  .sidebar::-webkit-scrollbar {
@@ -33,105 +114,56 @@
  }
  
  
- /* Sidebar Card */
  .sidebar-card {
-   background-color: #FFFFFF;
-   border-radius: 15px;
-   padding: 15px;
-   width: 100%; /* Adjust the card size */
-   margin: 20px 0; /* Add vertical spacing */
-   height: 100%;
-   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
- }
- 
- 
- .logo-img {
-   width: 120px; /* Reduced width for a smaller logo */
-   height: auto;
- }
- 
- 
- 
+  background-color: #FFFFFF;
+  border-radius: 15px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
  
  .menu ul, .tracker ul {
    list-style: none; /* Remove bullets */
    padding: 0;
  }
- 
- 
- .menu ul li, .tracker ul li {
-   margin: 10px 0;
- }
- 
- 
- .menu ul li a, .tracker ul li a {
-   text-decoration: none;
-   color: #333;
-   font-size: 1em;
-   padding: 10px;
-   border-radius: 8px;
- }
- 
+
  
  .menu ul li.active > a {
    background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
    color: white !important; /* Ensure this overrides conflicting styles */
  }
  
- 
- .menu ul li a:hover,
- .tracker ul li a:hover,
- .logout-button:hover {
-     color: #FF6B45; /* Dark orange text on hover */
-     transition: color 0.3s; /* Smooth color transition */
- }
- 
- 
- 
- 
  .logout-container {
-   align-self: flex-start; /* Align it to the left edge */
-   margin: 20px; /* Add spacing from the edge */
-   text-align: left; /* Ensure text aligns to the left */
-   width: 90%; /* Adjust width to match sidebar content */
- }
+  margin-top: auto;
+  text-align: center;
+}
+ 
+.logout-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 1em;
+  color: var(--maroon);
+  padding: 10px;
+  border-radius: 8px;
+  transition: background-color 0.3s, color 0.3s;
+}
  
  
- .logout-button {
-   display: flex;
-   align-items: center; /* Align the icon and text */
-   padding: 10px 15px; /* Add spacing inside the button */
-   text-decoration: none; /* Remove underline */
-   font-size: 1rem;
-   color: #A22F05;
-   border-radius: 8px;
-   transition: background 0.3s, color 0.3s; /* Smooth hover effect */
- }
+
+.logout-button i {
+  margin-right: 10px;
+}
+
+.logout-button:hover {
+  background: linear-gradient(90deg, var(--maroon) 0%, var(--orange) 100%);
+  color: #fff;
+}
  
  
- .logout-button i {
-   margin-right: 10px;
-   color: #A22F05;
- }
- 
- 
- .logout-button:hover {
-   background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
-   color: white;
- }
- 
- 
- 
- 
- .tracker ul li a {
-   color: #333;
- }
- 
- 
- .tracker ul li a:hover { color: #ff7e5f; }
- 
- 
- /* Main Content */
  
  
  main {

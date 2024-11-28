@@ -48,12 +48,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function fetchTenants(searchTerm, establishmentId) {
     try {
-        const response = await fetch(`/admin/dashboard`, {
-            method: 'POST',  
+        const response = await fetch(`/admin/dashboard?searchTerm=${searchTerm}&establishmentId=${establishmentId}`, {
             headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ searchTenants: searchTerm, establishmentId: establishmentId })
+                "Accept": "application/json",
+            }
         });
 
         if (response.headers.get("Content-Type").includes("text/html")) {
@@ -61,10 +59,10 @@ async function fetchTenants(searchTerm, establishmentId) {
             return;
         }
 
-        const data = await response.json();
+        const data = await response.json(); 
 
         if (response.ok && data.success) {
-            updateTenantCards(data.tenants);
+            updateTenantCards(data.tenants); 
         } else {
             console.error("Error fetching tenants:", data.message || "Unknown error");
         }
@@ -72,7 +70,6 @@ async function fetchTenants(searchTerm, establishmentId) {
         console.error("Error fetching tenants:", error);
     }
 }
-
 
 function updateTenantCards(tenants) {
     const tenantCardsContainer = document.getElementById("tenantCardsContainer");
