@@ -78,7 +78,9 @@ body, html {
   transition: background-color 0.3s, color 0.3s;
 }
 
-.menu ul li.active a, .tracker ul li.active a {
+.menu ul li.active a, 
+.tracker ul li.active a,
+.logout-button:hover {
   background: linear-gradient(90deg, var(--maroon) 0%, var(--orange) 100%);
   color: #fff;
 }
