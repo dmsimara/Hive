@@ -108,18 +108,51 @@
 }
 
 
-.header-right {
-    display: flex;
-    align-items: center;
-}
-
-
-.header-right input {
+/* Calendar Style with Rounded Corners */
+.header-right input.date-picker {
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 10px; /* Rounded corners */
     padding: 10px;
-    margin-right: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 1em;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: box-shadow 0.3s ease, border-color 0.3s ease; /* Smooth transition effects */
 }
 
 
+.header-right input.date-picker:hover {
+    border-color: #FF7F32; /* Change border color on hover */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Enhance shadow on hover */
+}
+
+.header-right input.date-picker:focus {
+    outline: none;
+    border-color: #FF7F32; /* Orange border on focus */
+    box-shadow: 0 6px 12px rgba(255, 127, 50, 0.4); /* Brighter shadow on focus */
+}
+
+/* Edit Info Button Styling */
+.edit-info-btn {
+    background-color: #FF7F32;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 1em;
+    border: none;
+    border-radius: 8px; /* Rounded corners */
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+}
+
+.edit-info-btn:hover {
+    background-color: #FFB548; /* Lighter orange on hover */
+    transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+.edit-info-btn:active {
+    transform: scale(0.95); /* Slight shrink effect on click */
+    background-color: #FF7F32; /* Reset to original color */
+}
 /* Room Overview */
 .room-overview {
     display: flex;
@@ -335,17 +368,17 @@
     height: 800px;
     margin: 0 auto;
     transition: background-color 0.3s ease; /* Smooth transition for background color */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Added shadow */
+    box-shadow: 0 14px 100px rgba(0, 0, 0, 0.1); /* Added shadow */
 }
 
 .room-number-card:hover {
     background-color: #f0f0f0; /* Light gray on hover */
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Darker shadow on hover */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2); /* Darker shadow on hover */
 }
 
 /* Circle Template for Room Number */
 .circle {
-    background-color: #2a1617; /* Change background to brown */
+    background-color: #ffffff; /* Change background to brown */
     color: white; /* Change text color to white */
     border-radius: 50%;
     width: 200px;
@@ -367,7 +400,64 @@
     font-size: 1.2em;
     font-weight: bold;
     color: #6F4F27;
-    margin-top: 10px;
+    margin-top: 25px;
 }
 
+.circle {
+    position: relative;
+    background-color: #2a1617; /* Inner circle color (brown) */
+    color: white; /* Inner text color */
+    border-radius: 50%;
+    width: 200px; /* Diameter of the inner circle */
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    box-shadow: 
+        0 0 0 10px #8b3c3c, /* Maroon ring thickness */
+        0 0 0 20px #ff7f32, /* Orange ring thickness */
+        0 8px 20px rgba(0, 0, 0, 0.6); /* Dark shadow for better visibility */
+}
+
+/* Text inside the circle */
+.circle h1 {
+    font-size: 3em;
+    margin: 0;
+    font-family: 'Inter', sans-serif; /* Apply Inter font style */
+    font-weight: 600; /* Set font weight for emphasis */
+    letter-spacing: 1px; /* Optional: Add slight letter spacing for aesthetics */
+    text-transform: uppercase; /* Optional: Make the text uppercase for a uniform look */
+}
+
+.room-details-header {
+    font-family: 'Inter', sans-serif; /* Inter font */
+    font-size: 2.5em; /* Make the text larger */
+    font-weight: bold; /* Bold text */
+    color: #333; /* Optional: Dark color for better contrast */
+    margin-bottom: 20px; /* Add space below the header */
+    text-align: center; /* Optional: Center the text */
+}
+
+
+
+/* Style for the Welcome Header */
+.welcome-header {
+    font-family: 'Inter', sans-serif; /* Ensure consistent font */
+    font-size: 1.5em; /* Smaller size */
+    font-weight: 400; /* Normal weight */
+    color: rgba(51, 51, 51, 0.7); /* Faded dark grey */
+    margin: 0; /* Remove any default margin */
+    line-height: 1.2; /* Adjust line spacing for visual balance */
+}
+
+/* Adjust Room Details Header to Align */
+.room-details-header {
+    font-family: 'Inter', sans-serif; /* Consistent font */
+    font-size: 2.5em; /* Larger size */
+    font-weight: bold; /* Bold text */
+    color: #333; /* Stronger color */
+    margin: 0; /* Align with the Welcome header */
+    line-height: 1.2; /* Match the line height */
+}
 
