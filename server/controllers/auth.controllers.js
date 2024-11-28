@@ -447,6 +447,8 @@ export const findTenants = async (req, res) => {
 
 export const findDashTenants = async (req, res) => {
     const searchTerm = req.body.searchTenants?.trim();
+    const establishmentId = req.body.establishmentId;
+
     console.log("Received search term:", searchTerm);
 
     try {
@@ -490,17 +492,17 @@ export const findDashTenants = async (req, res) => {
 
         const rows = tenants.map(tenant => tenant.get({ plain: true }));
 
-        const admins = await viewAdmins(req);
+        const admin = await viewAdmins(req);  
 
         if (req.xhr) {
-            return res.json({ success: true, tenants: rows });
+            return res.json({ success: true, tenants: rows, admin });
         }
 
         return res.render("adminDashboard", {
             title: "Hive",
             styles: ["adminDashboard"],
             tenants: rows,
-            admins,
+            admin,
             lastSearchTerm: searchTerm || "",
         });
     } catch (error) {
