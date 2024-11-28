@@ -583,6 +583,47 @@ body, html {
    color: white;
  }
  
- 
- 
+ /* Ensure that the bill section is using a column layout */
+.bill {
+  display: flex;
+  flex-direction: column; /* Arrange elements vertically */
+  align-items: flex-start; /* Align the children to the start of the flex container */
+  padding: 10px 15px;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #6F4F37; /* Solid orange border */
+  gap: 5px; /* Add gap between elements */
+}
+
+/* Adjust styling for bill title to ensure space is utilized well */
+.bill-title {
+  font-size: 2rem;
+  font-weight: 500;
+  color: #333;
+  margin: 0;
+}
+
+/* Adjust styling for bill amount, aligning it to the right */
+.bill-amount {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #444;
+  align-self: flex-end; /* Align to the right */
+}
+
+/* Style for the date section below the bill title */
+.bill-dates p {
+  font-size: 0.8rem;
+  color: #666;
+  margin: 2px 0 0 0; /* Adjust margin to ensure it's spaced below the title */
+}
+
+/* Style for the tenant share below the bill amount, aligning it to the right */
+.bill-tenant-share {
+  font-size: 0.8rem;
+  color: #666;
+  margin: 2px 0 0 0; /* Adjust margin to ensure it's spaced below the amount */
+  align-self: flex-end; /* Align to the right */
+}
+
  
