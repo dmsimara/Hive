@@ -68,88 +68,54 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const buttons = [allButton, pinnedButton, permanentButton];
-    let currentFilter = "/admin/announcements";
 
     function setActiveButton(activeButton) {
-        buttons.forEach((button) => button.classList.remove("active"));
-        activeButton.classList.add("active");
+        buttons.forEach((button) => button.classList.remove("active")); 
+        activeButton.classList.add("active"); 
     }
 
-    async function fetchFilteredNotices(url) {
-        try {
-            const response = await fetch(url, { headers: { Accept: "application/json" } });
-            if (!response.ok) throw new Error("Failed to fetch notices");
-
-            const { notices } = await response.json();
-            noticesContainer.innerHTML = notices.length
-                ? notices
-                      .map(
-                          (n) => `
-                    <div data-id="${n.notice_id}" class="notice-item">
-                        <h3>${n.title}</h3>
-                        <p>${n.content}</p>
-                        <i class="material-icons pinned" data-id="${n.notice_id}" onclick="togglePinned(${n.notice_id}, ${n.pinned})">
-                            ${n.pinned ? 'book' : 'bookmark'}
-                        </i>
-                        <i class="material-icons permanent" data-id="${n.notice_id}" onclick="togglePermanent(${n.notice_id}, ${n.permanent})">
-                            ${n.permanent ? 'note_add' : 'description'}
-                        </i>
-                        <i class="material-icons delete" data-id="${n.notice_id}" onclick="deleteNotice(${n.notice_id})">delete</i>
-                    </div>
-                `).join("")
-                : "<p>No notices found</p>";
-        } catch (error) {
-            console.error("Error fetching notices:", error);
-            alert("Failed to fetch notices.");
-        }
-    }
-
-    pinnedButton.addEventListener("click", () => {
-        setActiveButton(pinnedButton);
-        currentFilter = "/admin/announcements?filter=pinned";
-        fetchFilteredNotices(currentFilter);
+    buttons.forEach((button) => {
+        button.addEventListener("click", (event) => {
+            const filter = event.target.dataset.filter; 
+            window.location.href = `/admin/announcements?filter=${filter}`; 
+        });
     });
 
-    permanentButton.addEventListener("click", () => {
-        setActiveButton(permanentButton);
-        currentFilter = "/admin/announcements?filter=permanent";
-        fetchFilteredNotices(currentFilter);
-    });
-
-    allButton.addEventListener("click", () => {
-        setActiveButton(allButton);
-        currentFilter = "/admin/announcements";
-        fetchFilteredNotices(currentFilter);
-    });
+    const currentFilter = new URLSearchParams(window.location.search).get("filter") || "all";
+    const initialButton = buttons.find((btn) => btn.dataset.filter === currentFilter) || allButton;
+    setActiveButton(initialButton);
 
     submitNoticeButton.addEventListener("click", async () => {
         const title = document.getElementById("title").value;
         const content = document.getElementById("content").value;
-
+    
         if (!title || !content) return alert("Title and content are required!");
-
+    
         try {
             const response = await fetch("/api/auth/view/notices/add", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ title, content, pinned: false, permanent: false }),
             });
-
+    
             if (!response.ok) throw new Error("Failed to add announcement");
-
+    
             alert("Announcement added successfully!");
             addNoticeForm.reset();
             setActiveButton(allButton);
             fetchFilteredNotices("/admin/announcements");
-
+    
             addNoticeModal.hide();
-
+    
             console.log("Modal should be closed now!");
+    
+            location.reload();  
         } catch (error) {
             console.error("Error submitting notice:", error);
             alert("Error submitting notice.");
         }
     });
+    
 
     window.togglePinned = async (noticeId, isPinned) => {
         const action = isPinned ? "unpin" : "pin";
@@ -182,26 +148,56 @@ document.addEventListener("DOMContentLoaded", function () {
     window.deleteNotice = async (noticeId) => {
         const confirmed = confirm("Are you sure you want to delete this announcement?");
         if (!confirmed) return;
-
+    
         try {
             const response = await fetch(`/api/auth/view/notices/${noticeId}/delete`, {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" }
             });
-
+    
             if (!response.ok) throw new Error("Failed to delete announcement");
-
+    
             alert("Announcement deleted successfully!");
-            fetchFilteredNotices("/admin/announcements"); 
+            location.reload();  
         } catch (error) {
             console.error("Error deleting notice:", error);
             alert("Error deleting notice.");
         }
     };
-});
-
-document.querySelectorAll('.material-icons').forEach(icon => {
-    icon.addEventListener('click', function () {
-        console.log("Icon clicked!");
-    });
+    
+    async function fetchFilteredNotices(url) {
+        try {
+            const response = await fetch(url, { headers: { Accept: "application/json" } });
+            if (!response.ok) throw new Error("Failed to fetch notices");
+    
+            const { notices } = await response.json();
+    
+            noticesContainer.innerHTML = notices.length
+                ? notices
+                      .map(
+                          (n) => `
+                        <div data-id="${n.notice_id}" class="notice-item">
+                            <p>${n.updated_at}</p> <!-- This should be the formatted string -->
+                            <h3>${n.title}</h3>
+                            <p>${n.content}</p>
+                            <p class="notice-date">${n.updated_at}</p> <!-- Display the formatted date -->
+                            <i class="material-icons pinned" data-id="${n.notice_id}" onclick="togglePinned(${n.notice_id}, ${n.pinned})">
+                                ${n.pinned ? 'book' : 'bookmark'}
+                            </i>
+                            <i class="material-icons permanent" data-id="${n.notice_id}" onclick="togglePermanent(${n.notice_id}, ${n.permanent})">
+                                ${n.permanent ? 'note_add' : 'description'}
+                            </i>
+                            <i class="material-icons delete" data-id="${n.notice_id}" onclick="deleteNotice(${n.notice_id})">delete</i>
+                        </div>
+                    `
+                      )
+                      .join("")
+                : "<p>No notices found</p>";
+        } catch (error) {
+            console.error("Error fetching notices:", error);
+            alert("Failed to fetch notices.");
+        }
+    }
+    
+    
 });

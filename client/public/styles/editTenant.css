@@ -169,7 +169,6 @@ html, body {
     border: 2px solid var(--maroon);
 }
 
-/* Breadcrumb Styling */
 .breadcrumb {
     background-color: transparent;
     padding: 10px 0;

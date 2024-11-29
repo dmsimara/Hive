@@ -74,47 +74,47 @@
     </div>
   </div>
 
-<div style="max-height: 400px; overflow-y: auto;">
-  <table class="table table-bordered">
-    <thead class="table-dark">
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">First Name</th>
-        <th scope="col">Last Name</th>
-        <th scope="col">Email</th>
-        <th scope="col">Gender</th>
-        <th scope="col">Mobile Number</th>
-        <th scope="col" class="text-end">Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#if rows.length}}
-      {{#each rows}}
-      <tr>
-        <th scope="row">{{this.tenant_id}}</th>
-        <td>{{this.tenantFirstName}}</td>
-        <td>{{this.tenantLastName}}</td>
-        <td>{{this.tenantEmail}}</td>
-        <td>{{this.gender}}</td>
-        <td>{{this.mobileNum}}</td>
-        <td class="text-end">
-          <a href="/admin/dashboard/userManagement/editTenant/{{this.tenant_id}}" class="btn btn-edit btn-sm">
-            <i class="material-icons">edit</i> Edit
-          </a>
-          <a href="#" onclick="deleteTenant({{this.tenant_id}})" class="btn btn-delete btn-sm">
-            <i class="material-icons">person_remove</i> Delete
-          </a>
-        </td>
-      </tr>
-      {{/each}}
-      {{else}}
-      <tr>
-        <td colspan="7" class="text-center">No tenants found</td>
-      </tr>
-      {{/if}}
-    </tbody>
-  </table>
-</div>
+  <div style="max-height: 400px; overflow-y: auto;">
+    <table class="table table-bordered">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">First Name</th>
+          <th scope="col">Last Name</th>
+          <th scope="col">Email</th>
+          <th scope="col">Gender</th>
+          <th scope="col">Mobile Number</th>
+          <th scope="col" class="text-end">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#if rows.length}}
+        {{#each rows}}
+        <tr>
+          <th scope="row">{{this.tenant_id}}</th>
+          <td>{{this.tenantFirstName}}</td>
+          <td>{{this.tenantLastName}}</td>
+          <td>{{this.tenantEmail}}</td>
+          <td>{{this.gender}}</td>
+          <td>{{this.mobileNum}}</td>
+          <td class="text-end">
+            <a href="/admin/dashboard/userManagement/editTenant/{{this.tenant_id}}" class="btn btn-edit btn-sm">
+              <i class="material-icons">edit</i> Edit
+            </a>
+            <a href="#" onclick="deleteTenant({{this.tenant_id}})" class="btn btn-delete btn-sm">
+              <i class="material-icons">person_remove</i> Delete
+            </a>
+          </td>
+        </tr>
+        {{/each}}
+        {{else}}
+        <tr>
+          <td colspan="7" class="text-center">No tenants found</td>
+        </tr>
+        {{/if}}
+      </tbody>
+    </table>
+  </div>
 
   <!-- Add Tenant Modal -->
   <div class="modal fade" id="addTenantModal" tabindex="-1" aria-labelledby="addTenantModalLabel" aria-hidden="true">
@@ -206,15 +206,26 @@
             <div class="row mb-3">
               <div class="col">
                 <label for="tenantPassword" class="form-label">Password</label>
-                <input type="password" class="form-control form-control-sm" id="tenantPassword" name="tenantPassword"
-                  required>
+                <div class="input-group">
+                  <input type="password" class="form-control form-control-sm" id="tenantPassword" name="tenantPassword"
+                    required>
+                  <span class="input-group-text" id="togglePassword" style="cursor: pointer;">
+                    <i class="material-icons password-icon">visibility</i>
+                  </span>
+                </div>
               </div>
               <div class="col">
                 <label for="tenantConfirmPassword" class="form-label">Confirm Password</label>
-                <input type="password" class="form-control form-control-sm" id="tenantConfirmPassword"
-                  name="tenantConfirmPassword" required>
+                <div class="input-group">
+                  <input type="password" class="form-control form-control-sm" id="tenantConfirmPassword"
+                    name="tenantConfirmPassword" required>
+                  <span class="input-group-text" id="toggleConfirmPassword" style="cursor: pointer;">
+                    <i class="material-icons password-icon">visibility</i>
+                  </span>
+                </div>
               </div>
             </div>
+
             <button type="submit" class="btn btn-primary">Add Tenant</button>
           </form>
         </div>
@@ -223,7 +234,3 @@
   </div>
 
   <script src="/js/userManagement.js"></script>
-
-
-
-

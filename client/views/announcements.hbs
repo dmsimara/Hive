@@ -64,9 +64,9 @@
 
   <div class="body">
     <nav class="filter-nav">
-      <a href="#" id="all-notices-btn" class="filter-link active">All</a>
-      <a href="#" id="pinned-notices-btn" class="filter-link">Pinned</a>
-      <a href="#" id="permanent-notices-btn" class="filter-link">Permanent</a>
+      <a href="#" id="all-notices-btn" data-filter="all" class="filter-link active">All</a>
+      <a href="#" id="pinned-notices-btn" data-filter="pinned" class="filter-link">Pinned</a>
+      <a href="#" id="permanent-notices-btn" data-filter="permanent" class="filter-link">Permanent</a>
     </nav>
 
     <div id="notices-container" class="notices-list">
@@ -92,7 +92,7 @@
             onclick="togglePermanent({{notice_id}}, {{permanent}})">
             {{#if permanent}}note_add{{else}}description{{/if}}
           </i>
-          <i class="material-icons delete" data-id="{{notice_id}}" onclick="deleteNotice({{notice_id}})">delete</i>
+          <i class="material-icons delete" data-id="{{notice_id}}" onclick="deleteNotice({{notice_id}})">delete</i> 
         </div>
       </div>
       {{/each}}
@@ -100,7 +100,6 @@
       <p>No notices available at the moment.</p>
       {{/if}}
     </div>
-
   </div>
 </div>
 
@@ -123,11 +122,10 @@
             <textarea class="form-control" id="content" rows="10"></textarea>
           </div>
         </form>
-      </div>
-      <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" id="submitNotice">Publish</button>
       </div>
+     
     </div>
   </div>
 </div>
