@@ -204,13 +204,12 @@
   font-weight: 600;
 }
 
-/* Add Event Button - Base Styles */
 .add-event-button {
   background-color: transparent;
-  color: var(--orange); /* Orange text */
+  color: var(--orange);
   font-weight: 600;
   padding: 8px 12px;
-  border: 2px solid var(--orange); /* Orange border */
+  border: 2px solid var(--orange); 
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s, transform 0.3s;
@@ -218,9 +217,8 @@
   box-shadow: none;
 }
 
-/* Hover State */
 .add-event-button:hover {
-  background-color: var(--orange); /* Orange background on hover */
+  background-color: var(--orange);
   color: white;
   transform: scale(1.05);
   border: 2px solid var(--orange);
@@ -228,26 +226,25 @@
   box-shadow: none;
 }
 
-/* Focus State */
 .add-event-button:focus {
   border: 2px solid var(--orange);
   outline: none;
-  box-shadow: 0 0 5px rgba(254, 127, 66, 0.5); /* Optional glow effect */
+  box-shadow: 0 0 5px rgba(254, 127, 66, 0.5); 
 }
 
-/* Calendar specific styles */
+
 .calendar .calendar-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr); /* 7 columns for each day of the week */
+  grid-template-columns: repeat(7, 1fr); 
   gap: 5px;
-  border: 1px solid var(--brown); /* Grid line color */
+  border: 1px solid var(--brown); 
   padding: 10px;
-  background-color: var(--yellow); /* Light background for the calendar */
+  background-color: var(--yellow); 
 }
 
 .calendar .day {
-  background-color: var(--maroon); /* Maroon color for each day box */
-  color: var(--yellow); /* Yellow text on maroon background */
+  background-color: var(--maroon);
+  color: var(--yellow);
   padding: 10px;
   text-align: center;
   border-radius: 5px;
@@ -255,27 +252,27 @@
 }
 
 .calendar .day:hover {
-  background-color: var(--orange); /* Orange on hover */
-  transform: scale(1.1); /* Slightly enlarge the day box on hover */
+  background-color: var(--orange);
+  /* transform: scale(1.1); */
+  color: white;
 }
 
 .calendar .selected-day {
-  background-color: var(--orange); /* Highlight selected day with orange */
-  color: white; /* White text for selected day */
+  background-color: var(--orange); 
+  color: white; 
 }
 
 .calendar .month,
 .calendar .year {
   font-weight: bold;
   color: var(--maroon);
-  background-color: var(--yellow); /* Yellow background for month and year */
+  background-color: var(--yellow); 
   padding: 10px;
   text-align: center;
   border-radius: 5px;
   margin-bottom: 10px;
 }
 
-/* Customizing FullCalendar buttons */
 .fc-button {
     background-color: var(--orange) !important;
     color: white !important;
@@ -285,7 +282,7 @@
   }
   
   .fc-button:hover {
-    background-color: var(--maroon) !important; /* Maroon on hover */
+    background-color: var(--maroon) !important; 
     transform: scale(1.05);
   }
   
@@ -299,13 +296,11 @@
     color: white !important;
   }
   
-  /* Modify the calendar header text */
   .fc-toolbar-title {
     color: var(--brown) !important;
     font-weight: bold;
   }
   
-  /* Customizing selected button when clicked */
   .fc-button-group .fc-button:active {
     background-color: var(--brown) !important;
     color: white !important;
@@ -316,33 +311,28 @@
     color: white !important;
   }
 
-  /* Customizing the day numbers inside the grid */
 .fc-daygrid-day-number {
-    color: var(--brown) !important; /* Set the day numbers to brown */
+    color: var(--brown) !important; 
   }
   
-  /* Customizing the day of the week (header) */
   .fc-col-header-cell {
-    color: var(--brown) !important; /* Set the day names to brown */
+    color: var(--brown) !important; 
     font-weight: bold;
   }
   
-  /* Removing the background color from the grid cells */
   .fc-daygrid-day {
-    background-color: transparent !important; /* Remove any background color from the grid cells */
-    border: none !important; /* Remove borders for cleaner grid cells */
+    background-color: transparent !important; 
+    border: none !important; 
   }
   
-  /* Remove hover effect completely */
   .fc-daygrid-day:hover {
-    background-color: transparent !important; /* No background color on hover */
-    color: var(--brown) !important; /* Keep the day number brown when hovering */
+    background-color: transparent !important;
+    color: var(--brown) !important;
   }
   
-  /* Optional: Modify the current day background */
   .fc-daygrid-day.fc-day-today {
-    background-color: var(--orange) !important; /* Highlight today's date with orange */
-    color: white !important; /* Change text color to white for today */
+    background-color: var(--orange) !important; 
+    color: white !important; 
   }
 
   .fc-header-toolbar {
