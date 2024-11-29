@@ -170,34 +170,7 @@
     /* Brighter shadow on focus */
 }
 
-/* Edit Info Button Styling */
-.edit-info-btn {
-    background-color: #FF7F32;
-    color: white;
-    font-family: 'Inter', sans-serif;
-    font-size: 1em;
-    border: none;
-    border-radius: 8px;
-    /* Rounded corners */
-    padding: 10px 15px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    /* Smooth transitions */
-}
 
-.edit-info-btn:hover {
-    background-color: #FFB548;
-    /* Lighter orange on hover */
-    transform: scale(1.05);
-    /* Slight zoom effect on hover */
-}
-
-.edit-info-btn:active {
-    transform: scale(0.95);
-    /* Slight shrink effect on click */
-    background-color: #FF7F32;
-    /* Reset to original color */
-}
 
 /* Room Overview */
 .room-overview {
@@ -215,8 +188,46 @@
 }
 
 
-/* Tenants Section */
-.tenants-section,
+.tenants-section {
+    display: flex;
+    flex-direction: column;  /* Column layout for tenants section */
+    margin-bottom: 20px;     /* Optional: Add spacing between sections */
+}
+
+.tenants-title-wrapper {
+    display: flex;
+    justify-content: space-between;   /* Space between the title and the button */
+    align-items: center;              /* Vertically center the title and button */
+}
+
+.tenants-title {
+    margin: 0;                       /* Remove any default margin */
+    font-size: 1.5em;                 /* Adjust the font size if needed */
+}
+
+.edit-info-btn {
+    background-color: #FF7F32;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 1em;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-right: 10px;
+}
+
+.edit-info-btn:hover {
+    background-color: #FFB548;
+    transform: scale(1.05);
+}
+
+.edit-info-btn:active {
+    transform: scale(0.95);
+    background-color: #FF7F32;
+}
+
 .tenant-info-wrapper {
     flex: 1;
     display: flex;

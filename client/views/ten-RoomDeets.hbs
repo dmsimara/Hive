@@ -42,24 +42,28 @@
     <!-- Main Content -->
     <main class="main-content">
         <header class="header">
-    <div>
-        <!-- Add a new class to the Welcome header -->
-        <h1 class="welcome-header">Welcome to Hive</h1>
-        <!-- Add the class for custom styling -->
-        <h2 class="header-subtitle room-details-header">Room Details</h2>
-    </div>
-    <div class="header-right">
-        <input type="date" class="date-picker" value="2024-10-15">
-        <i class="fa fa-bell notification-icon"></i>
-    </div>
-</header>
+            <div>
+                <!-- Add a new class to the Welcome header -->
+                <h1 class="welcome-header">Welcome to Hive</h1>
+                <!-- Add the class for custom styling -->
+                <h2 class="header-subtitle room-details-header">Room Details</h2>
+            </div>
+            <div class="header-right">
+                <input type="date" class="date-picker" value="2024-10-15">
+                <i class="fa fa-bell notification-icon"></i>
+            </div>
+        </header>
 
 
         <section class="room-overview">
             <div class="left-section">
-                <!-- Tenants Section -->
                 <div class="tenants-section">
-                    <h3 class="tenants-title"><i class="fas fa-users"></i> Tenants</h3>
+                    <div class="tenants-title-wrapper">
+                        <h3 class="tenants-title"><i class="fas fa-users"></i> Tenants</h3>
+                        <a href="/tenant/room-details/view/account" class="edit-info-link">
+                            <button class="edit-info-btn top-right">Edit Info</button>
+                        </a>
+                    </div>
                     <div class="tenant-cards">
                         {{#each tenants}}
                         <div class="tenant-card tenants-template">
@@ -83,7 +87,7 @@
                             <div class="tenant-info-card">
                                 <div class="avatar">
                                     <img src="{{#if tenantProfile}}/images/upload/{{tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
-                                    alt="Tenant Profile">
+                                        alt="Tenant Profile">
                                 </div>
                                 <div class="tenant-details">
                                     <p><strong>{{tenantFirstName}} {{tenantLastName}}</strong></p>
@@ -98,26 +102,23 @@
                 </div>
             </div>
 
-           <!-- Right Section -->
-<div class="right-section">
-    <div class="room-info">
-        <div class="room-number">
-            <div class="room-number-card">
-                <!-- Circle Template for Room Number -->
-                <div class="circle">
-                    <h1>{{roomNumber}}</h1> <!-- Display the room number inside the circle -->
+            <!-- Right Section -->
+            <div class="right-section">
+                <div class="room-info">
+                    <div class="room-number">
+                        <div class="room-number-card">
+                            <!-- Circle Template for Room Number -->
+                            <div class="circle">
+                                <h1>{{roomNumber}}</h1> <!-- Display the room number inside the circle -->
+                            </div>
+                            <p>Room No.</p> <!-- Text outside the circle -->
+                        </div>
+                    </div>
                 </div>
-                <p>Room No.</p> <!-- Text outside the circle -->
             </div>
-        </div>
-    </div>
-</div>
 
         </section>
     </main>
-
-
-
 
     {{!--
     <!-- Modal for editing tenant info -->
