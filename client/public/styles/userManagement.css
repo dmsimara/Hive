@@ -379,7 +379,6 @@ table tr:nth-child(even) td {
 }
 
 
-/* Delete Button */
 .btn-delete {
   background-color: var(--maroon); 
   color: white;
@@ -390,9 +389,6 @@ table tr:nth-child(even) td {
   cursor: pointer;
   transition: all 0.3s ease;
 }
-
-
-
 
 .btn-delete:hover {
   background-color: white;
@@ -495,14 +491,41 @@ form select {
   margin-bottom: 6px;
 }
 
-
 form input::placeholder,
 form select::placeholder {
   color: #bbb;
 }
 
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 
-/* Modal Button Styles */
+form input:focus,
+form select:focus {
+  border-color: #ffb347 !important;
+  box-shadow: 0 0 5px rgba(255, 180, 71, 0.6) !important; 
+  outline: none !important;
+}
+
+.btn:focus,
+.form-control:focus {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.input-group-text {
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+}
+
+.password-icon {
+  font-size: 18px;
+  color: #333;
+}
+
 button.btn-secondary {
   background-color: transparent;
   border: 1px solid #ff4d4d;

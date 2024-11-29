@@ -1321,7 +1321,6 @@ export const togglePinned = async (req, res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         establishmentId = decoded.establishmentId;
 
-        // Find the notice
         const notice = await Notice.findOne({
             where: { notice_id: noticeId, establishment_id: establishmentId },
         });
@@ -1330,10 +1329,8 @@ export const togglePinned = async (req, res) => {
             return res.status(404).json({ success: false, message: "Notice not found." });
         }
 
-        // Toggle pinned status
         notice.pinned = notice.pinned ? 0 : 1;
 
-        // Save the changes to the database
         await notice.save();
 
         return res.status(200).json({

@@ -4,13 +4,27 @@ function toggleMenu() {
     subMenu.classList.toggle("open-menu");
 }
 
+document.getElementById('togglePassword').addEventListener('click', function () {
+    const passwordField = document.getElementById('tenantPassword');
+    const isPassword = passwordField.type === 'password';
+    passwordField.type = isPassword ? 'text' : 'password';
+    this.querySelector('i').textContent = isPassword ? 'visibility_off' : 'visibility';
+});
+  
+document.getElementById('toggleConfirmPassword').addEventListener('click', function () {
+    const confirmPasswordField = document.getElementById('tenantConfirmPassword');
+    const isPassword = confirmPasswordField.type === 'password';
+    confirmPasswordField.type = isPassword ? 'text' : 'password';
+    this.querySelector('i').textContent = isPassword ? 'visibility_off' : 'visibility';
+});
+  
+
 document.addEventListener("DOMContentLoaded", () => {
     const logoutButton = document.getElementById("logoutButton");
     const tenantForm = document.getElementById("tenantForm");
-    const editTenantForm = document.getElementById("editForm"); // updated form ID
+    const editTenantForm = document.getElementById("editForm"); 
     const roomDropdown = document.getElementById("roomSelection");
 
-    // Logout button click event
     logoutButton.addEventListener("click", async () => {
         const isConfirmed = confirm("Are you sure you want to log out?");
         if (!isConfirmed) return;
@@ -31,7 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Fetch available rooms when the "Add Tenant" modal is shown
     document.getElementById("addTenantModal").addEventListener("show.bs.modal", async () => {
         try {
             const response = await fetch('/api/auth/getAvailableRooms');
@@ -51,7 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Tenant form submission for adding new tenant
     tenantForm.addEventListener("submit", async function(event) {
         event.preventDefault();
         const tenantData = {
@@ -71,7 +83,6 @@ document.addEventListener("DOMContentLoaded", () => {
             dateJoined: new Date().toISOString()
         };
 
-        // Validate tenant data
         if (!validateTenantData(tenantData)) {
             alert("Please fill in all required fields.");
             return;
