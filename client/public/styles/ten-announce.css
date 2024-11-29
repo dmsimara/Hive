@@ -8,6 +8,7 @@ body, html {
     box-sizing: border-box;
 }
 
+
 /* Adjust the container */
 .container {
     display: grid;
@@ -17,7 +18,7 @@ body, html {
     width: 100%; /* Take the full width of the page */
     height: 100vh; /* Full viewport height */
     box-sizing: border-box; /* Ensures padding and borders are included in dimensions */
-    background-color: #F5F5F5; 
+    background-color: #F5F5F5;
 }
 
 
@@ -30,6 +31,7 @@ body, html {
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
+
 .sidebar-card {
     background-color: #FFFFFF;
     border-radius: 15px;
@@ -40,14 +42,17 @@ body, html {
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
+
 .logo {
     margin-bottom: 20px; /* Adjust space around logo */
 }
+
 
 .logo-img {
     width: 140px;
     height: auto;
 }
+
 
 .sidebar p {
     font-size: 1em;
@@ -55,47 +60,82 @@ body, html {
     margin-bottom: 10px; /* Increased spacing for readability */
 }
 
+
 .menu-title {
     font-weight: bold;
     color: #333; /* Darker color for better visibility */
     margin-bottom: 10px;
 }
 
+
 .menu ul {
     list-style: none;
     padding-left: 0;
 }
 
+
 .menu ul li {
     margin: 10px 0;
 }
 
+
+/* Default state for sidebar menu items */
 .menu ul li a {
     text-decoration: none;
-    color: #333;
+    color: #333; /* Default text color */
     font-size: 1em;
     padding: 10px 15px;
     border-radius: 8px;
     display: block;
-    transition: background 0.3s ease;
+    transition: none; /* Removed transition for non-active items */
 }
 
+
+/* Active menu item with gradient (orange to red) */
 .menu ul li.active a {
-    background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
-    color: white;
+    background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%); /* Orange to red gradient */
+    color: white; /* White font */
+    padding: 12px 15px; /* Adjust padding for a larger clickable area */
+    border-radius: 4px; /* Rounded corners */
+    transition: background 0.3s ease, color 0.3s ease; /* Smooth transitions */
 }
 
-.menu ul li a:hover,
-.tracker ul li a:hover,
-.logout-button:hover {
-    color: #FF6B45; /* Dark orange text on hover */
-    transition: color 0.3s; /* Smooth color transition */
+
+/* Active tracker item with gradient (orange to red) */
+.tracker ul li.active a {
+    background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%); /* Orange to red gradient */
+    color: white; /* White font */
+    padding: 12px 15px; /* Adjust padding for a larger clickable area */
+    border-radius: 4px; /* Rounded corners */
+    transition: background 0.3s ease, color 0.3s ease; /* Smooth transitions */
 }
 
+
+/* Active logout button with gradient (orange to red) */
+.logout-button.active {
+    background: linear-gradient(90deg, #210a01 0%, #FFAA44 25% ); /* Orange to Red gradient */
+    color: white; /* White font */
+    padding: 10px 15px;
+    border-radius: 8px;
+}
+
+
+/* Keep the hover effect consistent even for active state */
+.menu ul li.active a:hover,
+.tracker ul li.active a:hover,
+.logout-button.active:hover {
+   
+    background: linear-gradient(90deg, #fa1b10 0%, #FF6B45 100%); /* Maintain orange to red gradient on hover */
+    color: white; /* Maintain white font on hover */
+}
+
+
+/* Tracker and logout menu styles */
 .tracker ul {
     list-style: none;
     padding-left: 0;
 }
+
 
 .tracker ul li a {
     text-decoration: none;
@@ -104,14 +144,16 @@ body, html {
     padding: 10px 15px;
     border-radius: 8px;
     display: block;
-    transition: background 0.3s ease;
+    transition: none; /* Removed transition for non-active items */
 }
+
 
 .logout-container {
     margin-top: auto;
     padding-top: 20px;
     border-top: 1px solid #ddd;
 }
+
 
 .logout-button {
     display: flex;
@@ -121,18 +163,49 @@ body, html {
     font-size: 1em;
     padding: 10px 15px;
     border-radius: 8px;
-    transition: background 0.3s ease;
+    transition: none; /* Removed transition for non-active items */
 }
 
+
+/* Default state: black icon */
 .logout-button i {
     margin-right: 10px;
-    color: #A22F05;
+    color: #080808; /* Black */
+    transition: color 0.3s ease; /* Smooth transition for the color change */
 }
+
+
+/* Hover state: white icon */
+.logout-button:hover i {
+    color: #ffffff; /* White */
+}
+
 
 .logout-button:hover {
     background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
     color: white;
 }
+
+
+/* Hover effect for non-active sidebar menu items (font turns orange) */
+.menu ul li a:hover {
+    color: #FF6B45; /* Orange font color on hover */
+}
+
+
+.tracker ul li a:hover {
+    color: #FF6B45; /* Orange font color on hover */
+}
+
+
+.logout-button:hover {
+    color: #f7f3f3; /* Orange font color on hover */
+}
+
+
+
+
+
 
 /* Main Content */
 .main-content {
@@ -142,6 +215,7 @@ body, html {
     overflow-y: auto;
 }
 
+
 .announcement-header {
     display: flex;
     justify-content: space-between;
@@ -149,16 +223,19 @@ body, html {
     margin-bottom: 20px;
 }
 
+
 .announcement-header h1 {
     font-size: 24px;
     color: #000;
     font-weight: bold;
 }
 
+
 .announcement-header h2 {
     font-size: 18px;
     color: #555;
 }
+
 
 /* Section Titles */
 .pinned-section h3,
@@ -170,10 +247,12 @@ body, html {
     align-items: center;
 }
 
+
 .pinned-section h3 i,
 .new-section h3 i {
     margin-right: 10px;
 }
+
 
 /* Announcement Cards */
 .announcement-card {
@@ -187,11 +266,13 @@ body, html {
     position: relative;
 }
 
+
 .announcement-date h4 {
     font-size: 14px;
     color: #000;
     margin: 0;
 }
+
 
 .orange-line {
     width: 100%;
@@ -200,6 +281,7 @@ body, html {
     margin: 5px 0;
 }
 
+
 .announcement-content h3 {
     font-size: 16px;
     font-weight: bold;
@@ -207,11 +289,13 @@ body, html {
     margin: 0;
 }
 
+
 .announcement-content p {
     font-size: 14px;
-    color: #555;
+    color: #f1ecec;
     margin-top: 10px;
 }
+
 
 /* Permanent Notices Section */
 .permanent-notices {
@@ -226,12 +310,14 @@ body, html {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+
 .permanent-notices h2 {
     font-size: 18px; /* Adjusted text size */
     font-weight: bold;
     margin-bottom: 15px;
     color: white;
 }
+
 
 /* Scrollable Section */
 .notices-scroll {
@@ -240,11 +326,13 @@ body, html {
     padding-right: 10px;
 }
 
+
 .notices-scroll ul {
     list-style: none;
     margin: 0;
     padding: 0;
 }
+
 
 .permanent-card {
     background-color: #FFF;
@@ -256,6 +344,7 @@ body, html {
     font-size: 14px;
 }
 
+
 .permanent-card h3 {
     font-size: 16px;
     font-weight: bold;
@@ -263,26 +352,29 @@ body, html {
     margin-bottom: 10px;
 }
 
+
 .permanent-card p {
     margin: 5px 0;
 }
+
 
 /* Scrollbar Customization */
 .notices-scroll::-webkit-scrollbar {
     width: 10px;
 }
 
+
 .notices-scroll::-webkit-scrollbar-thumb {
     background-color: #CCCCCC; /* Changed to gray */
     border-radius: 5px;
 }
 
+
 .notices-scroll::-webkit-scrollbar-track {
     background-color: #F0F0F0;
     border-radius: 5px;
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
-}
-
+}/* Filter navigation */
 .filter-nav {
     display: flex;
     gap: 15px;
@@ -290,35 +382,84 @@ body, html {
     margin-top: 20px;
 }
 
+
+/* Filter link styling */
 .filter-link {
     text-decoration: none;
-    color: #007bff;
+    color: white; /* White text */
     font-weight: bold;
     cursor: pointer;
     padding: 5px 10px;
     border-radius: 5px;
+    background-color: #ff440b; /* Plain orange background */
+    transition: background-color 0.3s, color 0.3s; /* Smooth hover effect */
 }
 
+
+/* Hover effect for filter links */
 .filter-link:hover {
-    background-color: #f0f0f0;
+    background-color: #680202; /* Red background on hover */
+    color: white; /* Ensure text stays white on hover */
 }
 
+
+/* Active filter link styling */
 .filter-link.active {
-    color: #fff;
-    background-color: #007bff;
+    background-color: #680202; /* Orange background for active state */
+    color: white; /* White text */
 }
+
+
+/* Notices list */
 .notices-list {
     padding-top: 20px;
 }
 
+
+/* Individual notice styling (general) */
 .notice {
-    border: 1px solid #ccc;
+    border: 2px solid #FF6B45; /* Orange border for visibility */
     padding: 15px;
     margin-bottom: 10px;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+    background: linear-gradient(90deg, #FF6B45, #FF3C00); /* Gradient from orange to red */
+    color: white; /* White text */
+    transition: background-color 0.3s, color 0.3s; /* Smooth hover effect */
 }
 
+
+/* Hover effect for notices */
+.notice:hover {
+    background: linear-gradient(90deg, #070707, #B32C19); /* Lighter gradient on hover */
+    color: white; /* Ensure text stays white */
+}
+
+
+/* Title of each notice (set to orange) */
+.notice h3 {
+    font-size: 16px;
+    font-weight: bold;
+    color: #FF6B45; /* Orange color for the title */
+    margin-bottom: 10px;
+}
+
+
+/* Additional styling for pinned notices */
+.notice.pinned {
+    border: 2px solid #FF6B45; /* Orange border for pinned notices */
+    background: linear-gradient(90deg, #FF6B45, #FF3C00); /* Same gradient as normal */
+    color: white; /* White text */
+}
+
+
+/* Additional styling for permanent notices */
+.notice.permanent {
+    border: 2px solid #FF6B45; /* Orange border for permanent notices */
+    background: linear-gradient(90deg, #FF6B45, #FF3C00); /* Same gradient as normal */
+    color: white; /* White text */
+}
+
+
+/* Badge styling within notice */
 .notice .badge {
     font-size: 12px;
     background-color: gold;
@@ -327,3 +468,72 @@ body, html {
     border-radius: 3px;
     display: inline-block;
 }
+
+
+/* Notice Title */
+.notice-title {
+    color: #B32C19; /* Orange color */
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+
+/* Pinned Badge */
+.pinned-badge {
+    background-color: #B32C19; /* Cacao color */
+    color: white; /* White text for contrast */
+    padding: 3px 6px;
+    border-radius: 5px;
+    font-size: 12px;
+    margin-right: 5px; /* Space between badges */
+}
+
+
+/* Permanent Badge */
+.permanent-badge {
+    background-color: #B32C19; /* Cacao color */
+    color: white; /* White text for contrast */
+    padding: 3px 6px;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+
+/* Styling for individual notice item */
+.notice-item {
+    width: 100%; /* Ensures it takes the full available width */
+    max-width: 100%; /* Removes any max-width limit */
+    margin-bottom: 15px;
+    padding: 15px;
+    background-color: #FFFFFF; /* White background */
+    color: #333333; /* Original font color */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Gray shadow around the border */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+}
+
+
+
+
+/* Adjust the width for individual notice content */
+.notice-item .notice-title {
+    font-size: 24px; /* Larger font for the title */
+    color: #FF6B45; /* Orange color */
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+
+/* Ensure the entire content is responsive and doesn't break */
+.notice-content {
+    font-size: 16px;
+    color: #333333; /* Original font color */
+    margin-bottom: 10px;
+    line-height: 1.5; /* Improved readability */
+}
+
+
+
+
+

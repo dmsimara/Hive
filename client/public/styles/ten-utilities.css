@@ -168,14 +168,13 @@ body, html {
  
  
  
- main {
-   margin-left: 15%; /* Account for the sidebar width */
-   width: 85%; /* Align the right content to the edge */
-   padding: 0 20px; /* Ensure consistent spacing */
-   overflow-y: auto; /* Enable vertical scrolling */
-   height: 100vh;
-   scrollbar-width: thin; /* Optional: visible scrollbar styling */
- }
+main {
+  margin-left: 20%; /* Match this to the sidebar width */
+  width: 80%; /* Ensure the remaining width fits */
+  padding: 20px; /* Consistent padding */
+  overflow-y: auto; /* Enable vertical scrolling */
+  height: 100vh; /* Ensure it takes the full height */
+}
  
  
  .row {
@@ -206,8 +205,7 @@ body, html {
    color: #555; /* Muted color for a secondary focus */
    margin: 0;
  }
- 
- 
+
  .dashboard-title {
    font-size: 2rem;
    font-weight: bold;
@@ -379,14 +377,21 @@ body, html {
  
  
  .bill {
-   display: flex;
-   align-items: center;
-   justify-content: space-between;
-   padding: 10px 15px;
-   background: #fff;
-   border-radius: 8px;
-   border: 1px solid #6F4F37; /* Solid orange border */
- }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #6F4F37; /* Solid orange border */
+}
+
+.bill-amount, .shared-amount {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #444;
+  align-self: center;  /* Ensure they align at the same height */
+}
  
  
  .bill i {
@@ -409,9 +414,8 @@ body, html {
    font-weight: bold;
    color: #444;
  }
- 
- 
- 
+
+
  
  /* Shared Balance Paid Indicator */
  .paid-indicator {
@@ -583,6 +587,48 @@ body, html {
    color: white;
  }
  
+ /* Ensure that the bill section is using a column layout */
+.bill {
+  display: flex;
+  flex-direction: column; /* Arrange elements vertically */
+  align-items: flex-start; /* Align the children to the start of the flex container */
+  padding: 10px 15px;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #6F4F37; /* Solid orange border */
+  gap: 5px; /* Add gap between elements */
+}
+
+/* Adjust styling for bill title to ensure space is utilized well */
+.bill-title {
+  font-size: 2rem;
+  font-weight: 500;
+  color: #333;
+  margin: 0;
+}
+
+/* Adjust styling for bill amount, aligning it to the right */
+.bill-amount {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #444;
+  align-self: flex-end; /* Align to the right */
+}
+
+/* Style for the date section below the bill title */
+.bill-dates p {
+  font-size: 0.8rem;
+  color: #666;
+  margin: 2px 0 0 0; /* Adjust margin to ensure it's spaced below the title */
+}
+
+/* Style for the tenant share below the bill amount, aligning it to the right */
+.bill-tenant-share {
+  font-size: 0.8rem;
+  color: #666;
+  margin: 2px 0 0 0; /* Adjust margin to ensure it's spaced below the amount */
+  align-self: flex-end; /* Align to the right */
+}
+
  
- 
- 
+
