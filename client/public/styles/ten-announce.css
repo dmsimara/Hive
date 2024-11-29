@@ -2,11 +2,24 @@
 body, html {
     font-family: 'Arial', sans-serif;
     height: 100%;
+    width: 100%;
     margin: 0; /* Ensures no extra margins */
     padding: 0; /* Ensures no extra paddings */
     overflow: hidden; /* Prevents unwanted scrolling */
     box-sizing: border-box;
+   
 }
+body {
+    background-color: #F5F5F5; /* Light background color */
+}
+
+
+.container {
+    background: url('your-image.jpg') no-repeat center center/cover; /* Full-screen background image */
+   
+}
+
+
 
 
 .container {
@@ -21,7 +34,134 @@ body, html {
     background-color: #F5F5F5; /* Matches gray background */
 }
 
-/* Sidebar */
+
+.announcement-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #DDD;
+    padding: 15px 10px; /* Reduced horizontal padding */
+    margin-bottom: 20px;
+}
+
+
+.header-left {
+    margin-left:0x; /* Slightly shift the header left */
+}
+
+
+.header-right {
+    margin-right: 50px; /* Optional: keep balanced if needed */
+}
+
+
+.header-left h3 {
+    font-size: 1.2em;
+    color: #888; /* Subtle text for greeting */
+    margin-bottom: 0px;
+}
+
+
+.header-left h1 {
+    font-size: 2.5em;
+    color: #333;
+    font-weight: bold;
+    margin: 0; /* Align closely with greeting text */
+}
+
+
+
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* border-bottom: 1px solid #DDD; */ /* Remove or comment out this line */
+    padding: 15px 10px; /* Reduced horizontal padding */
+    margin-bottom: -15px;
+}
+
+
+.header-left {
+    margin-left: 0;
+}
+
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+
+.date-picker {
+    font-size: 1em;
+    padding: 8px 15px;
+    border-radius: 25px;
+    border: 1px solid #ddd;
+    background-color: #ffffff;
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    outline: none;
+}
+
+
+
+
+.notification-icon {
+    font-size: 1.5em;
+    color: #555;
+    cursor: pointer;
+     margin-top: 0px; /* Move it a little bit down */
+    margin-left: 0px; /* Slightly shift the header left */
+
+
+}
+
+
+.notification-icon:hover {
+    color: #FF6B45;
+    transition: color 0.3s ease;
+}
+
+
+.permanent-notices {
+    background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
+    padding: -15px;
+    border-radius: 10px;
+    color: white;
+    max-height: 90%;
+    width: 100%;
+    margin-top: 20px;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow-x: hidden; /* Prevent overflow in notices */
+}
+.notices-scroll {
+    overflow-y: auto;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    max-height: calc(100vh - 350px); /* Adjusted height */
+    padding-right: 10px;
+}
+/* Ensure all content elements do not overflow */
+.main-content {
+    margin-left: 0x; /* Shift content to the right of the sidebar */
+    background-color: transparent;
+    padding: 20px;
+    overflow-y: auto; /* Allow vertical scrolling if content overflows */
+    overflow-x: hidden; /* Prevent horizontal overflow */
+    border-radius: 15px;
+    width: calc(100% - 250px); /* Adjust content width based on sidebar */
+}
+
+
 .sidebar {
     background-color: #F4F4F4;
     padding: 0; /* Remove padding to avoid overflow */
@@ -29,8 +169,11 @@ body, html {
     flex-direction: column;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     height: 100%; /* Full height of container */
-    width: 125%; /* Ensure the sidebar takes up grid-defined space */
+    width: 100%; /* Prevent overflow */
+    max-width: 250px; /* Prevent sidebar from overflowing */
+   
 }
+
 
 /* Sidebar Card */
 .sidebar-card {
@@ -43,7 +186,14 @@ body, html {
     display: flex;
     flex-direction: column;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+   
 }
+
+
+
+
+
+
 
 
 .logo {
@@ -51,16 +201,29 @@ body, html {
     margin-top: -30px;
 }
 
+
+
+
 .logo-img {
     width: 140px;
     height: auto;
 }
 
+
+
+
 .sidebar p {
     font-size: 0.9em;
     color: #666;
     line-height: 1.8;
+   
 }
+
+
+
+
+
+
 
 
 .menu-title {
@@ -68,13 +231,23 @@ body, html {
     color: #0a0a0a;
 }
 
+
+
+
 .menu ul {
     list-style: none;
+   
 }
+
+
+
 
 .menu ul li {
     margin: 10px 0;
 }
+
+
+
 
 .menu ul li a {
     text-decoration: none;
@@ -83,25 +256,42 @@ body, html {
     padding: 10px;
     border-radius: 8px;
     line-height: 2.5;
+
+
 }
+
+
+
 
 .menu ul li.active a {
     background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
     color: white;
 }
 
+
+
+
+/* Hover state - orange background with orange text */
 .menu ul li a:hover,
-.tracker ul li a:hover,
-.logout-button:hover {
-    color: #FF6B45; /* Dark orange text on hover */
-    transition: color 0.3s; /* Smooth color transition */
+.tracker ul li a:hover {
+    color: #FF6B45; /* Orange font color */
 }
 
+
+/* Active state - same as hover */
+.menu ul li.active a,
+.tracker ul li.active a {
+    background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%); /* Orange gradient */
+    color: white; /* White font color */
+}
 .logout-container {
     margin-top: auto;
     padding-top: 20px;
     border-top: 1px solid #ddd;
 }
+
+
+
 
 .logout-button {
     display: flex;
@@ -113,10 +303,16 @@ body, html {
     border-radius: 8px;
 }
 
+
+
+
 .logout-button i {
     margin-right: 10px;
     color: #A22F05;
 }
+
+
+
 
 .logout-button:hover {
     background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
@@ -124,9 +320,18 @@ body, html {
 }
 
 
+
+
+
+
+
+
 .tracker ul {
     list-style: none;
 }
+
+
+
 
 .tracker ul li a {
     text-decoration: none;
@@ -140,13 +345,76 @@ body, html {
 
 
 
+
+
+
+
+.logout-container {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+   
+}
+
+
+
+
+.logout-button {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    font-size: 1em;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+}
+
+
+
+
+.logout-button i {
+    margin-right: 10px;
+    color: #A22F05;
+}
+.logout-button:hover i {
+    color: white; /* Change icon color to white on hover */
+    transition: color 0.3s ease; /* Smooth transition effect */
+}
+
+
+
+
+.logout-button:hover {
+    background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
+    color: white;
+}
+
+
+
+
+
+
 /* Main Content */
 .main-content {
+    margin-left: 0px; /* Shift content to the right of the sidebar */
     background-color: transparent; /* Background for visibility */
     padding: 20px; /* Space inside the content */
     overflow-y: auto; /* Allow vertical scrolling if content overflows */
     border-radius: 15px;
+    width: 100%; /* Allow full width for content */
+     margin-top: 10px; /* Move it a little bit down */
+
+
 }
+
+
+
+
+
+
+
+
 
 
 .announcement-header {
@@ -157,6 +425,8 @@ body, html {
 }
 
 
+
+
 .announcement-header h1 {
     font-size: 24px;
     color: #000;
@@ -164,10 +434,14 @@ body, html {
 }
 
 
+
+
 .announcement-header h2 {
     font-size: 18px;
     color: #555;
 }
+
+
 
 
 /* Section Titles */
@@ -181,10 +455,14 @@ body, html {
 }
 
 
+
+
 .pinned-section h3 i,
 .new-section h3 i {
     margin-right: 10px;
 }
+
+
 
 
 /* Announcement Cards */
@@ -200,11 +478,15 @@ body, html {
 }
 
 
+
+
 .announcement-date h4 {
     font-size: 14px;
     color: #000;
     margin: 0;
 }
+
+
 
 
 .orange-line {
@@ -215,6 +497,8 @@ body, html {
 }
 
 
+
+
 .announcement-content h3 {
     font-size: 16px;
     font-weight: bold;
@@ -223,11 +507,15 @@ body, html {
 }
 
 
+
+
 .announcement-content p {
     font-size: 14px;
     color: #f1ecec;
     margin-top: 10px;
 }
+
+
 
 
 /* Permanent Notices Section */
@@ -244,12 +532,16 @@ body, html {
 }
 
 
+
+
 .permanent-notices h2 {
     font-size: 18px; /* Adjusted text size */
     font-weight: bold;
     margin-bottom: 15px;
     color: white;
 }
+
+
 
 
 /* Scrollable Section */
@@ -260,11 +552,15 @@ body, html {
 }
 
 
+
+
 .notices-scroll ul {
     list-style: none;
     margin: 0;
     padding: 0;
 }
+
+
 
 
 .permanent-card {
@@ -278,6 +574,8 @@ body, html {
 }
 
 
+
+
 .permanent-card h3 {
     font-size: 16px;
     font-weight: bold;
@@ -286,9 +584,13 @@ body, html {
 }
 
 
+
+
 .permanent-card p {
     margin: 5px 0;
 }
+
+
 
 
 /* Scrollbar Customization */
@@ -297,16 +599,22 @@ body, html {
 }
 
 
+
+
 .notices-scroll::-webkit-scrollbar-thumb {
     background-color: #CCCCCC; /* Changed to gray */
     border-radius: 5px;
 }
 
 
+
+
 .notices-scroll::-webkit-scrollbar-track {
     background-color: #F0F0F0;
     border-radius: 5px;
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+
+
 }/* Filter navigation */
 .filter-nav {
     display: flex;
@@ -314,6 +622,8 @@ body, html {
     margin-bottom: 20px;
     margin-top: 20px;
 }
+
+
 
 
 /* Filter link styling */
@@ -329,11 +639,15 @@ body, html {
 }
 
 
+
+
 /* Hover effect for filter links */
 .filter-link:hover {
     background-color: #680202; /* Red background on hover */
     color: white; /* Ensure text stays white on hover */
 }
+
+
 
 
 /* Active filter link styling */
@@ -343,10 +657,14 @@ body, html {
 }
 
 
+
+
 /* Notices list */
 .notices-list {
     padding-top: 20px;
 }
+
+
 
 
 /* Individual notice styling (general) */
@@ -360,11 +678,15 @@ body, html {
 }
 
 
+
+
 /* Hover effect for notices */
 .notice:hover {
     background: linear-gradient(90deg, #070707, #B32C19); /* Lighter gradient on hover */
     color: white; /* Ensure text stays white */
 }
+
+
 
 
 /* Title of each notice (set to orange) */
@@ -376,6 +698,8 @@ body, html {
 }
 
 
+
+
 /* Additional styling for pinned notices */
 .notice.pinned {
     border: 2px solid #FF6B45; /* Orange border for pinned notices */
@@ -384,12 +708,16 @@ body, html {
 }
 
 
+
+
 /* Additional styling for permanent notices */
 .notice.permanent {
     border: 2px solid #FF6B45; /* Orange border for permanent notices */
     background: linear-gradient(90deg, #FF6B45, #FF3C00); /* Same gradient as normal */
     color: white; /* White text */
 }
+
+
 
 
 /* Badge styling within notice */
@@ -403,6 +731,8 @@ body, html {
 }
 
 
+
+
 /* Notice Title */
 .notice-title {
     color: #B32C19; /* Orange color */
@@ -410,6 +740,8 @@ body, html {
     font-weight: bold;
     margin-bottom: 15px;
 }
+
+
 
 
 /* Pinned Badge */
@@ -423,6 +755,8 @@ body, html {
 }
 
 
+
+
 /* Permanent Badge */
 .permanent-badge {
     background-color: #B32C19; /* Cacao color */
@@ -431,6 +765,8 @@ body, html {
     border-radius: 5px;
     font-size: 12px;
 }
+
+
 
 
 /* Styling for individual notice item */
@@ -449,6 +785,10 @@ body, html {
 
 
 
+
+
+
+
 /* Adjust the width for individual notice content */
 .notice-item .notice-title {
     font-size: 24px; /* Larger font for the title */
@@ -458,6 +798,8 @@ body, html {
 }
 
 
+
+
 /* Ensure the entire content is responsive and doesn't break */
 .notice-content {
     font-size: 16px;
@@ -465,6 +807,14 @@ body, html {
     margin-bottom: 10px;
     line-height: 1.5; /* Improved readability */
 }
+
+
+
+
+
+
+
+
 
 
 

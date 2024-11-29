@@ -19,6 +19,8 @@
             </nav>
 
 
+
+
             <p class="menu-title">Tracker</p>
             <div class="tracker">
                 <ul>
@@ -32,6 +34,8 @@
             </div>
 
 
+
+
             <!-- Logout button -->
             <div class="logout-container">
                 <a href="#" id="logoutButton" class="logout-button">
@@ -42,12 +46,29 @@
     </aside>
 <!-- Main Content Section -->
 
+
+
+
+<main class="main-content">
+        <header class="dashboard-header">
+            <div class="header-left">
+                <h3>Welcome to Hive</h3>
+                <h1 class="dashboard-title">Dashboard</h1> <!-- Bold styling added -->
+            </div>
+            <div class="header-right">
+                <input type="date" class="date-picker" value="2024-10-15">
+                <i class="fa fa-bell notification-icon"></i>
+            </div>
+        </header>
+
+
 <div class="main-content">
     <nav class="filter-nav">
         <a href="#" id="all-notices-btn" class="filter-link active">All</a>
         <a href="#" id="pinned-notices-btn" class="filter-link">Pinned</a>
         <a href="#" id="permanent-notices-btn" class="filter-link">Permanent</a>
     </nav>
+
 
     <div id="notices-container" class="notices-list">
         {{#if notices.length}}
@@ -70,7 +91,19 @@
 </div>
 
 
+
+
 <script src="/js/ten-announce.js"></script>
+
+
+
+
+
+
+
+
+
+
 
 
 
