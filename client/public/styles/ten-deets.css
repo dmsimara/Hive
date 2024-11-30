@@ -35,32 +35,41 @@
     height: 100%;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
-
 .logout-container {
     margin-top: auto;
-    padding-top: 20px;
-    border-top: 1px solid #ddd;
+    text-align: left; /* Align logout button to the left */
+    border-top: 1px solid #DDD; /* Add a separator line above */
+    padding-top: 15px; /* Space between the line and the logout button */
 }
 
 .logout-button {
+    color: #000; /* Default text color stays black */
     display: flex;
     align-items: center;
+    justify-content: left;
     text-decoration: none;
-    color: #333;
     font-size: 1em;
     padding: 10px;
     border-radius: 8px;
+    transition: background-color 0.3s, color 0.3s; /* Transition for both background and text */
+    background: none;  /* No background by default */
 }
 
 .logout-button i {
+    color: #A22F05;  /* Initial icon color */
     margin-right: 10px;
-    color: #A22F05;
 }
 
+/* Hover effect for the logout button */
 .logout-button:hover {
-    background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
-    color: white;
+    background: linear-gradient(90deg, #A22F05, #FF6B45); /* Orange gradient */
+    color:#FFFFFF  /* Text turns white on hover */
 }
+
+.logout-button:hover i {
+    color: white;  /* Icon turns white on hover */
+}
+
 
 .logo {
     margin-bottom: -15px;
@@ -91,13 +100,12 @@
     padding: 0;
 }
 
-
 .menu ul li,
 .tracker ul li {
     margin: 10px 0;
 }
 
-
+/* Remove bullet points */
 .menu ul li a,
 .tracker ul li a {
     text-decoration: none;
@@ -111,17 +119,37 @@
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-
+/* Active state for menu items */
 .menu ul li.active a {
-    background: linear-gradient(90deg, #FF7F32 0%, #FFB548 100%);
+    background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
+    color: white;
+}
+
+/* Hover effects for text and icon */
+.menu ul li a:hover,
+.tracker ul li a:hover {
+    color: #FF7F32;  /* Text turns orange */
+}
+
+.menu ul li a:hover i,
+.tracker ul li a:hover i {
+    color: #FF7F32;  /* Icon turns orange */
+}
+
+/* Active state for the icon */
+.menu ul li.active a i,
+.tracker ul li.active a i {
+    color: white; /* Icon turns white when active */
+}
+
+/* Active state for menu items */
+.menu ul li.active a {
+    background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
     color: white;
 }
 
 
-.menu ul li a:hover,
-.tracker ul li a:hover,
 .logout-button:hover {
-    background-color: #FFE3D5;
     color: #FF7F32;
 }
 
@@ -210,7 +238,7 @@
 }
 
 .edit-info-btn {
-    background-color: #FF7F32;
+    background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
     color: white;
     font-family: 'Inter', sans-serif;
     font-size: 1em;
