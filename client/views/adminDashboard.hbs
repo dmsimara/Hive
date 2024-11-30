@@ -52,52 +52,59 @@
 </nav>
 
 <div class="container pt-5 pb-5">
-  <div class="row">
-    <!-- Tenant Information -->
-    <div class="col-4" id="left" style="flex: 0 0 30%; max-width: 30%;">
-      <h3>Tenant Information
-        <a href="/admin/dashboard/userManagement">
-          <i class="material-icons">open_in_new</i>
-        </a>
-      </h3>
+  <!-- Tenant Information -->
+  <div class="col-4" id="left">
+    <h3>Tenant Information
+      <a href="/admin/dashboard/userManagement">
+        <i class="material-icons left-open">open_in_new</i>
+      </a>
+    </h3>
 
-      <form class="d-flex" id="tenantSearchForm" role="search" method="POST" action="/admin/dashboard" novalidate>
-        <input class="form-control me-2" type="search" placeholder="Search" name="searchTenants" aria-label="Search"
-          required id="searchTenantsInput" value="{{lastSearchTerm}}" />
-        <button class="btn btn-outline-success btn-sm" type="submit">Search</button>
-      </form>
-
-      <div class="tenant-cards" id="tenantCardsContainer">
-        {{#if tenants.length}}
-        {{#each tenants}}
-        <a href="#" class="card-link" data-id="{{tenant_id}}" onclick="openTenantModal({{tenant_id}})">
-          <div class="card mb-3">
-            <div class="card-body">
-              <img
-                src="{{#if this.tenantProfile}}/images/upload/{{this.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
-                alt="Profile" width="40px" class="me-2" />
-              <h5 class="card-title d-inline">{{this.tenantFirstName}} {{this.tenantLastName}}</h5>
-            </div>
-          </div>
-        </a>
-        {{/each}}
-        {{else}}
-        <p>No active tenants found.</p>
-        {{/if}}
+    <form class="d-flex" id="tenantSearchForm" role="search" method="POST" action="/admin/dashboard" novalidate>
+      <div class="search-bar">
+        <input class="form-control form-control-sm me-2" type="search" placeholder="Search Tenant" name="searchTenants"
+          aria-label="Search" id="searchTenantsInput" required value="{{lastSearchTerm}}">
+        <span class="search-icon">
+          <i class="material-icons">search</i>
+        </span>
       </div>
-    </div>
+    </form>
 
-    <!-- Admin Profile -->
-    <div class="col-4" id="middle" style="flex: 0 0 40%; max-width: 40%;">
+    <div class="tenant-cards" id="tenantCardsContainer">
+      {{#if tenants.length}}
+      {{#each tenants}}
+      <a href="#" class="card-link" data-id="{{tenant_id}}" onclick="openTenantModal({{tenant_id}})">
+        <div class="card mb-3">
+          <div class="card-body">
+            {{!-- <img src="/images/pattern.png" alt="Design"> --}}
+            <img
+              src="{{#if this.tenantProfile}}/images/upload/{{this.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+              alt="Profile" width="40px" class="me-2" />
+            <h5 class="card-title d-inline">{{this.tenantFirstName}} {{this.tenantLastName}}</h5>
+          </div>
+        </div>
+      </a>
+      {{/each}}
+      {{else}}
+      <p>No active tenants found.</p>
+      {{/if}}
+    </div>
+  </div>
+
+  <!-- Admin Profile -->
+  <div class="col-4" id="middle">
+    <div class="profile-container">
       <img src="{{#if admin.adminProfile}}/images/upload/{{admin.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
-        alt="Profile" class="user-pic" />
-      <h2>Hi, {{admin.adminFirstName}}</h2>
-      <h6>Here's an overview of your properties</h6>
+        alt="Profile" class="user-profile" />
+      <div class="text-container">
+        <h2>Hi, {{admin.adminFirstName}}</h2>
+        <h6>Here's an overview of your properties</h6>
+      </div>
     </div>
 
     <h3 class="announce-title">Announcements
       <a href="/admin/announcements">
-        <i class="material-icons">open_in_new</i>
+        <i class="material-icons middle-open">open_in_new</i>
       </a>
     </h3>
     <div class="announcement-container" id="announcement-container">
@@ -106,17 +113,17 @@
       <div class="notice-card">
         <h5>{{this.title}}</h5>
         <p>{{this.content}}</p>
-        <p>{{this.updated_at}}</p>
+        <p class="timestamp">{{this.updated_at}}</p>
       </div>
       {{/each}}
       {{else}}
-      <p>No notices available at the moment.</p>
+      <p class="no-notices">No notices available at the moment.</p>
       {{/if}}
     </div>
 
     <h3 class="tracker-title">Tracker
       <a href="/admin/tracker">
-        <i class="material-icons">open_in_new</i>
+        <i class="material-icons middle-open">open_in_new</i>
       </a>
     </h3>
     <div class="tracker-container" id="tracker-container">
@@ -131,14 +138,78 @@
       </div>
       {{/each}}
       {{else}}
-      <p>No events available at the moment.</p>
+      <p class="no-events">No events available at the moment.</p>
       {{/if}}
     </div>
 
+  </div>
 
-    <!-- Links and Navigation -->
-    <div class="col-4 right" id="right" style="flex: 0 0 30%; max-width: 30%;">
-      <h1>Analytics Section</h1>
+
+  <!-- Links and Navigation -->
+  <div class="col-4" id="right">
+    <h1 class="analytics-title">Analytics</h1>
+
+    <div class="analytics-container">
+      <div class="upper-container">
+        <div class="analytics-card">
+          <div class="analytics-header">
+            <i class="fa fa-users analytics-icon"></i>
+            <div class="analytics-body">
+              <p class="number">24</p>
+              <h5 class="desc">Tenants</h5>
+            </div>
+          </div>
+          <div class="progress-container">
+            <div class="progress-bar" style="width: 75%;"></div>
+          </div>
+        </div>
+        <a href="/admin/manage/unit" class="clickable-card">
+          <div class="analytics-card">
+            <div class="analytics-header">
+              <i class="fa fa-lock analytics-icon"></i>
+              <div class="analytics-body">
+                <p class="number">12</p>
+                <h5 class="desc">Occupied Units</h5>
+              </div>
+            </div>
+            <div class="progress-container">
+              <div class="progress-bar" data-progress="40"></div>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div class="lower-container">
+        <div class="analytics-card">
+          <div class="analytics-header">
+            <i class="fa fa-users analytics-icon"></i>
+            <div class="analytics-body">
+              <p class="number">80</p>
+              <h5 class="desc">Total Units</h5>
+            </div>
+          </div>
+          <div class="progress-container">
+            <div class="progress-bar" data-progress="90"></div>
+          </div>
+        </div>
+        <div class="analytics-card">
+          <div class="analytics-header">
+            <i class="fa fa-users analytics-icon"></i>
+            <div class="analytics-body">
+              <p class="number">7</p>
+              <h5 class="long-desc">Pending Maintenance</h5>
+            </div>
+          </div>
+          <div class="progress-container">
+            <div class="progress-bar" data-progress="25"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rent-container">
+        <h6 class="rent-title">Rent Collected This Month</h6>
+        <canvas id="rentPieChart"></canvas>
+      </div>
     </div>
   </div>
 </div>
@@ -154,7 +225,7 @@
         <!-- Tenant details will be dynamically inserted here by JavaScript -->
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary close-modal" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

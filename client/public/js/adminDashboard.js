@@ -110,22 +110,156 @@ function openTenantModal(tenant) {
     }
 
     if (tenant && tenant.tenantFirstName && tenant.tenantLastName) {
-        modalBody.innerHTML = `
-            <p><strong>Name:</strong> ${tenant.tenantFirstName} ${tenant.tenantLastName}</p>
-            <p><strong>Email:</strong> ${tenant.tenantEmail || "N/A"}</p>
-            <p><strong>Phone:</strong> ${tenant.mobileNum || "N/A"}</p>
-            <p><strong>Gender:</strong> ${tenant.gender || "N/A"}</p>
-            <p><strong>Guardian Number:</strong> ${tenant.tenantGuardianNum || "N/A"}</p>
-            <p><strong>Tenant ID:</strong> ${tenant.tenant_id || "N/A"}</p>`;
-
         const profileImageUrl = tenant.tenantProfile ? `/images/upload/${tenant.tenantProfile}` : "/images/defaultUser.webp";
-        modalBody.innerHTML += `
-            <h5>Profile Picture</h5>
-            <img src="${profileImageUrl}" alt="Tenant Profile" class="img-fluid" style="max-width: 200px;"/>`;
+        
+        modalBody.innerHTML = `
+            <div class="profile-container">
+                <img src="${profileImageUrl}" alt="Tenant Profile" class="img-fluid"/>
+                <div class="profile-details">
+                    <p class="name">${tenant.tenantFirstName} ${tenant.tenantLastName}</p>
+                    <div class="contact-info">
+                        <p class="mobileNum"><span class="material-icons call-icon">call</span> ${tenant.mobileNum || "N/A"}</p>
+                        <p class="email"><span class="material-icons email-icon">mail</span> ${tenant.tenantEmail || "N/A"}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="details-container">
+                <div class="details-row">
+                    <p><strong>Tenant ID:</strong> <span>${tenant.tenant_id || "N/A"}</span></p>
+                    <p><strong>Guardian:</strong> <span>${tenant.tenantGuardianName || "N/A"}</span></p>
+                </div>
+                <div class="second-row">
+                    <p><strong>Gender:</strong> <span>${tenant.gender || "N/A"}</span></p>
+                    <p><strong>Guardian Number:</strong> <span>${tenant.tenantGuardianNum || "N/A"}</span></p>
+                </div>
+            </div>
+            <div class="bills-container">
+                <div class="bills-header">
+                    <p>Monthly Bills</p>
+                    <a href="#" class="btn btn-edit btn-sm"><i class="material-icons edit-icon">edit</i>Edit</a>
+                </div>
+                <table class="table table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">Utilities</th>
+                            <th scope="col">Charge</th>
+                            <th scope="col">Statement Date</th>
+                            <th scope="col">Due Date</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Unit Rental</th>
+                            <td>PHP 2,000</td>
+                            <td>October 15, 2024</td>
+                            <td>October 23, 2024</td>
+                            <td class="paid">Paid</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Electricity Consumption</th>
+                            <td>PHP 2,000</td>
+                            <td>October 15, 2024</td>
+                            <td>October 23, 2024</td>
+                            <td class="unpaid">Unpaid</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Water Usage</th>
+                            <td>PHP 2,000</td>
+                            <td>October 15, 2024</td>
+                            <td>October 23, 2024</td>
+                            <td class="paid">Paid</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Water Usage</th>
+                            <td>PHP 2,000</td>
+                            <td>October 15, 2024</td>
+                            <td>October 23, 2024</td>
+                            <td class="paid">Paid</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        `;
     } else {
         modalBody.innerHTML = "<p>Tenant details are unavailable.</p>";
     }
-
+    
+    
     const modal = new bootstrap.Modal(document.getElementById("tenantModal"));
     modal.show();
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    var rentTitle = document.querySelector('.rent-title');
+    rentTitle.style.fontWeight = '700'; 
+    rentTitle.style.color = '#333'; 
+    rentTitle.style.marginBottom = '10px';
+
+    var canvas = document.getElementById('rentPieChart');
+    
+    canvas.width = 90; 
+    canvas.height = 90; 
+
+    var ctx = canvas.getContext('2d');
+    
+    var gray = getComputedStyle(document.documentElement).getPropertyValue('--gray');
+    var maroon = getComputedStyle(document.documentElement).getPropertyValue('--maroon');
+    var orange = getComputedStyle(document.documentElement).getPropertyValue('--orange');
+
+    var paidGradient = ctx.createLinearGradient(0, 0, 0, 400);
+    paidGradient.addColorStop(0, gray);
+    paidGradient.addColorStop(0.5, maroon);
+    paidGradient.addColorStop(1, orange);
+
+    var pendingColor = '#ECECEC';
+
+    var rentPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Paid', 'Pending'],
+            datasets: [{
+                data: [80, 20], 
+                backgroundColor: [paidGradient, pendingColor],
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false, 
+            aspectRatio: 1,
+            layout: {
+                padding: {
+                    top: 0,
+                    left: 0,
+                    right: 20,
+                    bottom: 20
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'right', 
+                    align: 'start',
+                    labels: {
+                        boxWidth: 20,
+                        padding: 10,
+                        color: '#333',  
+                        font: {
+                            weight: 'bold', 
+                        } 
+                    }
+                }
+            }
+        }
+    });
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const progressBars = document.querySelectorAll('.progress-bar');
+  
+    progressBars.forEach(function(progressBar) {
+      const progressValue = progressBar.getAttribute('data-progress');
+      progressBar.style.width = `${progressValue}%`;
+    });
+  });
+  
