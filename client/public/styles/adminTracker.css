@@ -1,66 +1,81 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
 
 :root {
-    --yellow: rgb(255, 251, 151); /* #FFFB97 */
-    --orange: rgb(254, 127, 66); /* #FE7F42 */
-    --maroon: rgb(179, 44, 26); /* #B32C1A */
-    --brown: rgb(122, 75, 71); /* #7A4B47 */
-    --gray: rgb(122, 75, 71); /* #7A4B47 */
-    --dark-gray: rgb(42, 22, 23); /* #2A1617 */
-    --background-color: rgb(245, 245, 245);
-  }
-  
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-    width: 100%;
-    font-family: "Raleway", "Inter", sans-serif;
-    background-color: var(--background-color);
-    box-sizing: border-box;
+  --yellow: rgb(255, 251, 151);
+  /* #FFFB97 */
+  --orange: rgb(254, 127, 66);
+  /* #FE7F42 */
+  --maroon: rgb(179, 44, 26);
+  /* #B32C1A */
+  --brown: rgb(122, 75, 71);
+  /* #7A4B47 */
+  --gray: rgb(122, 75, 71);
+  /* #7A4B47 */
+  --dark-gray: rgb(42, 22, 23);
+  /* #2A1617 */
+  --background-color: rgb(245, 245, 245);
+}
 
-  }
-  
-  .calendar .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr); 
-    gap: 5px;
-    border: 1px solid var(--brown); /* Grid line color */
-    padding: 10px;
-    background-color: var(--yellow); /* Light yellow background for the calendar */
-  }
-  
-  .calendar .day {
-    background-color: var(--maroon); /* Maroon color for each day box */
-    color: var(--yellow); /* Yellow text on maroon background */
-    padding: 10px;
-    text-align: center;
-    border-radius: 5px;
-    transition: background-color 0.3s, transform 0.3s;
-  }
-  
-  .calendar .day:hover {
-    background-color: var(--orange); /* Orange color on hover */
-    transform: scale(1.1); /* Slightly enlarge the day box on hover */
-  }
-  
-  
-  .calendar .selected-day {
-    background-color: var(--orange); /* Highlight selected day with orange */
-    color: black !important; /* Enforce black color for selected day */
-  }
-  
-  .calendar .month,
-  .calendar .year {
-    font-weight: bold;
-    color: var(--maroon);
-    background-color: var(--yellow); /* Yellow background for month and year */
-    padding: 10px;
-    text-align: center;
-    border-radius: 5px;
-    margin-bottom: 10px;
-  }
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100%;
+  font-family: "Raleway", "Inter", sans-serif;
+  background-color: var(--background-color);
+  box-sizing: border-box;
+
+}
+
+.calendar .calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  border: 1px solid var(--brown);
+  /* Grid line color */
+  padding: 10px;
+  background-color: var(--yellow);
+  /* Light yellow background for the calendar */
+}
+
+.calendar .day {
+  background-color: var(--maroon);
+  /* Maroon color for each day box */
+  color: var(--yellow);
+  /* Yellow text on maroon background */
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.calendar .day:hover {
+  background-color: var(--orange);
+  /* Orange color on hover */
+  transform: scale(1.1);
+  /* Slightly enlarge the day box on hover */
+}
+
+
+.calendar .selected-day {
+  background-color: var(--orange);
+  /* Highlight selected day with orange */
+  color: black !important;
+  /* Enforce black color for selected day */
+}
+
+.calendar .month,
+.calendar .year {
+  font-weight: bold;
+  color: var(--maroon);
+  background-color: var(--yellow);
+  /* Yellow background for month and year */
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
 
 
 
@@ -124,7 +139,7 @@
 .sub-menu-wrap {
   position: absolute;
   top: 100%;
-  right: 1%; 
+  right: 1%;
   width: 320px;
   max-height: 0px;
   overflow: hidden;
@@ -149,7 +164,7 @@
 }
 
 .user-info h3 {
-  font-weight: 500; 
+  font-weight: 500;
   color: var(--gray);
   font-size: 20px;
 }
@@ -209,16 +224,279 @@
   color: var(--orange);
   font-weight: 600;
   padding: 8px 12px;
-  border: 2px solid var(--orange); 
+  border: 2px solid var(--orange);
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s, transform 0.3s;
   outline: none;
   box-shadow: none;
+  margin-bottom: 20px;
 }
 
 .add-event-button:hover {
   background-color: var(--orange);
+  color: white;
+  border: 2px solid var(--orange);
+  outline: none;
+  box-shadow: none;
+}
+
+.add-event-button:focus {
+  border: 2px solid var(--orange);
+  outline: none;
+  box-shadow: 0 0 5px rgba(254, 127, 66, 0.5);
+}
+
+
+.calendar .calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr); 
+  gap: 5px;
+  padding: 10px;
+  background-color: var(--yellow);
+  border: 1px solid var(--brown); 
+}
+
+.calendar .day {
+  background-color: var(--maroon);  
+  color: var(--yellow);  
+  padding: 10px;
+  text-align: center;  
+  border-radius: 5px;
+  transition: background-color 0.3s;  
+  cursor: pointer;  
+}
+
+.calendar .day:hover {
+  background-color: var(--orange);  
+  color: white;  
+}
+
+.calendar .selected-day {
+  background: var(--orange); 
+  color: white; 
+}
+
+.calendar .month,
+.calendar .year {
+  font-weight: bold;
+  color: var(--maroon);
+  background-color: var(--yellow);
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.fc-button {
+  background-color: var(--orange); 
+  color: white;
+  border: none; 
+  font-weight: bold;
+  transition: background-color 0.3s, transform 0.3s ease-in-out; 
+  cursor: pointer; 
+  border: none !important;
+}
+
+.fc-button:hover {
+  background-color: var(--maroon) !important;
+  opacity: 0.6;
+  /* transform: scale(1.05); */
+}
+
+.fc-button-active {
+  background-color: var(--brown);
+  color: white;
+}
+
+.fc-button-primary {
+  background-color: var(--orange) !important;
+  color: white !important;
+}
+
+.fc-toolbar-title {
+  color: var(--brown) !important;
+  font-weight: bold;
+  margin: 0 10px;  
+  font-size: 18px; 
+  text-align: center;  
+}
+
+.fc-button-group .fc-button {
+  background-color: var(--orange) !important;
+  color: white !important;
+  border: none !important;
+  font-weight: bold;
+  margin-right: 15px; 
+  transition: background-color 0.3s, transform 0.3s ease-in-out;  
+  cursor: pointer;
+  padding: 8px 13px;  
+  border-radius: 5px;  
+}
+
+.fc-button-group .fc-button:active {
+  background-color: var(--brown) !important;
+  color: white !important;
+  transform: scale(0.98);  
+}
+
+.fc-button.fc-button-active {
+  background-color: var(--brown) !important;
+  color: white !important;
+  transform: scale(1.05);
+}
+
+.fc-daygrid-day-number {
+  color: var(--brown) !important;
+  padding: 10px;
+  border-radius: 50%; 
+  text-align: center; 
+  font-size: 14px; 
+  background-color: var(--yellow); 
+  margin: 10px;
+  height: 30px;
+  width: 30px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.fc-daygrid-day-number:hover {
+  background-color: var(--orange); 
+  color: white !important;
+  cursor: pointer;
+}
+
+.fc-col-header-cell {
+  color: var(--brown) !important;
+  font-weight: bold;
+  background-color: var(--yellow); 
+  text-align: center;
+  padding: 10px;  
+  border-radius: 5px; 
+  text-decoration: none !important;
+}
+
+.fc-daygrid-day {
+  border-radius: 5px; 
+  transition: background-color 0.3s, transform 0.3s ease-in-out; 
+  background-color: #f0f0f0 !important; 
+  padding: 10px;
+}
+
+.fc-daygrid-day:hover {
+  background-color: var(--orange);  
+  color: white;  
+  cursor: pointer;  
+}
+
+.fc-toolbar .fc-button-group .fc-button {
+  background-color: var(--orange) !important;
+  color: white !important;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.fc-button-group .fc-button:hover {
+  background-color: var(--maroon) !important;
+  transform: scale(1.05);
+}
+
+.fc-daygrid-day.fc-day-today {
+  background-color: var(--orange); /* Highlight background */
+  color: white; /* Text color */
+  border: 2px solid var(--maroon); /* Add a border for emphasis */
+  border-radius: 5px; /* Optional: rounded corners */
+  font-weight: bold; /* Emphasize the text */
+}
+
+.fc-button-group .fc-button:focus {
+  outline: none;
+}
+
+.fc-day-header {
+  background-color: var(--yellow);  
+  color: var(--brown);  
+  font-weight: bold;
+  text-align: center;  
+  padding: 10px;
+  border-radius: 5px; 
+}
+
+.fc-header-toolbar {
+  background-color: transparent !important;   
+  color: #333 !important;  
+  padding: 0 !important; 
+  border: none !important; 
+  box-shadow: none !important; 
+}
+
+
+.fc-daygrid-day {
+  background-color: #f0f0f0;  
+  border-radius: 5px;  
+  padding: 10px; 
+  transition: background-color 0.3s ease;  
+}
+
+.fc-event {
+  background-color: #ffcc00;  
+  color: rgb(0, 0, 0);  
+  border-radius: 5px;  
+  padding: 2px;
+  font-weight: bold;  
+  transition: background-color 0.3s ease;  
+}
+
+.fc-event:hover {
+  background-color: #ff6600; 
+  color: rgb(0, 0, 0); 
+}
+
+.fc-event.fc-event-selected {
+  background-color: #ff3300;  
+  color: rgb(0, 0, 0); 
+  border: 2px solid #ff6600; 
+}
+
+.fc-event.fc-event-dragging {
+  opacity: 0.7; 
+}
+
+.fc-dayGridMonth-view {
+  background-color: #fff;
+}
+
+
+.fc-timeGridWeek-view {
+  background-color: #fafafa;
+}
+
+
+.fc-timeGridDay-view {
+  background-color: #f0f0f0;
+}
+
+.fc-col-header-cell-cushion {
+  color: #7A4B47;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.add-event-button::before {
+  content: "+ ";
+  display: inline-block;
+  font-size: 1.2em;
+  /* Adjust icon size */
+  color: #FFFFFF;
+  /* Icon color matches text */
+}
+
+/* Hover State */
+.add-event-button:hover {
+  background-color: var(--orange);
+  /* Orange background on hover */
   color: white;
   transform: scale(1.05);
   border: 2px solid var(--orange);
@@ -229,17 +507,66 @@
 .add-event-button:focus {
   border: 2px solid var(--orange);
   outline: none;
-  box-shadow: 0 0 5px rgba(254, 127, 66, 0.5); 
+  box-shadow: 0 0 5px rgba(254, 127, 66, 0.5);
+}
+
+
+.btn-close-red:hover {
+  background-color: var(--maroon);
+  color: white;
+  border: 2px solid var(--maroon);
+  outline: none;
+  box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+}
+
+.btn-close-red:focus {
+  border: 2px solid var(--maroon);
+  outline: none;
+  box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+}
+
+.btn-close-red {
+  background-color: transparent;
+  border: 2px solid var(--maroon);
+  color: var(--maroon);
+  outline: none;
+  box-shadow: none;
+}
+
+
+.btn-save-orange {
+  background-color: transparent;
+  border: 2px solid var(--orange);
+  color: var(--orange);
+  outline: none;
+  box-shadow: none;
+}
+
+.btn-save-orange:hover {
+  background-color: var(--orange);
+  color: white;
+  border: 2px solid var(--orange);
+  outline: none;
+  box-shadow: 0 0 5px rgba(255, 165, 0, 0.5);
+}
+
+.btn-save-orange:focus {
+  border: 2px solid var(--orange);
+  outline: none;
+  box-shadow: 0 0 5px rgba(255, 165, 0, 0.5);
 }
 
 
 .calendar .calendar-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr); 
+  grid-template-columns: repeat(7, 1fr);
+  /* 7 columns for each day of the week */
   gap: 5px;
-  border: 1px solid var(--brown); 
+  border: 1px solid var(--brown);
+  /* Changed the grid line color to brown */
   padding: 10px;
-  background-color: var(--yellow); 
+  background-color: var(--yellow);
+  /* Light yellow background for the calendar */
 }
 
 .calendar .day {
@@ -248,325 +575,38 @@
   padding: 10px;
   text-align: center;
   border-radius: 5px;
-  transition: background-color 0.3s, transform 0.3s;
+  transition: background-color 0.3s;
 }
 
 .calendar .day:hover {
   background-color: var(--orange);
-  /* transform: scale(1.1); */
-  color: white;
 }
 
 .calendar .selected-day {
-  background-color: var(--orange); 
-  color: white; 
+  background-color: var(--orange);
+  color: white;
 }
 
 .calendar .month,
 .calendar .year {
   font-weight: bold;
   color: var(--maroon);
-  background-color: var(--yellow); 
+  background-color: var(--yellow);
   padding: 10px;
   text-align: center;
   border-radius: 5px;
   margin-bottom: 10px;
 }
 
-.fc-button {
-    background-color: var(--orange) !important;
-    color: white !important;
-    border: none !important;
-    font-weight: bold;
-    transition: background-color 0.3s, transform 0.3s;
-  }
-  
-  .fc-button:hover {
-    background-color: var(--maroon) !important; 
-    transform: scale(1.05);
-  }
-  
-  .fc-button-active {
-    background-color: var(--brown) !important;
-    color: white !important;
-  }
-  
-  .fc-button-primary {
-    background-color: var(--orange) !important;
-    color: white !important;
-  }
-  
-  .fc-toolbar-title {
-    color: var(--brown) !important;
-    font-weight: bold;
-  }
-  
-  .fc-button-group .fc-button:active {
-    background-color: var(--brown) !important;
-    color: white !important;
-  }
-  
-  .fc-toolbar .fc-button-group .fc-button {
-    background-color: var(--orange) !important;
-    color: white !important;
-  }
-
-.fc-daygrid-day-number {
-    color: var(--brown) !important; 
-  }
-  
-  .fc-col-header-cell {
-    color: var(--brown) !important; 
-    font-weight: bold;
-  }
-  
-  .fc-daygrid-day {
-    background-color: transparent !important; 
-    border: none !important; 
-  }
-  
-  .fc-daygrid-day:hover {
-    background-color: transparent !important;
-    color: var(--brown) !important;
-  }
-  
-  .fc-daygrid-day.fc-day-today {
-    background-color: var(--orange) !important; 
-    color: white !important; 
-  }
-
-  .fc-header-toolbar {
-    background-color: #f8f9fa; /* Light background color */
-    color: #333; /* Dark text color */
-  }
-  
-  
-  .fc-daygrid-day {
-    background-color: #f0f0f0; /* Light background for the day cells */
-  }
-  
-  
-  .fc-daygrid-day-number {
-    color: #e3620b; /* Change the color of the day numbers */
-  }
-  
-  
-  
-  
-  .fc-event {
-    background-color: #ffcc00; /* Change background color */
-    color: rgb(0, 0, 0); /* Ensure event text is black */
-  }
-  
-  
- /* Event Hover */
-.fc-event:hover {
-  background-color: #ff6600; /* Darker hover color */
-  color: rgb(0, 0, 0); /* Keep the text black even on hover */
-}
-  
-  
-  /* Event Selected */
-.fc-event.fc-event-selected {
-  background-color: #ff3300; /* Active event color */
-  color: rgb(0, 0, 0); /* Keep text black */
-}
-  
-  
-  .fc-dayGridMonth-view {
-    background-color: #fff; /* Month view background */
-  }
-  
-  
-  .fc-timeGridWeek-view {
-    background-color: #fafafa; /* Week view background */
-  }
-  
-  
-  .fc-timeGridDay-view {
-    background-color: #f0f0f0; /* Day view background */
-  }
-  
-  
-  /* Change the background color of the weekday header cells */
-  .fc-col-header-cell {
-    background-color: #f0f0f0; /* Light gray background */
-  }
-  
-  
-  /* Change the text color of the weekday names to orange */
-  .fc-col-header-cell-cushion {
-    color: #7A4B47; /* Orange text color */
-    font-weight: bold; /* Optional: Makes the weekday names bold */
-  }
- /* Add Event Button - Base Styles */
-.add-event-button {
-  background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
-  color: #FFFFFF; /* White text */
-  font-weight: 600; /* Bold font */
-  padding: 8px 12px; /* Padding for spacing */
-  border: 2px solid var(--orange); /* Orange border */
-  border-radius: 8px; /* Rounded corners */
-  cursor: pointer; /* Pointer on hover */
-  transition: background-color 0.3s, color 0.3s, transform 0.3s; /* Smooth transition */
-  outline: none; /* Remove default focus outline */
-  box-shadow: none; /* Remove any box-shadow applied by the browser */
-  position: relative; /* Needed for icon positioning */
-  display: inline-flex; /* Align icon with text */
-  align-items: center;
-  gap: 8px; /* Space between icon and text */
-}
-
-.add-event-button::before {
-  content: "+";
-  display: inline-block;
-  font-size: 1.2em; /* Adjust icon size */
-  color: #FFFFFF; /* Icon color matches text */
-}
-
-/* Hover State */
-.add-event-button:hover {
-  background-color: var(--orange); /* Orange background on hover */
-  color: white;
-  transform: scale(1.05);
-  border: 2px solid var(--orange);
-  outline: none;
-  box-shadow: none;
-}
-
-/* Focus State */
-.add-event-button:focus {
-  border: 2px solid var(--orange);
-  outline: none;
-  box-shadow: 0 0 5px rgba(254, 127, 66, 0.5); 
-}
-
-  
- /* Hover State - Close Button */
-.btn-close-red:hover {
-    background-color: rgb(255, 0, 0); /* Red background on hover */
-    color: white; /* White text on hover */
-    transform: scale(1.05); /* Slightly enlarge on hover */
-    border: 2px solid rgb(255, 0, 0); /* Ensure border stays red */
-    outline: none; /* Prevent default outline on hover */
-    box-shadow: none; /* Prevent any shadow on hover */
-  }
-  
-  
-  /* Focus State - Close Button */
-  .btn-close-red:focus {
-    border: 2px solid rgb(255, 0, 0); /* Keep border red */
-    outline: none; /* Prevent default blue outline on focus */
-    box-shadow: 0 0 5px rgba(255, 0, 0, 0.5); /* Optional glow effect */
-  }
-  
-  
- 
-
-/* Default State - Close Button */
-.btn-close-red {
-    background-color: transparent; /* No background color */
-    border: 2px solid rgb(255, 0, 0); /* Red border */
-    color: rgb(255, 0, 0); /* Red text */
-    outline: none; /* Remove outline */
-    box-shadow: none; /* No shadow */
-  }
-  
-  
-  /* Hover State - Close Button */
-  .btn-close-red:hover {
-    background-color: rgb(255, 0, 0); /* Red background on hover */
-    color: white; /* White text on hover */
-    transform: scale(1.05); /* Slightly enlarge on hover */
-    border: 2px solid rgb(255, 0, 0); /* Ensure border stays red */
-    outline: none; /* Prevent default outline on hover */
-    box-shadow: none; /* Prevent any shadow on hover */
-  }
-  
-  
-  /* Focus State - Close Button */
-  .btn-close-red:focus {
-    border: 2px solid rgb(255, 0, 0); /* Keep border red */
-    outline: none; /* Prevent default blue outline on focus */
-    box-shadow: 0 0 5px rgba(255, 0, 0, 0.5); /* Optional glow effect */
-  }
-  
-  
-  /* Default State - Save Button */
-  .btn-save-orange {
-    background-color: transparent; /* No background color */
-    border: 2px solid rgb(255, 165, 0); /* Orange border */
-    color: rgb(255, 165, 0); /* Orange text */
-    outline: none; /* Remove outline */
-    box-shadow: none; /* No shadow */
-  }
-  
-  
-  /* Hover State - Save Button */
-  .btn-save-orange:hover {
-    background-color: rgb(255, 165, 0); /* Orange background on hover */
-    color: white; /* White text on hover */
-    transform: scale(1.05); /* Slightly enlarge on hover */
-    border: 2px solid rgb(255, 165, 0); /* Ensure border stays orange */
-    outline: none; /* Prevent default outline on hover */
-    box-shadow: none; /* Prevent any shadow on hover */
-  }
-  
-  
-  /* Focus State - Save Button */
-  .btn-save-orange:focus {
-    border: 2px solid rgb(255, 165, 0); /* Keep border orange */
-    outline: none; /* Prevent default blue outline on focus */
-    box-shadow: 0 0 5px rgba(255, 165, 0, 0.5); /* Optional glow effect */
-  }
-
-  .calendar .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr); /* 7 columns for each day of the week */
-    gap: 5px;
-    border: 1px solid var(--brown); /* Changed the grid line color to brown */
-    padding: 10px;
-    background-color: var(--yellow); /* Light yellow background for the calendar */
-  }
-  
-  .calendar .day {
-    background-color: var(--maroon); /* Maroon color for each day box */
-    color: var(--yellow); /* Yellow text on maroon background */
-    padding: 10px;
-    text-align: center;
-    border-radius: 5px;
-    transition: background-color 0.3s, transform 0.3s;
-  }
-  
-  .calendar .day:hover {
-    background-color: var(--orange); /* Orange color on hover */
-    transform: scale(1.1); /* Slightly enlarge the day box on hover */
-  }
-  
-  .calendar .selected-day {
-    background-color: var(--orange); /* Highlight selected day with orange */
-    color: white; /* White text for selected day */
-  }
-  
-  .calendar .month,
-  .calendar .year {
-    font-weight: bold;
-    color: var(--maroon);
-    background-color: var(--yellow); /* Yellow background for month and year */
-    padding: 10px;
-    text-align: center;
-    border-radius: 5px;
-    margin-bottom: 10px;
-  }
-  
-  /* FullCalendar: Change grid line color to brown */
 .fc-daygrid-day {
-  border: 1px solid #8B4513 !important;  /* Brown border */
+  border: 1px solid #8B4513 !important;
+  /* Brown border */
 }
 
 /* Optional: Change the border color of weekends (if needed) */
 .fc-daygrid-weekend {
-  border: 1px solid #8B4513 !important;  /* Brown border for weekends */
+  border: 1px solid #8B4513 !important;
+  /* Brown border for weekends */
 }
 
 /* Apply border-radius to the calendar days */
@@ -587,22 +627,17 @@
 /* Smooth transition for hover effects */
 .fc-daygrid-day-frame,
 .fc-daygrid-day-frame:hover {
-    transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 /* Smooth transition for the modal background */
 .modal-content {
-    transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
 /* Apply subtle shadows to the calendar */
 .fc-daygrid-day-frame {
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-/* Apply a subtle shadow to the calendar header */
-.fc-header-toolbar {
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Apply shadows to buttons */
@@ -622,7 +657,8 @@
 
 /* Change the background color smoothly on hover */
 .fc-daygrid-day-frame:hover {
-  background-color: #f5f5f5; /* Light background on hover */
+  background-color: #f5f5f5;
+  /* Light background on hover */
 }
 
 /* Smooth modal animation */
@@ -640,37 +676,45 @@
 
 /* Reduce opacity of the grid lines */
 .fc-daygrid-day-frame {
-  border-color: rgba(0, 0, 0, 0.1); /* Lighten the grid lines */
+  border-color: rgba(0, 0, 0, 0.1);
+  /* Lighten the grid lines */
   border-width: 1px;
 }
 
 /* Make the grid lines thinner and lighter */
 .fc-daygrid-day-frame {
-  border-color: #e0e0e0; /* Light grey for a subtle effect */
-  border-width: 0.5px; /* Thinner lines */
+  border-color: #e0e0e0;
+  /* Light grey for a subtle effect */
+  border-width: 0.5px;
+  /* Thinner lines */
 }
 
 /* Apply dashed or dotted grid lines */
 .fc-daygrid-day-frame {
-  border-style: dashed; /* Or use 'dotted' for dotted lines */
+  border-style: dashed;
+  /* Or use 'dotted' for dotted lines */
   border-color: #ddd;
   border-width: 1px;
 }
 
 /* Remove grid lines entirely */
 .fc-daygrid-day-frame {
-  border: none; /* No border for a cleaner look */
+  border: none;
+  /* No border for a cleaner look */
 }
 
 /* Add soft shadows around each day cell to replace grid lines */
 .fc-daygrid-day-frame {
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05); /* Soft shadow around each day */
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
+  /* Soft shadow around each day */
 }
 
 /* Add a hover effect to the days */
 .fc-daygrid-day-frame:hover {
-  background-color: rgba(0, 0, 0, 0.1); /* Light hover background */
-  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.05); /* Soft hover effect */
+  background-color: rgba(0, 0, 0, 0.1);
+  /* Light hover background */
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.05);
+  /* Soft hover effect */
 }
 
 /* Subtle gradient for separating days */
@@ -680,103 +724,155 @@
 
 /* Modal container */
 .modal-content {
-  background-color: #ffffff; /* White background */
-  border-radius: 8px; /* Rounded corners */
-  border: none; /* No borders around the modal */
-  color: #000; /* Ensure text is black by default */
+  background-color: #ffffff;
+  /* White background */
+  border-radius: 8px;
+  /* Rounded corners */
+  border: none;
+  /* No borders around the modal */
+  color: #000;
+  /* Ensure text is black by default */
 }
 
 /* Modal body background and padding */
 .modal-body {
-  background-color: #ffffff; /* White background */
-  color: #000; /* Ensure text is black */
-  padding: 20px; /* Padding inside the modal body */
-  border-radius: 8px; /* Rounded corners */
+  background-color: #ffffff;
+  /* White background */
+  color: #000;
+  /* Ensure text is black */
+  padding: 20px;
+  /* Padding inside the modal body */
+  border-radius: 8px;
+  /* Rounded corners */
 }
 
 /* Form input fields, textareas, and select dropdowns */
-.modal-body input, .modal-body select, .modal-body textarea {
-  background-color: #ffffff; /* White background for form elements */
-  border: 1px solid #ccc; /* Light gray border */
-  color: #000; /* Black text color */
-  padding: 10px; /* Padding inside inputs */
-  border-radius: 4px; /* Rounded corners */
-  width: 100%; /* Full width for inputs */
+.modal-body input,
+.modal-body select,
+.modal-body textarea {
+  background-color: #ffffff;
+  /* White background for form elements */
+  border: 1px solid #ccc;
+  /* Light gray border */
+  color: #000;
+  /* Black text color */
+  padding: 10px;
+  /* Padding inside inputs */
+  border-radius: 4px;
+  /* Rounded corners */
+  width: 100%;
+  /* Full width for inputs */
 }
 
 /* Textareas */
 .modal-body textarea {
-  height: 100px; /* Set height for textareas */
-  resize: vertical; /* Allow vertical resizing */
+  height: 100px;
+  /* Set height for textareas */
+  resize: vertical;
+  /* Allow vertical resizing */
 }
 
 /* Remove any outline on focus, keeping the style clean */
-.modal-body input:focus, .modal-body select:focus, .modal-body textarea:focus {
-  outline: none; /* Remove the outline on focus */
-  border-color: #ccc; /* Light border color on focus */
-  box-shadow: none; /* No shadow */
+.modal-body input:focus,
+.modal-body select:focus,
+.modal-body textarea:focus {
+  outline: none;
+  /* Remove the outline on focus */
+  border-color: #ccc;
+  /* Light border color on focus */
+  box-shadow: none;
+  /* No shadow */
 }
 
 /* Labels styling */
 .modal-body .form-label {
-  color: #000; /* Black color for labels */
-  font-weight: 600; /* Bold labels */
+  color: #000;
+  /* Black color for labels */
+  font-weight: 600;
+  /* Bold labels */
 }
 
 /* Buttons with solid colors (no transparency) */
-.btn-close, .btn-save-orange, .btn-secondary, .btn-danger {
-  background-color: #007bff; /* Blue button background */
-  color: #ffffff; /* White text */
-  border: none; /* No border around buttons */
-  padding: 10px 15px; /* Padding for buttons */
-  border-radius: 4px; /* Rounded corners for buttons */
-  font-weight: bold; /* Bold text for buttons */
+.btn-close,
+.btn-save-orange,
+.btn-secondary,
+.btn-danger {
+  background-color: #007bff;
+  /* Blue button background */
+  color: #ffffff;
+  /* White text */
+  border: none;
+  /* No border around buttons */
+  padding: 10px 15px;
+  /* Padding for buttons */
+  border-radius: 4px;
+  /* Rounded corners for buttons */
+  font-weight: bold;
+  /* Bold text for buttons */
 }
 
 .btn-save-orange {
-  background-color: #ffa500; /* Orange save button */
+  background-color: #ffa500;
+  /* Orange save button */
 }
 
 .btn-secondary {
-  background-color: #6c757d; /* Gray secondary button */
+  background-color: #6c757d;
+  /* Gray secondary button */
 }
 
 .btn-danger {
-  background-color: #dc3545; /* Red danger button */
+  background-color: #dc3545;
+  /* Red danger button */
 }
 
 /* Hover effect for buttons */
-.btn-close:hover, .btn-save-orange:hover, .btn-secondary:hover, .btn-danger:hover {
-  opacity: 0.9; /* Slight opacity change on hover */
+.btn-close:hover,
+.btn-save-orange:hover,
+.btn-secondary:hover,
+.btn-danger:hover {
+  opacity: 0.9;
+  /* Slight opacity change on hover */
 }
 
 /* Fixing any residual black background areas */
-.modal-body, .modal-content, .modal-body input, .modal-body select, .modal-body textarea {
-  background-color: #ffffff !important; /* Force background to be white everywhere */
-  color: #000 !important; /* Ensure dark text everywhere */
+.modal-body,
+.modal-content,
+.modal-body input,
+.modal-body select,
+.modal-body textarea {
+  background-color: #ffffff !important;
+  /* Force background to be white everywhere */
+  color: #000 !important;
+  /* Ensure dark text everywhere */
 }
 
 /* Clear out any unexpected background colors */
-.modal-body .form-group, .modal-body .form-control {
-  background-color: #ffffff !important; /* Force white background for form controls */
-  color: #000 !important; /* Force dark text for form controls */
+.modal-body .form-group,
+.modal-body .form-control {
+  background-color: #ffffff !important;
+  /* Force white background for form controls */
+  color: #000 !important;
+  /* Force dark text for form controls */
 }
 
 /* Adjust color of titles and fields to ensure readability */
 .modal-body .form-label {
-  color: #000; /* Black text for labels */
+  color: #000;
+  /* Black text for labels */
 }
 
 .modal-body .form-control {
-  color: #000; /* Ensure dark text color for the form fields */
+  color: #000;
+  /* Ensure dark text color for the form fields */
 }
 
 /* Special focus states for input fields */
-.modal-body input:focus, .modal-body select:focus, .modal-body textarea:focus {
-  border-color: #007bff; /* Focus border color */
-  color: #000; /* Maintain dark text color */
+.modal-body input:focus,
+.modal-body select:focus,
+.modal-body textarea:focus {
+  border-color: var(--orange);
+  /* Focus border color */
+  color: #000;
+  /* Maintain dark text color */
 }
-
-
-  
-  
