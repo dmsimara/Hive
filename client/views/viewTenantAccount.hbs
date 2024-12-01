@@ -38,9 +38,11 @@
             </div>
         </div>
     </aside>
+
+    <!-- Main Content -->
     <div class="main-content">
         <header class="section-header">
-            <h3>
+            <h3 class="title-profile">
                 <i class="material-icons dots">more_horiz</i> Tenant Profile
             </h3>
         </header>
@@ -56,36 +58,48 @@
 
                 <!-- Tenant Details -->
                 <div class="card__details">
-                    <div class="card__section">
-                        <h1>Name:</h1>
-                        <h2>{{tenantFirstName}} {{tenantLastName}}</h2>
+                    <!-- Row for Name and Email -->
+                    <div class="card__row">
+                        <div class="card__section">
+                            <h1>Name:</h1>
+                            <span>{{tenantFirstName}} {{tenantLastName}}</span>
+                        </div>
+                        <div class="card__section">
+                            <h1>Email:</h1>
+                            <span>{{tenantEmail}}</span>
+                        </div>
                     </div>
-                    <div class="card__section">
-                        <h1>Email:</h1>
-                        <h2>{{tenantEmail}}</h2>
+
+                    <!-- Row for Gender and Mobile Number -->
+                    <div class="card__row">
+                        <div class="card__section">
+                            <h1>Gender:</h1>
+                            <span>{{gender}}</span>
+                        </div>
+                        <div class="card__section">
+                            <h1>Mobile Number:</h1>
+                            <span>{{mobileNum}}</span>
+                        </div>
                     </div>
-                    <div class="card__section">
-                        <h1>Gender:</h1>
-                        <h2>{{gender}}</h2>
+
+                    <!-- Row for Guardian Name and Guardian Mobile Number -->
+                    <div class="card__row">
+                        <div class="card__section">
+                            <h1>Guardian Name:</h1>
+                            <span>{{tenantGuardianName}}</span>
+                        </div>
+                        <div class="card__section">
+                            <h1>Guardian Number:</h1>
+                            <span>{{tenantGuardianNum}}</span>
+                        </div>
                     </div>
-                    <div class="card__section">
-                        <h1>Mobile Number:</h1>
-                        <h2>{{mobileNum}}</h2>
-                    </div>
-                    <div class="card__section">
-                        <h1>Guardian Name:</h1>
-                        <h2>{{tenantGuardianName}}</h2>
-                    </div>
-                    <div class="card__section">
-                        <h1>Guardian Mobile Number:</h1>
-                        <h2>{{tenantGuardianNum}}</h2>
-                    </div>
-                    {{/each}}
+
                     <!-- Edit Profile Button -->
                     <a href="/tenant/room-details/edit/account" class="btn btn--edit-profile">
                         <i class="material-icons">edit</i> Edit Profile
                     </a>
                 </div>
+                {{/each}}
             </div>
         </section>
     </div>

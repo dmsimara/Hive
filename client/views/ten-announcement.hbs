@@ -1,54 +1,51 @@
-<div class="container">
+<div class="dashboard-container">
     <aside class="sidebar">
         <div class="sidebar-card">
-            <div class="logo">
-                <a href="/tenant/dashboard">
-                    <img src="/images/hiveLight.png" alt="Hive Logo" class="logo-img">
-                </a>
+            <div class="d-flex">
+                <div class="logo">
+                    <a href="/tenant/dashboard">
+                        <img src="/images/hiveLight.png" alt="Hive Logo" class="logo-img">
+                    </a>
+                </div>
             </div>
-            <p class="menu-title">Menu</p>
-            <nav class="menu">
-                <ul>
-                    <li>
-                        <a href="/tenant/dashboard"><i class="fas fa-columns"></i> Dashboard</a>
-                    </li>
-                    <li>
-                        <a href="/tenant/room-details"><i class="fas fa-door-open"></i> Room Details</a>
-                    </li>
-                </ul>
-            </nav>
-
-
-
-
-            <p class="menu-title">Tracker</p>
-            <div class="tracker">
-                <ul>
-                    <li>
-                        <a href="/tenant/utilities"><i class="fas fa-lightbulb"></i> Utilities and Bills</a>
-                    </li>
-                    <li class="active">
-                        <a href="/tenant/announcement"><i class="fas fa-bullhorn"></i> Announcements</a>
-                    </li>
-                </ul>
-            </div>
-
-
-
-
-            <!-- Logout button -->
-            <div class="logout-container">
-                <a href="#" id="logoutButton" class="logout-button">
-                    <i class="fas fa-sign-out-alt"></i> Log Out
+            <ul class="sidebar-nav">
+                <p class="menu-title">Menu</p>
+                <li class="sidebar-item">
+                    <a href="/tenant/dashboard" class="sidebar-link">
+                        <i class="fas fa-columns"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/tenant/room-details" class="sidebar-link">
+                        <i class="fas fa-door-open"></i>
+                        <span>Room Details</span>
+                    </a>
+                </li>
+                <p class="menu-title tracker">Tracker</p>
+                <li class="sidebar-item">
+                    <a href="/tenant/utilities" class="sidebar-link">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>Utilities and Bills</span>
+                    </a>
+                </li>
+                <li class="sidebar-item active">
+                    <a href="/tenant/announcement" class="sidebar-link">
+                        <i class="fas fa-bullhorn"></i>
+                        <span>Announcement</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="#" id="logoutButton" class="logout-button sidebar-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
                 </a>
             </div>
         </div>
     </aside>
-<!-- Main Content Section -->
 
-
-
-
+    <!-- Main Content Section -->
     <main class="main-content">
         <header class="dashboard-header">
             <div class="header-left">
@@ -56,59 +53,36 @@
                 <h1 class="dashboard-title">Announcements</h1> <!-- Bold styling added -->
             </div>
             <div class="header-right">
-                  <input type="date" class="date-picker" id="datePicker">
+                <input type="date" class="date-picker" id="datePicker">
                 <i class="fa fa-bell notification-icon"></i>
             </div>
         </header>
 
-
-
-<div class="main-content">
-    <nav class="filter-nav">
-        <a href="#" id="all-notices-btn" class="filter-link active">All</a>
-        <a href="#" id="pinned-notices-btn" class="filter-link">Pinned</a>
-        <a href="#" id="permanent-notices-btn" class="filter-link">Permanent</a>
-    </nav>
-
-
-    <div id="notices-container" class="notices-list">
-        {{#if notices.length}}
-        {{#each notices}}
-        <div class="notice-item {{#if pinned}}pinned{{/if}} {{#if permanent}}permanent{{/if}}"
-            data-id="{{notice_id}}" data-pinned="{{pinned}}" data-permanent="{{permanent}}">
-            <h2 class="notice-title">{{title}}</h2>
-            <p class="notice-content">{{content}}</p>
-            <span class="notice-meta">
-                {{#if pinned}}<span class="badge pinned-badge">Pinned</span>{{/if}}
-                {{#if permanent}}<span class="badge permanent-badge">Permanent</span>{{/if}}
-                <span class="notice-date">{{updated_at}}</span>
-            </span>
+        <div class="main-content">
+            <nav class="filter-nav">
+                <a href="#" id="all-notices-btn" class="filter-link active">All</a>
+                <a href="#" id="pinned-notices-btn" class="filter-link">Pinned</a>
+                <a href="#" id="permanent-notices-btn" class="filter-link">Permanent</a>
+            </nav>
+            <div id="notices-container" class="notices-list">
+                {{#if notices.length}}
+                {{#each notices}}
+                <div class="notice-item {{#if pinned}}pinned{{/if}} {{#if permanent}}permanent{{/if}}"
+                    data-id="{{notice_id}}" data-pinned="{{pinned}}" data-permanent="{{permanent}}">
+                    <h2 class="notice-title">{{title}}</h2>
+                    <p class="notice-content">{{content}}</p>
+                    <span class="notice-meta">
+                        {{#if pinned}}<span class="badge pinned-badge">Pinned</span>{{/if}}
+                        {{#if permanent}}<span class="badge permanent-badge">Permanent</span>{{/if}}
+                        <span class="notice-date">{{updated_at}}</span>
+                    </span>
+                </div>
+                {{/each}}
+                {{else}}
+                <p>No notices available at the moment.</p>
+                {{/if}}
+            </div>
         </div>
-        {{/each}}
-        {{else}}
-        <p>No notices available at the moment.</p>
-        {{/if}}
-    </div>
+    </main>
 </div>
-
-
-
-
 <script src="/js/ten-announce.js"></script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

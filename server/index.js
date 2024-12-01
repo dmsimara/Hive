@@ -659,7 +659,6 @@ app.get("/tenant/announcement", verifyTenantToken, async (req, res) => {
     try {
         const { filter } = req.query;
 
-        // Fetch tenant and room information
         const tenant = await Tenant.findOne({ where: { tenant_id: req.tenantId } });
         if (!tenant) {
             return res.status(404).json({ message: "Tenant not found" });
