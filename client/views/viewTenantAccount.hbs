@@ -1,39 +1,45 @@
 <div class="dashboard-container">
-    <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-card">
-            <div class="logo">
-                <a href="index.html">
-                    <img src="/images/hiveLight.png" alt="Hive Logo" class="logo-img">
-                </a>
+            <div class="d-flex">
+                <div class="logo">
+                    <a href="/tenant/dashboard">
+                        <img src="/images/hiveLight.png" alt="Hive Logo" class="logo-img">
+                    </a>
+                </div>
             </div>
-            <p class="menu-title">Menu</p>
-            <nav class="menu">
-                <ul>
-                    <li>
-                        <a href="/tenant/dashboard"><i class="fas fa-columns"></i> Dashboard</a>
-                    </li>
-                    <li class="active">
-                        <a href="/tenant/room-details"><i class="fas fa-door-open"></i> Room Details</a>
-                    </li>
-                </ul>
-            </nav>
-            <p class="menu-title">Tracker</p>
-            <div class="tracker">
-                <ul>
-                    <li>
-                        <a href="/tenant/utilities"><i class="fas fa-lightbulb"></i> Utilities and Bills</a>
-                    </li>
-                    <li>
-                        <a href="/tenant/announcement"><i class="fas fa-bullhorn"></i> Announcement</a>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Logout Button -->
-            <div class="logout-container">
-                <a href="#" id="logoutButton" class="logout-button">
-                    <i class="fas fa-sign-out-alt"></i> Log Out
+            <ul class="sidebar-nav">
+                <p class="menu-title">Menu</p>
+                <li class="sidebar-item">
+                    <a href="/tenant/dashboard" class="sidebar-link">
+                        <i class="fas fa-columns"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-item active">
+                    <a href="/tenant/room-details" class="sidebar-link">
+                        <i class="fas fa-door-open"></i>
+                        <span>Room Details</span>
+                    </a>
+                </li>
+                <p class="menu-title tracker">Tracker</p>
+                <li class="sidebar-item">
+                    <a href="/tenant/utilities" class="sidebar-link">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>Utilities and Bills</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/tenant/announcement" class="sidebar-link">
+                        <i class="fas fa-bullhorn"></i>
+                        <span>Announcement</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="#" id="logoutButton" class="logout-button sidebar-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
                 </a>
             </div>
         </div>

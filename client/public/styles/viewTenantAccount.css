@@ -1,24 +1,30 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
 
 :root {
-    --yellow: rgb(255, 251, 151);  /* #FFFB97 */
-    --orange: rgb(254, 127, 66);   /* #FE7F42 */
-    --maroon: rgb(179, 44, 26);    /* #B32C1A */
-    --gray: rgb(122, 75, 71);      /* #7A4B47 */
-    --dark-gray: rgb(42, 22, 23);  /* #2A1617 */
+    --yellow: rgb(255, 251, 151);
+    /* #FFFB97 */
+    --orange: rgb(254, 127, 66);
+    /* #FE7F42 */
+    --maroon: rgb(179, 44, 26);
+    /* #B32C1A */
+    --gray: rgb(122, 75, 71);
+    /* #7A4B47 */
+    --dark-gray: rgb(42, 22, 23);
+    /* #2A1617 */
     --background-color: rgb(245, 245, 245);
 }
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body, html {
+body,
+html {
     font-family: 'Inter', sans-serif;
     height: 100%;
-    background-color: var(--background-color);
+
 }
 
 .dashboard-container {
@@ -26,15 +32,23 @@ body, html {
     height: 100vh;
     width: 100vw;
     background-color: #F9F9F9;
+    overflow: auto;
 }
 
 .sidebar {
+    position: sticky;
+    top: 0;
     background-color: #F4F4F4;
-    width: 20%;
+    width: 300px;
+    min-width: 300px;
     padding: 20px;
     display: flex;
     flex-direction: column;
+    z-index: 1000;
+    transition: all .25s ease-in-out;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    height: 100vh;
+    overflow-y: auto;
 }
 
 .sidebar-card {
@@ -47,6 +61,7 @@ body, html {
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
+
 .logo {
     margin-bottom: -15px;
     margin-top: -30px;
@@ -57,55 +72,68 @@ body, html {
     height: auto;
 }
 
+.sidebar-nav {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.sidebar-item {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    color: #333;
+    font-size: 1em;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sidebar-item:hover {
+    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
+}
+
+.sidebar-item a {
+    text-decoration: none;
+    color: var(--dark-gray);
+    font-size: 18px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.sidebar-item:hover a {
+    color: white;
+}
+
+.sidebar-item i {
+    margin-right: 10px;
+}
+
+.sidebar-item.active {
+    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
+    color: white;
+}
+
+.sidebar-item.active a {
+    color: white;
+}
+
 .sidebar p {
     font-size: 0.9em;
     color: #666;
 }
 
-.menu-title {
-    font-weight: bold;
-    color: #0a0a0a;
+
+.sidebar-nav .menu-title {
+    font-weight: 700;
+    color: var(--dark-gray);
+    margin-left: 5px;
 }
 
-.menu ul {
-    list-style: none;
-}
-
-.menu ul li {
-    margin: 10px 0;
-}
-
-.menu ul li a {
-    text-decoration: none;
-    color: #333;
-    font-size: 1em;
-    padding: 10px;
-    border-radius: 8px;
-}
-
-.menu ul li.active a {
-    background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
-    color: white;
-}
-
-.tracker ul {
-    list-style: none;
-}
-
-.tracker ul li a {
-    text-decoration: none;
-    color: #333;
-    font-size: 0.9em;
-    padding: 10px;
-    border-radius: 8px;
-}
-
-.main-content {
-    flex: 1;
-    padding: 20px;
-    overflow-x: hidden;
-    margin-top: 20px;
-    margin-left: 20px;
+.tracker {
+    margin-top: 40px;
 }
 
 .logout-container {
@@ -118,10 +146,17 @@ body, html {
     display: flex;
     align-items: center;
     text-decoration: none;
-    color: #333;
+    color: var(--dark-gray);
+    font-weight: 600;
     font-size: 1em;
     padding: 10px;
     border-radius: 8px;
+    transition: color 0.3s ease;
+}
+
+.logout-button:hover {
+    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
+    color: white;
 }
 
 .logout-button i {
@@ -129,140 +164,23 @@ body, html {
     color: #A22F05;
 }
 
-.logout-button:hover {
-    background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
+.logout-button:hover i {
+    color: white;
+}
+
+.logout-button:hover span {
     color: white;
 }
 
 
-.navbar {
-    padding: 0 10px;
-    border-bottom: 1px solid var(--orange);
-    background-color: var(--background-color) !important;
-}
+/* main content styles */
 
-.navbar-brand {
-    padding: 0 8px;
-    margin: 0;
-    transition: opacity 0.3s ease;
-}
-
-.navbar-brand:hover {
-    opacity: 0.8;
-}
-
-.navbar-nav {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    gap: 30px;
-}
-
-.nav-link {
-    font-weight: 600;
-    font-size: 16px;
-    color: var(--dark-gray) !important;
-    padding: 8px 18px;
-    border-radius: 15px;
-    transition: color 0.3s ease, background-color 0.3s ease;
-}
-
-.nav-link:hover, .nav-link.active {
-    color: var(--orange) !important;
-    background-color: rgba(255, 158, 0, 0.18);
-    transform: scale(1.05);
-}
-
-.user-pic {
-    width: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-}
-
-.sub-menu-wrap {
-    position: absolute;
-    top: 100%;
-    right: 1%; 
-    width: 320px;
-    max-height: 0px;
-    overflow: hidden;
-    transition: max-height 0.5s;
-}
-
-.sub-menu-wrap.open-menu {
-    max-height: 400px;
-}
-
-.sub-menu {
-    background: white;
-    padding: 20px;
-    margin: 10px;
-    border-radius: 1em;
-}
-
-.user-info {
-    display: flex;
-    align-items: center;
-}
-
-.user-info h3 {
-    font-weight: 500; 
-    color: var(--gray);
-    font-size: 20px;
-}
-
-.user-info img {
-    width: 60px;
-    border-radius: 50%;
-    margin-right: 15px;
-}
-
-.sub-menu-wrap {
-    z-index: 1000;
-}
-
-.sub-menu hr {
-    border: 0;
-    height: 1px;
-    width: 100%;
-    background: var(--maroon);
-    margin: 15px 0 10px;
-}
-
-.sub-menu-link {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: var(--gray);
-    margin: 12px 0;
-}
-
-.sub-menu-link p {
-    width: 100%;
-    line-height: 40px;
-    margin: 0;
+.main-content {
     flex: 1;
-}
-
-.sub-menu-link .material-icons {
-    background: rgb(210, 209, 209);
-    width: 40px;
-    border-radius: 50%;
-    padding: 8px;
-    margin-right: 15px;
-}
-
-.sub-menu-link span {
-    font-size: 22px;
-    transition: transform 0.5s;
-}
-
-.sub-menu-link:hover span {
-    transform: translateX(5px);
-}
-
-.sub-menu-link:hover p {
-    font-weight: 600;
+    padding: 30px;
+    transition: all 0.35s ease-in-out;
+    margin-top: 10px;
+    margin-left: 20px;
 }
 
 .container img {
