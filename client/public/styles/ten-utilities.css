@@ -65,9 +65,10 @@ body, html {
   margin: 10px 0;
 }
 
-.menu ul li a, .tracker ul li a {
+.menu ul li a, 
+.tracker ul li a {
   text-decoration: none;
-  color: #333;
+  color: #333; /* Default text color */
   font-size: 1em;
   padding: 10px;
   border-radius: 8px;
@@ -77,16 +78,33 @@ body, html {
   transition: background-color 0.3s, color 0.3s;
 }
 
-.menu ul li.active a, 
-.tracker ul li.active a,
-.logout-button:hover {
-  background: linear-gradient(90deg, var(--maroon) 0%, var(--orange) 100%);
-  color: #fff;
+.menu ul li a i, 
+.tracker ul li a i {
+  color: #000; /* Default icon color */
+  transition: color 0.3s ease-in-out;
 }
 
-.menu ul li a:hover, .tracker ul li a:hover {
+/* Hover Effects: Both text and icon turn orange */
+.menu ul li a:hover, 
+.tracker ul li a:hover {
   color: var(--orange);
-  transition: color 0.3s ease-in-out;
+}
+
+.menu ul li a:hover i, 
+.tracker ul li a:hover i {
+  color: var(--orange);
+}
+
+/* Active State: White background and dark gray text/icon */
+.menu ul li.active a, 
+.tracker ul li.active a {
+  background: linear-gradient(to right, #cc3e22, #ff825c);
+  color: #f8f3f3; 
+}
+
+.menu ul li.active a i, 
+.tracker ul li.active a i {
+  color: #f8f3f3;  /* Icon also becomes dark gray */
 }
 
  .container {
@@ -138,33 +156,37 @@ body, html {
  
  .logout-container {
   margin-top: auto;
-  text-align: center;
+  text-align: left; /* Align logout button to the left */
+  border-top: 1px solid #DDD; /* Add a separator line above */
+  padding-top: 15px; /* Space between the line and the logout button */
 }
  
 .logout-button {
+  color: #000; /* Text stays black */
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
   text-decoration: none;
   font-size: 1em;
-  color: var(--maroon);
   padding: 10px;
   border-radius: 8px;
   transition: background-color 0.3s, color 0.3s;
 }
- 
- 
 
 .logout-button i {
+  color: #A22F05;
   margin-right: 10px;
 }
 
+
 .logout-button:hover {
-  background: linear-gradient(90deg, var(--maroon) 0%, var(--orange) 100%);
+  background: linear-gradient(90deg, var(--maroon), var(--orange));
   color: #fff;
 }
- 
- 
+
+.logout-button:hover i {
+  color: #fff; /* Icon turns white */
+}
  
  
 main {
@@ -181,15 +203,13 @@ main {
    justify-content: space-between;
    gap: 20px;
  }
- /* General Header Styling */
  .dashboard-header {
-   display: flex;
-   justify-content: space-between;
-   align-items: center;
-   background-color: #f9f9f9; /* Light background for contrast */
-   padding: 1.5rem;
-   border-bottom: 1px solid #ddd; /* Adds a subtle divider */
- }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #DDD; /* This is the line */
+  padding-bottom: 15px;
+}
  
  
  /* Left Section: Welcome Texts */

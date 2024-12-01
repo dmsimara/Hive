@@ -1,14 +1,13 @@
-/* Remove default body and html margin and padding */
 body, html {
     font-family: 'Arial', sans-serif;
     height: 100%;
     width: 100%;
-    margin: 0; /* Ensures no extra margins */
-    padding: 0; /* Ensures no extra paddings */
-    overflow: hidden; /* Prevents unwanted scrolling */
+    margin: 0; 
+    padding: 0; 
+    overflow: hidden; 
     box-sizing: border-box;
-   
 }
+
 body {
     background-color: #F5F5F5; /* Light background color */
 }
@@ -24,15 +23,16 @@ body {
 
 .container {
     display: grid;
-    grid-template-columns: 250px auto; /* Sidebar + content */
-    gap: 0; /* Remove gaps between columns */
-    margin: 0; /* Reset external margin */
-    padding: 0; /* Remove internal padding */
-    width: 100%; /* Full width of the viewport */
-    height: 100vh; /* Ensures full viewport height */
+    grid-template-columns: 250px 1fr; 
+    gap: 0; 
+    margin: 0; 
+    padding: 0; 
+    width: 100%; 
+    height: 100vh; 
     box-sizing: border-box;
-    background-color: #F5F5F5; /* Matches gray background */
+    background-color:#F5F5F5; 
 }
+
 
 
 .announcement-header {
@@ -83,9 +83,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* border-bottom: 1px solid #DDD; */ /* Remove or comment out this line */
-    padding: 15px 10px; /* Reduced horizontal padding */
-    margin-bottom: -15px;
+    border-bottom: 1px solid #DDD; /* This is the line */
+    padding-bottom: 15px;
 }
 
 

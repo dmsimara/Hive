@@ -30,3 +30,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const datePicker = document.getElementById("datePicker");
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const dd = String(today.getDate()).padStart(2, '0');
+    
+    // Set the date picker's value to today's date
+    datePicker.value = `${yyyy}-${mm}-${dd}`;
+});
