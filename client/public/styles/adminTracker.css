@@ -485,7 +485,7 @@ body {
 }
 
 .add-event-button::before {
-  content: "+ ";
+  content: "+";
   display: inline-block;
   font-size: 1.2em;
   /* Adjust icon size */

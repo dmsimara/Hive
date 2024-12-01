@@ -282,9 +282,6 @@ html, body {
     gap: 10px;
     margin-left: -15px;
     max-width: 400px;
-    /* position: relative;
-    top: -12em;
-    left: 16em; */
 }
 
 form input[type="text"],
@@ -309,6 +306,20 @@ form input[type="submit"] {
 
 form input[type="submit"]:hover {
     opacity: 0.8;
+}
+
+input:focus {
+    outline: none; 
+    box-shadow: 0 0 4px 1px var(--orange);
+    border-color: var(--orange);
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="file"]:focus {
+    outline: none;
+    box-shadow: 0 0 4px 1px var(--orange);
+    border-color: var(--orange);
 }
 
 h3 {
