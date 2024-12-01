@@ -20,7 +20,8 @@
     box-sizing: border-box;
 }
 
-body, html {
+body,
+html {
     font-family: 'Inter', sans-serif;
     height: 100%;
 
@@ -31,15 +32,23 @@ body, html {
     height: 100vh;
     width: 100vw;
     background-color: #F9F9F9;
+    overflow: auto;
 }
 
 .sidebar {
+    position: sticky;
+    top: 0;
     background-color: #F4F4F4;
-    width: 20%;
+    width: 300px;
+    min-width: 300px;
     padding: 20px;
     display: flex;
     flex-direction: column;
+    z-index: 1000;
+    transition: all .25s ease-in-out;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    height: 100vh;
+    overflow-y: auto;
 }
 
 .sidebar-card {
@@ -52,6 +61,7 @@ body, html {
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
+
 .logo {
     margin-bottom: -15px;
     margin-top: -30px;
@@ -62,62 +72,138 @@ body, html {
     height: auto;
 }
 
+.sidebar-nav {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.sidebar-item {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    color: #333;
+    font-size: 1em;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sidebar-item:hover {
+    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
+}
+
+.sidebar-item a {
+    text-decoration: none;
+    color: var(--dark-gray);
+    font-size: 18px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.sidebar-item:hover a {
+    color: white;
+}
+
+.sidebar-item i {
+    margin-right: 10px;
+}
+
+.sidebar-item.active {
+    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
+    color: white;
+}
+
+.sidebar-item.active a {
+    color: white;
+}
+
 .sidebar p {
     font-size: 0.9em;
     color: #666;
 }
 
 
-.menu-title {
-    font-weight: bold;
-    color: #0a0a0a;
+.sidebar-nav .menu-title {
+    font-weight: 700;
+    color: var(--dark-gray);
+    margin-left: 5px;
 }
 
-.menu ul {
-    list-style: none;
+.tracker {
+    margin-top: 40px;
 }
 
-.menu ul li {
-    margin: 10px 0;
+.logout-container {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
 }
 
-.menu ul li a {
+.logout-button {
+    display: flex;
+    align-items: center;
     text-decoration: none;
-    color: #333;
+    color: var(--dark-gray);
+    font-weight: 600;
     font-size: 1em;
     padding: 10px;
     border-radius: 8px;
+    transition: color 0.3s ease;
 }
 
-.menu ul li.active a {
-    background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
+.logout-button:hover {
+    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
     color: white;
 }
 
-.menu ul li a:hover,
-.tracker ul li a:hover,
-.logout-button:hover {
-    color: #FF6B45; /* Dark orange text on hover */
-    transition: color 0.3s; /* Smooth color transition */
+.logout-button i {
+    margin-right: 10px;
+    color: #A22F05;
+}
+
+.logout-button:hover i {
+    color: white;
+}
+
+.logout-button:hover span {
+    color: white;
+}
+
+.dashboard-container::-webkit-scrollbar {
+    width: 12px; 
+}
+
+.dashboard-container::-webkit-scrollbar-thumb {
+    background-color: var(--maroon);
+    border-radius: 10px; 
+    border: 2px solid #fff;
+}
+
+.dashboard-container::-webkit-scrollbar-thumb:hover {
+    background-color: var(--maroon);
+}
+
+.dashboard-container::-webkit-scrollbar-track {
+    background: #f1f1f1;  
+    border-radius: 10px;  
+}
+
+.dashboard-container::-webkit-scrollbar-track:hover {
+    background: #e1e1e1; 
 }
 
 
 
-.tracker ul {
-    list-style: none;
-}
 
-.tracker ul li a {
-    text-decoration: none;
-    color: #333;
-    font-size: 0.9em;
-    padding: 10px;
-    border-radius: 8px;
-}
 
+/* main content styles */
 .main-content {
     flex: 1;
     padding: 20px;
+    transition: all 0.35s ease-in-out;
 }
 
 .dashboard-header {
@@ -141,7 +227,7 @@ body, html {
 .header-right {
     display: flex;
     align-items: center;
-    gap: 15px; 
+    gap: 15px;
 }
 
 .date-picker {
@@ -165,8 +251,9 @@ body, html {
     border-radius: 15px;
     color: white;
     margin-top: 30px;
-    margin-bottom: 20px; /* Added space below the header */
-    
+    margin-bottom: 20px;
+    /* Added space below the header */
+
 }
 
 .room-header h1 {
@@ -183,15 +270,20 @@ body, html {
     padding: 20px;
     border-radius: 12px;
     border: 3px solid #FFA45B;
-    margin-top: 20px; /* Ensure space between sections */
+    margin-top: 20px;
+    /* Ensure space between sections */
 }
 
 .overview-header h2 {
-    font-size: 1.4em; /* Slightly smaller font size */
+    font-size: 1.4em;
+    /* Slightly smaller font size */
     font-weight: 600;
-    white-space: nowrap; /* Prevents wrapping */
-    margin: 0; /* Removes unnecessary spacing */
-    overflow: hidden; /* Ensures no text overflows */
+    white-space: nowrap;
+    /* Prevents wrapping */
+    margin: 0;
+    /* Removes unnecessary spacing */
+    overflow: hidden;
+    /* Ensures no text overflows */
 }
 
 
@@ -203,23 +295,32 @@ body, html {
 }
 
 .date-card {
-    background-color: #f8f8f8; /* Ensure background is subtle */
-    padding: 5px 10px; /* Adjust padding for a more compact design */
-    border-radius: 12px; /* Keep the oblong shape */
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1); /* Optional: light shadow for clarity */
-    display: inline-flex; /* Aligns content horizontally inside the oblong */
-    align-items: center; /* Centers the content vertically */
+    background-color: #f8f8f8;
+    /* Ensure background is subtle */
+    padding: 5px 10px;
+    /* Adjust padding for a more compact design */
+    border-radius: 12px;
+    /* Keep the oblong shape */
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+    /* Optional: light shadow for clarity */
+    display: inline-flex;
+    /* Aligns content horizontally inside the oblong */
+    align-items: center;
+    /* Centers the content vertically */
 }
 
 .date-card p {
-    font-size: 0.9em; /* Slightly smaller font to fit the layout */
-    margin: 0; /* Removes unnecessary margin */
+    font-size: 0.9em;
+    /* Slightly smaller font to fit the layout */
+    margin: 0;
+    /* Removes unnecessary margin */
     display: flex;
     align-items: center;
 }
 
 .calendar-icon {
-    margin-left: 5px; /* Adds spacing between text and icon */
+    margin-left: 5px;
+    /* Adds spacing between text and icon */
 }
 
 .utilities-cards {
@@ -382,97 +483,82 @@ body, html {
     flex-direction: row;
     align-items: flex-start;
 }
-.logout-container {
-    margin-top: auto;
-    padding-top: 20px;
-    border-top: 1px solid #ddd;
-}
 
-.logout-button {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: #333;
-    font-size: 1em;
-    padding: 10px;
-    border-radius: 8px;
-}
-
-.logout-button i {
-    margin-right: 10px;
-    color: #A22F05;
-}
-
-.logout-button:hover {
-    background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
-    color: white;
-}
 @media (max-width: 1024px) {
     .dashboard-container {
         flex-direction: column;
         overflow-x: hidden;
-        align-items: center; /* Center align items */
+        align-items: center;
+        /* Center align items */
     }
 
     .sidebar {
         width: 100%;
         max-width: 100%;
-        margin-bottom: 20px; /* Add space below sidebar */
+        margin-bottom: 20px;
+        /* Add space below sidebar */
     }
 
     .main-content {
-        padding: 15px; /* Slightly increase padding for better spacing */
-        width: 100%; /* Ensure main content spans full width */
+        padding: 15px;
+        /* Slightly increase padding for better spacing */
+        width: 100%;
+        /* Ensure main content spans full width */
     }
 }
 
 @media (max-width: 768px) {
     .utilities-cards {
         grid-template-columns: repeat(1, 1fr);
-        gap: 15px; /* Add more space between cards */
+        gap: 15px;
+        /* Add more space between cards */
     }
 
-    .dashboard-header, .room-header {
+    .dashboard-header,
+    .room-header {
         text-align: center;
-        padding: 15px; /* Increase padding for more spacing */
-        font-size: 1.2em; /* Slightly increase text size for visibility */
+        padding: 15px;
+        /* Increase padding for more spacing */
+        font-size: 1.2em;
+        /* Slightly increase text size for visibility */
     }
 
     .preview-section {
-        margin: 20px 0; /* Add more spacing above and below */
+        margin: 20px 0;
+        /* Add more spacing above and below */
     }
 
     .preview-card {
         max-width: 100%;
-        margin: 0 auto; /* Center preview cards */
-        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Add subtle shadow for better visibility */
+        margin: 0 auto;
+        /* Center preview cards */
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        /* Add subtle shadow for better visibility */
     }
 }
 
 @media (max-width: 480px) {
     .sidebar {
-        display: none; /* Hide sidebar for smaller screens */
+        display: none;
+        /* Hide sidebar for smaller screens */
     }
 
     .dashboard-container {
         padding: 10px;
     }
 
-    .dashboard-header, .room-header {
-        font-size: 1.1em; /* Slightly smaller font for very small screens */
+    .dashboard-header,
+    .room-header {
+        font-size: 1.1em;
+        /* Slightly smaller font for very small screens */
     }
 
     .utilities-cards {
-        gap: 20px; /* Increase spacing for better usability */
+        gap: 20px;
+        /* Increase spacing for better usability */
     }
 
     .main-content {
         padding: 10px;
     }
 }
-
-
-
-
-
-

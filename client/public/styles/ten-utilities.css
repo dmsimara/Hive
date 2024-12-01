@@ -15,186 +15,193 @@
 }
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body, html {
-  font-family: 'Inter', sans-serif;
-  height: 100%;
+    font-family: 'Inter', sans-serif;
+    height: 100%;
 
 }
 
 .dashboard-container {
-  display: flex;
-  height: 100vh;
-  width: 100vw;
-  background-color: #F9F9F9;
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background-color: #F9F9F9;
+    overflow: auto;
+}
+
+main::-webkit-scrollbar {
+  width: 12px; 
+}
+
+main::-webkit-scrollbar-thumb {
+  background-color: var(--maroon);  
+  border-radius: 10px;  
+  border: 2px solid #fff; 
+}
+
+main::-webkit-scrollbar-thumb:hover {
+  background-color: var(--maroon);
+}
+
+main::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  border-radius: 10px; 
+}
+
+main::-webkit-scrollbar-track:hover {
+  background: #e1e1e1;
+}
+
+.sidebar {
+    position: sticky;
+    top: 0; 
+    background-color: #F4F4F4;
+    width: 300px;
+    min-width: 300px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transition: all .25s ease-in-out;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    height: 100vh;
+    overflow-y: auto; 
+}
+
+.sidebar-card {
+    background-color: #FFFFFF;
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
 
 .logo {
-  margin-bottom: -15px;
-  margin-top: -30px;
+    margin-bottom: -15px;
+    margin-top: -30px;
 }
 
 .logo-img {
-  width: 140px;
-  height: auto;
+    width: 140px;
+    height: auto;
+}
+
+.sidebar-nav {
+    list-style-type: none; 
+    padding: 0;  
+    margin: 0;  
+    flex-grow: 1;
+}
+
+.sidebar-item {
+    list-style-type: none; 
+    display: flex;
+    align-items: center;
+    color: #333;
+    font-size: 1em;
+    padding: 10px;
+    border-radius: 8px; 
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sidebar-item:hover {
+    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
+}
+
+.sidebar-item a {
+    text-decoration: none;
+    color: var(--dark-gray);
+    font-size: 18px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.sidebar-item:hover a {
+    color: white;
+}
+
+.sidebar-item i {
+    margin-right: 10px;
+}
+
+.sidebar-item.active {
+    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
+    color: white; 
+}
+
+.sidebar-item.active a {
+    color: white;
 }
 
 .sidebar p {
-  font-size: 0.9em;
-  color: #666;
+    font-size: 0.9em;
+    color: #666;
 }
 
 
-.menu-title {
-  font-weight: bold;
-  color: #0a0a0a;
+.sidebar-nav .menu-title {
+    font-weight: 700;
+    color: var(--dark-gray);
+    margin-left: 5px;
 }
 
-.menu ul, .tracker ul {
-  list-style: none;
-  padding: 0;
+.tracker {
+    margin-top: 40px;
 }
 
-
-.menu ul li, .tracker ul li {
-  margin: 10px 0;
+.logout-container {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
 }
 
-.menu ul li a, 
-.tracker ul li a {
-  text-decoration: none;
-  color: #333; /* Default text color */
-  font-size: 1em;
-  padding: 10px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.menu ul li a i, 
-.tracker ul li a i {
-  color: #000; /* Default icon color */
-  transition: color 0.3s ease-in-out;
-}
-
-/* Hover Effects: Both text and icon turn orange */
-.menu ul li a:hover, 
-.tracker ul li a:hover {
-  color: var(--orange);
-}
-
-.menu ul li a:hover i, 
-.tracker ul li a:hover i {
-  color: var(--orange);
-}
-
-/* Active State: White background and dark gray text/icon */
-.menu ul li.active a, 
-.tracker ul li.active a {
-  background: linear-gradient(to right, #cc3e22, #ff825c);
-  color: #f8f3f3; 
-}
-
-.menu ul li.active a i, 
-.tracker ul li.active a i {
-  color: #f8f3f3;  /* Icon also becomes dark gray */
-}
-
- .container {
-   display: flex;
-   height: 100vh;
-   width: 100%;
-   overflow: hidden; /* Prevent unintended scrolling */
- }
- 
- 
- .sidebar {
-  background-color: #F4F4F4;
-  width: 20%;
-  height: 100vh;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  position: fixed;
-  overflow-y: auto;
-}
- 
- 
- .sidebar::-webkit-scrollbar {
-   display: none; /* Hide scrollbar for Chrome/Safari */
- }
- 
- 
- .sidebar-card {
-  background-color: #FFFFFF;
-  border-radius: 15px;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-}
- 
- .menu ul, .tracker ul {
-   list-style: none; /* Remove bullets */
-   padding: 0;
- }
-
- 
- .menu ul li.active > a {
-   background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
-   color: white !important; /* Ensure this overrides conflicting styles */
- }
- 
- .logout-container {
-  margin-top: auto;
-  text-align: left; /* Align logout button to the left */
-  border-top: 1px solid #DDD; /* Add a separator line above */
-  padding-top: 15px; /* Space between the line and the logout button */
-}
- 
 .logout-button {
-  color: #000; /* Text stays black */
-  display: flex;
-  align-items: center;
-  justify-content: left;
-  text-decoration: none;
-  font-size: 1em;
-  padding: 10px;
-  border-radius: 8px;
-  transition: background-color 0.3s, color 0.3s;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--dark-gray);
+    font-weight: 600;
+    font-size: 1em;
+    padding: 10px;
+    border-radius: 8px;
+    transition: color 0.3s ease;
+}
+
+.logout-button:hover {
+    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
+    color: white; 
 }
 
 .logout-button i {
-  color: #A22F05;
-  margin-right: 10px;
-}
-
-
-.logout-button:hover {
-  background: linear-gradient(90deg, var(--maroon), var(--orange));
-  color: #fff;
+    margin-right: 10px;
+    color: #A22F05;
 }
 
 .logout-button:hover i {
-  color: #fff; /* Icon turns white */
+    color: white;
 }
- 
- 
+
+.logout-button:hover span {
+    color: white; 
+}
+
+
+
+/* main content styles  */
 main {
-  margin-left: 20%; /* Match this to the sidebar width */
-  width: 80%; /* Ensure the remaining width fits */
-  padding: 20px; /* Consistent padding */
-  overflow-y: auto; /* Enable vertical scrolling */
-  height: 100vh; /* Ensure it takes the full height */
+  width: 80%; 
+  padding: 20px; 
+  overflow-y: auto;  
+  height: 100vh;  
 }
  
  

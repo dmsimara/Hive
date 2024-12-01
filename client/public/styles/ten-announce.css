@@ -1,36 +1,212 @@
-body, html {
-    font-family: 'Arial', sans-serif;
-    height: 100%;
-    width: 100%;
-    margin: 0; 
-    padding: 0; 
-    overflow: hidden; 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+    --yellow: rgb(255, 251, 151);
+    /* #FFFB97 */
+    --orange: rgb(254, 127, 66);
+    /* #FE7F42 */
+    --maroon: rgb(179, 44, 26);
+    /* #B32C1A */
+    --gray: rgb(122, 75, 71);
+    /* #7A4B47 */
+    --dark-gray: rgb(42, 22, 23);
+    /* #2A1617 */
+    --background-color: rgb(245, 245, 245);
+}
+
+* {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
-body {
-    background-color: #F5F5F5; /* Light background color */
+body,
+html {
+    font-family: 'Inter', sans-serif;
+    height: 100%;
+
+}
+
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background-color: #F9F9F9;
+    overflow: auto;
+}
+
+.sidebar {
+    position: sticky;
+    top: 0;
+    background-color: #F4F4F4;
+    width: 300px;
+    min-width: 300px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transition: all .25s ease-in-out;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.sidebar-card {
+    background-color: #FFFFFF;
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
 
-.container {
-    background: url('your-image.jpg') no-repeat center center/cover; /* Full-screen background image */
-   
+.logo {
+    margin-bottom: -15px;
+    margin-top: -30px;
 }
 
+.logo-img {
+    width: 140px;
+    height: auto;
+}
+
+.sidebar-nav {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.sidebar-item {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    color: #333;
+    font-size: 1em;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sidebar-item:hover {
+    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
+}
+
+.sidebar-item a {
+    text-decoration: none;
+    color: var(--dark-gray);
+    font-size: 18px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.sidebar-item:hover a {
+    color: white;
+}
+
+.sidebar-item i {
+    margin-right: 10px;
+}
+
+.sidebar-item.active {
+    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
+    color: white;
+}
+
+.sidebar-item.active a {
+    color: white;
+}
+
+.sidebar p {
+    font-size: 0.9em;
+    color: #666;
+}
+
+
+.sidebar-nav .menu-title {
+    font-weight: 700;
+    color: var(--dark-gray);
+    margin-left: 5px;
+}
+
+.tracker {
+    margin-top: 40px;
+}
+
+.logout-container {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.logout-button {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--dark-gray);
+    font-weight: 600;
+    font-size: 1em;
+    padding: 10px;
+    border-radius: 8px;
+    transition: color 0.3s ease;
+}
+
+.logout-button:hover {
+    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
+    color: white;
+}
+
+.logout-button i {
+    margin-right: 10px;
+    color: #A22F05;
+}
+
+.logout-button:hover i {
+    color: white;
+}
+
+.logout-button:hover span {
+    color: white;
+}
+
+main::-webkit-scrollbar {
+    width: 12px;
+}
+
+main::-webkit-scrollbar-thumb {
+    background-color: var(--maroon);
+    border-radius: 10px;
+    border: 2px solid #fff;
+}
+
+main::-webkit-scrollbar-thumb:hover {
+    background-color: var(--maroon);
+}
+
+main::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+main::-webkit-scrollbar-track:hover {
+    background: #e1e1e1;
+}
 
 
 
 .container {
     display: grid;
-    grid-template-columns: 250px 1fr; 
-    gap: 0; 
-    margin: 0; 
-    padding: 0; 
-    width: 100%; 
-    height: 100vh; 
+    grid-template-columns: 250px 1fr;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100vh;
     box-sizing: border-box;
-    background-color:#F5F5F5; 
+    background-color: #F5F5F5;
 }
 
 
@@ -40,24 +216,28 @@ body {
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #DDD;
-    padding: 15px 10px; /* Reduced horizontal padding */
+    padding: 15px 10px;
+    /* Reduced horizontal padding */
     margin-bottom: 20px;
 }
 
 
 .header-left {
-    margin-left:0x; /* Slightly shift the header left */
+    margin-left: 0x;
+    /* Slightly shift the header left */
 }
 
 
 .header-right {
-    margin-right: 50px; /* Optional: keep balanced if needed */
+    margin-right: 50px;
+    /* Optional: keep balanced if needed */
 }
 
 
 .header-left h3 {
     font-size: 1.2em;
-    color: #888; /* Subtle text for greeting */
+    color: #888;
+    /* Subtle text for greeting */
     margin-bottom: 0px;
 }
 
@@ -66,7 +246,8 @@ body {
     font-size: 2.5em;
     color: #333;
     font-weight: bold;
-    margin: 0; /* Align closely with greeting text */
+    margin: 0;
+    /* Align closely with greeting text */
 }
 
 
@@ -83,7 +264,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #DDD; /* This is the line */
+    border-bottom: 1px solid #DDD;
+    /* This is the line */
     padding-bottom: 15px;
 }
 
@@ -118,8 +300,10 @@ body {
     font-size: 1.5em;
     color: #555;
     cursor: pointer;
-     margin-top: 0px; /* Move it a little bit down */
-    margin-left: 0px; /* Slightly shift the header left */
+    margin-top: 0px;
+    /* Move it a little bit down */
+    margin-left: 0px;
+    /* Slightly shift the header left */
 
 
 }
@@ -141,36 +325,49 @@ body {
     margin-top: 20px;
     position: relative;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    overflow-x: hidden; /* Prevent overflow in notices */
+    overflow-x: hidden;
+    /* Prevent overflow in notices */
 }
+
 .notices-scroll {
     overflow-y: auto;
-    overflow-x: hidden; /* Prevent horizontal scrolling */
-    max-height: calc(100vh - 350px); /* Adjusted height */
+    overflow-x: hidden;
+    /* Prevent horizontal scrolling */
+    max-height: calc(100vh - 350px);
+    /* Adjusted height */
     padding-right: 10px;
 }
+
 /* Ensure all content elements do not overflow */
 .main-content {
-    margin-left: 0x; /* Shift content to the right of the sidebar */
+    margin-left: 0x;
+    /* Shift content to the right of the sidebar */
     background-color: transparent;
     padding: 20px;
-    overflow-y: auto; /* Allow vertical scrolling if content overflows */
-    overflow-x: hidden; /* Prevent horizontal overflow */
+    overflow-y: auto;
+    /* Allow vertical scrolling if content overflows */
+    overflow-x: hidden;
+    /* Prevent horizontal overflow */
     border-radius: 15px;
-    width: calc(100% - 250px); /* Adjust content width based on sidebar */
+    width: calc(100% - 250px);
+    /* Adjust content width based on sidebar */
 }
 
 
 .sidebar {
     background-color: #F4F4F4;
-    padding: 0; /* Remove padding to avoid overflow */
+    padding: 0;
+    /* Remove padding to avoid overflow */
     display: flex;
     flex-direction: column;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    height: 100%; /* Full height of container */
-    width: 100%; /* Prevent overflow */
-    max-width: 250px; /* Prevent sidebar from overflowing */
-   
+    height: 100%;
+    /* Full height of container */
+    width: 100%;
+    /* Prevent overflow */
+    max-width: 250px;
+    /* Prevent sidebar from overflowing */
+
 }
 
 
@@ -178,14 +375,17 @@ body {
 .sidebar-card {
     background-color: #FFFFFF;
     border-radius: 15px;
-    margin: 15px; /* Add space between card and sidebar edges */
-    padding: 15px; /* Internal padding for content */
-    flex-grow: 1; /* Ensures it fills available height */
+    margin: 15px;
+    /* Add space between card and sidebar edges */
+    padding: 15px;
+    /* Internal padding for content */
+    flex-grow: 1;
+    /* Ensures it fills available height */
     height: 90;
     display: flex;
     flex-direction: column;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-   
+
 }
 
 
@@ -215,7 +415,7 @@ body {
     font-size: 0.9em;
     color: #666;
     line-height: 1.8;
-   
+
 }
 
 
@@ -235,7 +435,7 @@ body {
 
 .menu ul {
     list-style: none;
-   
+
 }
 
 
@@ -273,16 +473,20 @@ body {
 /* Hover state - orange background with orange text */
 .menu ul li a:hover,
 .tracker ul li a:hover {
-    color: #FF6B45; /* Orange font color */
+    color: #FF6B45;
+    /* Orange font color */
 }
 
 
 /* Active state - same as hover */
 .menu ul li.active a,
 .tracker ul li.active a {
-    background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%); /* Orange gradient */
-    color: white; /* White font color */
+    background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
+    /* Orange gradient */
+    color: white;
+    /* White font color */
 }
+
 .logout-container {
     margin-top: auto;
     padding-top: 20px;
@@ -352,7 +556,7 @@ body {
     margin-top: auto;
     padding-top: 20px;
     border-top: 1px solid #ddd;
-   
+
 }
 
 
@@ -376,9 +580,12 @@ body {
     margin-right: 10px;
     color: #A22F05;
 }
+
 .logout-button:hover i {
-    color: white; /* Change icon color to white on hover */
-    transition: color 0.3s ease; /* Smooth transition effect */
+    color: white;
+    /* Change icon color to white on hover */
+    transition: color 0.3s ease;
+    /* Smooth transition effect */
 }
 
 
@@ -396,13 +603,19 @@ body {
 
 /* Main Content */
 .main-content {
-    margin-left: 0px; /* Shift content to the right of the sidebar */
-    background-color: transparent; /* Background for visibility */
-    padding: 20px; /* Space inside the content */
-    overflow-y: auto; /* Allow vertical scrolling if content overflows */
+    margin-left: 0px;
+    /* Shift content to the right of the sidebar */
+    background-color: transparent;
+    /* Background for visibility */
+    padding: 20px;
+    /* Space inside the content */
+    overflow-y: auto;
+    /* Allow vertical scrolling if content overflows */
     border-radius: 15px;
-    width: 100%; /* Allow full width for content */
-     margin-top: 10px; /* Move it a little bit down */
+    width: 100%;
+    /* Allow full width for content */
+    margin-top: 10px;
+    /* Move it a little bit down */
 
 
 }
@@ -534,7 +747,8 @@ body {
 
 
 .permanent-notices h2 {
-    font-size: 18px; /* Adjusted text size */
+    font-size: 18px;
+    /* Adjusted text size */
     font-weight: bold;
     margin-bottom: 15px;
     color: white;
@@ -546,7 +760,8 @@ body {
 /* Scrollable Section */
 .notices-scroll {
     overflow-y: auto;
-    max-height: calc(100vh - 350px); /* Adjusted height */
+    max-height: calc(100vh - 350px);
+    /* Adjusted height */
     padding-right: 10px;
 }
 
@@ -601,7 +816,8 @@ body {
 
 
 .notices-scroll::-webkit-scrollbar-thumb {
-    background-color: #CCCCCC; /* Changed to gray */
+    background-color: #CCCCCC;
+    /* Changed to gray */
     border-radius: 5px;
 }
 
@@ -614,7 +830,9 @@ body {
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
 
 
-}/* Filter navigation */
+}
+
+/* Filter navigation */
 .filter-nav {
     display: flex;
     gap: 15px;
@@ -628,13 +846,16 @@ body {
 /* Filter link styling */
 .filter-link {
     text-decoration: none;
-    color: white; /* White text */
+    color: white;
+    /* White text */
     font-weight: bold;
     cursor: pointer;
     padding: 5px 10px;
     border-radius: 5px;
-    background-color: #ff440b; /* Plain orange background */
-    transition: background-color 0.3s, color 0.3s; /* Smooth hover effect */
+    background-color: #ff440b;
+    /* Plain orange background */
+    transition: background-color 0.3s, color 0.3s;
+    /* Smooth hover effect */
 }
 
 
@@ -642,8 +863,10 @@ body {
 
 /* Hover effect for filter links */
 .filter-link:hover {
-    background-color: #680202; /* Red background on hover */
-    color: white; /* Ensure text stays white on hover */
+    background-color: #680202;
+    /* Red background on hover */
+    color: white;
+    /* Ensure text stays white on hover */
 }
 
 
@@ -651,8 +874,10 @@ body {
 
 /* Active filter link styling */
 .filter-link.active {
-    background-color: #680202; /* Orange background for active state */
-    color: white; /* White text */
+    background-color: #680202;
+    /* Orange background for active state */
+    color: white;
+    /* White text */
 }
 
 
@@ -668,12 +893,16 @@ body {
 
 /* Individual notice styling (general) */
 .notice {
-    border: 2px solid #FF6B45; /* Orange border for visibility */
+    border: 2px solid #FF6B45;
+    /* Orange border for visibility */
     padding: 15px;
     margin-bottom: 10px;
-    background: linear-gradient(90deg, #FF6B45, #FF3C00); /* Gradient from orange to red */
-    color: white; /* White text */
-    transition: background-color 0.3s, color 0.3s; /* Smooth hover effect */
+    background: linear-gradient(90deg, #FF6B45, #FF3C00);
+    /* Gradient from orange to red */
+    color: white;
+    /* White text */
+    transition: background-color 0.3s, color 0.3s;
+    /* Smooth hover effect */
 }
 
 
@@ -681,8 +910,10 @@ body {
 
 /* Hover effect for notices */
 .notice:hover {
-    background: linear-gradient(90deg, #070707, #B32C19); /* Lighter gradient on hover */
-    color: white; /* Ensure text stays white */
+    background: linear-gradient(90deg, #070707, #B32C19);
+    /* Lighter gradient on hover */
+    color: white;
+    /* Ensure text stays white */
 }
 
 
@@ -692,7 +923,8 @@ body {
 .notice h3 {
     font-size: 16px;
     font-weight: bold;
-    color: #FF6B45; /* Orange color for the title */
+    color: #FF6B45;
+    /* Orange color for the title */
     margin-bottom: 10px;
 }
 
@@ -701,9 +933,12 @@ body {
 
 /* Additional styling for pinned notices */
 .notice.pinned {
-    border: 2px solid #FF6B45; /* Orange border for pinned notices */
-    background: linear-gradient(90deg, #FF6B45, #FF3C00); /* Same gradient as normal */
-    color: white; /* White text */
+    border: 2px solid #FF6B45;
+    /* Orange border for pinned notices */
+    background: linear-gradient(90deg, #FF6B45, #FF3C00);
+    /* Same gradient as normal */
+    color: white;
+    /* White text */
 }
 
 
@@ -711,9 +946,12 @@ body {
 
 /* Additional styling for permanent notices */
 .notice.permanent {
-    border: 2px solid #FF6B45; /* Orange border for permanent notices */
-    background: linear-gradient(90deg, #FF6B45, #FF3C00); /* Same gradient as normal */
-    color: white; /* White text */
+    border: 2px solid #FF6B45;
+    /* Orange border for permanent notices */
+    background: linear-gradient(90deg, #FF6B45, #FF3C00);
+    /* Same gradient as normal */
+    color: white;
+    /* White text */
 }
 
 
@@ -734,7 +972,8 @@ body {
 
 /* Notice Title */
 .notice-title {
-    color: #B32C19; /* Orange color */
+    color: #B32C19;
+    /* Orange color */
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 15px;
@@ -745,12 +984,15 @@ body {
 
 /* Pinned Badge */
 .pinned-badge {
-    background-color: #B32C19; /* Cacao color */
-    color: white; /* White text for contrast */
+    background-color: #B32C19;
+    /* Cacao color */
+    color: white;
+    /* White text for contrast */
     padding: 3px 6px;
     border-radius: 5px;
     font-size: 12px;
-    margin-right: 5px; /* Space between badges */
+    margin-right: 5px;
+    /* Space between badges */
 }
 
 
@@ -758,8 +1000,10 @@ body {
 
 /* Permanent Badge */
 .permanent-badge {
-    background-color: #B32C19; /* Cacao color */
-    color: white; /* White text for contrast */
+    background-color: #B32C19;
+    /* Cacao color */
+    color: white;
+    /* White text for contrast */
     padding: 3px 6px;
     border-radius: 5px;
     font-size: 12px;
@@ -770,15 +1014,22 @@ body {
 
 /* Styling for individual notice item */
 .notice-item {
-    width: 100%; /* Ensures it takes the full available width */
-    max-width: 100%; /* Removes any max-width limit */
+    width: 100%;
+    /* Ensures it takes the full available width */
+    max-width: 100%;
+    /* Removes any max-width limit */
     margin-bottom: 15px;
     padding: 15px;
-    background-color: #FFFFFF; /* White background */
-    color: #333333; /* Original font color */
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Gray shadow around the border */
-    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+    background-color: #FFFFFF;
+    /* White background */
+    color: #333333;
+    /* Original font color */
+    border-radius: 10px;
+    /* Rounded corners */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    /* Gray shadow around the border */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    /* Smooth transition */
 }
 
 
@@ -790,8 +1041,10 @@ body {
 
 /* Adjust the width for individual notice content */
 .notice-item .notice-title {
-    font-size: 24px; /* Larger font for the title */
-    color: #FF6B45; /* Orange color */
+    font-size: 24px;
+    /* Larger font for the title */
+    color: #FF6B45;
+    /* Orange color */
     font-weight: bold;
     margin-bottom: 15px;
 }
@@ -802,20 +1055,9 @@ body {
 /* Ensure the entire content is responsive and doesn't break */
 .notice-content {
     font-size: 16px;
-    color: #333333; /* Original font color */
+    color: #333333;
+    /* Original font color */
     margin-bottom: 10px;
-    line-height: 1.5; /* Improved readability */
+    line-height: 1.5;
+    /* Improved readability */
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,5 +1,18 @@
-/* General reset */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+    --yellow: rgb(255, 251, 151);
+    /* #FFFB97 */
+    --orange: rgb(254, 127, 66);
+    /* #FE7F42 */
+    --maroon: rgb(179, 44, 26);
+    /* #B32C1A */
+    --gray: rgb(122, 75, 71);
+    /* #7A4B47 */
+    --dark-gray: rgb(42, 22, 23);
+    /* #2A1617 */
+    --background-color: rgb(245, 245, 245);
+}
 
 * {
     margin: 0;
@@ -7,24 +20,36 @@
     box-sizing: border-box;
 }
 
+body,
+html {
+    font-family: 'Inter', sans-serif;
+    height: 100%;
+
+}
 
 .dashboard-container {
     display: flex;
-    flex-direction: row;
     height: 100vh;
     width: 100vw;
+    background-color: #F9F9F9;
+    overflow: auto;
 }
 
-
 .sidebar {
+    position: sticky;
+    top: 0;
     background-color: #F4F4F4;
-    width: 20%;
+    width: 300px;
+    min-width: 300px;
     padding: 20px;
     display: flex;
     flex-direction: column;
+    z-index: 1000;
+    transition: all .25s ease-in-out;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    height: 100vh;
+    overflow-y: auto;
 }
-
 
 .sidebar-card {
     background-color: #FFFFFF;
@@ -34,40 +59,6 @@
     flex-direction: column;
     height: 100%;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-}
-.logout-container {
-    margin-top: auto;
-    text-align: left; /* Align logout button to the left */
-    border-top: 1px solid #DDD; /* Add a separator line above */
-    padding-top: 15px; /* Space between the line and the logout button */
-}
-
-.logout-button {
-    color: #000; /* Default text color stays black */
-    display: flex;
-    align-items: center;
-    justify-content: left;
-    text-decoration: none;
-    font-size: 1em;
-    padding: 10px;
-    border-radius: 8px;
-    transition: background-color 0.3s, color 0.3s; /* Transition for both background and text */
-    background: none;  /* No background by default */
-}
-
-.logout-button i {
-    color: #A22F05;  /* Initial icon color */
-    margin-right: 10px;
-}
-
-/* Hover effect for the logout button */
-.logout-button:hover {
-    background: linear-gradient(90deg, #A22F05, #FF6B45); /* Orange gradient */
-    color:#FFFFFF  /* Text turns white on hover */
-}
-
-.logout-button:hover i {
-    color: white;  /* Icon turns white on hover */
 }
 
 
@@ -81,77 +72,131 @@
     height: auto;
 }
 
-
-.sidebar p {
-    font-size: 0.9em;
-    color: #666;
-    font-weight: bold;
-    margin: 10px 0;
-}
-
-.menu-title {
-    font-weight: bold;
-    color: #0a0a0a;
-}
-
-.menu ul,
-.tracker ul {
-    list-style: none;
+.sidebar-nav {
+    list-style-type: none;
     padding: 0;
+    margin: 0;
+    flex-grow: 1;
 }
 
-.menu ul li,
-.tracker ul li {
-    margin: 10px 0;
-}
-
-/* Remove bullet points */
-.menu ul li a,
-.tracker ul li a {
-    text-decoration: none;
+.sidebar-item {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
     color: #333;
     font-size: 1em;
     padding: 10px;
     border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sidebar-item:hover {
+    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
+}
+
+.sidebar-item a {
+    text-decoration: none;
+    color: var(--dark-gray);
+    font-size: 18px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.sidebar-item:hover a {
+    color: white;
+}
+
+.sidebar-item i {
+    margin-right: 10px;
+}
+
+.sidebar-item.active {
+    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
+    color: white;
+}
+
+.sidebar-item.active a {
+    color: white;
+}
+
+.sidebar p {
+    font-size: 0.9em;
+    color: #666;
+}
+
+
+.sidebar-nav .menu-title {
+    font-weight: 700;
+    color: var(--dark-gray);
+    margin-left: 5px;
+}
+
+.tracker {
+    margin-top: 40px;
+}
+
+.logout-container {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.logout-button {
     display: flex;
     align-items: center;
-    gap: 10px;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    text-decoration: none;
+    color: var(--dark-gray);
+    font-weight: 600;
+    font-size: 1em;
+    padding: 10px;
+    border-radius: 8px;
+    transition: color 0.3s ease;
 }
-
-/* Active state for menu items */
-.menu ul li.active a {
-    background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
-    color: white;
-}
-
-/* Hover effects for text and icon */
-.menu ul li a:hover,
-.tracker ul li a:hover {
-    color: #FF7F32;  /* Text turns orange */
-}
-
-.menu ul li a:hover i,
-.tracker ul li a:hover i {
-    color: #FF7F32;  /* Icon turns orange */
-}
-
-/* Active state for the icon */
-.menu ul li.active a i,
-.tracker ul li.active a i {
-    color: white; /* Icon turns white when active */
-}
-
-/* Active state for menu items */
-.menu ul li.active a {
-    background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
-    color: white;
-}
-
 
 .logout-button:hover {
-    color: #FF7F32;
+    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
+    color: white;
 }
+
+.logout-button i {
+    margin-right: 10px;
+    color: #A22F05;
+}
+
+.logout-button:hover i {
+    color: white;
+}
+
+.logout-button:hover span {
+    color: white;
+}
+
+main::-webkit-scrollbar {
+    width: 12px;
+}
+
+main::-webkit-scrollbar-thumb {
+    background-color: var(--maroon);
+    border-radius: 10px;
+    border: 2px solid #fff;
+}
+
+main::-webkit-scrollbar-thumb:hover {
+    background-color: var(--maroon);
+}
+
+main::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+main::-webkit-scrollbar-track:hover {
+    background: #e1e1e1;
+}
+
+
+
 
 
 /* Main content layout */
@@ -222,19 +267,25 @@
 
 .tenants-section {
     display: flex;
-    flex-direction: column;  /* Column layout for tenants section */
-    margin-bottom: 20px;     /* Optional: Add spacing between sections */
+    flex-direction: column;
+    /* Column layout for tenants section */
+    margin-bottom: 20px;
+    /* Optional: Add spacing between sections */
 }
 
 .tenants-title-wrapper {
     display: flex;
-    justify-content: space-between;   /* Space between the title and the button */
-    align-items: center;              /* Vertically center the title and button */
+    justify-content: space-between;
+    /* Space between the title and the button */
+    align-items: center;
+    /* Vertically center the title and button */
 }
 
 .tenants-title {
-    margin: 0;                       /* Remove any default margin */
-    font-size: 1.5em;                 /* Adjust the font size if needed */
+    margin: 0;
+    /* Remove any default margin */
+    font-size: 1.5em;
+    /* Adjust the font size if needed */
 }
 
 .edit-info-btn {
