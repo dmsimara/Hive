@@ -782,13 +782,19 @@ app.get("/tenant/room-details", verifyTenantToken, async (req, res) => {
         }
 
         const roomNumber = room.get('roomNumber');
+        const roomType = room.get('roomType');
+        const floorNumber = room.get('floorNumber');
+        const roomTotalSlot = room.get('roomTotalSlot');
         const plainTenants = tenants.map(tenant => tenant.get({ plain: true }));
 
         res.render("ten-RoomDeets", {
             title: "Hive",
             styles: ["ten-deets"],
             tenants: plainTenants,
-            roomNumber: roomNumber
+            roomNumber: roomNumber,
+            roomType: roomType,
+            floorNumber: floorNumber,
+            roomTotalSlot: roomTotalSlot
         });
     } catch (error) {
         console.error('Error fetching tenant data:', error);
