@@ -49,9 +49,7 @@
     <main class="main-content">
         <header class="header">
             <div>
-                <!-- Add a new class to the Welcome header -->
                 <h1 class="welcome-header">Welcome to Hive</h1>
-                <!-- Add the class for custom styling -->
                 <h2 class="header-subtitle room-details-header">Room Details</h2>
             </div>
             <div class="header-right">
@@ -85,27 +83,37 @@
                 </div>
 
                 <!-- Tenant Info Section -->
-                <div class="tenant-info-wrapper">
-                    <div class="tenants-info">
-                        <h3><i class="fas fa-info-circle"></i> Tenants Info</h3>
-                        <div class="tenant-info-cards">
-                            {{#each tenants}}
-                            <div class="tenant-info-card">
-                                <div class="avatar">
-                                    <img src="{{#if tenantProfile}}/images/upload/{{tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
-                                        alt="Tenant Profile">
+                <div class="container">
+                    <div class="tenant-info-wrapper">
+                        <div class="tenants-info">
+                            <h3><i class="fas fa-info-circle"></i> Tenants Info</h3>
+                            <div class="tenant-info-cards">
+                                {{#each tenants}}
+                                <div class="tenant-info-card">
+                                    <div class="avatar">
+                                        <img src="{{#if tenantProfile}}/images/upload/{{tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+                                            alt="Tenant Profile">
+                                    </div>
+                                    <div class="tenant-details">
+                                        <p><strong>{{tenantFirstName}} {{tenantLastName}}</strong></p>
+                                        <p><strong>Tenant ID:</strong> {{tenant_id}}</p>
+                                        <p><strong>Contact Number:</strong> {{mobileNum}}</p>
+                                        <p><strong>Email:</strong> {{tenantEmail}}</p>
+                                    </div>
                                 </div>
-                                <div class="tenant-details">
-                                    <p><strong>{{tenantFirstName}} {{tenantLastName}}</strong></p>
-                                    <p><strong>Tenant ID:</strong> {{tenant_id}}</p>
-                                    <p><strong>Contact Number:</strong> {{mobileNum}}</p>
-                                    <p><strong>Email:</strong> {{tenantEmail}}</p>
-                                </div>
+                                {{/each}}
                             </div>
-                            {{/each}}
                         </div>
                     </div>
+                    <div class="penalty-wrapper">
+                        <i class="material-icons">verified_user</i>
+                        <p class="penalty-title">Penalty:</p>
+                        <div class="penalty-container"></div>
+                        <p class="penalty-title">Keycard Code:</p>
+                        <div class="keycard-container"></div>
+                    </div>
                 </div>
+
             </div>
 
             <!-- Right Section -->
@@ -113,41 +121,75 @@
                 <div class="room-info">
                     <div class="room-number">
                         <div class="room-number-card">
-                            <!-- Circle Template for Room Number -->
                             <div class="circle">
-                                <h1>{{roomNumber}}</h1> <!-- Display the room number inside the circle -->
+                                <h1>{{roomNumber}}</h1>
+                                <p>Room No.</p>
                             </div>
-                            <p>Room No.</p> <!-- Text outside the circle -->
+                            <div class="room-status-wrapper">
+                                <i class="fa-solid fa-bed"></i>
+                                <div class="room-status-text">
+                                    <p><strong>Room Status:</strong></p>
+                                    <p>Occupied</p>
+                                </div>
+                            </div>
+                            <div class="first-row">
+                                <div class="row-container">
+                                    <i class="fa-solid fa-door-open"></i>
+                                    <div class="row-text">
+                                        <p class="row-text-title"><strong>Room Type:</strong></p>
+                                        <p>{{roomType}}</p>
+                                    </div>
+                                </div>
+                                <div class="row-container">
+                                    <i class="material-icons">open_in_new</i>
+                                    <div class="row-text">
+                                        <p class="row-text-title"><strong>Floor No:</strong></p>
+                                        <p>{{floorNumber}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="second-row">
+                                <div class="row-container">
+                                    <i class="material-icons">group</i>
+                                    <div class="row-text">
+                                        <p class="row-text-title"><strong>Capacity:</strong></p>
+                                        <p>{{roomTotalSlot}}</p>
+                                    </div>
+                                </div>
+                                <div class="row-container">
+                                    <i class="fa-solid fa-bed"></i>
+                                    <div class="row-text">
+                                        <p class="row-text-title"><strong>Furniture:</strong></p>
+                                        <p>Bunk Bed, Desk</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="third-row">
+                                <div class="row-container">
+                                    <i class="material-icons">alt_route</i>
+                                    <div class="row-text">
+                                        <p class="row-text-title"><strong>Room Size:</strong></p>
+                                        <p>25 sqm</p>
+                                    </div>
+                                </div>
+                                <div class="row-container">
+                                    <i class="material-icons">kitchen</i>
+                                    <div class="row-text">
+                                        <p class="row-text-title"><strong>Amenities:</strong></p>
+                                        <p>Kitchen, Laundry</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="end-row"></div>
                         </div>
                     </div>
                 </div>
             </div>
 
+
+
+
         </section>
     </main>
-
-    {{!--
-    <!-- Modal for editing tenant info -->
-    <div id="editModal" class="modal hidden">
-        <div class="modal-content">
-            <button class="close-modal">&times;</button>
-            <form id="editForm">
-                <h2>Edit Tenant Info</h2>
-                <label for="tenantName">Name:</label>
-                <input type="text" id="tenantName" name="tenantName" value="John Doe" />
-
-                <label for="tenantContact">Contact:</label>
-                <input type="text" id="tenantContact" name="tenantContact" value="0987654321" />
-
-                <label for="tenantEmail">Email:</label>
-                <input type="email" id="tenantEmail" name="tenantEmail" value="john.doe@example.com" />
-
-                <input type="hidden" id="tenantId" name="tenantId" value="12345" />
-
-                <button type="submit">Save Changes</button>
-            </form>
-        </div>
-    </div> --}}
-
-
-    <script src="/js/ten-details.js"></script>
+</div>
+<script src="/js/ten-details.js"></script>
