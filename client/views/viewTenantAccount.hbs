@@ -45,68 +45,58 @@
         </div>
     </aside>
 
-    <!-- Main Content -->
     <div class="main-content">
-        <header class="section-header">
-            <h3 class="title-profile">
-                <i class="material-icons dots">more_horiz</i> Tenant Profile
-            </h3>
-        </header>
+    <header class="section-header">
+        <h3 class="title-profile">
+            <i class="material-icons dots">more_horiz</i> Tenant Profile
+        </h3>
+    </header>
 
-        <section class="card">
-            <div class="card__content">
-                {{#each tenant}}
-                <!-- Profile Image Section -->
-                <div class="card__profile">
-                    <img src="{{#if tenantProfile}}/images/upload/{{tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
-                        alt="Tenant Profile Picture" width="80px">
-                </div>
-
-                <!-- Tenant Details -->
-                <div class="card__details">
-                    <!-- Row for Name and Email -->
-                    <div class="card__row">
-                        <div class="card__section">
-                            <h1>Name:</h1>
-                            <span>{{tenantFirstName}} {{tenantLastName}}</span>
-                        </div>
-                        <div class="card__section">
-                            <h1>Email:</h1>
-                            <span>{{tenantEmail}}</span>
-                        </div>
-                    </div>
-
-                    <!-- Row for Gender and Mobile Number -->
-                    <div class="card__row">
-                        <div class="card__section">
-                            <h1>Gender:</h1>
-                            <span>{{gender}}</span>
-                        </div>
-                        <div class="card__section">
-                            <h1>Mobile Number:</h1>
-                            <span>{{mobileNum}}</span>
-                        </div>
-                    </div>
-
-                    <!-- Row for Guardian Name and Guardian Mobile Number -->
-                    <div class="card__row">
-                        <div class="card__section">
-                            <h1>Guardian Name:</h1>
-                            <span>{{tenantGuardianName}}</span>
-                        </div>
-                        <div class="card__section">
-                            <h1>Guardian Number:</h1>
-                            <span>{{tenantGuardianNum}}</span>
-                        </div>
-                    </div>
-
-                    <!-- Edit Profile Button -->
-                    <a href="/tenant/room-details/edit/account" class="btn btn--edit-profile">
-                        <i class="material-icons">edit</i> Edit Profile
-                    </a>
-                </div>
-                {{/each}}
+    <section class="card">
+        <div class="card__content">
+            <div class="card__profile">
+                <img src="{{#if tenant.tenantProfile}}/images/upload/{{tenant.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+                    alt="Tenant Profile Picture" width="80px">
             </div>
-        </section>
-    </div>
+
+            <div class="card__details">
+                <div class="card__row">
+                    <div class="card__section">
+                        <h1>Name:</h1>
+                        <span>{{tenant.tenantFirstName}} {{tenant.tenantLastName}}</span>
+                    </div>
+                    <div class="card__section">
+                        <h1>Email:</h1>
+                        <span>{{tenant.tenantEmail}}</span>
+                    </div>
+                </div>
+
+                <div class="card__row">
+                    <div class="card__section">
+                        <h1>Gender:</h1>
+                        <span>{{tenant.gender}}</span>
+                    </div>
+                    <div class="card__section">
+                        <h1>Mobile Number:</h1>
+                        <span>{{tenant.mobileNum}}</span>
+                    </div>
+                </div>
+
+                <div class="card__row">
+                    <div class="card__section">
+                        <h1>Guardian Name:</h1>
+                        <span>{{tenant.tenantGuardianName}}</span>
+                    </div>
+                    <div class="card__section">
+                        <h1>Guardian Number:</h1>
+                        <span>{{tenant.tenantGuardianNum}}</span>
+                    </div>
+                </div>
+
+                <a href="/tenant/room-details/edit/account" class="btn btn--edit-profile">
+                    <i class="material-icons">edit</i> Edit Profile
+                </a>
+            </div>
+        </div>
+    </section>
 </div>
