@@ -131,11 +131,12 @@ main::-webkit-scrollbar-track:hover {
 
 .sidebar-item i {
     margin-right: 10px;
+    color: #333;
 }
 
 .sidebar-item.active {
     background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
-    color: white; 
+    color: white !important; 
 }
 
 .sidebar-item.active a {

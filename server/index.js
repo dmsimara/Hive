@@ -819,16 +819,12 @@ app.get("/tenant/room-details/view/account", verifyTenantToken, async (req, res)
             return res.status(404).send("Tenant not found");
         }
 
-        const roomId = tenant.get("room_id");
-
-        const tenants = await getTenantsDashboard(roomId);
-
-        const plainTenants = tenants.map((tenant) => tenant.get({ plain: true }));
+        const plainTenant = tenant.get({ plain: true });
 
         res.render("viewTenantAccount", {
             title: "Hive",
             styles: ["viewTenantAccount"],
-            tenant: plainTenants, 
+            tenant: plainTenant, 
         });
     } catch (error) {
         console.error("Error fetching tenant data:", error);
