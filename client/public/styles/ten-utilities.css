@@ -32,6 +32,7 @@ body, html {
     width: 100vw;
     background-color: #F9F9F9;
     overflow: auto;
+    gap: 20px;
 }
 
 main::-webkit-scrollbar {
@@ -63,7 +64,7 @@ main::-webkit-scrollbar-track:hover {
     background-color: #F4F4F4;
     width: 300px;
     min-width: 300px;
-    padding: 20px;
+    padding: 30px;
     display: flex;
     flex-direction: column;
     z-index: 1000;
@@ -200,7 +201,7 @@ main::-webkit-scrollbar-track:hover {
 /* main content styles  */
 main {
   width: 80%; 
-  padding: 20px; 
+  padding: 30px; 
   overflow-y: auto;  
   height: 100vh;  
 }
@@ -282,7 +283,7 @@ main {
    background: #fff;
    padding: 20px;
    border-radius: 8px;
-   border: 3px solid #B62B1B; /* Orange border */
+   border: 3px solid #B62B1B; 
  }
  
  
@@ -470,50 +471,50 @@ main {
  
  /* Utilities History Section */
  .utilities-history {
-   padding: 20px; /* Padding around the section */
-   background-color: #fafafa; /* Light background color */
-   border-radius: 12px; /* Rounded corners for section */
+   padding: 20px; 
+   background-color: #fafafa; 
+   border-radius: 12px; 
    margin-top: 30px;
  }
  
  
  .utilities-history h2 {
-   font-size: 24px; /* Larger heading font */
-   margin-bottom: 20px; /* Spacing below the heading */
-   color: #333; /* Dark text for clarity */
+   font-size: 24px; 
+   margin-bottom: 20px; 
+   color: #333; 
  }
  
  
  .utilities-history-card {
-   background: #ffffff; /* White background for card clarity */
-   border: 2px solid #ddd; /* Subtle border for definition */
-   border-radius: 12px; /* Rounded corners for the card */
-   padding: 20px; /* Spacing inside the card */
-   box-shadow: 0 4px 12px rgba(255, 249, 249, 0.1); /* Slight shadow for depth */
-   margin-top: 20px; /* Spacing from other sections */
-   display: flex; /* Flexbox for organized content inside the card */
-   flex-direction: column; /* Stack content vertically */
-   gap: 15px; /* Space between sections inside the card */
+   background: #ffffff; 
+   border: 2px solid #ddd; 
+   border-radius: 12px; 
+   padding: 20px; 
+   box-shadow: 0 4px 12px rgba(255, 249, 249, 0.1); 
+   margin-top: 20px; 
+   display: flex; 
+   flex-direction: column; 
+   gap: 15px; 
  }
  
  
  /* Table styles */
  table {
-   width: 100%; /* Full width */
-   border-collapse: collapse; /* Collapse borders between cells */
+   width: 100%; 
+   border-collapse: collapse; 
  }
  
  
  th, td {
-   padding: 12px; /* Padding inside each cell */
-   text-align: left; /* Align text to the left */
-   border-bottom: 1px solid #ddd; /* Light border between rows */
+   padding: 12px; 
+   text-align: left; 
+   border-bottom: 1px solid #ddd; 
  }
  
- 
+ /* header bg and font color*/
  th {
-   background-color: #f9f9f9; /* Light background for headers */
-   font-weight: bold; /* Make header text bold */
+   background-color: #f9f9f9; 
+   font-weight: bold; 
  }
  
  
@@ -521,10 +522,10 @@ main {
    background-color: #fafafa; /* Slight background for table data */
  }
  
- 
+ /* icon and text spacing and color*/
  i {
-   margin-right: 8px; /* Spacing between icon and text */
-   color: #f39c12; /* Icon color for better contrast */
+   margin-right: 8px;
+   color: #f39c12; 
  }
  
  
@@ -532,31 +533,31 @@ main {
    display: flex;
    justify-content: space-between;
    align-items: center;
-   margin-bottom: 15px; /* Space between header and list */
+   margin-bottom: 15px; 
  }
  
  
  .utilities-history-header h3 {
-   font-size: 1.5rem; /* Slightly larger text */
-   color: #333; /* Dark gray for emphasis */
+   font-size: 1.5rem; 
+   color: #333; 
    font-weight: bold;
  }
  
  
  .utilities-history-header .year {
    font-size: 1rem;
-   color: #777; /* Muted gray for a secondary focus */
+   color: #777; 
  }
  
  
  .utilities-history-header i {
-   font-size: 1.8rem; /* Icon size slightly larger */
-   color: #FF6B45; /* Accent color for visibility */
+   font-size: 1.8rem; 
+   color: #FF6B45;
  }
  
  
  .utilities-history-list {
-   margin-top: 10px; /* Add spacing from the header */
+   margin-top: 10px; 
  }
  
  
@@ -564,33 +565,33 @@ main {
    display: flex;
    justify-content: space-between;
    align-items: center;
-   padding: 10px 15px; /* Internal spacing */
-   border-bottom: 1px solid #ddd; /* Divider between items */
-   transition: background 0.3s ease; /* Smooth hover effect */
+   padding: 10px 15px; 
+   border-bottom: 1px solid #ddd; 
+   transition: background 0.3s ease; 
  }
  
  
  .history-item:last-child {
-   border-bottom: none; /* Remove the border for the last item */
+   border-bottom: none; 
  }
  
  
  .history-item:hover {
-   background: #f9f9f9; /* Light gray background on hover */
+   background: #f9f9f9;
  }
  
  
  .history-item .title {
    font-size: 1rem;
-   font-weight: 500; /* Medium weight for readability */
-   color: #444; /* Dark gray text */
+   font-weight: 500; 
+   color: #444;
  }
  
  
  .history-item .amount {
    font-size: 1rem;
-   font-weight: bold; /* Highlight amounts */
-   color: #FF6B45; /* Accent color for visibility */
+   font-weight: bold; 
+   color: #FF6B45; 
  }
  
  
@@ -617,13 +618,13 @@ main {
  /* Ensure that the bill section is using a column layout */
 .bill {
   display: flex;
-  flex-direction: column; /* Arrange elements vertically */
-  align-items: flex-start; /* Align the children to the start of the flex container */
+  flex-direction: column; 
+  align-items: flex-start; 
   padding: 10px 15px;
   background: #fff;
   border-radius: 8px;
-  border: 1px solid #6F4F37; /* Solid orange border */
-  gap: 5px; /* Add gap between elements */
+  border: 1px solid #6F4F37; 
+  gap: 5px; 
 }
 
 /* Adjust styling for bill title to ensure space is utilized well */
@@ -639,22 +640,22 @@ main {
   font-size: 2rem;
   font-weight: bold;
   color: #444;
-  align-self: flex-end; /* Align to the right */
+  align-self: flex-end; 
 }
 
 /* Style for the date section below the bill title */
 .bill-dates p {
   font-size: 0.8rem;
   color: #666;
-  margin: 2px 0 0 0; /* Adjust margin to ensure it's spaced below the title */
+  margin: 2px 0 0 0; 
 }
 
 /* Style for the tenant share below the bill amount, aligning it to the right */
 .bill-tenant-share {
   font-size: 0.8rem;
   color: #666;
-  margin: 2px 0 0 0; /* Adjust margin to ensure it's spaced below the amount */
-  align-self: flex-end; /* Align to the right */
+  margin: 2px 0 0 0;
+  align-self: flex-end; 
 }
 
  

@@ -33,6 +33,7 @@ html {
     width: 100vw;
     background-color: #F9F9F9;
     overflow: auto;
+    gap: 20px;
 }
 
 .sidebar {
@@ -41,7 +42,7 @@ html {
     background-color: #F4F4F4;
     width: 300px;
     min-width: 300px;
-    padding: 20px;
+    padding: 30px;
     display: flex;
     flex-direction: column;
     z-index: 1000;
@@ -202,7 +203,7 @@ main::-webkit-scrollbar-track:hover {
 /* Main content layout */
 .main-content {
     flex-grow: 1;
-    padding: 20px;
+    padding: 30px;
     overflow: auto;
 }
 
