@@ -33,6 +33,7 @@ html {
     width: 100vw;
     background-color: #F9F9F9;
     overflow: auto;
+    gap: 20px; 
 }
 
 .sidebar {
@@ -41,7 +42,7 @@ html {
     background-color: #F4F4F4;
     width: 300px;
     min-width: 300px;
-    padding: 20px;
+    padding: 30px;
     display: flex;
     flex-direction: column;
     z-index: 1000;
@@ -217,27 +218,23 @@ main::-webkit-scrollbar-track:hover {
     align-items: center;
     border-bottom: 1px solid #DDD;
     padding: 15px 10px;
-    /* Reduced horizontal padding */
     margin-bottom: 20px;
 }
 
 
 .header-left {
     margin-left: 0x;
-    /* Slightly shift the header left */
 }
 
 
 .header-right {
     margin-right: 50px;
-    /* Optional: keep balanced if needed */
 }
 
 
 .header-left h3 {
     font-size: 1.2em;
     color: #888;
-    /* Subtle text for greeting */
     margin-bottom: 0px;
 }
 
@@ -247,7 +244,7 @@ main::-webkit-scrollbar-track:hover {
     color: #333;
     font-weight: bold;
     margin: 0;
-    /* Align closely with greeting text */
+   
 }
 
 
@@ -265,7 +262,6 @@ main::-webkit-scrollbar-track:hover {
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #DDD;
-    /* This is the line */
     padding-bottom: 15px;
 }
 
@@ -301,9 +297,7 @@ main::-webkit-scrollbar-track:hover {
     color: #555;
     cursor: pointer;
     margin-top: 0px;
-    /* Move it a little bit down */
     margin-left: 0px;
-    /* Slightly shift the header left */
 
 
 }
@@ -340,34 +334,22 @@ main::-webkit-scrollbar-track:hover {
 
 /* Ensure all content elements do not overflow */
 .main-content {
-    margin-left: 0x;
-    /* Shift content to the right of the sidebar */
-    background-color: transparent;
-    padding: 20px;
-    overflow-y: auto;
-    /* Allow vertical scrolling if content overflows */
-    overflow-x: hidden;
-    /* Prevent horizontal overflow */
-    border-radius: 15px;
-    width: calc(100% - 250px);
-    /* Adjust content width based on sidebar */
+    flex: 1;
+    padding: 30px;
+    margin-left: 20px;
+    transition: all 0.35s ease-in-out;
 }
 
 
 .sidebar {
     background-color: #F4F4F4;
-    padding: 0;
-    /* Remove padding to avoid overflow */
+    padding: 15px;
     display: flex;
     flex-direction: column;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     height: 100%;
-    /* Full height of container */
     width: 100%;
-    /* Prevent overflow */
     max-width: 250px;
-    /* Prevent sidebar from overflowing */
-
 }
 
 
@@ -389,26 +371,16 @@ main::-webkit-scrollbar-track:hover {
 }
 
 
-
-
-
-
-
-
 .logo {
     margin-bottom: -15px;
     margin-top: -30px;
 }
 
 
-
-
 .logo-img {
     width: 140px;
     height: auto;
 }
-
-
 
 
 .sidebar p {
@@ -419,18 +391,10 @@ main::-webkit-scrollbar-track:hover {
 }
 
 
-
-
-
-
-
-
 .menu-title {
     font-weight: bold;
     color: #0a0a0a;
 }
-
-
 
 
 .menu ul {
@@ -439,13 +403,9 @@ main::-webkit-scrollbar-track:hover {
 }
 
 
-
-
 .menu ul li {
     margin: 10px 0;
 }
-
-
 
 
 .menu ul li a {
@@ -460,21 +420,16 @@ main::-webkit-scrollbar-track:hover {
 }
 
 
-
-
 .menu ul li.active a {
     background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
     color: white;
 }
 
 
-
-
-/* Hover state - orange background with orange text */
 .menu ul li a:hover,
 .tracker ul li a:hover {
     color: #FF6B45;
-    /* Orange font color */
+    /* font color */
 }
 
 
@@ -515,25 +470,15 @@ main::-webkit-scrollbar-track:hover {
 }
 
 
-
-
 .logout-button:hover {
     background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
     color: white;
 }
 
 
-
-
-
-
-
-
 .tracker ul {
     list-style: none;
 }
-
-
 
 
 .tracker ul li a {
@@ -546,20 +491,12 @@ main::-webkit-scrollbar-track:hover {
 }
 
 
-
-
-
-
-
-
 .logout-container {
     margin-top: auto;
     padding-top: 20px;
     border-top: 1px solid #ddd;
 
 }
-
-
 
 
 .logout-button {
@@ -574,8 +511,6 @@ main::-webkit-scrollbar-track:hover {
 }
 
 
-
-
 .logout-button i {
     margin-right: 10px;
     color: #A22F05;
@@ -583,11 +518,10 @@ main::-webkit-scrollbar-track:hover {
 
 .logout-button:hover i {
     color: white;
-    /* Change icon color to white on hover */
+    /* icon color to white when hover */
     transition: color 0.3s ease;
-    /* Smooth transition effect */
+    /* transition effect */
 }
-
 
 
 
@@ -599,33 +533,19 @@ main::-webkit-scrollbar-track:hover {
 
 
 
-
-
 /* Main Content */
 .main-content {
     margin-left: 0px;
-    /* Shift content to the right of the sidebar */
     background-color: transparent;
-    /* Background for visibility */
     padding: 20px;
-    /* Space inside the content */
     overflow-y: auto;
-    /* Allow vertical scrolling if content overflows */
     border-radius: 15px;
     width: 100%;
-    /* Allow full width for content */
     margin-top: 10px;
-    /* Move it a little bit down */
+  
 
 
 }
-
-
-
-
-
-
-
 
 
 
@@ -655,7 +575,6 @@ main::-webkit-scrollbar-track:hover {
 
 
 
-
 /* Section Titles */
 .pinned-section h3,
 .new-section h3 {
@@ -668,12 +587,10 @@ main::-webkit-scrollbar-track:hover {
 
 
 
-
 .pinned-section h3 i,
 .new-section h3 i {
     margin-right: 10px;
 }
-
 
 
 
@@ -748,7 +665,7 @@ main::-webkit-scrollbar-track:hover {
 
 .permanent-notices h2 {
     font-size: 18px;
-    /* Adjusted text size */
+    /* text size*/
     font-weight: bold;
     margin-bottom: 15px;
     color: white;
@@ -817,7 +734,6 @@ main::-webkit-scrollbar-track:hover {
 
 .notices-scroll::-webkit-scrollbar-thumb {
     background-color: #CCCCCC;
-    /* Changed to gray */
     border-radius: 5px;
 }
 
@@ -847,15 +763,14 @@ main::-webkit-scrollbar-track:hover {
 .filter-link {
     text-decoration: none;
     color: white;
-    /* White text */
+    /* text color */
     font-weight: bold;
     cursor: pointer;
     padding: 5px 10px;
     border-radius: 5px;
     background-color: #ff440b;
-    /* Plain orange background */
     transition: background-color 0.3s, color 0.3s;
-    /* Smooth hover effect */
+
 }
 
 
@@ -864,9 +779,7 @@ main::-webkit-scrollbar-track:hover {
 /* Hover effect for filter links */
 .filter-link:hover {
     background-color: #680202;
-    /* Red background on hover */
     color: white;
-    /* Ensure text stays white on hover */
 }
 
 
@@ -877,7 +790,7 @@ main::-webkit-scrollbar-track:hover {
     background-color: #680202;
     /* Orange background for active state */
     color: white;
-    /* White text */
+    /* text color */
 }
 
 
@@ -894,64 +807,49 @@ main::-webkit-scrollbar-track:hover {
 /* Individual notice styling (general) */
 .notice {
     border: 2px solid #FF6B45;
-    /* Orange border for visibility */
     padding: 15px;
     margin-bottom: 10px;
     background: linear-gradient(90deg, #FF6B45, #FF3C00);
-    /* Gradient from orange to red */
     color: white;
-    /* White text */
     transition: background-color 0.3s, color 0.3s;
-    /* Smooth hover effect */
+    
 }
-
-
 
 
 /* Hover effect for notices */
 .notice:hover {
     background: linear-gradient(90deg, #070707, #B32C19);
-    /* Lighter gradient on hover */
     color: white;
-    /* Ensure text stays white */
 }
 
 
 
 
-/* Title of each notice (set to orange) */
+/* color of title of each notice */
 .notice h3 {
     font-size: 16px;
     font-weight: bold;
     color: #FF6B45;
-    /* Orange color for the title */
+
     margin-bottom: 10px;
 }
-
-
 
 
 /* Additional styling for pinned notices */
 .notice.pinned {
     border: 2px solid #FF6B45;
-    /* Orange border for pinned notices */
     background: linear-gradient(90deg, #FF6B45, #FF3C00);
-    /* Same gradient as normal */
     color: white;
-    /* White text */
+    
 }
-
-
 
 
 /* Additional styling for permanent notices */
 .notice.permanent {
     border: 2px solid #FF6B45;
-    /* Orange border for permanent notices */
     background: linear-gradient(90deg, #FF6B45, #FF3C00);
-    /* Same gradient as normal */
     color: white;
-    /* White text */
+   
 }
 
 
@@ -973,7 +871,6 @@ main::-webkit-scrollbar-track:hover {
 /* Notice Title */
 .notice-title {
     color: #B32C19;
-    /* Orange color */
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 15px;
@@ -985,14 +882,12 @@ main::-webkit-scrollbar-track:hover {
 /* Pinned Badge */
 .pinned-badge {
     background-color: #B32C19;
-    /* Cacao color */
     color: white;
-    /* White text for contrast */
     padding: 3px 6px;
     border-radius: 5px;
     font-size: 12px;
     margin-right: 5px;
-    /* Space between badges */
+    
 }
 
 
@@ -1001,9 +896,7 @@ main::-webkit-scrollbar-track:hover {
 /* Permanent Badge */
 .permanent-badge {
     background-color: #B32C19;
-    /* Cacao color */
     color: white;
-    /* White text for contrast */
     padding: 3px 6px;
     border-radius: 5px;
     font-size: 12px;
@@ -1012,52 +905,36 @@ main::-webkit-scrollbar-track:hover {
 
 
 
-/* Styling for individual notice item */
+/* for styling individual notice item */
 .notice-item {
     width: 100%;
-    /* Ensures it takes the full available width */
     max-width: 100%;
-    /* Removes any max-width limit */
     margin-bottom: 15px;
     padding: 15px;
     background-color: #FFFFFF;
-    /* White background */
     color: #333333;
-    /* Original font color */
     border-radius: 10px;
-    /* Rounded corners */
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    /* Gray shadow around the border */
     transition: background-color 0.3s ease, color 0.3s ease;
-    /* Smooth transition */
+    
 }
-
-
-
-
-
-
 
 
 /* Adjust the width for individual notice content */
 .notice-item .notice-title {
     font-size: 24px;
-    /* Larger font for the title */
     color: #FF6B45;
-    /* Orange color */
     font-weight: bold;
     margin-bottom: 15px;
 }
 
 
 
-
-/* Ensure the entire content is responsive and doesn't break */
+/* Ensure the entire content is responsive*/
 .notice-content {
     font-size: 16px;
     color: #333333;
-    /* Original font color */
     margin-bottom: 10px;
     line-height: 1.5;
-    /* Improved readability */
+    
 }
