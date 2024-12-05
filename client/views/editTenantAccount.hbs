@@ -87,13 +87,14 @@
                                 <label for="gender" class="form-label">Gender</label>
                                 <select class="form-select" name="gender" id="gender" required>
                                     <option value="" disabled>Select Gender</option>
-                                    <option value="Female" {{#if (eq tenant.gender "Female" )}}selected{{/if}}>Female
+                                    <option value="F" {{#if (eq tenant.gender "Female" )}}selected{{/if}}>Female
                                     </option>
-                                    <option value="Male" {{#if (eq tenant.gender "Male" )}}selected{{/if}}>Male</option>
+                                    <option value="M" {{#if (eq tenant.gender "Male" )}}selected{{/if}}>Male</option>
                                     <option value="Other" {{#if (eq tenant.gender "Other" )}}selected{{/if}}>Other
                                     </option>
                                 </select>
                             </div>
+
                             <div class="col-12 col-md-6">
                                 <label for="mobileNum" class="form-label">Mobile Number</label>
                                 <input type="number" class="form-control" id="mobileNum" name="mobileNum"
