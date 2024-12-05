@@ -1,101 +1,86 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const logoutButton = document.getElementById("logoutButton");
-
-    logoutButton.addEventListener("click", async () => {
-        const isConfirmed = confirm("Are you sure you want to log out?");
-        
-        if (!isConfirmed) {
-            return;
-        }
-        
+    // Function to handle API requests
+    async function sendApiRequest(url, options) {
         try {
-            const response = await fetch("/api/auth/tenantLogout", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-
+            const response = await fetch(url, options);
             const data = await response.json();
 
             if (response.ok) {
-                alert(data.message); 
-                window.location.href = "/"; 
+                return { success: true, message: data.message };
             } else {
-                alert(data.message || "Logout failed. Please try again.");
+                return { success: false, message: data.message || "Request failed. Please try again." };
             }
         } catch (error) {
-            alert("An error occurred during logout. Please try again later.");
             console.error("Error:", error);
+            return { success: false, message: "An error occurred. Please try again later." };
         }
-    });
-});
+    }
 
-document.addEventListener("DOMContentLoaded", () => {
+    // Logout functionality
+    const logoutButton = document.getElementById("logoutButton");
+    if (logoutButton) {
+        logoutButton.addEventListener("click", async () => {
+            const isConfirmed = confirm("Are you sure you want to log out?");
+            if (!isConfirmed) return;
+
+            const result = await sendApiRequest("/api/auth/tenantLogout", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+            });
+
+            alert(result.message);
+            if (result.success) window.location.href = "/";
+        });
+    }
+
+    // Profile picture update functionality
     const profileImage = document.getElementById('profileImage');
     const fileInput = document.getElementById('fileInput');
     const updateForm = document.getElementById("updateTenantForm");
 
-    profileImage.addEventListener('click', () => {
-        fileInput.click();
-    });
+    if (profileImage && fileInput) {
+        profileImage.addEventListener('click', () => fileInput.click());
 
-    fileInput.addEventListener('change', () => {
-        const file = fileInput.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                profileImage.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
-    if (updateForm) {
-        updateForm.addEventListener("submit", async (event) => {
-            event.preventDefault(); 
-
-            const formData = new FormData(updateForm);
-            
-            if (fileInput.files.length === 0) {
-                formData.delete("profilePicture"); 
-            }
-
-            try {
-                const response = await fetch(updateForm.action, {
-                    method: updateForm.method,
-                    body: formData,
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    alert("Profile updated successfully!");
-                    window.location.href = "/tenant/room-details/view/account";
-                } else {
-                    alert(data.message || "Failed to update profile.");
-                }
-            } catch (error) {
-                alert("An error occurred while updating the profile. Please try again later.");
-                console.error("Error:", error);
+        fileInput.addEventListener('change', () => {
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => profileImage.src = e.target.result;
+                reader.readAsDataURL(file);
             }
         });
     }
-});
 
+    // Form submission for profile update
+    if (updateForm) {
+        updateForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const formData = new FormData(updateForm);
 
-document.addEventListener("DOMContentLoaded", () => {
+            if (fileInput.files.length === 0) formData.delete("profilePicture");
+
+            const result = await sendApiRequest(updateForm.action, {
+                method: updateForm.method,
+                body: formData,
+            });
+
+            alert(result.message);
+            if (result.success) window.location.href = "/tenant/room-details/view/account";
+        });
+    }
+
+    // Cancel button functionality
     const cancelButton = document.querySelector(".cancel");
+    if (cancelButton) {
+        cancelButton.addEventListener("click", (event) => {
+            event.preventDefault();
 
-    cancelButton.addEventListener("click", (event) => {
-        event.preventDefault(); 
-
-        const isConfirmed = confirm("Are you sure you want to cancel? Any unsaved changes will be lost.");
-        
-        if (isConfirmed) {
-            setTimeout(() => {
-                window.location.href = "/tenant/dashboard"; 
-            }, 1000); 
-        }
-    });
+            const isConfirmed = confirm("Are you sure you want to cancel? Any unsaved changes will be lost.");
+            if (isConfirmed) {
+                setTimeout(() => {
+                    window.location.href = "/tenant/dashboard";
+                }, 1000);
+            }
+        });
+    }
 });

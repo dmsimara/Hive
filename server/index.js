@@ -811,6 +811,7 @@ app.get("/tenant/room-details/view/account", verifyTenantToken, async (req, res)
     }
 
     try {
+        // Find the logged-in tenant
         const tenant = await Tenant.findOne({
             where: { tenant_id: tenantId },
         });
@@ -831,6 +832,7 @@ app.get("/tenant/room-details/view/account", verifyTenantToken, async (req, res)
         res.status(500).json({ success: false, message: "Error fetching tenant data" });
     }
 });
+
 
 app.get("/tenant/room-details/edit/account", verifyTenantToken, async (req, res) => {
     try {
