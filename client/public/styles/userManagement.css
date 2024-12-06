@@ -636,8 +636,8 @@ label {
 
 
 .btn-red:hover {
-  background-color: darkred; /* Darken on hover for better contrast */
-  transform: scale(1.1); /* Slightly enlarge on hover */
+  background-color: darkred; 
+  transform: scale(1.1); 
 }
 
 
@@ -652,8 +652,8 @@ label {
 }
 /* Save Changes button */
 .btn-save-changes {
-  background-color: #28a745; /* Green background */
-  color: white; /* White text */
+  background-color: #28a745; 
+  color: white; 
   font-weight: bold;
   border-radius: 6px;
   border: none;
@@ -665,14 +665,14 @@ label {
 
 
 .btn-save-changes:hover {
-  background-color: #218838; /* Darker green on hover */
-  transform: scale(1.05); /* Slightly enlarge on hover */
+  background-color: #218838; 
+  transform: scale(1.05); 
 }
 
 
 .btn-cancel {
-  background-color: #dc3545; /* Red background */
-  color: white; /* White text */
+  background-color: #dc3545; 
+  color: white; 
   font-weight: bold;
   border-radius: 6px;
   border: none;
@@ -684,8 +684,8 @@ label {
 
 
 .btn-cancel:hover {
-  background-color: #c82333; /* Darker red on hover */
-  transform: scale(1.05); /* Slightly enlarge on hover */
+  background-color: #c82333; 
+  transform: scale(1.05); 
 }
 
 
