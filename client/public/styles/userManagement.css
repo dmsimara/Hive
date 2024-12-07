@@ -621,7 +621,7 @@ label {
 
 /* Red Delete Button */
 .btn-red {
-  background-color: var(--maroon); /* Matches maroon theme */
+  background-color: var(--maroon); 
   color: white;
   font-weight: 600;
   padding: 10px 16px;
