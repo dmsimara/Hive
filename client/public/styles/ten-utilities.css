@@ -296,13 +296,13 @@ main {
    width: 30%;
    display: flex;
    flex-direction: column;
-   gap: 15px; /* Space between the cards */
+   gap: 15px; 
  }
  
  
  /* Room Total Balance Card */
  .total-balance-card {
-   background: linear-gradient(to bottom, #B32C19, #FC8042); /* Orange to Red gradient (top to bottom) */
+   background: linear-gradient(to bottom, #B32C19, #FC8042);
    color: white;
    padding: 15px;
    text-align: center;
@@ -351,7 +351,7 @@ main {
    padding: 20px;
    border-radius: 8px;
    text-align: center;
-   border: 1px solid #ddd; /* Added border to make usage summary visible */
+   border: 1px solid #ddd; 
  }
  
  
@@ -415,14 +415,14 @@ main {
   padding: 10px 15px;
   background: #fff;
   border-radius: 8px;
-  border: 1px solid #6F4F37; /* Solid orange border */
+  border: 1px solid #6F4F37; 
 }
 
 .bill-amount, .shared-amount {
   font-size: 1rem;
   font-weight: bold;
   color: #444;
-  align-self: center;  /* Ensure they align at the same height */
+  align-self: center; 
 }
  
  
@@ -462,13 +462,13 @@ main {
  
  
  .paid {
-   background: #4CAF50; /* Green for Paid */
+   background: #4CAF50;
    color: white;
  }
  
  
  .unpaid {
-   background: #FF6B45; /* Orange for Unpaid */
+   background: #FF6B45; 
    color: white;
  }
  

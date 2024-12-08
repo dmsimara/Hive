@@ -328,42 +328,39 @@ p {
 
 
 
+/* Table */
 table {
   width: 100%;
   border-collapse: collapse;
-  background-color: var(--yellow); 
-  border-radius: 10px;
+  background-color: white;
+  border-radius: 12px; 
   overflow: hidden;
-  border: none; 
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
+  transition: all 0.3s ease; 
 }
 
 thead tr:first-child th {
   background-color: var(--maroon) !important;
   color: white !important;
-  text-transform: uppercase; 
-  font-weight: 600; 
-  padding: 12px;
-  text-align: center;
-  font-size: 14px;
-}
-
-thead tr:first-child th.text-end {
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 16px 20px; 
   text-align: center !important;
+  font-size: 14px;
+  border-bottom: 2px solid brown; 
 }
 
 table td {
   text-align: left;
-  padding: 15px;
+  padding: 16px 20px; 
   font-size: 14px;
-  color: var(--dark-gray);  
+  color: var(--dark-gray);
+  border-bottom: 1px solid rgba(139, 69, 19, 0.7);
+  transition: background-color 0.2s ease, transform 0.2s ease; 
 }
 
-table tr:nth-child(odd) td {
-  background-color: rgba(245, 245, 220, 8);
-}
-
-table tr:nth-child(even) td {
-  background-color: rgb(255, 255, 255); 
+table th, table td {
+  border-color: brown !important; 
 }
 
 thead.maroon-header th {

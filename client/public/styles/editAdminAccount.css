@@ -199,9 +199,9 @@ html, body {
 
 .button-group {
     display: flex;
-    justify-content: flex-end; /* Aligns items to the right */
-    gap: 10px; /* Adds spacing between the buttons */
-    padding-top: 20px; /* Optional, to add space above buttons */
+    justify-content: flex-end; 
+    gap: 10px; 
+    padding-top: 20px; 
 }
 
 .material-icons {

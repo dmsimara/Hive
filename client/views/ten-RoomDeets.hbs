@@ -58,7 +58,6 @@
             </div>
         </header>
 
-
         <section class="room-overview">
             <div class="left-section">
                 <div class="tenants-section">
@@ -186,10 +185,15 @@
                 </div>
             </div>
 
-
-
-
         </section>
     </main>
 </div>
+<script>
+    // Automatically set the date picker to today's date
+    document.addEventListener('DOMContentLoaded', function() {
+        const datePicker = document.getElementById('datePicker');
+        const today = new Date().toISOString().split('T')[0];
+        datePicker.value = today;
+    });
+</script>
 <script src="/js/ten-details.js"></script>
