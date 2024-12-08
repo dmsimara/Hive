@@ -3,7 +3,7 @@ import Admin from './admin.models.js';
 import Establishment from './establishment.models.js';
 
 const sequelize = new Sequelize(process.env.DATABASE, process.env.DATABASE_USER, process.env.DATABASE_PASSWORD, {
-  host: 'localhost',
+  host: process.env.DATABASE_HOST,
   dialect: 'mysql',
 });
 
