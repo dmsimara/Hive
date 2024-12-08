@@ -1,3 +1,4 @@
+// db/connectDB.js
 import mysql from 'mysql2';
 
 export const connectDB = () => {
@@ -5,8 +6,7 @@ export const connectDB = () => {
         host: process.env.DATABASE_HOST,
         user: process.env.DATABASE_USER,
         password: process.env.DATABASE_PASSWORD,
-        database: process.env.DATABASE,
-        port: process.env.DATABASE_PORT || 3306, 
+        database: process.env.DATABASE
     });
 
     connection.connect((err) => {
