@@ -246,10 +246,10 @@ header p {
 table {
   width: 100%;
   border-collapse: collapse;
-  background-color: var(--yellow); 
+  background-color: white; 
   border-radius: 10px;
   overflow: hidden;
-  border: none; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
 }
 
 thead tr:first-child th {
@@ -260,27 +260,76 @@ thead tr:first-child th {
   padding: 12px;
   text-align: center;
   font-size: 14px;
+  border-bottom: 2px solid var(--brown);
+  border-right: 2px solid var(--brown);
 }
 
 thead tr:first-child th.text-end {
   text-align: center !important;
 }
 
-/* Table Rows */
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 12px; 
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
+  transition: all 0.3s ease; 
+}
+
+thead tr:first-child th {
+  background-color: var(--maroon) !important;
+  color: white !important;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 16px 20px; 
+  text-align: center;
+  font-size: 14px;
+  border-bottom: 2px solid brown; 
+}
+
 table td {
   text-align: left;
-  padding: 14px;
+  padding: 16px 20px;
   font-size: 14px;
-  color: var(--dark-gray); 
+  color: var(--dark-gray);
+  border-bottom: 1px solid rgba(139, 69, 19, 0.7);
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-/* Alternate row colors */
-table tr:nth-child(odd) td {
-  background-color: rgba(245, 245, 220, 8); 
+table th, table td {
+  border-color: brown !important;
 }
 
-table tr:nth-child(even) td {
-  background-color: rgb(255, 255, 255); 
+table tr:hover td {
+  background-color: rgba(255, 223, 186, 0.4); 
+  transform: scale(1.02); 
+}
+
+table tr:hover {
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+table td:first-child, table th:first-child {
+  border-left: none;
+}
+
+table td:last-child, table th:last-child {
+  border-right: none;
+}
+
+/* Horizontal Divider in Sub-menu */
+.sub-menu hr {
+  border: 0;
+  height: 2px;
+  width: 100%;
+  background: brown;
+  margin: 15px 0 10px;
+  border-radius: 5px; 
 }
 
 
