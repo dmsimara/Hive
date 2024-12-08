@@ -5,7 +5,7 @@ import Establishment from './establishment.models.js';
 dotenv.config();
 
 const sequelize = new Sequelize(process.env.DATABASE, process.env.DATABASE_USER, process.env.DATABASE_PASSWORD, {
-  host: 'localhost',
+  host: process.env.DATABASE_HOST,
   dialect: 'mysql', 
 });
 
