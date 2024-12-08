@@ -247,6 +247,10 @@ html {
     border-color: #FF6B45;
 }
 
+.room-number {
+    font-weight: 800;
+}
+
 .room-header {
     background: linear-gradient(to right, #cc3e22, #ff825c);
     padding: 50px 50px;

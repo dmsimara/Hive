@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const isConfirmed = confirm("Are you sure you want to cancel? Any unsaved changes will be lost.");
             if (isConfirmed) {
                 setTimeout(() => {
-                    window.location.href = "/tenant/dashboard";
+                    window.location.href = "/tenant/room-details/view/account";
                 }, 1000);
             }
         });

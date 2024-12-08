@@ -144,6 +144,10 @@ main::-webkit-scrollbar-track:hover {
     color: white;
 }
 
+.sidebar-item.active i {
+  color: white !important; 
+}
+
 .sidebar p {
     font-size: 0.9em;
     color: #666;
