@@ -741,7 +741,7 @@ export const updateTenant = async (req, res) => {
         const connection = connectDB();
 
         const updateQuery = `
-            UPDATE tenants 
+            UPDATE Tenants 
             SET tenantFirstName = ?, tenantLastName = ?, tenantEmail = ?, mobileNum = ?, gender = ?, tenantGuardianName = ?, tenantAddress = ?, tenantGuardianNum = ? 
             WHERE tenant_id = ?
         `;
@@ -750,7 +750,7 @@ export const updateTenant = async (req, res) => {
         ]);
 
         if (updateResult.affectedRows > 0) {
-            const [rows] = await connection.promise().query('SELECT * FROM tenants WHERE tenant_id = ?', [tenantId]);
+            const [rows] = await connection.promise().query('SELECT * FROM Tenants WHERE tenant_id = ?', [tenantId]);
             connection.end(); 
             return res.json({ success: true, message: 'Tenant updated successfully', tenant: rows[0] });
         } else {
@@ -796,7 +796,7 @@ export const deleteUnit = (req, res) => {
     const roomId = req.params.room_id;
     const connection = connectDB();
 
-    connection.query('DELETE FROM rooms WHERE room_id = ?', [roomId], (err, result) => {
+    connection.query('DELETE FROM Rooms WHERE room_id = ?', [roomId], (err, result) => {
         connection.end();
 
         if (err) {
@@ -1125,7 +1125,7 @@ export const updateEvent = async (req, res) => {
         const connection = connectDB();
 
         const updateQuery = `
-            UPDATE calendars 
+            UPDATE Calendars 
             SET event_name = ?, event_description = ?, start = ?, end = ?, status = ? 
             WHERE event_id = ?
         `;
@@ -1134,7 +1134,7 @@ export const updateEvent = async (req, res) => {
         ]);
 
         if (updateResult.affectedRows > 0) {
-            const [rows] = await connection.promise().query('SELECT * FROM calendars WHERE event_id = ?', [eventId]);
+            const [rows] = await connection.promise().query('SELECT * FROM Calendars WHERE event_id = ?', [eventId]);
             connection.end();
             return res.json({ success: true, message: 'Event updated successfully', event: rows[0] });
         } else {
@@ -1360,7 +1360,6 @@ export const togglePermanent = async (req, res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         establishmentId = decoded.establishmentId;
 
-        // Find the notice
         const notice = await Notice.findOne({
             where: { notice_id: noticeId, establishment_id: establishmentId },
         });
