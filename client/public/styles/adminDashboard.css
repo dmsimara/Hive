@@ -79,8 +79,13 @@ body {
 
 .user-pic {
     width: 40px;
+    height: 40px; 
     border-radius: 50%;
-    cursor: pointer;
+    cursor: pointer; 
+    object-fit: cover; 
+    display: block;
+    overflow: hidden; 
+    aspect-ratio: 1 / 1; 
 }
 
 .sub-menu-wrap {
@@ -123,7 +128,8 @@ body {
     margin-right: 15px;
     object-fit: cover; 
     display: block;
-    max-height: 60px;
+    overflow: hidden; 
+    aspect-ratio: 1 / 1; 
 }
 
 .sub-menu hr {
@@ -300,9 +306,12 @@ body {
     border-radius: 50%;
     height: 70px;
     width: 70px;
-    max-height: 70px;
     margin-top: 20px;
     margin-left: 10px;
+    object-fit: cover; 
+    display: block;
+    overflow: hidden; 
+    aspect-ratio: 1 / 1; 
 }
 
 .card-title {
@@ -338,11 +347,13 @@ body {
     border-radius: 50%;
     height: 150px;
     width: 150px;
-    max-height: 150px;
-    max-width: 150px;
     border: 2px solid var(--maroon);
     margin-left: 20px;
     margin-top: 10px;
+    object-fit: cover; 
+    display: block;
+    overflow: hidden; 
+    aspect-ratio: 1 / 1; 
 }
 
 .profile-container {
