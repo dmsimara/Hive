@@ -8,12 +8,10 @@ import bcryptjs from 'bcryptjs';
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import { generateTokenAndSetCookie, generateTokenAndSetTenantCookie } from '../utils/generateTokenAndSetCookie.js';
-import { sendPasswordResetEmail, sendResetSuccessEmail, sendTenantVerificationEmail, sendVerificationEmail, sendWelcomeEmail } from '../mailtrap/emails.js';
 import { connectDB } from '../db/connectDB.js';
 import { Sequelize, Op } from 'sequelize';
 import { format, startOfWeek, endOfWeek, addHours } from 'date-fns';
 import { title } from 'process';
-
 
 export const adminRegister = async (req, res) => {
     const { adminFirstName, adminLastName, adminEmail, adminPassword, eName } = req.body;
@@ -842,18 +840,37 @@ export const getOccupiedUnits = async (req, res) => {
 
 export const getAvailableRooms = async (req, res) => {
     try {
+      const token = req.cookies.token;
+      if (!token) {
+        return res.status(401).json({ success: false, message: 'Unauthorized. No token provided.' });
+      }
+  
+      let establishmentId;
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        establishmentId = decoded.establishmentId; 
+      } catch (err) {
+        return res.status(401).json({ success: false, message: 'Invalid or expired token.' });
+      }
+  
       const rooms = await Room.findAll({
-        where: { roomRemainingSlot: { [Op.gt]: 0 } },  
+        where: {
+          establishmentId,
+          roomRemainingSlot: { [Op.gt]: 0 }, 
+        },
         attributes: ['room_id', 'roomNumber', 'roomType', 'floorNumber'],
       });
+  
+      if (rooms.length === 0) {
+        return res.status(404).json({ success: false, message: 'No available rooms found for this establishment.' });
+      }
   
       res.json({ success: true, availableRooms: rooms });
     } catch (error) {
       console.error('Error fetching available rooms:', error);
       res.status(500).json({ success: false, message: 'An error occurred while fetching available rooms.' });
     }
-  };
-
+};
 
 export const addEvent = async (req, res) => {
     const { event_name, event_description, start, end, status } = req.body;

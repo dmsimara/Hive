@@ -230,7 +230,6 @@ select:focus {
     padding: 8px;
 }
 
-/* Buttons Styling */
 #editTenantButton {
     background-color: var(--orange);
     border-color: var(--orange);
@@ -266,19 +265,16 @@ select:focus {
     color: var(--maroon);
 }
 
-/* Flexbox for buttons alignment */
 .d-flex {
     display: flex;
     justify-content: flex-end;
     margin-top: 20px;
 }
 
-/* Add space between buttons */
 .d-flex button {
     margin-left: 10px;
 }
 
-/* Responsive Adjustments */
 @media (max-width: 768px) {
     .container {
         padding: 15px;

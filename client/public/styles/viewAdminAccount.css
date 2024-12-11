@@ -264,15 +264,3 @@ html, body {
 .card__about {
     margin-bottom: 20px;
 }
-
-/*
-.card__title {
-    font-size: 24px;
-    font-weight: bold;
-    margin: 0 0 5px;
-}
-
-.card__email {
-    color: var(--gray);
-    margin: 5px 0; 
-} */

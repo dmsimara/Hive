@@ -425,8 +425,8 @@ body::-webkit-scrollbar-track:hover {
 }
 
 .fc-daygrid-day.fc-day-today {
-  background-color: var(--orange); /* Highlight background */
-  color: white; /* Text color */
+  background-color: var(--orange);
+  color: white; 
   border: 2px solid var(--maroon); 
   border-radius: 5px; 
   font-weight: bold; 
@@ -513,7 +513,6 @@ body::-webkit-scrollbar-track:hover {
   
 }
 
-/* Hover State */
 .add-event-button:hover {
   background-color: var(--orange);
   color: white;
@@ -694,7 +693,6 @@ body::-webkit-scrollbar-track:hover {
 
 .fc-daygrid-day-frame {
   border-color: rgba(0, 0, 0, 0.1);
-  
   border-width: 1px;
 }
 
@@ -705,7 +703,6 @@ body::-webkit-scrollbar-track:hover {
  
 }
 
-/* Apply dashed or dotted grid lines */
 .fc-daygrid-day-frame {
   border-style: dashed;
   
@@ -713,31 +710,25 @@ body::-webkit-scrollbar-track:hover {
   border-width: 1px;
 }
 
-/* Removing the gridlines */
 .fc-daygrid-day-frame {
   border: none;
   
 }
 
-/* for soft shadow of the frames */
 .fc-daygrid-day-frame {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
-  /* Soft shadow around each day */
 }
 
-/* hover effects of the days */
 .fc-daygrid-day-frame:hover {
   background-color: rgba(0, 0, 0, 0.1);
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.05);
  
 }
 
-/* Subtle gradient for separating days */
 .fc-daygrid-day-frame {
   background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(245, 245, 245, 1) 100%);
 }
 
-/* Modal container */
 .modal-content {
   background-color: #ffffff;
   border-radius: 8px;
@@ -746,7 +737,6 @@ body::-webkit-scrollbar-track:hover {
 
 }
 
-/* Modal body background and padding */
 .modal-body {
   background-color: #ffffff;
   color: #000;
@@ -755,7 +745,6 @@ body::-webkit-scrollbar-track:hover {
   
 }
 
-/* Form input fields, textareas, and select dropdowns */
 .modal-body input,
 .modal-body select,
 .modal-body textarea {
@@ -768,14 +757,12 @@ body::-webkit-scrollbar-track:hover {
   
 }
 
-/* Textareas */
 .modal-body textarea {
   height: 100px;
   resize: vertical;
   
 }
 
-/*removing the outlines*/
 .modal-body input:focus,
 .modal-body select:focus,
 .modal-body textarea:focus {
@@ -785,14 +772,12 @@ body::-webkit-scrollbar-track:hover {
   
 }
 
-/* Labels styling */
 .modal-body .form-label {
   color: #000;
   font-weight: 600;
   
 }
 
-/* Buttons with solid colors (no transparency) */
 .btn-close,
 .btn-save-orange,
 .btn-secondary,
@@ -821,7 +806,6 @@ body::-webkit-scrollbar-track:hover {
   
 }
 
-/* Hover effect for buttons */
 .btn-close:hover,
 .btn-save-orange:hover,
 .btn-secondary:hover,
@@ -829,7 +813,6 @@ body::-webkit-scrollbar-track:hover {
   opacity: 0.9;
   
 }
-
 
 .modal-body,
 .modal-content,
@@ -848,7 +831,6 @@ body::-webkit-scrollbar-track:hover {
 
 }
 
-/* color of the titles */
 .modal-body .form-label {
   color: #000;
   
@@ -859,7 +841,6 @@ body::-webkit-scrollbar-track:hover {
   
 }
 
-/* special focus states for input fields */
 .modal-body input:focus,
 .modal-body select:focus,
 .modal-body textarea:focus {

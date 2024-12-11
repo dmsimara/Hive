@@ -210,8 +210,6 @@ main::-webkit-scrollbar-track:hover {
     background-color: #F5F5F5;
 }
 
-
-
 .announcement-header {
     display: flex;
     justify-content: space-between;
@@ -221,23 +219,19 @@ main::-webkit-scrollbar-track:hover {
     margin-bottom: 20px;
 }
 
-
 .header-left {
     margin-left: 0x;
 }
 
-
 .header-right {
     margin-right: 50px;
 }
-
 
 .header-left h3 {
     font-size: 1.2em;
     color: #888;
     margin-bottom: 0px;
 }
-
 
 .header-left h1 {
     font-size: 2.5em;
@@ -247,15 +241,11 @@ main::-webkit-scrollbar-track:hover {
    
 }
 
-
-
-
 .header-right {
     display: flex;
     align-items: center;
     gap: 15px;
 }
-
 
 .dashboard-header {
     display: flex;
@@ -265,18 +255,15 @@ main::-webkit-scrollbar-track:hover {
     padding-bottom: 15px;
 }
 
-
 .header-left {
     margin-left: 0;
 }
-
 
 .header-right {
     display: flex;
     align-items: center;
     gap: 15px;
 }
-
 
 .date-picker {
     font-size: 1em;
@@ -289,25 +276,18 @@ main::-webkit-scrollbar-track:hover {
     outline: none;
 }
 
-
-
-
 .notification-icon {
     font-size: 1.5em;
     color: #555;
     cursor: pointer;
     margin-top: 0px;
     margin-left: 0px;
-
-
 }
-
 
 .notification-icon:hover {
     color: #FF6B45;
     transition: color 0.3s ease;
 }
-
 
 .permanent-notices {
     background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
@@ -319,8 +299,7 @@ main::-webkit-scrollbar-track:hover {
     margin-top: 20px;
     position: relative;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    overflow-x: hidden;
-    
+    overflow-x: hidden;    
 }
 
 .notices-scroll {
@@ -330,14 +309,12 @@ main::-webkit-scrollbar-track:hover {
     padding-right: 10px;
 }
 
-/* Ensure all content elements do not overflow */
 .main-content {
     flex: 1;
     padding: 30px;
     margin-left: 20px;
     transition: all 0.35s ease-in-out;
 }
-
 
 .sidebar {
     background-color: #F4F4F4;
@@ -350,8 +327,6 @@ main::-webkit-scrollbar-track:hover {
     max-width: 250px;
 }
 
-
-/* Sidebar Card */
 .sidebar-card {
     background-color: #FFFFFF;
     border-radius: 15px;
@@ -365,43 +340,34 @@ main::-webkit-scrollbar-track:hover {
 
 }
 
-
 .logo {
     margin-bottom: -15px;
     margin-top: -30px;
 }
-
 
 .logo-img {
     width: 140px;
     height: auto;
 }
 
-
 .sidebar p {
     font-size: 0.9em;
     color: #666;
     line-height: 1.8;
-
 }
-
 
 .menu-title {
     font-weight: bold;
     color: #0a0a0a;
 }
 
-
 .menu ul {
     list-style: none;
-
 }
-
 
 .menu ul li {
     margin: 10px 0;
 }
-
 
 .menu ul li a {
     text-decoration: none;
@@ -410,31 +376,23 @@ main::-webkit-scrollbar-track:hover {
     padding: 10px;
     border-radius: 8px;
     line-height: 2.5;
-
-
 }
-
 
 .menu ul li.active a {
     background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
     color: white;
 }
 
-
 .menu ul li a:hover,
 .tracker ul li a:hover {
     color: #FF6B45;
-    /* font color */
 }
 
 
-/* Active state - same as hover */
 .menu ul li.active a,
 .tracker ul li.active a {
     background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
-    /* Orange gradient */
     color: white;
-    /* White font color */
 }
 
 .logout-container {
@@ -442,9 +400,6 @@ main::-webkit-scrollbar-track:hover {
     padding-top: 20px;
     border-top: 1px solid #ddd;
 }
-
-
-
 
 .logout-button {
     display: flex;
@@ -456,25 +411,19 @@ main::-webkit-scrollbar-track:hover {
     border-radius: 8px;
 }
 
-
-
-
 .logout-button i {
     margin-right: 10px;
     color: #A22F05;
 }
-
 
 .logout-button:hover {
     background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
     color: white;
 }
 
-
 .tracker ul {
     list-style: none;
 }
-
 
 .tracker ul li a {
     text-decoration: none;
@@ -485,14 +434,11 @@ main::-webkit-scrollbar-track:hover {
     line-height: 2.5;
 }
 
-
 .logout-container {
     margin-top: auto;
     padding-top: 20px;
     border-top: 1px solid #ddd;
-
 }
-
 
 .logout-button {
     display: flex;
@@ -505,7 +451,6 @@ main::-webkit-scrollbar-track:hover {
     transition: background 0.3s ease;
 }
 
-
 .logout-button i {
     margin-right: 10px;
     color: #A22F05;
@@ -513,20 +458,13 @@ main::-webkit-scrollbar-track:hover {
 
 .logout-button:hover i {
     color: white;
-    /* icon color to white when hover */
     transition: color 0.3s ease;
-    /* transition effect */
 }
-
-
 
 .logout-button:hover {
     background: linear-gradient(90deg, #A22F05 0%, #FF6B45 100%);
     color: white;
 }
-
-
-
 
 /* Main Content */
 .main-content {
@@ -537,12 +475,7 @@ main::-webkit-scrollbar-track:hover {
     border-radius: 15px;
     width: 100%;
     margin-top: 10px;
-  
-
-
 }
-
-
 
 .announcement-header {
     display: flex;
@@ -551,17 +484,11 @@ main::-webkit-scrollbar-track:hover {
     margin-bottom: 20px;
 }
 
-
-
-
 .announcement-header h1 {
     font-size: 24px;
     color: #000;
     font-weight: bold;
 }
-
-
-
 
 .announcement-header h2 {
     font-size: 18px;
@@ -569,8 +496,6 @@ main::-webkit-scrollbar-track:hover {
 }
 
 
-
-/* Section Titles */
 .pinned-section h3,
 .new-section h3 {
     font-size: 18px;
@@ -579,8 +504,6 @@ main::-webkit-scrollbar-track:hover {
     display: flex;
     align-items: center;
 }
-
-
 
 .pinned-section h3 i,
 .new-section h3 i {
