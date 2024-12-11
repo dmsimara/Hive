@@ -254,7 +254,6 @@ html, body {
 }
 
 .card__left {
-    /* flex: 1;                         */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -269,7 +268,6 @@ html, body {
 }
 
 .card__right {
-    /* flex: 2; */
     text-align: left;
     padding-top: 10px;
 }
