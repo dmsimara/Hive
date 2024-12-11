@@ -59,18 +59,24 @@ html, body {
 
 .user-pic {
     width: 40px;
+    height: 40px; 
     border-radius: 50%;
-    cursor: pointer;
+    cursor: pointer; 
+    object-fit: cover; 
+    display: block;
+    overflow: hidden; 
+    aspect-ratio: 1 / 1; 
 }
 
 .sub-menu-wrap {
     position: absolute;
     top: 100%;
-    right: 1%; 
+    right: 1%;
     width: 320px;
     max-height: 0px;
     overflow: hidden;
     transition: max-height 0.5s;
+    z-index: 1000;
 }
 
 .sub-menu-wrap.open-menu {
@@ -102,7 +108,8 @@ html, body {
     margin-right: 15px;
     object-fit: cover; 
     display: block;
-    max-height: 60px;
+    overflow: hidden; 
+    aspect-ratio: 1 / 1; 
 }
 
 .sub-menu-wrap {
@@ -224,6 +231,10 @@ html, body {
     margin-right: 60px;
     margin-left: 20px;
     border-radius: 1em;
+    object-fit: cover; 
+    display: block;
+    overflow: hidden; 
+    aspect-ratio: 1 / 1; 
 }
 
 .card__details {

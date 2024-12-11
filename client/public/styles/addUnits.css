@@ -81,10 +81,14 @@ html, body {
 
 .user-pic {
     width: 40px;
+    height: 40px; 
     border-radius: 50%;
-    cursor: pointer;
+    cursor: pointer; 
+    object-fit: cover; 
+    display: block;
+    overflow: hidden; 
+    aspect-ratio: 1 / 1; 
 }
-
 
 .sub-menu-wrap {
     position: absolute;
@@ -101,7 +105,6 @@ html, body {
     max-height: 400px;
 }
 
-
 .sub-menu {
     background: white;
     padding: 20px;
@@ -109,12 +112,10 @@ html, body {
     border-radius: 1em;
 }
 
-
 .user-info {
     display: flex;
     align-items: center;
 }
-
 
 .user-info h3 {
     font-weight: 500;
@@ -122,13 +123,16 @@ html, body {
     font-size: 20px;
 }
 
-
 .user-info img {
     width: 60px;
+    height: 60px;
     border-radius: 50%;
     margin-right: 15px;
+    object-fit: cover; 
+    display: block;
+    overflow: hidden; 
+    aspect-ratio: 1 / 1; 
 }
-
 
 .sub-menu hr {
     border: 0;
@@ -138,7 +142,6 @@ html, body {
     margin: 15px 0 10px;
 }
 
-
 .sub-menu-link {
     display: flex;
     align-items: center;
@@ -147,14 +150,12 @@ html, body {
     margin: 12px 0;
 }
 
-
 .sub-menu-link p {
     width: 100%;
     line-height: 40px;
     margin: 0;
     flex: 1;
 }
-
 
 .sub-menu-link .material-icons {
     background: rgb(210, 209, 209);
@@ -164,17 +165,14 @@ html, body {
     margin-right: 15px;
 }
 
-
 .sub-menu-link span {
     font-size: 22px;
     transition: transform 0.5s;
 }
 
-
 .sub-menu-link:hover span {
     transform: translateX(5px);
 }
-
 
 .sub-menu-link:hover p {
     font-weight: 600;

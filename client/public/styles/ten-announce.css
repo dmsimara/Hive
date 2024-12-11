@@ -345,11 +345,6 @@ main::-webkit-scrollbar-track:hover {
     margin-top: -30px;
 }
 
-.logo-img {
-    width: 140px;
-    height: auto;
-}
-
 .sidebar p {
     font-size: 0.9em;
     color: #666;
