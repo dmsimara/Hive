@@ -55,14 +55,14 @@ html, body {
     font-size: 55px;
     color: var(--dark-gray);
     position: absolute;
-    left: 10.5em;
+    left: 12em; /* Increase this value to add more space */
     top: 1em;
 }
 
 .desc {
     color: var(--gray);
     position: absolute;
-    left: 39em;
+    left: 44.5em;
     top: 8em;
     font-size: 15px;
     line-height: 1.2em;
@@ -97,7 +97,7 @@ label {
     font-size: 15px;
     position: absolute;
     bottom: 6em;
-    left: 39.5em;
+    left: 44.5em;
 }
 
 .create a {
