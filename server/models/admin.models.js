@@ -1,16 +1,14 @@
-import { Sequelize, DataTypes } from 'sequelize';  // Import Sequelize and DataTypes
-import dotenv from 'dotenv';  // Import dotenv to use environment variables
-import Establishment from './establishment.models.js';  // Import the Establishment model
+import { Sequelize, DataTypes } from 'sequelize';
+import dotenv from 'dotenv';
+import Establishment from './establishment.models.js';
 
-dotenv.config();  // Load environment variables
+dotenv.config();
 
-// Connect Sequelize to the database using environment variables
 const sequelize = new Sequelize(process.env.DATABASE, process.env.DATABASE_USER, process.env.DATABASE_PASSWORD, {
   host: process.env.DATABASE_HOST,
   dialect: 'mysql', 
 });
 
-// Define the Admin model
 const Admin = sequelize.define('Admin', {
   admin_id: {
     type: DataTypes.INTEGER,
@@ -21,7 +19,7 @@ const Admin = sequelize.define('Admin', {
   adminEmail: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true  
+    unique: true
   },
   adminPassword: {
     type: DataTypes.STRING,
@@ -39,11 +37,11 @@ const Admin = sequelize.define('Admin', {
     type: DataTypes.INTEGER,
     field: 'establishment_id', 
     references: {
-        model: 'Establishment',  
+        model: 'Establishment',
         key: 'establishment_id'
     },
     allowNull: false,
-    onDelete: 'CASCADE'  // Delete admin if the related establishment is deleted
+    onDelete: 'CASCADE'
   },
   adminProfile: {
     type: DataTypes.STRING,
@@ -51,11 +49,11 @@ const Admin = sequelize.define('Admin', {
   },
   isVerified: {
     type: DataTypes.BOOLEAN,
-    defaultValue: false  // Default value is false
+    defaultValue: false
   },
   lastLogin: {
     type: DataTypes.DATE,
-    defaultValue: Sequelize.NOW  // Set default value as the current time
+    defaultValue: Sequelize.NOW
   },
   resetPasswordToken: {
     type: DataTypes.STRING
@@ -69,15 +67,14 @@ const Admin = sequelize.define('Admin', {
   verificationTokenExpiresAt: {
     type: DataTypes.DATE
   }
-}, { timestamps: false });  // Don't use timestamps 
+}, { timestamps: false });
 
-// Set up the relationship between Admin and Establishment models
 Establishment.hasMany(Admin, { foreignKey: 'establishment_id' });
 Admin.belongsTo(Establishment, { foreignKey: 'establishment_id' });
 
-// Sync the model with the database and log success or error
 sequelize.sync().then(() => {
     console.log('Admin table has been created.');
 }).catch(err => console.error('Error creating table:', err));
 
-export default Admin;  // Export the Admin model for use in other files
+export default Admin;
+ 
