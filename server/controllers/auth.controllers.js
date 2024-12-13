@@ -165,7 +165,6 @@ export const tenantLogin = async (req, res) => {
 
         generateTokenAndSetTenantCookie(res, tenant.tenant_id);
 
-        // tenant.lastLogin = new Date();
         await tenant.save();
 
         res.status(201).json({
