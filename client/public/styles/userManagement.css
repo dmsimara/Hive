@@ -320,10 +320,6 @@ table tr:hover td {
   transform: scale(1.02); 
 }
 
-table tr:hover {
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease;
-}
 
 table td:first-child, table th:first-child {
   border-left: none;
@@ -333,7 +329,6 @@ table td:last-child, table th:last-child {
   border-right: none;
 }
 
-/* Horizontal Divider in Sub-menu */
 .sub-menu hr {
   border: 0;
   height: 2px;
@@ -408,14 +403,6 @@ table td:last-child, table th:last-child {
   color: var(--dark-gray);
   border: 1px solid var(--gray);
   transition: background-color 0.3s, color 0.3s;
-}
-
-
-.pagination a:hover,
-.pagination a.active {
-  background-color: var(--orange);
-  color: white;
-  border-color: var(--orange);
 }
 
 
@@ -700,17 +687,6 @@ label {
   transform: scale(1.1); 
 }
 
-
-
-
-/* Pagination Active State */
-.pagination a.active {
-  background-color: var(--orange);
-  color: white;
-  border: none;
-  font-weight: bold;
-}
-/* Save Changes button */
 .btn-save-changes {
   background-color: #28a745; 
   color: white; 
@@ -721,14 +697,10 @@ label {
   transition: background-color 0.3s, transform 0.2s;
 }
 
-
-
-
 .btn-save-changes:hover {
   background-color: #218838; 
   transform: scale(1.05); 
 }
-
 
 .btn-cancel {
   background-color: #dc3545; 
@@ -740,21 +712,30 @@ label {
   transition: background-color 0.3s, transform 0.2s;
 }
 
-
-
-
 .btn-cancel:hover {
   background-color: #c82333; 
   transform: scale(1.05); 
 }
 
+.table-container::-webkit-scrollbar {
+  width: 12px;
+}
 
+.table-container::-webkit-scrollbar-thumb {
+  background-color: var(--maroon);
+  border-radius: 10px;
+  border: 2px solid #fff;
+}
 
+.table-container::-webkit-scrollbar-thumb:hover {
+  background-color: var(--maroon);
+}
 
+.table-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
 
-
-
-
-
-
-
+.table-container::-webkit-scrollbar-track:hover {
+  background: #e1e1e1;
+}

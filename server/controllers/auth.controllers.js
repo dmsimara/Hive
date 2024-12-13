@@ -916,7 +916,7 @@ export const addEvent = async (req, res) => {
         }
 
         const startDateUTC = new Date(start).toISOString();  
-        const endDateUTC = end ? new Date(end).toISOString() : null;  
+        const endDateUTC = end ? new Date(end).toISOString() : null;
 
         const newEvent = await Calendar.create({
             event_name,
@@ -936,8 +936,8 @@ export const addEvent = async (req, res) => {
             event: {
                 event_name: newEvent.event_name,
                 event_description: newEvent.event_description,
-                start: newEvent.start,
-                end: newEvent.end,
+                start: new Date(newEvent.start).toLocaleString(),  
+                end: newEvent.end ? new Date(newEvent.end).toLocaleString() : null,
                 status: newEvent.status
             }
         });
@@ -946,6 +946,7 @@ export const addEvent = async (req, res) => {
         return res.status(500).json({ success: false, message: 'Failed to add event', error: error.message });
     }
 };
+
 
 export const viewEvents = async (req) => {
     const token = req.cookies.token;  
@@ -993,24 +994,97 @@ export const viewEvents = async (req) => {
 
 export const editEvent = async (req, res) => {
     try {
-        const { event_id, start, end } = req.body;
+        const { event_id, start, end, status } = req.body;
 
-        const updatedEvent = await Calendar.update(
-            { start, end },  
-            {
-                where: {
-                    event_id: event_id  
-                }
+        if (!event_id || (!start && !end && !status)) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Missing required fields. At least one field must be updated.' 
             });
+        }
+
+        const updatedFields = {};
+        if (start) updatedFields.start = start;
+        if (end) updatedFields.end = end;
+        if (status) updatedFields.status = status;
+
+        const updatedEvent = await Calendar.update(updatedFields, {
+            where: { event_id: event_id },
+        });
 
         if (updatedEvent[0] > 0) {  
-            res.json({ success: true, message: 'Event updated successfully!' });
+            const updatedRecord = await Calendar.findOne({ where: { event_id: event_id } });
+            return res.json({ 
+                success: true, 
+                message: 'Event updated successfully!', 
+                event: updatedRecord 
+            });
         } else {
-            res.status(400).json({ success: false, message: 'Error updating event. Event not found.' });
+            return res.status(404).json({ 
+                success: false, 
+                message: 'Error updating event. Event not found or no changes made.' 
+            });
         }
     } catch (error) {
         console.error('Error updating event:', error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
+        return res.status(500).json({ 
+            success: false, 
+            message: 'Internal server error' 
+        });
+    }
+};
+
+export const updateEvent = async (req, res) => {
+    const { event_name, event_description, start, end, status } = req.body;
+    const eventId = req.params.eventId;  
+
+    if (!event_name || !event_description || !start || !end || !status) {
+        return res.status(400).json({ 
+            success: false, 
+            message: 'Missing required fields. Please ensure all fields are filled in.' 
+        });
+    }
+
+    try {
+        const connection = connectDB();
+
+        const updateQuery = `
+            UPDATE Calendars 
+            SET event_name = ?, event_description = ?, start = ?, end = ?, status = ? 
+            WHERE event_id = ?
+        `;
+        console.log('Executing query with data:', {
+            event_name, event_description, start, end, status, eventId,
+        });
+
+        const [updateResult] = await connection.promise().query(updateQuery, [
+            event_name, event_description, start, end, status, eventId,
+        ]);
+
+        if (updateResult.affectedRows > 0) {
+            const [rows] = await connection.promise().query(
+                'SELECT * FROM Calendars WHERE event_id = ?', 
+                [eventId]
+            );
+            connection.end();
+            return res.json({ 
+                success: true, 
+                message: 'Event updated successfully', 
+                event: rows[0] 
+            });
+        } else {
+            connection.end();
+            return res.status(404).json({ 
+                success: false, 
+                message: 'Event not found or no changes made.' 
+            });
+        }
+    } catch (err) {
+        console.error('Error updating event:', err);
+        return res.status(500).json({ 
+            success: false, 
+            message: 'An error occurred while updating event data' 
+        });
     }
 };
 
@@ -1134,35 +1208,6 @@ const formatEventStatus = (status) => {
     }
 };
 
-export const updateEvent = async (req, res) => {
-    const { event_name, event_description, start, end, status } = req.body;
-    const eventId = req.params.eventId;  
-
-    try {
-        const connection = connectDB();
-
-        const updateQuery = `
-            UPDATE Calendars 
-            SET event_name = ?, event_description = ?, start = ?, end = ?, status = ? 
-            WHERE event_id = ?
-        `;
-        const [updateResult] = await connection.promise().query(updateQuery, [
-            event_name, event_description, start, end, status, eventId
-        ]);
-
-        if (updateResult.affectedRows > 0) {
-            const [rows] = await connection.promise().query('SELECT * FROM Calendars WHERE event_id = ?', [eventId]);
-            connection.end();
-            return res.json({ success: true, message: 'Event updated successfully', event: rows[0] });
-        } else {
-            connection.end();
-            return res.status(404).json({ success: false, message: "Event not found or no changes made." });
-        }
-    } catch (err) {
-        console.error('Error updating event:', err);
-        return res.status(500).json({ success: false, message: 'An error occurred while updating event data' });
-    }
-};
 
 export const viewNotices = async (req, res) => {
     const { establishmentId } = req;

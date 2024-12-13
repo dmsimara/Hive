@@ -36,9 +36,9 @@ const Calendar = sequelize.define('Calendar', {
   status: {  
     type: DataTypes.ENUM(
       'Not Started',
-      'Working in Progress',
+      'In Progress',
       'On Hold',
-      'Done'
+      'Completed'
     ),
     allowNull: false,
     defaultValue: 'Not Started' 
