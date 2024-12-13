@@ -3,113 +3,107 @@ import dotenv from 'dotenv';
 import Establishment from './establishment.models.js';
 import Room from './room.models.js';
 
-// Load environment variables for database connection
 dotenv.config();
 
-// Set up Sequelize to connect to the database using environment credentials
 const sequelize = new Sequelize(process.env.DATABASE, process.env.DATABASE_USER, process.env.DATABASE_PASSWORD, {
   host: process.env.DATABASE_HOST,
   dialect: 'mysql', 
 });
 
-// Define the Tenant model with necessary fields
 const Tenant = sequelize.define('Tenant', {
-  tenant_id: {  // Unique ID for each tenant
+  tenant_id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
     allowNull: false
   },
-  tenantFirstName: {  // Tenant's first name
+  tenantFirstName: {
     type: DataTypes.STRING(200),
     allowNull: false
   },
-  tenantLastName: {  // Tenant's last name
+  tenantLastName: {
     type: DataTypes.STRING(200),
     allowNull: false
   },
-  tenantEmail: {  // Tenant's email address
+  tenantEmail: {
     type: DataTypes.STRING(200),
     allowNull: false,
     unique: true
   },
-  tenantPassword: {  // Tenant's password
+  tenantPassword: {
     type: DataTypes.STRING(255),
     allowNull: false
   },
-  gender: {  // Tenant's gender
+  gender: {
     type: DataTypes.ENUM('M', 'F', 'Other'),
     allowNull: false
   },
-  mobileNum: {  // Tenant's mobile number
+  mobileNum: {
     type: DataTypes.STRING(15)
   },
-  tenantProfile: {  // Tenant's profile picture 
+  tenantProfile: {
     type: DataTypes.STRING,
     allowNull: true
   },
-  room_id: {  // Room the tenant is assigned to 
+  room_id: {
     type: DataTypes.INTEGER,
     references: {
-      model: 'Room',  // Reference to the Room model
-      key: 'room_id'  // Use the 'room_id' from the Room table
+      model: 'Room',
+      key: 'room_id'
     },
-    onDelete: 'SET NULL'  // Set room_id to null if the room is deleted
+    onDelete: 'SET NULL'
   },
-  establishmentId: {  // ID of the establishment the tenant belongs to
+  establishmentId: { 
     type: DataTypes.INTEGER,
-    field: 'establishment_id',  // Use 'establishment_id' in the database
+    field: 'establishment_id', 
     references: {
-      model: 'Establishment',  // Reference to the Establishment model
-      key: 'establishment_id'  // Use the 'establishment_id' from the Establishment table
+        model: 'Establishment',
+        key: 'establishment_id'
     },
     allowNull: false,
-    onDelete: 'CASCADE'  // Delete tenant if the establishment is deleted
+    onDelete: 'CASCADE'
   },
-  stayFrom: {  // Start date of the tenant's stay
+  stayFrom: {
     type: DataTypes.DATE,
     allowNull: true
   },
-  stayTo: {  // End date of the tenant's stay
+  stayTo: {
     type: DataTypes.DATE,
     allowNull: true
   },
-  periodRemaining: {  // Remaining period of the tenant's stay (e.g., number of days)
+  periodRemaining: {
     type: DataTypes.INTEGER
   },
-  status: {  // Tenant's current status (active or expired)
+  status: {
     type: DataTypes.ENUM('active', 'expired'),
     allowNull: false,
-    defaultValue: 'active'  // Default status is 'active'
+    defaultValue: 'active'
   },
-  dateJoined: {  // Date the tenant joined
+  dateJoined: {
     type: DataTypes.DATE,
     allowNull: true,
-    defaultValue: DataTypes.NOW  // Default to current date and time
+    defaultValue: DataTypes.NOW 
   },
-  tenantGuardianName: {  // Tenant's guardian name (optional)
+  tenantGuardianName: {
     type: DataTypes.STRING(200),
     allowNull: true
   },
-  tenantAddress: {  // Tenant's address (optional)
+  tenantAddress: {
     type: DataTypes.STRING(255),
     allowNull: true
   },
-  tenantGuardianNum: {  // Tenant's guardian contact number (optional)
+  tenantGuardianNum: {
     type: DataTypes.STRING(15),
     allowNull: true
   }
-}, { timestamps: false });  // Disable automatic timestamp fields
+}, { timestamps: false });
 
-// Set up the relationship between Tenant and Establishment
 Establishment.hasMany(Tenant, { foreignKey: 'establishment_id' });
 Tenant.belongsTo(Establishment, { foreignKey: 'establishment_id' });
 
-// Set up the relationship between Tenant and Room
 Room.hasMany(Tenant, { foreignKey: 'room_id' });
 Tenant.belongsTo(Room, { foreignKey: 'room_id' });
 
-// Sync the model with the database
 sequelize.sync()
   .then(() => {
     console.log('Tenants table has been created.');
