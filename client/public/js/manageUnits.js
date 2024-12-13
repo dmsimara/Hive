@@ -1,14 +1,18 @@
 let subMenu = document.getElementById("subMenu");
 
+// Toggle the submenu open/close
 if (subMenu) {
     function toggleMenu() {
         subMenu.classList.toggle("open-menu");
     }
 }
 
+// Wait for the page to load
 document.addEventListener("DOMContentLoaded", () => {
     const logoutButton = document.getElementById("logoutButton");
 
+
+// Handle logout functionality
     if (logoutButton) {
         logoutButton.addEventListener("click", async () => {
             const isConfirmed = confirm("Are you sure you want to log out?");
@@ -18,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             
             try {
+                  // Send logout request to server
                 const response = await fetch("/api/auth/adminLogout", {
                     method: "POST",
                     headers: {
@@ -41,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+// Load tenants for a specific room
 function loadTenants(roomId) {
     fetch(`/admin/manage/unit/tenants?room_id=${roomId}`)
         .then(response => {
@@ -55,6 +61,7 @@ function loadTenants(roomId) {
             const rentedSlot = document.getElementById("rentedSlot");
             const remainingSlot = document.getElementById("remainingSlot");
 
+             // Clear the existing tenant list
             if (tenantList) tenantList.innerHTML = ''; 
 
             const roomTotalSlot = data.roomTotalSlot || 0;
@@ -62,12 +69,14 @@ function loadTenants(roomId) {
 
             const roomRentedSlot = roomTotalSlot - roomRemainingSlot;
 
+            // Update room slot details
             if (totalSlot) totalSlot.textContent = roomTotalSlot;
             if (rentedSlot) rentedSlot.textContent = roomRentedSlot;
             if (remainingSlot) remainingSlot.textContent = roomRemainingSlot;
 
             const dateNow = new Date();
 
+            // Display tenants or a message if none exist
             if (!data.tenants || data.tenants.length === 0) {
                 const row = document.createElement("tr");
                 row.innerHTML = `<td colspan="6" class="text-center">No tenants assigned yet</td>`;
@@ -76,6 +85,7 @@ function loadTenants(roomId) {
                 data.tenants.forEach(tenant => {
                     const row = document.createElement("tr");
 
+                     // Format tenant stay dates
                     const stayFromDate = new Date(tenant.stayFrom);
                     const stayToDate = new Date(tenant.stayTo);
 
@@ -84,6 +94,7 @@ function loadTenants(roomId) {
 
                     const periodRemaining = isNaN(stayToDate) ? 'Invalid date' : Math.ceil((stayToDate - dateNow) / (1000 * 60 * 60 * 24));
 
+                    // Add tenant data to table row
                     row.innerHTML = `
                         <td>${tenant.tenant_id}</td>
                         <td>${tenant.tenantFirstName} ${tenant.tenantLastName}</td>
@@ -102,6 +113,7 @@ function loadTenants(roomId) {
         .catch(error => console.error('Error loading tenants:', error));
 }
 
+// Remove a tenant from a room
 function removeTenant(tenantId, roomId) {
     if (confirm("Are you sure you want to remove this tenant?")) {
         fetch(`/api/auth/deleteTenant/${tenantId}`, {
@@ -125,6 +137,7 @@ function removeTenant(tenantId, roomId) {
     }
 }
 
+// Delete a room
 function deleteUnit(roomId) {
     if (confirm("Are you sure you want to delete this room?")) {
         fetch(`/api/auth/deleteUnit/${roomId}`, {
