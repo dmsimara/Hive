@@ -361,6 +361,7 @@ main::-webkit-scrollbar-track:hover {
     object-fit: cover; 
     margin-top: 60px;
     margin-bottom: -30px;
+    margin: 0 auto;
     display: block;
     overflow: hidden; 
     aspect-ratio: 1 / 1; 
