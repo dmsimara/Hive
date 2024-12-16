@@ -1,5 +1,8 @@
 import jwt from "jsonwebtoken";
 
+// Defines two functions that generate JWT tokens and set them as HTTP-only cookies in the response.
+// The first function is for generating and setting an admin token, while the second is for a tenant token.
+
 export const generateTokenAndSetCookie = (res, adminId, establishmentId) => {
     const token = jwt.sign({ adminId, establishmentId }, process.env.JWT_SECRET, {
         expiresIn: '7d',

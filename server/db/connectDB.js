@@ -1,4 +1,3 @@
-// db/connectDB.js
 import mysql from 'mysql2';
 
 export const connectDB = () => {

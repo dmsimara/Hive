@@ -36,4 +36,4 @@ This repository contains the code and assets for **Hive**, a web application dev
 
 ## 📱User Interface
 
-To be followed.
+<img src="/images/homePage.png" alt="Home Page">
