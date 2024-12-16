@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 
+// Verifies the JWT token sent by an admin in the request cookies.
 export const verifyToken = (req, res, next) => {
     const token = req.cookies.token;
     if (!token) {
@@ -18,6 +19,7 @@ export const verifyToken = (req, res, next) => {
     }
 }
 
+// Verifies the JWT token sent by a tenant in the request cookies.
 export const verifyTenantToken = (req, res, next) => {
     const token = req.cookies.tenantToken; 
     if (!token) {

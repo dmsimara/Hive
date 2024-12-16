@@ -1,7 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
-import bodyParser from "body-parser";
 import { fileURLToPath } from "url"; 
 import { dirname } from "path";
 import { connectDB } from "./db/connectDB.js";
@@ -19,15 +18,18 @@ import Notice from "./models/notice.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
 import { addTenant, addTenantView, addUnitView, editTenant, findDashTenants, findTenants, findUnits, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, updateEvent, updateTenant, viewAdmins, viewEvents, viewNotices, viewTenants, viewUnits } from './controllers/auth.controllers.js';
 
-
+// Sets up `__filename` and `__dirname` in an ES module environment using Node.js.
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// Loads environment variables from a .env file into process.env.
 dotenv.config();
 
+// Initializes an Express app and sets the server port to an environment variable or default (5000).
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Configures middleware for parsing JSON, URL-encoded data, cookies, and handling Cross-Origin Resource Sharing (CORS).
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -36,7 +38,7 @@ app.use(cors({
     credentials: true
 }));
 
-
+// Sets up session management with a secret, disabling resave, and configuring cookies based on the environment.
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -44,6 +46,7 @@ app.use(session({
     cookie: { secure: process.env.NODE_ENV === 'production' } 
 }));
 
+// Configures Handlebars as the view engine with custom helpers for logic, arrays, and conditionals.
 app.engine("hbs", exphbs.engine({
     extname: ".hbs",
     defaultLayout: "main", 
@@ -76,27 +79,26 @@ app.engine("hbs", exphbs.engine({
         },
         isArrayEmpty: function(arr) {
             return arr && arr.length === 0;
-          }
+        }
     }
 }));
 
+// Sets up Handlebars as the view engine, defines the views directory, serves static files
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "../client/views")); 
 console.log("Views Directory: ", path.join(__dirname, "../client/views"));
-
 app.use(express.static(path.join(__dirname, "../client/public"))); 
 
+// configures authentication routes, and enables file uploads.
 app.use("/api/auth", authRoutes);
-
-// default option for profile pic upload
 app.use(fileUpload());
 
-// home route
+// HOME ROUTE ---------------------------------------------------------------------------------------
 app.get("/", (req, res) => {
-    res.render("home", { title: "Home Page", styles: ["home"] });
+    res.render("home", { title: "Hive", styles: ["home"] });
 });
 
-// admin authentication routes
+// ADMIN AUTHENTICATION ROUTES -----------------------------------------------------------------------
 app.get("/admin/login", (req, res) => {
     res.render("adminLogin", { title: "Hive", styles: ["adminLogin"] });
 });
@@ -109,12 +111,12 @@ app.get("/admin/register/verifyEmail", (req, res) => {
     res.render("verifyEmail", { title: "Hive", styles: ["verifyEmail"] })
 });
 
-// tenant authentication routes
+// TENANT AUTHENTICATION ROUTES -----------------------------------------------------------------------
 app.get("/tenant/login", (req, res) => {
     res.render("tenantLogin", { title: "Hive", styles: ["tenantLogin"] });
 });
 
-// ADMIN PAGES ROUTES
+// ADMIN PAGES (DASHBOARD) ----------------------------------------------------------------------------
 app.get("/admin/dashboard", verifyToken, async (req, res) => {
     try {
       const admin = await viewAdmins(req, res);
@@ -153,7 +155,7 @@ app.get("/admin/dashboard", verifyToken, async (req, res) => {
   
 app.post("/admin/dashboard", verifyToken, findDashTenants);
 
-
+// ADMIN PAGES (MANAGE UNIT) ---------------------------------------------------------------------------
 app.get("/admin/manage/unit", verifyToken, async (req, res) => {
     try {
       const admin = await viewAdmins(req);
@@ -261,13 +263,27 @@ app.post("/admin/manage/unit", findUnits, async (req, res) => {
         res.status(500).json({ success: false, message: 'Error fetching unit or admin data' });
     }
 });
+
+app.get('/api/auth/admin/totalUnits', async (req, res) => {
+    try {
+        const { establishmentId } = req.admin; 
+        
+        const totalUnits = await Room.sum('roomTotalSlot', {
+            where: { establishmentId }
+        });
+
+        res.status(200).json({ totalUnits });
+    } catch (error) {
+        console.error('Error calculating total units:', error);
+        res.status(500).json({ message: 'Failed to calculate total units' });
+    }
+});
   
-// userManagement routes
+// ADMIN PAGES (USER MANAGEMENT) ---------------------------------------------------------------------
 app.post("/admin/dashboard/userManagement", verifyToken, findTenants, async (req, res) => {
     try {
         const admin = await viewAdmins(req, res);
 
-        // Render the user management page
         res.render("userManagement", {
             title: "Hive",
             styles: ["userManagement"],
@@ -291,11 +307,8 @@ app.post('/api/auth/find-tenants', async (req, res) => {
     }
 });
 
-
 app.get("/admin/manage/unit/add", verifyToken, addUnitView);
 
-
-// user management routes
 app.get("/admin/dashboard/userManagement", verifyToken, async (req, res) => {
     try {
         const { tenants, success } = await viewTenants(req);  
@@ -363,8 +376,9 @@ app.get("/admin/dashboard/userManagement/editTenant/:tenant_id", verifyToken, as
 
 app.put('/api/auth/updateTenant/:tenantId', updateTenant);
 app.get('/api/auth/getAvailableRooms', verifyToken, getAvailableRooms);
+app.post("/api/auth/addTenant", verifyToken, addTenant); 
 
-// view and edit account
+// ADMIN PAGES (VIEW AND EDIT ACCOUNT) ----------------------------------------------------------------
 app.get("/admin/dashboard/view/account", verifyToken, async (req, res) => {
     try {
         const admin = await viewAdmins(req);  
@@ -440,22 +454,7 @@ const updateAdminDetails = async (body, adminProfile) => {
     await Admin.update(adminDetails, { where: { admin_id: adminId } });
 };
 
-app.get('/api/auth/admin/totalUnits', async (req, res) => {
-    try {
-        const { establishmentId } = req.admin; 
-        
-        const totalUnits = await Room.sum('roomTotalSlot', {
-            where: { establishmentId }
-        });
-
-        res.status(200).json({ totalUnits });
-    } catch (error) {
-        console.error('Error calculating total units:', error);
-        res.status(500).json({ message: 'Failed to calculate total units' });
-    }
-});
-
-// Tracker Page Route
+// ADMMIN PAGES (TRACKER) ----------------------------------------------------------------------------
 app.get("/admin/tracker", verifyToken, async (req, res) => {
     try {
         const events = await viewEvents(req);  
@@ -508,7 +507,7 @@ app.put('/api/auth/updateEvent/:eventId', async (req, res) => {
     }
   });
 
-// ANNOUNCEMENT PAGE ROUTES
+// ADMIN PAGES (ANNOUNCEMENT) -----------------------------------------------------------------------
 app.get("/admin/announcements", verifyToken, async (req, res) => {
     try {
         const { filter } = req.query; 
@@ -578,9 +577,8 @@ app.get("/admin/announcements", verifyToken, async (req, res) => {
     }
 });
   
-  
- // TENANT PAGES ROUTES
- const getTenantsDashboard = async (roomId) => {
+// TENANT PAGES (DASHBOARD) -------------------------------------------------------------------------
+const getTenantsDashboard = async (roomId) => {
     try {
         const tenants = await Tenant.findAll({
             where: { room_id: roomId }
@@ -592,7 +590,7 @@ app.get("/admin/announcements", verifyToken, async (req, res) => {
     }
 };
 
- app.get("/tenant/dashboard", verifyTenantToken, async (req, res) => {
+app.get("/tenant/dashboard", verifyTenantToken, async (req, res) => {
     const tenantId = req.tenantId; 
     if (!tenantId) {
         return res.status(400).send("Tenant ID not found in the token.");
@@ -655,6 +653,7 @@ app.get("/admin/announcements", verifyToken, async (req, res) => {
     }
 });
 
+// TENANT PAGES (ANNOUNCEMENT) ----------------------------------------------------------------------
 app.get("/tenant/announcement", verifyTenantToken, async (req, res) => {
     try {
         const { filter } = req.query;
@@ -709,6 +708,7 @@ app.get("/tenant/announcement", verifyTenantToken, async (req, res) => {
     }
 });
 
+// TENANT PAGES (UTILITIES) -------------------------------------------------------------------------
 app.get("/tenant/utilities", verifyTenantToken, async (req, res) => {
     const tenantId = req.tenantId;
     if (!tenantId) {
@@ -752,8 +752,7 @@ app.get("/tenant/utilities", verifyTenantToken, async (req, res) => {
     }
 });
 
-app.post("/api/auth/addTenant", verifyToken, addTenant); 
-
+// TENANT PAGES (ROOM DEETS) ------------------------------------------------------------------------
 app.get("/tenant/room-details", verifyTenantToken, async (req, res) => {
     const tenantId = req.tenantId;
     if (!tenantId) {
@@ -802,7 +801,7 @@ app.get("/tenant/room-details", verifyTenantToken, async (req, res) => {
     }
 });
 
-// view and edit account
+// TENANT PAGES (VIEW AND EDIT ACCOUNT) -------------------------------------------------------------
 app.get("/tenant/room-details/view/account", verifyTenantToken, async (req, res) => {
     const tenantId = req.tenantId;
 
@@ -832,7 +831,6 @@ app.get("/tenant/room-details/view/account", verifyTenantToken, async (req, res)
         res.status(500).json({ success: false, message: "Error fetching tenant data" });
     }
 });
-
 
 app.get("/tenant/room-details/edit/account", verifyTenantToken, async (req, res) => {
     try {
@@ -899,11 +897,8 @@ const updateTenantDetails = async (body, tenantProfile) => {
     await Tenant.update(tenantDetails, { where: { tenant_id: tenantId } });
 };
 
-
-
-
+// Starts the server on the specified port, connects to the database, and logs a message when the server is running.
 app.listen(PORT, () => {
     connectDB();
     console.log("Server is running on port: ", PORT);
 })
-
