@@ -9,6 +9,8 @@ This repository contains the code and assets for **Hive**, a web application dev
 - HTML, CSS, JavaScript - three fundamental web technologies for building web applications
 - Figma: A collaborative tool for interface design, ideal for UI/UX development.
 - MySQL: The database management system used for the application's data storage.
+- Node.js and Express: Used for building the backend of the application, handling requests, and serving dynamic content.
+
 <p align="left">
     <a href="https://www.w3.org/html/" target="_blank" rel="noreferrer">
     <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original-wordmark.svg" alt="html5" width="40" height="40"/>
@@ -33,7 +35,8 @@ This repository contains the code and assets for **Hive**, a web application dev
     </a>
 </p>
 
+## 📱 User Interface
 
-## 📱User Interface
-
-<img src="/images/homePage.png" alt="Home Page">
+<img src="client/public/images/homePage.png" alt="Home Page">
+<img src="client/public/images/adminDashboard.png" alt="Admin Dashboard">
+<img src="client/public/images/tenantDashboard.png" alt="Tenant Dashboard">
