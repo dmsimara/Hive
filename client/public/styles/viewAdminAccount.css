@@ -199,9 +199,10 @@ html, body {
 
 .container h3 {
     position: relative;
-    left: -12em;
+    left: -15em;
     font-weight: 600;
-    top: -10px;
+    top: -30px;
+    margin-bottom: 0;
 }
 
 .container .dots {
@@ -219,7 +220,7 @@ html, body {
     max-width: 800px;
     border-radius: 1em;
     background-color: white;
-    margin-top: -12em;
+    margin-top: -20em;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0), 0 3px 18px rgba(0, 0, 0, 0.13);
 }
 
