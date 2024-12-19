@@ -389,8 +389,8 @@ body::-webkit-scrollbar-track:hover {
 
 .modal {
     position: fixed;
-    top: 320px;
-    left: 1250px;
+    top: 280px;
+    left: 1050px;
     z-index: 1050;
     margin: 0;
     padding: 0;
