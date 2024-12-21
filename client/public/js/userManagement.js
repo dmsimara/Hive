@@ -10,19 +10,17 @@ document.getElementById('togglePassword').addEventListener('click', function () 
     passwordField.type = isPassword ? 'text' : 'password';
     this.querySelector('i').textContent = isPassword ? 'visibility_off' : 'visibility';
 });
-  
+
 document.getElementById('toggleConfirmPassword').addEventListener('click', function () {
     const confirmPasswordField = document.getElementById('tenantConfirmPassword');
     const isPassword = confirmPasswordField.type === 'password';
     confirmPasswordField.type = isPassword ? 'text' : 'password';
     this.querySelector('i').textContent = isPassword ? 'visibility_off' : 'visibility';
 });
-  
 
 document.addEventListener("DOMContentLoaded", () => {
     const logoutButton = document.getElementById("logoutButton");
     const tenantForm = document.getElementById("tenantForm");
-    const editTenantForm = document.getElementById("editForm"); 
     const roomDropdown = document.getElementById("roomSelection");
 
     logoutButton.addEventListener("click", async () => {
@@ -30,7 +28,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!isConfirmed) return;
 
         try {
-            const response = await fetch("/api/auth/adminLogout", { method: "POST", headers: { "Content-Type": "application/json" } });
+            const response = await fetch("/api/auth/adminLogout", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" }
+            });
+
             if (response.ok) {
                 const data = await response.json();
                 alert(data.message);
@@ -64,8 +66,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    tenantForm.addEventListener("submit", async function(event) {
+    tenantForm.addEventListener("submit", async function (event) {
         event.preventDefault();
+
         const tenantData = {
             tenantFirstName: document.getElementById("tenantFirstName").value.trim(),
             tenantLastName: document.getElementById("tenantLastName").value.trim(),
@@ -105,6 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: JSON.stringify(tenantData)
             });
             const data = await response.json();
+
             if (data.success) {
                 alert("Tenant added successfully!");
                 tenantForm.reset();
@@ -155,3 +159,68 @@ function deleteTenant(tenantId) {
             alert('An error occurred while deleting the tenant: ' + error.message);
         });
 }
+
+const searchInput = document.querySelector('#search');
+const resultsBody = document.querySelector('#results');
+
+loadData();
+
+function loadData(query = '') {
+    const request = new XMLHttpRequest();
+
+    request.open('GET', `/api/auth/search?q=${query}`);
+
+    request.onload = () => {
+        try {
+            const response = JSON.parse(request.responseText); 
+
+            let html = '';
+
+            if (response.success && response.tenants.length > 0) {
+                response.tenants.forEach(result => {
+                    html += `
+                        <tr>
+                            <th scope="row">${result.tenant_id}</th>
+                            <td>${result.tenantFirstName}</td>
+                            <td>${result.tenantLastName}</td>
+                            <td>${result.tenantEmail}</td>
+                            <td>${result.gender}</td>
+                            <td>${result.mobileNum}</td>
+                            <td class="text-end">
+                                <a href="/admin/dashboard/userManagement/editTenant/${result.tenant_id}" class="btn btn-edit btn-sm">
+                                    <i class="material-icons">edit</i> Edit
+                                </a>
+                                <a href="#" onclick="deleteTenant(${result.tenant_id})" class="btn btn-delete btn-sm">
+                                    <i class="material-icons">person_remove</i> Delete
+                                </a>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } else {
+                html += `
+                    <tr>
+                        <td colspan="7" class="text-center">No tenants found</td>
+                    </tr>
+                `;
+            }
+
+            resultsBody.innerHTML = html;
+
+        } catch (error) {
+            console.error('Error parsing JSON:', error);
+            alert('An error occurred. Please try again.');
+        }
+    };
+
+    request.onerror = () => {
+        alert('An error occurred with the request.');
+    };
+
+    request.send();
+}
+
+searchInput.addEventListener('input', () => {
+    const query = searchInput.value;
+    loadData(query);  
+});

@@ -11,12 +11,14 @@ import session from "express-session";
 import fileUpload from "express-fileupload";
 import fs from 'fs';
 import cors from 'cors';
+import jwt from 'jsonwebtoken';
 import Admin from "./models/admin.models.js";
 import Room from "./models/room.models.js";
 import Tenant from "./models/tenant.models.js";
 import Notice from "./models/notice.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
-import { addTenant, addTenantView, addUnitView, editTenant, findDashTenants, findTenants, findUnits, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, updateEvent, updateTenant, viewAdmins, viewEvents, viewNotices, viewTenants, viewUnits } from './controllers/auth.controllers.js';
+import { addTenant, addTenantView, addUnitView, editTenant, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, updateEvent, updateTenant, viewAdmins, viewEvents, viewNotices, viewTenants, viewUnits } from './controllers/auth.controllers.js';
+import { createPool } from "mysql2";
 
 // Sets up `__filename` and `__dirname` in an ES module environment using Node.js.
 const __filename = fileURLToPath(import.meta.url);
@@ -152,8 +154,7 @@ app.get("/admin/dashboard", verifyToken, async (req, res) => {
       res.status(500).json({ success: false, message: "Error fetching admin dashboard data" });
     }
   });
-  
-app.post("/admin/dashboard", verifyToken, findDashTenants);
+
 
 // ADMIN PAGES (MANAGE UNIT) ---------------------------------------------------------------------------
 app.get("/admin/manage/unit", verifyToken, async (req, res) => {
@@ -248,22 +249,6 @@ app.get('/admin/manage/unit/tenants', async (req, res) => {
     }
 });
 
-app.post("/admin/manage/unit", findUnits, async (req, res) => {
-    try {
-        const admin = await viewAdmins(req);
-
-        res.render("manageUnits", {
-            title: "Hive",
-            styles: ["manageUnits"],
-            rows: admin,
-            units: req.units
-        });
-    } catch (error) {
-        console.error('Error fetching tenant or admin data:', error);
-        res.status(500).json({ success: false, message: 'Error fetching unit or admin data' });
-    }
-});
-
 app.get('/api/auth/admin/totalUnits', async (req, res) => {
     try {
         const { establishmentId } = req.admin; 
@@ -280,32 +265,6 @@ app.get('/api/auth/admin/totalUnits', async (req, res) => {
 });
   
 // ADMIN PAGES (USER MANAGEMENT) ---------------------------------------------------------------------
-app.post("/admin/dashboard/userManagement", verifyToken, findTenants, async (req, res) => {
-    try {
-        const admin = await viewAdmins(req, res);
-
-        res.render("userManagement", {
-            title: "Hive",
-            styles: ["userManagement"],
-            tenants: req.tenants,
-            admin: admin
-        });
-    } catch (error) {
-        console.error('Error fetching tenant or admin data:', error);
-        res.status(500).json({ success: false, message: 'Error fetching data' });
-    }
-});
-
-app.post('/api/auth/find-tenants', async (req, res) => {
-    try {
-        const search = req.body.search || '';
-        const [results] = await db.query("SELECT * FROM tenants WHERE tenantFirstName LIKE ? OR tenantLastName LIKE ?", [`%${search}%`, `%${search}%`]);
-        res.json({ success: true, tenants: results });
-    } catch (error) {
-        console.error("Error fetching tenants:", error);
-        res.status(500).json({ success: false, message: "Internal Server Error" });
-    }
-});
 
 app.get("/admin/manage/unit/add", verifyToken, addUnitView);
 
@@ -344,10 +303,6 @@ app.get("/admin/dashboard/userManagement", verifyToken, async (req, res) => {
         res.status(500).json({ success: false, message: 'Error fetching data' });
     }
 });
-
-app.post("/admin/dashboard/userManagement", findTenants, (req, res) => {
-     res.render("userManagement", { title: "Hive", styles: ["userManagement"], tenants: req.tenants });
- });
 
 app.get("/admin/dashboard/userManagement/add", verifyToken, addTenantView);
 

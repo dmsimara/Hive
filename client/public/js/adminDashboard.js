@@ -1,4 +1,3 @@
-
 let subMenu = document.getElementById("subMenu");
 
 function toggleMenu() {
@@ -80,6 +79,7 @@ function updateTenantCards(tenants) {
             const tenantCard = document.createElement("a");
             tenantCard.classList.add("card-link");
             tenantCard.href = "#";
+            tenantCard.dataset.id = tenant.tenant_id;
 
             tenantCard.innerHTML = `
                 <div class="card mb-3">
@@ -92,7 +92,7 @@ function updateTenantCards(tenants) {
 
             tenantCard.addEventListener("click", (event) => {
                 event.preventDefault();
-                openTenantModal(tenant);
+                openTenantModal(tenant); 
             });
 
             tenantCardsContainer.appendChild(tenantCard);
@@ -104,88 +104,84 @@ function updateTenantCards(tenants) {
 
 function openTenantModal(tenant) {
     const modalBody = document.querySelector("#tenantModal .modal-body");
+
     if (!modalBody) {
         console.error("Modal body not found!");
         return;
     }
 
-    if (tenant && tenant.tenantFirstName && tenant.tenantLastName) {
-        const profileImageUrl = tenant.tenantProfile ? `/images/upload/${tenant.tenantProfile}` : "/images/defaultUser.webp";
-        
-        modalBody.innerHTML = `
-            <div class="profile-container">
-                <img src="${profileImageUrl}" alt="Tenant Profile" class="img-fluid"/>
-                <div class="profile-details">
-                    <p class="name">${tenant.tenantFirstName} ${tenant.tenantLastName}</p>
-                    <div class="contact-info">
-                        <p class="mobileNum"><span class="material-icons call-icon">call</span> ${tenant.mobileNum || "N/A"}</p>
-                        <p class="email"><span class="material-icons email-icon">mail</span> ${tenant.tenantEmail || "N/A"}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="details-container">
-                <div class="details-row">
-                    <p><strong>Tenant ID:</strong> <span>${tenant.tenant_id || "N/A"}</span></p>
-                    <p><strong>Guardian:</strong> <span>${tenant.tenantGuardianName || "N/A"}</span></p>
-                </div>
-                <div class="second-row">
-                    <p><strong>Gender:</strong> <span>${tenant.gender || "N/A"}</span></p>
-                    <p><strong>Guardian Number:</strong> <span>${tenant.tenantGuardianNum || "N/A"}</span></p>
-                </div>
-            </div>
-            <div class="bills-container">
-                <div class="bills-header">
-                    <p>Monthly Bills</p>
-                    <a href="#" class="btn btn-edit btn-sm"><i class="material-icons edit-icon">edit</i>Edit</a>
-                </div>
-                <table class="table table-bordered">
-                    <thead class="table-dark">
-                        <tr>
-                            <th scope="col">Utilities</th>
-                            <th scope="col">Charge</th>
-                            <th scope="col">Statement Date</th>
-                            <th scope="col">Due Date</th>
-                            <th scope="col">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">Unit Rental</th>
-                            <td>PHP 2,000</td>
-                            <td>October 15, 2024</td>
-                            <td>October 23, 2024</td>
-                            <td class="paid">Paid</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Electricity Consumption</th>
-                            <td>PHP 2,000</td>
-                            <td>October 15, 2024</td>
-                            <td>October 23, 2024</td>
-                            <td class="unpaid">Unpaid</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Water Usage</th>
-                            <td>PHP 2,000</td>
-                            <td>October 15, 2024</td>
-                            <td>October 23, 2024</td>
-                            <td class="paid">Paid</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Water Usage</th>
-                            <td>PHP 2,000</td>
-                            <td>October 15, 2024</td>
-                            <td>October 23, 2024</td>
-                            <td class="paid">Paid</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        `;
-    } else {
-        modalBody.innerHTML = "<p>Tenant details are unavailable.</p>";
-    }
+    const profileImageUrl = tenant.tenantProfile ? `/images/upload/${tenant.tenantProfile}` : "/images/defaultUser.webp";
     
-    
+    modalBody.innerHTML = `
+        <div class="profile-container">
+            <img src="${profileImageUrl}" alt="Tenant Profile" class="img-fluid"/>
+            <div class="profile-details">
+                <p class="name">${tenant.tenantFirstName} ${tenant.tenantLastName}</p>
+                <div class="contact-info">
+                    <p class="mobileNum"><span class="material-icons call-icon">call</span> ${tenant.mobileNum || "N/A"}</p>
+                    <p class="email"><span class="material-icons email-icon">mail</span> ${tenant.tenantEmail || "N/A"}</p>
+                </div>
+            </div>
+        </div>
+        <div class="details-container">
+            <div class="details-row">
+                <p><strong>Tenant ID:</strong> <span>${tenant.tenant_id || "N/A"}</span></p>
+                <p><strong>Guardian:</strong> <span>${tenant.tenantGuardianName || "N/A"}</span></p>
+            </div>
+            <div class="second-row">
+                <p><strong>Gender:</strong> <span>${tenant.gender || "N/A"}</span></p>
+                <p><strong>Guardian Number:</strong> <span>${tenant.tenantGuardianNum || "N/A"}</span></p>
+            </div>
+        </div>
+        <div class="bills-container">
+            <div class="bills-header">
+                <p>Monthly Bills</p>
+                <a href="#" class="btn btn-edit btn-sm"><i class="material-icons edit-icon">edit</i>Edit</a>
+            </div>
+            <table class="table table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Utilities</th>
+                        <th scope="col">Charge</th>
+                        <th scope="col">Statement Date</th>
+                        <th scope="col">Due Date</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">Unit Rental</th>
+                        <td>PHP 2,000</td>
+                        <td>October 15, 2024</td>
+                        <td>October 23, 2024</td>
+                        <td class="paid">Paid</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Electricity Consumption</th>
+                        <td>PHP 2,000</td>
+                        <td>October 15, 2024</td>
+                        <td>October 23, 2024</td>
+                        <td class="unpaid">Unpaid</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Water Usage</th>
+                        <td>PHP 2,000</td>
+                        <td>October 15, 2024</td>
+                        <td>October 23, 2024</td>
+                        <td class="paid">Paid</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Water Usage</th>
+                        <td>PHP 2,000</td>
+                        <td>October 15, 2024</td>
+                        <td>October 23, 2024</td>
+                        <td class="paid">Paid</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    `;
+
     const modal = new bootstrap.Modal(document.getElementById("tenantModal"));
     modal.show();
 }
@@ -197,12 +193,10 @@ document.addEventListener('DOMContentLoaded', function () {
     rentTitle.style.marginBottom = '10px';
 
     var canvas = document.getElementById('rentPieChart');
-    
     canvas.width = 90; 
     canvas.height = 90; 
 
     var ctx = canvas.getContext('2d');
-    
     var gray = getComputedStyle(document.documentElement).getPropertyValue('--gray');
     var maroon = getComputedStyle(document.documentElement).getPropertyValue('--maroon');
     var orange = getComputedStyle(document.documentElement).getPropertyValue('--orange');
@@ -253,7 +247,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-
 document.addEventListener('DOMContentLoaded', function() {
     const progressBars = document.querySelectorAll('.progress-bar');
   
@@ -261,5 +254,55 @@ document.addEventListener('DOMContentLoaded', function() {
       const progressValue = progressBar.getAttribute('data-progress');
       progressBar.style.width = `${progressValue}%`;
     });
-  });
-  
+});
+
+const searchInput = document.querySelector('#search');
+const resultsBody = document.querySelector('#tenantCardsContainer');
+
+loadData(); 
+
+function loadData(query = '') {
+    const request = new XMLHttpRequest();
+
+    request.open('GET', `/api/auth/searchTenants?q=${query}`);
+
+    request.onload = () => {
+        try {
+            const response = JSON.parse(request.responseText);
+
+            let html = '';
+
+            if (response.success && response.tenants.length > 0) {
+                response.tenants.forEach(result => {
+                    const tenantProfileImage = result.tenantProfile
+                        ? `/images/upload/${result.tenantProfile}`
+                        : '/images/defaultUser.webp'; 
+
+                    html += `
+                        <a href="#" class="card-link" data-id="${result.tenant_id}" onclick="openTenantModal(${result.tenant_id})">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <img src="${tenantProfileImage}" alt="Tenant Profile" width="40px" class="me-2">
+                                    <h5 class="card-title">${result.tenantFirstName} ${result.tenantLastName}</h5>
+                                </div>
+                            </div>
+                        </a>
+                    `;
+                });
+            } else {
+                html = '<p>No tenants found.</p>';
+            }
+
+            resultsBody.innerHTML = html;
+        } catch (error) {
+            console.error('Error loading tenant data:', error);
+        }
+    };
+
+    request.send();
+}
+
+searchInput.addEventListener('input', function () {
+    const query = searchInput.value;
+    loadData(query); 
+});

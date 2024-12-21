@@ -147,3 +147,69 @@ function deleteUnit(roomId) {
         .catch(error => console.error('Error deleting room:', error));
     }
 }
+
+const searchInput = document.querySelector('#search');
+const resultsBody = document.querySelector('#results');
+
+loadData();
+
+function loadData(query = '') {
+    const request = new XMLHttpRequest();
+
+    request.open('GET', `/api/auth/searchRooms?q=${query}`);
+
+    request.onload = () => {
+        try {
+            // Check if the response is a valid JSON
+            const response = JSON.parse(request.responseText);
+            
+            if (!response || !response.success) {
+                throw new Error('Invalid response format');
+            }
+
+            let html = '';
+            
+            if (response.success && response.rooms.length > 0) {
+                response.rooms.forEach(result => {
+                    html += `
+                    <tr>
+                       <th>${result.room_id}</th>
+                       <td>${result.floorNumber}</td>
+                       <td>${result.roomNumber}</td>
+                       <td>${result.roomType}</td>
+                       <td>${result.roomTotalSlot}</td>
+                       <td>${result.roomRemainingSlot}</td>
+                       <td class="text-end">
+                          <a href="#" data-bs-toggle="modal" data-bs-target="#manageUnitModal" onclick="loadTenants('${result.room_id}')" class="btn manage-button btn-small">Manage</a>
+                          <a href="#" type="button" onclick="deleteUnit('${result.room_id}')" class="btn delete-button btn-small">Delete</a>
+                       </td>
+                    </tr>
+                    `;
+                });
+            } else {
+                html += `
+                <tr>
+                   <td colspan="7" class="text-center">No rooms found</td>
+                </tr>
+                `;
+            }
+
+            resultsBody.innerHTML = html;
+
+        } catch (error) {
+            console.error('Error parsing JSON:', error);
+            alert('An error occurred. Please try again.');
+        }
+    };
+
+    request.onerror = () => {
+        alert('An error occurred with the request.');
+    };
+
+    request.send();
+}
+
+searchInput.addEventListener('input', () => {
+    const query = searchInput.value;
+    loadData(query);
+});

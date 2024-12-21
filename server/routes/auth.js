@@ -1,5 +1,5 @@
 import express from "express";
-import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, deleteTenant, viewAdmins, viewUnits, findUnits, addUnitView, addUnit, deleteUnit, getOccupiedUnits, editTenant, updateTenant, findDashTenants, addEvent, viewEvents, editEvent, deleteEvent, getEvents, updateEvent, viewNotices, pinnedNotices, permanentNotices, addNotice, togglePinned, togglePermanent, deleteNotice, getAvailableRooms, getNotices } from "../controllers/auth.controllers.js";
+import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, deleteTenant, viewAdmins, viewUnits, addUnitView, addUnit, deleteUnit, getOccupiedUnits, editTenant, updateTenant, addEvent, viewEvents, editEvent, deleteEvent, getEvents, updateEvent, viewNotices, pinnedNotices, permanentNotices, addNotice, togglePinned, togglePermanent, deleteNotice, getAvailableRooms, getNotices, searchTenants, searchRooms } from "../controllers/auth.controllers.js";
 import { verifyTenantToken, verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
@@ -13,8 +13,6 @@ router.post("/verify-email", verifyEmail);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password/:token", resetPassword);
 router.get("/view-units", viewUnits);
-router.post("/find-units", findUnits);
-router.post("/find-tenants", findDashTenants);
 router.get("/addUnitView", addUnitView);
 router.post("/addUnit", addUnit);
 router.delete("/deleteUnit/:room_id", deleteUnit);
@@ -34,11 +32,13 @@ router.patch("/view/notices/:noticeId/toggle_pinned", togglePinned);
 router.patch("/view/notices/:noticeId/toggle_permanent", togglePermanent);
 router.delete("/view/notices/:noticeId/delete", deleteNotice);
 router.get("/getAvailableRooms", getAvailableRooms);
+router.get("/search", searchTenants);
+router.get("/searchRooms", searchRooms);
+router.get("/searchTenants", findTenants);
 
 
 // tenants
 router.get("/view-tenants", viewTenants);
-router.post("/find-tenants", findTenants);
 router.post("/addTenant", addTenant);
 router.get("/addTenantView", addTenantView);
 router.get('/tenant/checkAuth', verifyTenantToken, checkTenantAuth);

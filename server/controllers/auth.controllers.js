@@ -373,6 +373,149 @@ export const viewUnits = async (req, res) => {
     }
 };
 
+export const searchTenants = async (req, res, next) => {
+    try {
+        const searchTerm = req.query.q?.trim() || '';
+        console.log("Search Term:", searchTerm);
+
+        const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ success: false, message: "Unauthorized. No token provided." });
+        }
+
+        let establishmentId;
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            establishmentId = decoded.establishmentId;
+            console.log("Establishment ID from Token:", establishmentId);
+
+            if (!establishmentId) {
+                return res.status(400).json({ success: false, message: "Establishment ID is required." });
+            }
+        } catch (err) {
+            return res.status(401).json({ success: false, message: "Invalid or expired token." });
+        }
+
+        const tenants = await Tenant.findAll({
+            where: {
+                establishmentId,
+                [Op.or]: [
+                    { tenantFirstName: { [Op.like]: `%${searchTerm}%` } },
+                    { tenantLastName: { [Op.like]: `%${searchTerm}%` } },
+                    { tenantEmail: { [Op.like]: `%${searchTerm}%` } }
+                ]
+            }
+        });
+
+        if (tenants.length === 0) {
+            console.log('No tenants found.');
+            return res.json({ success: true, tenants: [] });
+        }
+
+        console.log('Tenants retrieved successfully.');
+        return res.json({ success: true, tenants });
+
+    } catch (error) {
+        console.error('Error executing query:', error);
+        return res.status(500).json({ success: false, message: 'Database query failed' });
+    }
+};
+
+export const searchRooms = async (req, res, next) => {
+    try {
+        const searchTerm = req.query.q?.trim() || '';
+        console.log("Search Term:", searchTerm);
+
+        const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ success: false, message: "Unauthorized. No token provided." });
+        }
+
+        let establishmentId;
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            establishmentId = decoded.establishmentId;
+            console.log("Establishment ID from Token:", establishmentId);
+
+            if (!establishmentId) {
+                return res.status(400).json({ success: false, message: "Establishment ID is required." });
+            }
+        } catch (err) {
+            return res.status(401).json({ success: false, message: "Invalid or expired token." });
+        }
+
+        const rooms = await Room.findAll({
+            where: {
+                establishmentId,
+                [Op.or]: [
+                    { roomNumber: { [Op.like]: `%${searchTerm}%` } },
+                    { roomType: { [Op.like]: `%${searchTerm}%` } },
+                    { floorNumber: { [Op.like]: `%${searchTerm}%` } }
+                ]
+            }
+        });
+
+        if (rooms.length === 0) {
+            console.log('No rooms found.');
+            return res.json({ success: true, rooms: [] });
+        }
+
+        console.log('Rooms retrieved successfully.');
+        return res.json({ success: true, rooms });
+
+    } catch (error) {
+        console.error('Error executing query:', error);
+        return res.status(500).json({ success: false, message: 'Database query failed' });
+    }
+};
+
+export const findTenants = async (req, res, next) => {
+    try {
+        const searchTerm = req.query.q?.trim() || ''; 
+        console.log("Search Term:", searchTerm);
+
+        const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ success: false, message: "Unauthorized. No token provided." });
+        }
+
+        let establishmentId;
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            establishmentId = decoded.establishmentId;
+            console.log("Establishment ID from Token:", establishmentId);
+
+            if (!establishmentId) {
+                return res.status(400).json({ success: false, message: "Establishment ID is required." });
+            }
+        } catch (err) {
+            return res.status(401).json({ success: false, message: "Invalid or expired token." });
+        }
+
+        const tenants = await Tenant.findAll({
+            where: {
+                establishmentId,
+                [Op.or]: [
+                    { tenantFirstName: { [Op.like]: `%${searchTerm}%` } },
+                    { tenantLastName: { [Op.like]: `%${searchTerm}%` } }
+                ]
+            }
+        });
+
+        if (tenants.length === 0) {
+            console.log('No tenants found.');
+            return res.json({ success: true, tenants: [] });
+        }
+
+        console.log('Tenants retrieved successfully.');
+        return res.json({ success: true, tenants });
+
+    } catch (error) {
+        console.error('Error executing query:', error);
+        return res.status(500).json({ success: false, message: 'Database query failed' });
+    }
+};
+
 export const viewAdmins = async (req) => {
     try {
         const adminId = req.adminId;
@@ -402,137 +545,6 @@ export const viewAdmins = async (req) => {
     } catch (error) {
         console.error('Error fetching admin:', error);
         throw error; 
-    }
-};
-
-export const findTenants = async (req, res) => {
-    const searchTerm = req.body.search?.trim();
-    const establishmentId = req.body.establishmentId;
-
-    console.log("Received search term:", searchTerm);
-
-    if (!searchTerm) {
-        return res.status(400).json({ success: false, message: "Search term is required" });
-    }
-
-    try {
-        const tenants = await Tenant.findAll({
-            where: {
-                establishmentId: establishmentId, // Make sure this is set correctly
-                [Op.or]: [
-                    Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('tenantFirstName')), { [Op.like]: '%working%' }),
-                    Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('tenantLastName')), { [Op.like]: '%working%' })
-                ]
-            }
-        });
-        console.log(tenants);
-        
-
-        const rows = tenants.map((tenant) => tenant.get({ plain: true }));
-        console.log("Fetched tenants:", rows);
-
-        // Return JSON response for the frontend
-        return res.json({ success: true, tenants: rows });
-    } catch (error) {
-        console.error("Error in findTenants:", error);
-        return res.status(500).json({ success: false, message: "Unexpected error occurred" });
-    }
-};
-
-
-export const findDashTenants = async (req, res) => {
-    const searchTerm = req.body.searchTenants?.trim();
-    const establishmentId = req.body.establishmentId;
-
-    console.log("Received search term:", searchTerm);
-
-    try {
-        let tenants = [];
-        const lowerSearchTerm = searchTerm?.toLowerCase();
-
-        if (!lowerSearchTerm) {
-            tenants = await Tenant.findAll();
-        } else {
-            const searchWords = lowerSearchTerm.split(" ").filter(word => word.length > 0);
-
-            const whereClause =
-                searchWords.length === 1
-                    ? {
-                          [Op.or]: [
-                              Sequelize.where(
-                                  Sequelize.fn("LOWER", Sequelize.col("tenantFirstName")),
-                                  { [Op.like]: `%${searchWords[0]}%` }
-                              ),
-                              Sequelize.where(
-                                  Sequelize.fn("LOWER", Sequelize.col("tenantLastName")),
-                                  { [Op.like]: `%${searchWords[0]}%` }
-                              ),
-                          ],
-                      }
-                    : {
-                          [Op.and]: [
-                              Sequelize.where(
-                                  Sequelize.fn("LOWER", Sequelize.col("tenantFirstName")),
-                                  { [Op.like]: `%${searchWords[0]}%` }
-                              ),
-                              Sequelize.where(
-                                  Sequelize.fn("LOWER", Sequelize.col("tenantLastName")),
-                                  { [Op.like]: `%${searchWords[1]}%` }
-                              ),
-                          ],
-                      };
-
-            tenants = await Tenant.findAll({ where: whereClause });
-        }
-
-        const rows = tenants.map(tenant => tenant.get({ plain: true }));
-
-        const admin = await viewAdmins(req);  
-
-        if (req.xhr) {
-            return res.json({ success: true, tenants: rows, admin });
-        }
-
-        return res.render("adminDashboard", {
-            title: "Hive",
-            styles: ["adminDashboard"],
-            tenants: rows,
-            admin,
-            lastSearchTerm: searchTerm || "",
-        });
-    } catch (error) {
-        console.error("Error in findDashTenants:", error.message || error);
-        return res.status(500).json({ success: false, message: "An error occurred while searching for tenants." });
-    }
-};
-
-
-export const findUnits = async (req, res) => {
-    const adminId = req.user?.admin_id; 
-    if (!adminId) {
-        return res.status(400).json({ success: false, message: 'Admin ID is required' });
-    }
-
-    try {
-        const searchTerm = req.body.searchUnits || ''; 
-        const rooms = await Room.findAll({
-            where: {
-                roomNumber: {
-                    [Op.like]: `%${searchTerm}%` 
-                }
-            }
-        });
-
-        const adminData = await viewAdmins(adminId); 
-        res.json({
-            success: true,
-            units: rooms,
-            admins: adminData
-        });
-
-    } catch (error) {
-        console.error("Error in findUnits:", error);
-        res.status(500).json({ success: false, message: 'An error occurred while processing the request.' });
     }
 };
 
