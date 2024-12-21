@@ -40,6 +40,11 @@
             <p>View Account</p>
             <span>></span>
           </a>
+          <a href="/admin/settings" class="sub-menu-link">
+            <i class="material-icons">settings</i>
+            <p>Settings</p>
+            <span>></span>
+          </a>
           <a href="#" id="logoutButton" class="sub-menu-link">
             <i class="material-icons">logout</i>
             <p>Logout</p>
@@ -92,19 +97,19 @@
         <i class="material-icons middle-open">open_in_new</i>
       </a>
     </h3>
-<div class="announcement-container" id="announcement-container">
-  {{#if notices.length}}
-    {{#each notices}}
+    <div class="announcement-container" id="announcement-container">
+      {{#if notices.length}}
+      {{#each notices}}
       <div class="notice-card">
         <h5>{{this.title}}</h5>
         <p>{{this.content}}</p>
         <p class="timestamp">{{this.updated_at}}</p>
       </div>
-    {{/each}}
-  {{else}}
-    <p class="no-notices">No notices available at the moment.</p>
-  {{/if}}
-</div>
+      {{/each}}
+      {{else}}
+      <p class="no-notices">No notices available at the moment.</p>
+      {{/if}}
+    </div>
 
     <h3 class="tracker-title">Tracker
       <a href="/admin/tracker">
@@ -112,8 +117,8 @@
       </a>
     </h3>
     <div class="tracker-container" id="tracker-container">
-  {{#if events.length}}
-    {{#each events}}
+      {{#if events.length}}
+      {{#each events}}
       <div class="event-card">
         <h5>{{this.event_name}}</h5>
         <p><strong>Start:</strong> {{this.start}}</p>
@@ -121,14 +126,12 @@
         <p><strong>Description:</strong> {{this.event_description}}</p>
         <p><strong>Status:</strong> {{this.status}}</p>
       </div>
-    {{/each}}
-  {{else}}
-    <p class="no-events">No events available at the moment.</p>
-  {{/if}}
-</div>
-
+      {{/each}}
+      {{else}}
+      <p class="no-events">No events available at the moment.</p>
+      {{/if}}
+    </div>
   </div>
-
 
   <!-- Links and Navigation -->
   <div class="col-4" id="right">

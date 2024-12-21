@@ -184,6 +184,11 @@ body {
     box-sizing: border-box;
 }
 
+.dark-theme {
+    background-color: black;
+    color: white;
+}
+
 /* left part */
 
 #left {
