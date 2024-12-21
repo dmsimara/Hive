@@ -61,8 +61,9 @@
     </h3>
 
     <form class="d-flex" id="tenantSearchForm" role="search" method="POST" action="/admin/dashboard" novalidate>
+    <input type="hidden" name="establishmentId" value="{{establishmentId}}">
       <div class="search-bar">
-        <input class="form-control form-control-sm me-2" type="search" placeholder="Search Tenant" name="searchTenants"
+        <input class="form-control form-control-sm me-2" type="search" id="search" autocomplete="off" placeholder="Search Tenant" name="searchTenants"
           aria-label="Search" id="searchTenantsInput" required value="{{lastSearchTerm}}">
         <span class="search-icon">
           <i class="material-icons">search</i>
@@ -71,23 +72,7 @@
     </form>
 
     <div class="tenant-cards" id="tenantCardsContainer">
-      {{#if tenants.length}}
-      {{#each tenants}}
-      <a href="#" class="card-link" data-id="{{tenant_id}}" onclick="openTenantModal({{tenant_id}})">
-        <div class="card mb-3">
-          <div class="card-body">
-            {{!-- <img src="/images/pattern.png" alt="Design"> --}}
-            <img
-              src="{{#if this.tenantProfile}}/images/upload/{{this.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
-              alt="Profile" width="40px" class="me-2" />
-            <h5 class="card-title d-inline">{{this.tenantFirstName}} {{this.tenantLastName}}</h5>
-          </div>
-        </div>
-      </a>
-      {{/each}}
-      {{else}}
-      <p>No active tenants found.</p>
-      {{/if}}
+   
     </div>
   </div>
 
@@ -107,19 +92,19 @@
         <i class="material-icons middle-open">open_in_new</i>
       </a>
     </h3>
-    <div class="announcement-container" id="announcement-container">
-      {{#if notices.length}}
-      {{#each notices}}
+<div class="announcement-container" id="announcement-container">
+  {{#if notices.length}}
+    {{#each notices}}
       <div class="notice-card">
         <h5>{{this.title}}</h5>
         <p>{{this.content}}</p>
         <p class="timestamp">{{this.updated_at}}</p>
       </div>
-      {{/each}}
-      {{else}}
-      <p class="no-notices">No notices available at the moment.</p>
-      {{/if}}
-    </div>
+    {{/each}}
+  {{else}}
+    <p class="no-notices">No notices available at the moment.</p>
+  {{/if}}
+</div>
 
     <h3 class="tracker-title">Tracker
       <a href="/admin/tracker">
@@ -127,8 +112,8 @@
       </a>
     </h3>
     <div class="tracker-container" id="tracker-container">
-      {{#if events.length}}
-      {{#each events}}
+  {{#if events.length}}
+    {{#each events}}
       <div class="event-card">
         <h5>{{this.event_name}}</h5>
         <p><strong>Start:</strong> {{this.start}}</p>
@@ -136,11 +121,11 @@
         <p><strong>Description:</strong> {{this.event_description}}</p>
         <p><strong>Status:</strong> {{this.status}}</p>
       </div>
-      {{/each}}
-      {{else}}
-      <p class="no-events">No events available at the moment.</p>
-      {{/if}}
-    </div>
+    {{/each}}
+  {{else}}
+    <p class="no-events">No events available at the moment.</p>
+  {{/if}}
+</div>
 
   </div>
 
