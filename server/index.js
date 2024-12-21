@@ -531,6 +531,14 @@ app.get("/admin/announcements", verifyToken, async (req, res) => {
         }
     }
 });
+
+// ADMIN PAGES (SETTINGS) ---------------------------------------------------------------------------
+app.get("/admin/settings", verifyToken, async (req, res) => {
+    res.render("adminSettings", {
+        title: "Hive",
+        styles: ["adminSettings"]
+    });
+})
   
 // TENANT PAGES (DASHBOARD) -------------------------------------------------------------------------
 const getTenantsDashboard = async (roomId) => {

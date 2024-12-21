@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             // Send logout request
-            const response = await fetch("/api/auth/adminLogout", {
+            const response = await fetch("/api/auth/tenantLogout", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
