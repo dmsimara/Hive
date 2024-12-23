@@ -8,7 +8,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-center">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/admin/dashboard">Dashboard</a>
+          <a class="nav-link" aria-current="page" href="/admin/dashboard">Dashboard</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/admin/dashboard/userManagement">Manage Tenant</a>
@@ -57,10 +57,17 @@
 </nav>
 
 <div class="container pt-5 pb-5">
-    <div class="toggle-btn" id="btn">
-        <span id="btnText">Dark</span>
-        <i class="material-icons" id="btnIcon">dark_mode</i>
-    </div>
+  <div class="toggle-btn" id="btn">
+    <span id="btnText">Dark</span>
+    <i class="material-icons" id="btnIcon">dark_mode</i>
+  </div>
+
+  <a href="#" onclick="deleteAdmin({{admin_id}}); return false;" class="btn btn-delete btn-sm">
+    <i class="material-icons">person_remove</i> Delete
+  </a>
+
+
+
 </div>
 
 <script src="/js/adminSettings.js"></script>

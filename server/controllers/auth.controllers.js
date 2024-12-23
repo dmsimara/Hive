@@ -785,6 +785,37 @@ export const updateTenant = async (req, res) => {
     }
 };
 
+export const deleteAdmin = async (req, res) => {
+    const adminId = req.params.admin_id;
+    console.log('adminId received by backend:', adminId); 
+
+    if (!adminId) {
+        return res.status(400).json({ success: false, message: 'Admin ID is required' });
+    }
+
+    try {
+        const admin = await Admin.findByPk(adminId);
+        if (!admin) {
+            return res.status(404).json({ success: false, message: 'Admin not found' });
+        }
+
+        const adminCount = await Admin.count();
+        if (adminCount <= 1) {
+            return res.status(400).json({
+                success: false,
+                message: 'Cannot delete the last admin account'
+            });
+        }
+
+        await admin.destroy();
+        return res.status(200).json({ success: true, message: 'Admin deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting admin:', error);
+        return res.status(500).json({ success: false, message: 'An error occurred while deleting the admin' });
+    }
+};
+
+
 export const deleteTenant = async (req, res) => {
     const tenantId = req.params.tenant_id;
     console.log('tenantId received by backend:', tenantId); 
