@@ -7,20 +7,25 @@
         <!-- Middle Side: Form Container -->
         <div class="col-6 form-container d-flex justify-content-center align-items-center">
             <div class="content">
-                <img src="/images/hiveLight.png" alt="Hive Logo" width="200px"/>
+                <img src="/images/hiveLight.png" alt="Hive Logo" width="200px" />
                 <h2 class="intro">Welcome <strong>Back!</strong></h2>
                 <p class="desc">
                     Stay on track and in control of your living experience
                 </p>
             </div>
-            <form action="/api/auth/adminLogin" method="POST" style="width: 80%;"> 
+            <form action="/api/auth/adminLogin" method="POST" style="width: 80%;">
                 <div class="mb-3">
                     <label for="adminEmail" class="form-label">Email</label>
                     <input type="email" class="form-control" id="adminEmail" name="adminEmail" required>
                 </div>
-                <div class="mb-3">
+                <div class="mb-3 password-container">
                     <label for="adminPassword" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="adminPassword" name="adminPassword" required>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="adminPassword" name="adminPassword" required>
+                        <span class="input-group-text" id="togglePassword" style="cursor: pointer;">
+                            <i class="material-icons password-icon">visibility</i>
+                        </span>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Log in</button>
             </form>
@@ -29,9 +34,11 @@
 
         <!-- Right Side: Logo Container -->
         <div class="col-3 logo-container d-flex justify-content-center align-items-center">
-            <img src="/images/icon1.png" alt="Logo" class="logo"> 
+            <img src="/images/icon1.png" alt="Logo" class="logo">
         </div>
     </div>
 </div>
+
+
 
 <script src="/js/adminLogin.js"></script>

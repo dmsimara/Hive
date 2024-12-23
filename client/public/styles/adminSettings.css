@@ -235,3 +235,40 @@ body {
     background: linear-gradient(#555, #333);
     color: var(--yellow);
 }
+
+.btn-delete {
+    display: inline-block;
+    padding: 12px 25px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 20px;
+    background: linear-gradient(var(--maroon), var(--orange)); 
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase; 
+    margin-top: 20px; 
+    border: 1px solid transparent; 
+}
+
+.btn-delete:hover {
+    background: linear-gradient(var(--orange), var(--maroon)); 
+    opacity: 0.8;
+}
+
+.btn-delete:focus {
+    outline: 2px solid #f44336; 
+    outline-offset: 2px;
+}
+
+.btn-delete:active {
+    background: linear-gradient(var(--maroon), var(--orange)); 
+    opacity: 1;
+}
+
+.btn-delete:disabled {
+    background: #e57373; 
+    cursor: not-allowed;
+}

@@ -733,3 +733,141 @@ label {
 .table-container::-webkit-scrollbar-track:hover {
   background: #e1e1e1;
 }
+
+/* Base styles for larger screens (laptop) */
+@media screen and (min-width: 1024px) {
+  .navbar-nav {
+      justify-content: center;
+      width: 100%;
+      gap: 30px;
+  }
+
+  .search-bar input {
+      width: 300px;
+  }
+
+  .container {
+      max-width: 1200px;
+  }
+
+  .row .col-6 {
+      display: flex;
+      align-items: center;
+  }
+
+  table {
+      width: 100%;
+      border-radius: 12px;
+  }
+}
+
+/* Styles for tablets and smaller laptops */
+@media screen and (max-width: 1024px) {
+  .navbar-nav {
+      flex-direction: column;
+      gap: 15px;
+  }
+
+  .search-bar input {
+      width: 200px;
+  }
+
+  .container {
+      margin: 15px;
+      padding: 15px;
+  }
+
+  table {
+      font-size: 12px;
+  }
+
+  .navbar {
+      padding: 0 15px;
+  }
+
+  .title-icon {
+      font-size: 40px;
+      margin-right: 10px;
+  }
+
+  header h1 {
+      font-size: 22px;
+  }
+
+  .user-pic {
+      width: 35px;
+      height: 35px;
+  }
+
+  .sub-menu-wrap {
+      width: 250px;
+  }
+}
+
+/* Styles for mobile screens */
+@media screen and (max-width: 768px) {
+  .navbar-nav {
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+  }
+
+  .search-bar {
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 15px;
+  }
+
+  .search-bar input {
+      width: 100%;
+      margin-bottom: 10px;
+  }
+
+  .container {
+      margin: 10px;
+      padding: 10px;
+      width: 100%;
+  }
+
+  table {
+      font-size: 10px;
+      overflow-x: auto;
+  }
+
+  header h1 {
+      font-size: 20px;
+  }
+
+  .title-icon {
+      font-size: 30px;
+      margin-right: 5px;
+  }
+
+  .user-pic {
+      width: 30px;
+      height: 30px;
+  }
+
+  .sub-menu-wrap {
+      width: 200px;
+  }
+
+  .pagination a {
+      padding: 6px 12px;
+  }
+
+  .status-badge {
+      font-size: 12px;
+      padding: 2px 6px;
+  }
+
+  .btn-edit,
+  .btn-delete {
+      padding: 4px 8px;
+      font-size: 12px;
+  }
+
+  .tenant-management-progress {
+      width: 80px;
+  }
+}

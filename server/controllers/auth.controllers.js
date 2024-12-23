@@ -11,77 +11,142 @@ import { generateTokenAndSetCookie, generateTokenAndSetTenantCookie } from '../u
 import { connectDB } from '../db/connectDB.js';
 import { Sequelize, Op } from 'sequelize';
 import { format, startOfWeek, endOfWeek, addHours } from 'date-fns';
+import { sendMail } from '../nodemailer/mail.js';
 
 export const adminRegister = async (req, res) => {
     const { adminFirstName, adminLastName, adminEmail, adminPassword, eName } = req.body;
 
     try {
+        // Validate input fields
         if (!adminFirstName || !adminLastName || !adminEmail || !adminPassword || !eName) {
-            throw new Error("All fields are required");
+            return res.status(400).json({ success: false, message: "All fields are required" });
         }
 
-        const adminAlreadyExists = await Admin.findOne({
-            where: { adminEmail }
-        });
-
-        console.log("adminAlreadyExists", adminAlreadyExists);
-
+        // Check if admin already exists
+        const adminAlreadyExists = await Admin.findOne({ where: { adminEmail } });
         if (adminAlreadyExists) {
             return res.status(400).json({ success: false, message: "Admin already exists" });
         }
 
-        let establishment = await Establishment.findOne({
-            where: { eName }
-        });
-
+        // Find or create establishment
+        let establishment = await Establishment.findOne({ where: { eName } });
         if (!establishment) {
             establishment = await Establishment.create({ eName });
             console.log('Created new establishment:', establishment);
         }
 
+        // Hash password and generate verification token
         const hashedPassword = await bcryptjs.hash(adminPassword, 10);
+        const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
 
+        // Create new admin
         const admin = await Admin.create({
             adminFirstName,
             adminLastName,
             adminEmail,
             adminPassword: hashedPassword,
             establishmentId: establishment.establishment_id,
+            verificationToken,
+            verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours from now
         });
 
+        // Generate token and set cookie
+        generateTokenAndSetCookie(res, admin.adminId);
+
+        // Send welcome email
+        const subject = 'Welcome to Hive! Confirm Your Email';
+        const html = `
+           <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
+              <h2 style="color: #4CAF50; text-align: center;">Welcome to Hive, ${adminFirstName}!</h2>
+              <p>Thank you for registering as an admin for <strong>${eName}</strong>.</p>
+              <p>To confirm your account and verify your email, please use the following One-Time Password (OTP):</p>
+              <div style="text-align: center; margin: 20px 0;">
+                 <span style="font-size: 24px; font-weight: bold; color: #4CAF50; letter-spacing: 2px;">${verificationToken}</span>
+              </div>
+              <p>If you did not create an account with Hive, you can safely disregard this email.</p>
+              <p style="margin-top: 30px; font-size: 0.9em; color: #555;">Best regards,</p>
+              <p style="font-size: 0.9em; color: #555;"><strong>Hive Team</strong></p>
+              <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+              <p style="font-size: 0.8em; color: #777; text-align: center;">
+                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.
+              </p>
+           </div>
+        `;
+
+        await sendMail(adminEmail, subject, null, html);
+
+        // Respond with success
         res.status(201).json({
             success: true,
-            message: "Admin created successfully",
+            message: "Registration successful. Please check your email to verify your account.",
             admin: {
                 ...admin.dataValues,
-                adminPassword: undefined,
+                adminPassword: undefined, // Remove sensitive data
             },
         });
     } catch (error) {
         console.error("Error registering admin:", error);
-        res.status(400).json({ success: false, message: error.message });
+
+        // Respond with error
+        res.status(500).json({
+            success: false,
+            message: error.message || "An unexpected error occurred",
+        });
     }
 };
+
 
 export const verifyEmail = async (req, res) => {
     const {code} = req.body;
 
     try {
-        const admin = await Admin.findOne( {
-            verificationToken: code,
-            verificationTokenExpiresAt: { $gt: Date.now() }
-        })
+        // Find admin with the matching verification code and check expiration
+        const admin = await Admin.findOne({
+            where: {
+                verificationToken: code,
+                verificationTokenExpiresAt: { [Op.gt]: Date.now() }, // Ensure expiration is in the future
+            },
+            include: {
+                model: Establishment,  
+                as: 'Establishment',  
+                attributes: ['eName'],  
+            },
+        });
 
         if (!admin) {
-            return res.status(400).json({success: false, message: "Invalid or expired verification code"})
+            return res.status(400).json({
+                success: false,
+                message: "Invalid or expired verification code",
+            });
         }
 
+        // Mark admin as verified and clear verification data
         admin.isVerified = true;
-        admin.verificationToken = undefined;
-        admin.verificationTokenExpiresAt = undefined;
+        admin.verificationToken = null;
+        admin.verificationTokenExpiresAt = null;
         await admin.save();
 
-        await sendWelcomeEmail(admin.adminEmail, admin.adminFirstName);
+        const eName = admin.Establishment.eName;   
+
+        // send email
+        const subject = 'Welcome to Hive!';
+        const html = `
+           <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
+              <h2 style="color: #4CAF50; text-align: center;">Welcome to Hive, ${admin.adminFirstName}!</h2>
+              <p style="text-align: center;">We're thrilled to have you as an admin for <strong>${eName}</strong>.</p>
+              <p style="text-align: center;">Your email has been successfully verified, and your account is now active!</p>
+              <p style="text-align: center;">Here at Hive, we value your contribution and look forward to working with you to make a positive impact. We're excited about all that we can achieve together!</p>
+              <br>
+              <p style="font-size: 0.9em; color: #555; text-align: center;">Best regards,</p>
+              <p style="font-size: 0.9em; color: #555; text-align: center;"><strong>Hive Team</strong></p>
+              <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+              <p style="font-size: 0.8em; color: #777; text-align: center;">
+                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.
+              </p>
+            </div>
+        `;
+
+        await sendMail(admin.adminEmail, subject, null, html);
 
         res.status(201).json({
             success: true,
@@ -107,6 +172,11 @@ export const adminLogin = async (req, res) => {
 
         if (!admin) {
             return res.status(400).json({ success: false, message: "Admin not found" });
+        }
+
+        // Check if the admin email is verified
+        if (!admin.isVerified) {
+            return res.status(400).json({ success: false, message: "Please verify your email before logging in." });
         }
 
         const isPasswordValid = await bcryptjs.compare(adminPassword, admin.adminPassword);
@@ -178,6 +248,10 @@ export const tenantLogin = async (req, res) => {
         console.log("Error in login:", error);
         res.status(400).json({ success: false, message: error.message});
     }
+}
+
+export const adminOTPEmail = async (req, res) => {
+
 }
 
 export const adminLogout = async (req, res) => {
