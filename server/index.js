@@ -534,11 +534,23 @@ app.get("/admin/announcements", verifyToken, async (req, res) => {
 
 // ADMIN PAGES (SETTINGS) ---------------------------------------------------------------------------
 app.get("/admin/settings", verifyToken, async (req, res) => {
-    res.render("adminSettings", {
-        title: "Hive",
-        styles: ["adminSettings"]
-    });
-})
+    try {
+        const admin = await viewAdmins(req, res);
+
+        const adminId = admin ? admin.admin_id : null;
+
+        res.render("adminSettings", {
+            title: "Hive",
+            styles: ["adminSettings"],
+            admin: admin || {},
+            admin_id: adminId 
+        });
+    } catch (error) {
+        console.error('Error fetching admin:', error);
+        res.status(500).send("An error occurred while retrieving admin data.");
+    }
+});
+
   
 // TENANT PAGES (DASHBOARD) -------------------------------------------------------------------------
 const getTenantsDashboard = async (roomId) => {
@@ -796,6 +808,8 @@ app.get("/tenant/room-details/view/account", verifyTenantToken, async (req, res)
 });
 
 app.get("/tenant/room-details/edit/account", verifyTenantToken, async (req, res) => {
+    const admin = await viewAdmins(req, res);
+
     try {
         const tenant = await Tenant.findOne({ where: { tenant_id: req.tenantId } });
         if (!tenant) {
@@ -806,6 +820,7 @@ app.get("/tenant/room-details/edit/account", verifyTenantToken, async (req, res)
             title: "Hive",
             styles: ["editTenantAccount"],
             tenant: tenant.get({ plain: true }),
+            admin: admin || {},
         });
     } catch (error) {
         console.error("Error fetching tenant data:", error);

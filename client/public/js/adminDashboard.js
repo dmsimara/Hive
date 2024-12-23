@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (response.ok) {
                 alert(data.message);
-                window.location.href = "/";
+                window.location.href = "/"; // Redirect to homepage after logout
             } else {
                 alert(data.message || "Logout failed. Please try again.");
             }
