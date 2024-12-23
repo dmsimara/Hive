@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 window.location.href = "/admin/dashboard"; 
             } else {
                 alert(data.message || "Login failed. Please try again.");
-                console.error("Login error data:", data); // Log additional data for debugging
+                console.error("Login error data:", data);
             }
         } catch (error) {
             alert("An error occurred. Please try again later.");
@@ -31,3 +31,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+document.getElementById('togglePassword').addEventListener('click', function () {
+    const passwordField = document.getElementById('adminPassword');
+    const isPassword = passwordField.type === 'password';
+    passwordField.type = isPassword ? 'text' : 'password';
+    this.querySelector('i').textContent = isPassword ? 'visibility_off' : 'visibility';
+});
+

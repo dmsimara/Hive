@@ -20,30 +20,32 @@ document.addEventListener("DOMContentLoaded", () => {
         fetchTenants(searchTerm, window.establishmentId);
     });
 
-    logoutButton.addEventListener("click", async () => {
-        const isConfirmed = confirm("Are you sure you want to log out?");
-        if (!isConfirmed) return;
-
-        try {
-            const response = await fetch("/api/auth/adminLogout", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                alert(data.message);
-                window.location.href = "/"; // Redirect to homepage after logout
-            } else {
-                alert(data.message || "Logout failed. Please try again.");
-            }
-        } catch (error) {
-            alert("An error occurred during logout. Please try again later.");
-            console.error("Error:", error);
-        }
-    });
+    logoutButton.addEventListener("click", logout);
 });
+
+async function logout() {
+    const isConfirmed = confirm("Are you sure you want to log out?");
+    if (!isConfirmed) return;
+
+    try {
+        const response = await fetch("/api/auth/adminLogout", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert(data.message);
+            window.location.href = "/"; // Redirect to homepage after logout
+        } else {
+            alert(data.message || "Logout failed. Please try again.");
+        }
+    } catch (error) {
+        alert("An error occurred during logout. Please try again later.");
+        console.error("Error:", error);
+    }
+}
 
 async function fetchTenants(searchTerm, establishmentId) {
     try {
@@ -58,10 +60,10 @@ async function fetchTenants(searchTerm, establishmentId) {
             return;
         }
 
-        const data = await response.json(); 
+        const data = await response.json();
 
         if (response.ok && data.success) {
-            updateTenantCards(data.tenants); 
+            updateTenantCards(data.tenants);
         } else {
             console.error("Error fetching tenants:", data.message || "Unknown error");
         }
@@ -84,15 +86,16 @@ function updateTenantCards(tenants) {
             tenantCard.innerHTML = `
                 <div class="card mb-3">
                     <div class="card-body">
-                        <img src="${tenant.tenantProfile ? `/images/upload/${tenant.tenantProfile}` : "/images/defaultUser.webp"}" 
+                        <img src="${tenant.tenantProfile ? `/images/upload/${tenant.tenantProfile}` : '/images/defaultUser.webp'}" 
                              alt="Profile" width="40px" class="me-2" />
                         <h5 class="card-title d-inline">${tenant.tenantFirstName} ${tenant.tenantLastName}</h5>
                     </div>
-                </div>`;
+                </div>
+            `;
 
             tenantCard.addEventListener("click", (event) => {
                 event.preventDefault();
-                openTenantModal(tenant); 
+                openTenantModal(tenant);
             });
 
             tenantCardsContainer.appendChild(tenantCard);
@@ -279,30 +282,32 @@ function loadData(query = '') {
                         : '/images/defaultUser.webp'; 
 
                     html += `
-                        <a href="#" class="card-link" data-id="${result.tenant_id}" onclick="openTenantModal(${result.tenant_id})">
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <img src="${tenantProfileImage}" alt="Tenant Profile" width="40px" class="me-2">
-                                    <h5 class="card-title">${result.tenantFirstName} ${result.tenantLastName}</h5>
-                                </div>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <img src="${tenantProfileImage}" alt="Profile" class="me-2" />
+                                <h5 class="card-title">${result.tenantFirstName} ${result.tenantLastName}</h5>
                             </div>
-                        </a>
+                        </div>
                     `;
                 });
             } else {
-                html = '<p>No tenants found.</p>';
+                html = `<p>No tenants found</p>`;
             }
 
             resultsBody.innerHTML = html;
-        } catch (error) {
-            console.error('Error loading tenant data:', error);
+        } catch (e) {
+            resultsBody.innerHTML = `<p>Error loading data. Please try again later.</p>`;
+            console.error(e);
         }
+    };
+
+    request.onerror = () => {
+        resultsBody.innerHTML = `<p>Network error. Please try again later.</p>`;
     };
 
     request.send();
 }
 
-searchInput.addEventListener('input', function () {
-    const query = searchInput.value;
-    loadData(query); 
+searchInput.addEventListener('input', (event) => {
+    loadData(event.target.value);
 });

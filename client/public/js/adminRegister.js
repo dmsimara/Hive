@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     adminLastName,
                     adminEmail,
                     adminPassword,
-                    eName
+                    eName,
                 }),
             });
 
@@ -47,7 +47,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (response.ok) {
                 alert(data.message);
-                window.location.href = "/admin/login"; 
+                // Redirect to verify email page
+                window.location.href = "/admin/register/verifyEmail";
             } else {
                 errorMessageDiv.textContent = data.message || "Registration failed. Please try again.";
             }
