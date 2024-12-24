@@ -57,56 +57,254 @@
 </nav>
 
 <div class="container pt-5 pb-5">
-  <div class="toggle-btn" id="btn">
-    <span id="btnText">Dark</span>
-    <i class="material-icons" id="btnIcon">dark_mode</i>
+  <div class="headerContainer">
+    <h2 class="account-title">Account Settings</h2>
+    <a href="/admin/dashboard/view/account" class="viewProfile"><i class="material-icons">person</i>View Profile</a>
   </div>
 
-  <a href="#" onclick="deleteAdmin({{admin_id}}); return false;" class="btn btn-delete btn-sm">
-    Delete Account
-  </a>
-
-  <form id="updatePasswordForm">
-    <div
-      style="max-width: 400px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; font-family: Arial, sans-serif;">
-      <h2 style="text-align: center; color: #4CAF50;">Change Password</h2>
-
-      <!-- Current Password -->
-      <div style="margin-bottom: 15px;">
-        <label for="currentPassword" style="display: block; margin-bottom: 5px; color: #333;">Current Password</label>
-        <input type="password" id="currentPassword" name="currentPassword" required
-          style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-      </div>
-
-      <!-- New Password -->
-      <div style="margin-bottom: 15px;">
-        <label for="newPassword" style="display: block; margin-bottom: 5px; color: #333;">New Password</label>
-        <input type="password" id="newPassword" name="newPassword" required
-          style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-      </div>
-
-      <!-- Confirm New Password -->
-      <div style="margin-bottom: 15px;">
-        <label for="confirmPassword" style="display: block; margin-bottom: 5px; color: #333;">Confirm New
-          Password</label>
-        <input type="password" id="confirmPassword" name="confirmPassword" required
-          style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-      </div>
-
-      <!-- Optional Admin ID -->
-      <!-- If you need adminId in the form, add this hidden input -->
-      <input type="hidden" id="adminId" name="adminId" value="12345" /> <!-- Update with the correct value if needed -->
-
-      <!-- Submit Button -->
-      <div style="text-align: center;">
-        <button type="submit"
-          style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
-          Update Password
-        </button>
-      </div>
+  <div class="sidebarPageContainer">
+    <div class="sidebarContainer">
+      <ul>
+        <li><a href="#" class="sidebar-link" data-content="darkMode"><i class="material-icons">nightlight_round</i>Dark
+            Mode</a></li>
+        <li><a href="#" class="sidebar-link" data-content="feedbackSupport"><i class="material-icons">mail</i>Feedback &
+            Support</a></li>
+        <li><a href="#" class="sidebar-link" data-content="passwordReset"><i
+              class="material-icons">lock_reset</i>Password Reset</a></li>
+        <li><a href="#" class="sidebar-link" data-content="activityLog"><i class="material-icons">timeline</i>Activity
+            Log</a></li>
+        <li><a href="#" class="sidebar-link" data-content="deleteAccount"><i class="material-icons">delete</i>Delete
+            Account</a></li>
+      </ul>
     </div>
-  </form>
 
+    <div class="pageContainer">
+      <div id="contentPlaceholder"></div>
+    </div>
+  </div>
 </div>
 
+
 <script src="/js/adminSettings.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const sidebarLinks = document.querySelectorAll(".sidebar-link");
+    const contentPlaceholder = document.getElementById("contentPlaceholder");
+
+    // Content for each page
+    const pages = {
+      darkMode: `
+            <div class="toggle-btn" id="btn">
+                <span id="btnText">Dark</span>
+                <i class="material-icons" id="btnIcon">dark_mode</i>
+            </div>
+            <p>Toggle dark mode settings here. Click the button to switch modes.</p>`,
+      feedbackSupport: "<h3>Feedback & Support</h3><p>Get help and provide feedback.</p>",
+      passwordReset: `
+        <h3>Password Reset</h3>
+        <p>Change your password here.</p>
+        <form id="updatePasswordForm">
+            <div style="max-width: 400px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; font-family: Arial, sans-serif;">
+                <h2 style="text-align: center; color: #4CAF50;">Change Password</h2>
+
+                <!-- Current Password -->
+                <div style="margin-bottom: 15px;">
+                    <label for="currentPassword" style="display: block; margin-bottom: 5px; color: #333;">Current Password</label>
+                    <input type="password" id="currentPassword" name="currentPassword" required
+                        style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+
+                <!-- New Password -->
+                <div style="margin-bottom: 15px;">
+                    <label for="newPassword" style="display: block; margin-bottom: 5px; color: #333;">New Password</label>
+                    <input type="password" id="newPassword" name="newPassword" required
+                        style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+
+                <!-- Confirm New Password -->
+                <div style="margin-bottom: 15px;">
+                    <label for="confirmPassword" style="display: block; margin-bottom: 5px; color: #333;">Confirm New Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required
+                        style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+
+                <!-- Optional Admin ID -->
+                <!-- If you need adminId in the form, add this hidden input -->
+                <input type="hidden" id="adminId" name="adminId" value="12345" /> <!-- Update with the correct value if needed -->
+
+                <!-- Submit Button -->
+                <div style="text-align: center;">
+                    <button type="submit"
+                        style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+                        Update Password
+                    </button>
+                </div>
+            </div>
+        </form>`,
+      activityLog: "<h3>Activity Log</h3><p>Review your recent activity here.</p>",
+      deleteAccount: `
+        <h3>Delete Account</h3>
+        <p>Delete your account permanently.</p>
+        <a href="#" onclick="deleteAdmin({{admin_id}}); return false;" class="btn btn-delete btn-sm">
+            Delete Account
+        </a>`
+    };
+
+    // Retrieve the saved page from localStorage or default to darkMode
+    const savedPage = localStorage.getItem("currentPage") || "darkMode";
+    contentPlaceholder.innerHTML = pages[savedPage];
+    initializePage(savedPage);
+
+    // Initialize dark mode based on localStorage
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      document.body.classList.add("dark-theme");
+    }
+
+    // Event listener for sidebar links
+    sidebarLinks.forEach((link) => {
+      link.addEventListener("click", function (event) {
+        event.preventDefault(); // Prevent default link behavior
+        const contentId = event.target.getAttribute("data-content");
+        contentPlaceholder.innerHTML = pages[contentId];
+        localStorage.setItem("currentPage", contentId);
+        initializePage(contentId);
+      });
+    });
+
+    // Function to initialize the current page
+    function initializePage(contentId) {
+      if (contentId === "darkMode") {
+        initializeDarkModeButton();
+      } else if (contentId === "passwordReset") {
+        initializePasswordResetForm();
+      }
+    }
+
+    // Initialize the dark mode button
+    function initializeDarkModeButton() {
+      const darkModeButton = document.getElementById("btn");
+      const btnText = document.getElementById("btnText");
+      const btnIcon = document.getElementById("btnIcon");
+
+      if (!darkModeButton) return;
+
+      // Set the correct text and icon based on current theme
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme === "dark") {
+        btnIcon.innerHTML = "light_mode";
+        btnText.innerHTML = "Light";
+      } else {
+        btnIcon.innerHTML = "dark_mode";
+        btnText.innerHTML = "Dark";
+      }
+
+      darkModeButton.addEventListener("click", function () {
+        const isDark = document.body.classList.toggle("dark-theme");
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+
+        if (isDark) {
+          btnIcon.innerHTML = "light_mode";
+          btnText.innerHTML = "Light";
+        } else {
+          btnIcon.innerHTML = "dark_mode";
+          btnText.innerHTML = "Dark";
+        }
+      });
+    }
+
+    // Initialize the password reset form
+    function initializePasswordResetForm() {
+      const form = document.querySelector("#updatePasswordForm");
+      if (!form) return;
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        const currentPassword = document.getElementById("currentPassword").value;
+        const newPassword = document.getElementById("newPassword").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+
+        if (newPassword !== confirmPassword) {
+          alert("New password and confirm password do not match.");
+          return;
+        }
+
+        if (!currentPassword || !newPassword || !confirmPassword) {
+          alert("Please fill in all fields.");
+          return;
+        }
+
+        fetch("/api/auth/update-password", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ currentPassword, newPassword }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              alert("Password updated successfully!");
+              window.location.reload();
+            } else {
+              alert("Error updating password: " + (data.message || "Unknown error"));
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("An error occurred while updating the password: " + error.message);
+          });
+      });
+    }
+  });
+</script>
+
+
+{{!--
+<div class="toggle-btn" id="btn">
+  <span id="btnText">Dark</span>
+  <i class="material-icons" id="btnIcon">dark_mode</i>
+</div>
+
+<a href="#" onclick="deleteAdmin({{admin_id}}); return false;" class="btn btn-delete btn-sm">
+  Delete Account
+</a>
+
+<form id="updatePasswordForm">
+  <div
+    style="max-width: 400px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; font-family: Arial, sans-serif;">
+    <h2 style="text-align: center; color: #4CAF50;">Change Password</h2>
+
+    <!-- Current Password -->
+    <div style="margin-bottom: 15px;">
+      <label for="currentPassword" style="display: block; margin-bottom: 5px; color: #333;">Current Password</label>
+      <input type="password" id="currentPassword" name="currentPassword" required
+        style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+    </div>
+
+    <!-- New Password -->
+    <div style="margin-bottom: 15px;">
+      <label for="newPassword" style="display: block; margin-bottom: 5px; color: #333;">New Password</label>
+      <input type="password" id="newPassword" name="newPassword" required
+        style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+    </div>
+
+    <!-- Confirm New Password -->
+    <div style="margin-bottom: 15px;">
+      <label for="confirmPassword" style="display: block; margin-bottom: 5px; color: #333;">Confirm New
+        Password</label>
+      <input type="password" id="confirmPassword" name="confirmPassword" required
+        style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+    </div>
+
+    <!-- Optional Admin ID -->
+    <!-- If you need adminId in the form, add this hidden input -->
+    <input type="hidden" id="adminId" name="adminId" value="12345" /> <!-- Update with the correct value if needed -->
+
+    <!-- Submit Button -->
+    <div style="text-align: center;">
+      <button type="submit"
+        style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+        Update Password
+      </button>
+    </div>
+  </div>
+</form> --}}
