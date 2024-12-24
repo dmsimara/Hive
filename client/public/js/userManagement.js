@@ -110,9 +110,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
 
             if (data.success) {
-                alert("Tenant added successfully!");
                 tenantForm.reset();
-                window.location.href = '/admin/dashboard/userManagement';
+                alert("Tenant added successfully!");
+                setTimeout(() => {
+                    window.location.href = '/admin/dashboard/userManagement';
+                }, 1000);
             } else {
                 alert("Error adding tenant: " + data.message);
             }

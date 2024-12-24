@@ -813,8 +813,6 @@ export const addTenant = async (req, res) => {
         const isStayFromValid = Date.parse(stayFrom);
         const isStayToValid = Date.parse(stayTo);
 
-        console.log('Parsed Stay From:', isStayFromValid, 'Parsed Stay To:', isStayToValid);
-
         if (isNaN(isStayFromValid) || isNaN(isStayToValid)) {
             return res.status(400).json({ success: false, message: "Invalid date format." });
         }
@@ -832,7 +830,6 @@ export const addTenant = async (req, res) => {
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             establishmentId = decoded.establishmentId;
-            console.log('Decoded JWT Token:', decoded);
         } catch (err) {
             return res.status(401).json({ success: false, message: "Invalid or expired token." });
         }
@@ -854,11 +851,15 @@ export const addTenant = async (req, res) => {
         }
 
         const hashedPassword = await bcryptjs.hash(tenantPassword, 10);
-        console.log('Hashed Password:', hashedPassword);
 
         const room = await Room.findOne({ where: { room_id, establishmentId } });
         if (!room) {
             return res.status(400).json({ success: false, message: "Room not found." });
+        }
+
+        const establishment = await Establishment.findOne({ where: { establishment_id: establishmentId } });
+        if (!establishment) {
+            return res.status(404).json({ success: false, message: "Establishment not found." });
         }
 
         const newTenant = await Tenant.create({
@@ -877,12 +878,29 @@ export const addTenant = async (req, res) => {
             tenantGuardianNum
         });
 
-        console.log('New Tenant Created:', newTenant);
-
         room.roomRemainingSlot -= 1;
         await room.save();
 
         generateTokenAndSetTenantCookie(res, newTenant.tenant_id, establishmentId);
+
+        // Send confirmation email
+        const subject = 'Account Creation Notification';
+        const html = `
+           <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
+              <h2 style="color: #4CAF50; text-align: center;">Account Creation Notification</h2>
+              <p style="text-align: left;">We are writing to inform you that an account has been created for you under the establishment <strong>${establishment.eName}</strong>.</p> 
+              <p style="text-align: left;">For your privacy and security, we strongly recommend that you update your password immediately after logging in.</p>
+              <p style="text-align: left;">If you have any questions or did not expect this account creation, please contact our support team immediately at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.</p>
+              <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
+              <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
+              <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+              <p style="font-size: 0.8em; color: #777; text-align: center;">
+                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.
+              </p>
+           </div>
+        `;
+
+        await sendMail(tenantEmail, subject, null, html);
 
         return res.status(201).json({
             success: true,
@@ -912,7 +930,6 @@ export const addTenant = async (req, res) => {
         return res.status(500).json({ success: false, message: 'Failed to add tenant', error: error.message });
     }
 };
-
 
 export const addUnit = async (req, res) => {
     try {
