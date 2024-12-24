@@ -65,6 +65,48 @@
   <a href="#" onclick="deleteAdmin({{admin_id}}); return false;" class="btn btn-delete btn-sm">
     Delete Account
   </a>
+
+  <form id="updatePasswordForm">
+    <div
+      style="max-width: 400px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; font-family: Arial, sans-serif;">
+      <h2 style="text-align: center; color: #4CAF50;">Change Password</h2>
+
+      <!-- Current Password -->
+      <div style="margin-bottom: 15px;">
+        <label for="currentPassword" style="display: block; margin-bottom: 5px; color: #333;">Current Password</label>
+        <input type="password" id="currentPassword" name="currentPassword" required
+          style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+      </div>
+
+      <!-- New Password -->
+      <div style="margin-bottom: 15px;">
+        <label for="newPassword" style="display: block; margin-bottom: 5px; color: #333;">New Password</label>
+        <input type="password" id="newPassword" name="newPassword" required
+          style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+      </div>
+
+      <!-- Confirm New Password -->
+      <div style="margin-bottom: 15px;">
+        <label for="confirmPassword" style="display: block; margin-bottom: 5px; color: #333;">Confirm New
+          Password</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required
+          style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+      </div>
+
+      <!-- Optional Admin ID -->
+      <!-- If you need adminId in the form, add this hidden input -->
+      <input type="hidden" id="adminId" name="adminId" value="12345" /> <!-- Update with the correct value if needed -->
+
+      <!-- Submit Button -->
+      <div style="text-align: center;">
+        <button type="submit"
+          style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+          Update Password
+        </button>
+      </div>
+    </div>
+  </form>
+
 </div>
 
 <script src="/js/adminSettings.js"></script>
