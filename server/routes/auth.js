@@ -1,5 +1,5 @@
 import express from "express";
-import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, deleteTenant, viewAdmins, viewUnits, addUnitView, addUnit, deleteUnit, getOccupiedUnits, editTenant, updateTenant, addEvent, viewEvents, editEvent, deleteEvent, getEvents, updateEvent, viewNotices, pinnedNotices, permanentNotices, addNotice, togglePinned, togglePermanent, deleteNotice, getAvailableRooms, getNotices, searchTenants, searchRooms, deleteAdmin } from "../controllers/auth.controllers.js";
+import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, deleteTenant, viewAdmins, viewUnits, addUnitView, addUnit, deleteUnit, getOccupiedUnits, editTenant, updateTenant, addEvent, viewEvents, editEvent, deleteEvent, getEvents, updateEvent, viewNotices, pinnedNotices, permanentNotices, addNotice, togglePinned, togglePermanent, deleteNotice, getAvailableRooms, getNotices, searchTenants, searchRooms, deleteAdmin, updateAdminPassword, updateTenantPassword } from "../controllers/auth.controllers.js";
 import { verifyTenantToken, verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
@@ -36,6 +36,7 @@ router.get("/search", searchTenants);
 router.get("/searchRooms", searchRooms);
 router.get("/searchTenants", findTenants);
 router.delete("/deleteAdmin/:admin_id", deleteAdmin);
+router.post("/update-password", verifyToken, updateAdminPassword);
 
 
 // tenants
@@ -49,5 +50,6 @@ router.get("/editTenant/:tenant_id", editTenant);
 router.post("/editTenant/:tenant_id", updateTenant);
 router.delete("/deleteTenant/:tenant_id", deleteTenant);
 router.get("/view-admins", viewAdmins);
+router.post("/update-tenant-password", verifyTenantToken, updateTenantPassword);
 
 export default router;
