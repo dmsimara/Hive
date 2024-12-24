@@ -16,6 +16,7 @@ import Admin from "./models/admin.models.js";
 import Room from "./models/room.models.js";
 import Tenant from "./models/tenant.models.js";
 import Notice from "./models/notice.models.js";
+import Feedback from "./models/feedback.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
 import { addTenant, addTenantView, addUnitView, editTenant, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, updateEvent, updateTenant, viewAdmins, viewEvents, viewNotices, viewTenants, viewUnits } from './controllers/auth.controllers.js';
 import { createPool } from "mysql2";
@@ -534,6 +535,24 @@ app.get("/admin/announcements", verifyToken, async (req, res) => {
 
 // ADMIN PAGES (SETTINGS) ---------------------------------------------------------------------------
 app.get("/admin/settings", verifyToken, async (req, res) => {
+    try {
+        const admin = await viewAdmins(req, res);
+
+        const adminId = admin ? admin.admin_id : null;
+
+        res.render("adminSettings", {
+            title: "Hive",
+            styles: ["adminSettings"],
+            admin: admin || {},
+            admin_id: adminId 
+        });
+    } catch (error) {
+        console.error('Error fetching admin:', error);
+        res.status(500).send("An error occurred while retrieving admin data.");
+    }
+});
+
+app.post("/admin/settings", verifyToken, async (req, res) => {
     try {
         const admin = await viewAdmins(req, res);
 

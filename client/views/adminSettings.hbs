@@ -99,7 +99,59 @@
                 <i class="material-icons" id="btnIcon">dark_mode</i>
             </div>
             <p>Toggle dark mode settings here. Click the button to switch modes.</p>`,
-      feedbackSupport: "<h3>Feedback & Support</h3><p>Get help and provide feedback.</p>",
+      feedbackSupport: `
+         <h3>Feedback Form</h3>
+         <form action="#" method="POST">
+            <label for="userName">Name:</label>
+            <input type="text" id="userName" name="userName" placeholder="Enter your name" required>
+            
+            <label for="userEmail">Email:</label>
+            <input type="email" id="userEmail" name="userEmail" placeholder="Enter your email" required>
+            
+            <div class="emoji-feedback">
+               <p>How would you rate your experience?</p>
+               <label>
+                  <input type="radio" name="feedback" value="1" required>
+                  <div class="emoji-container">
+                     <span class="emoji">😞</span>
+                     <span class="label-text">Worst</span>
+                  </div>
+               </label>
+               <label>
+                  <input type="radio" name="feedback" value="2">
+                  <div class="emoji-container">
+                     <span class="emoji">😟</span>
+                     <span class="label-text">Not Good</span>
+                  </div>
+               </label>
+               <label>
+                  <input type="radio" name="feedback" value="3">
+                  <div class="emoji-container">
+                     <span class="emoji">😐</span>
+                     <span class="label-text">Fine</span>
+                  </div>
+               </label>
+               <label>
+                  <input type="radio" name="feedback" value="4">
+                  <div class="emoji-container">
+                     <span class="emoji">🙂</span>
+                     <span class="label-text">Look Good</span>
+                  </div>
+               </label>
+               <label>
+                  <input type="radio" name="feedback" value="5">
+                  <div class="emoji-container">
+                     <span class="emoji">😃</span>
+                     <span class="label-text">Very Good</span>
+                  </div>
+               </label>
+            </div>
+            
+            <textarea name="content" placeholder="Optional comments..."></textarea>
+            
+            <button type="submit">Submit Feedback</button>
+          </form>
+      `,
       passwordReset: `
         <h3>Password Reset</h3>
         <p>Change your password here.</p>
@@ -155,22 +207,60 @@
     contentPlaceholder.innerHTML = pages[savedPage];
     initializePage(savedPage);
 
-    // Initialize dark mode based on localStorage
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      document.body.classList.add("dark-theme");
-    }
-
-    // Event listener for sidebar links
     sidebarLinks.forEach((link) => {
       link.addEventListener("click", function (event) {
-        event.preventDefault(); // Prevent default link behavior
+        event.preventDefault();
         const contentId = event.target.getAttribute("data-content");
         contentPlaceholder.innerHTML = pages[contentId];
         localStorage.setItem("currentPage", contentId);
         initializePage(contentId);
       });
     });
+
+    function initializePage(contentId) {
+      if (contentId === "feedbackSupport") {
+        initializeFeedbackForm();
+      }
+    }
+
+    // Initialize the feedback form
+    function initializeFeedbackForm() {
+      const form = document.getElementById("feedbackForm");
+      if (!form) return;
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const userName = document.getElementById("userName").value;
+        const userEmail = document.getElementById("userEmail").value;
+        const feedback = document.querySelector('input[name="feedback"]:checked')?.value;
+        const content = document.querySelector("textarea[name='content']").value;
+
+        if (!userName || !userEmail || !feedback) {
+          alert("Please fill in all required fields.");
+          return;
+        }
+
+        // Prepare data to send
+        const feedbackData = { userName, userEmail, feedback, content };
+
+        fetch("/api/auth/send-feedback", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(feedbackData),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.message) {
+              alert(data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("Error submitting feedback:", error);
+            alert("An error occurred while submitting your feedback.");
+          });
+      });
+    }
 
     // Function to initialize the current page
     function initializePage(contentId) {

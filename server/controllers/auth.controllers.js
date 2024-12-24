@@ -4,6 +4,7 @@ import Room from '../models/room.models.js';
 import Establishment from '../models/establishment.models.js';
 import Calendar from '../models/calendar.models.js';
 import Notice from '../models/notice.models.js';
+import Feedback from '../models/feedback.models.js';
 import bcryptjs from 'bcryptjs';
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
@@ -964,6 +965,36 @@ export const addUnit = async (req, res) => {
     } catch (error) {
         console.error('Error adding room:', error);
         res.status(500).json({ message: 'Failed to add room', error: error.message });
+    }
+};
+
+export const addFeedback = async (req, res) => {
+    const adminId = req.adminId;  
+
+    try {
+      const { userName, userEmail, feedback, content } = req.body;
+
+      const newFeedback = await Feedback.create({
+        userName: userName,
+        tenant_id: null,   
+        admin_id: adminId,   
+        establishment_id: null,   
+        feedback_level: feedback,  
+        content: content,  
+        userEmail: userEmail,  
+      });
+  
+      // Send a success response
+      res.status(201).json({
+        message: 'Feedback submitted successfully!',
+        feedback: newFeedback,
+      });
+    } catch (error) {
+      console.error('Error saving feedback:', error);
+      res.status(500).json({
+        message: 'Error saving feedback.',
+        error: error.message,
+      });
     }
 };
 
