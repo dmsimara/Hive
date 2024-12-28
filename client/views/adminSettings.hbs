@@ -101,7 +101,7 @@
             <p>Toggle dark mode settings here. Click the button to switch modes.</p>`,
       feedbackSupport: `
          <h3>Feedback Form</h3>
-         <form action="#" method="POST">
+         <form id="feedbackForm">
             <label for="userName">Name:</label>
             <input type="text" id="userName" name="userName" placeholder="Enter your name" required>
             
@@ -225,42 +225,43 @@
 
     // Initialize the feedback form
     function initializeFeedbackForm() {
-      const form = document.getElementById("feedbackForm");
-      if (!form) return;
+    const form = document.querySelector("#feedbackForm"); // Use querySelector for dynamic elements
+    if (!form) return;
 
-      form.addEventListener("submit", function (event) {
+    form.addEventListener("submit", function (event) {
         event.preventDefault();
 
-        const userName = document.getElementById("userName").value;
-        const userEmail = document.getElementById("userEmail").value;
+        const userName = document.querySelector("#userName").value;
+        const userEmail = document.querySelector("#userEmail").value;
         const feedback = document.querySelector('input[name="feedback"]:checked')?.value;
         const content = document.querySelector("textarea[name='content']").value;
 
         if (!userName || !userEmail || !feedback) {
-          alert("Please fill in all required fields.");
-          return;
+            alert("Please fill in all required fields.");
+            return;
         }
 
         // Prepare data to send
         const feedbackData = { userName, userEmail, feedback, content };
 
         fetch("/api/auth/send-feedback", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(feedbackData),
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(feedbackData),
         })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.message) {
-              alert(data.message);
-            }
-          })
-          .catch((error) => {
-            console.error("Error submitting feedback:", error);
-            alert("An error occurred while submitting your feedback.");
-          });
-      });
-    }
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.message) {
+                    alert(data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error submitting feedback:", error);
+                alert("An error occurred while submitting your feedback.");
+            });
+    });
+}
+
 
     // Function to initialize the current page
     function initializePage(contentId) {

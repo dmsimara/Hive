@@ -17,8 +17,9 @@ import Room from "./models/room.models.js";
 import Tenant from "./models/tenant.models.js";
 import Notice from "./models/notice.models.js";
 import Feedback from "./models/feedback.models.js";
+import Utility from "./models/utility.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
-import { addTenant, addTenantView, addUnitView, editTenant, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, updateEvent, updateTenant, viewAdmins, viewEvents, viewNotices, viewTenants, viewUnits } from './controllers/auth.controllers.js';
+import { addTenant, addTenantView, addUnitView, editTenant, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, updateEvent, updateTenant, viewAdmins, viewEvents, viewNotices, viewTenants, viewUnits, viewUtilities } from './controllers/auth.controllers.js';
 import { createPool } from "mysql2";
 
 // Sets up `__filename` and `__dirname` in an ES module environment using Node.js.
@@ -552,23 +553,27 @@ app.get("/admin/settings", verifyToken, async (req, res) => {
     }
 });
 
-app.post("/admin/settings", verifyToken, async (req, res) => {
+// ADMIN PAGES (UTILITIES) ---------------------------------------------------------------------------
+app.get("/admin/utilities", verifyToken, async (req, res) => {
     try {
-        const admin = await viewAdmins(req, res);
-
+        const admin = await viewAdmins(req);
         const adminId = admin ? admin.admin_id : null;
 
-        res.render("adminSettings", {
+        const utilities = await viewUtilities(req);
+
+        res.render("adminUtils", {
             title: "Hive",
-            styles: ["adminSettings"],
+            styles: ["adminUtils"],
             admin: admin || {},
-            admin_id: adminId 
+            admin_id: adminId,
+            utilities: utilities || []
         });
     } catch (error) {
-        console.error('Error fetching admin:', error);
-        res.status(500).send("An error occurred while retrieving admin data.");
+        console.error('Error fetching data:', error);
+        res.status(500).send("An error occurred while retrieving data.");
     }
 });
+
 
   
 // TENANT PAGES (DASHBOARD) -------------------------------------------------------------------------

@@ -5,6 +5,7 @@ import Establishment from '../models/establishment.models.js';
 import Calendar from '../models/calendar.models.js';
 import Notice from '../models/notice.models.js';
 import Feedback from '../models/feedback.models.js';
+import Utility from '../models/utility.models.js';
 import bcryptjs from 'bcryptjs';
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
@@ -781,6 +782,146 @@ export const viewAdmins = async (req) => {
     }
 };
 
+export const viewUtilities = async (req) => {
+    try {
+        const establishmentId = req.establishmentId;
+        const { roomId, utilityType } = req.query || {}; 
+
+        const conditions = { establishment_id: establishmentId };
+        if (roomId) {
+            conditions.room_id = roomId;
+        }
+        if (utilityType) {
+            conditions[Op.and] = Sequelize.where(
+                Sequelize.fn('LOWER', Sequelize.col('utilityType')),
+                'LIKE',
+                `%${utilityType.toLowerCase()}%`
+            );
+        }
+
+        const rows = await Utility.findAll({
+            where: conditions,
+            include: {
+                model: Room,
+                attributes: ['roomNumber', 'roomType', 'floorNumber'],
+            },
+        });
+
+        if (!rows || rows.length === 0) {
+            return []; 
+        }
+
+        return rows.map(row => {
+            const utility = row.get({ plain: true });
+            return {
+                utility_id: utility.utility_id,
+                utilityType: utility.utilityType,
+                charge: utility.charge,
+                statementDate: utility.statementDate,
+                dueDate: utility.dueDate,
+                status: utility.status,
+                roomId: utility.room_id,
+                roomNumber: utility.Room?.roomNumber,
+                roomType: utility.Room?.roomType,
+                floorNumber: utility.Room?.floorNumber,
+            };
+        });
+    } catch (error) {
+        console.error('Error fetching utilities:', error);
+        throw error;
+    }
+};
+
+export const addUtility = async (req, res) => {
+    const { utilityType, charge, statementDate, dueDate, status, roomId } = req.body;
+
+    if (!utilityType || !charge || !statementDate || !dueDate || !status || !roomId) {
+        return res.status(400).json({ success: false, message: "All fields are required." });
+    }
+
+    const parsedCharge = parseFloat(charge);
+    if (isNaN(parsedCharge) || parsedCharge <= 0) {
+        return res.status(400).json({ success: false, message: "Invalid charge value." });
+    }
+
+    try {
+        console.log('Incoming request data:', req.body);
+
+        const token = req.cookies.token;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const establishmentId = decoded.establishmentId;
+
+        console.log('Decoded JWT:', decoded);
+
+        const room = await Room.findOne({ where: { room_id: roomId, establishment_id: establishmentId } });
+        if (!room) {
+            return res.status(400).json({ success: false, message: "Room not found for this establishment." });
+        }
+
+        console.log('Querying Utilities for room:', {
+            establishmentId,
+            roomId,
+            utilityType,
+        });
+
+        const utilitiesForRoom = await Utility.findAll({
+            where: {
+                establishment_id: establishmentId,
+                room_id: roomId
+            }
+        });
+
+        console.log('Fetched utilities for room:', utilitiesForRoom);
+
+        let totalBalance = 0;
+        utilitiesForRoom.forEach((utility) => {
+            totalBalance += parseFloat(utility.charge) || 0; 
+        });
+
+        totalBalance += parsedCharge;
+
+        console.log('Total balance for the utilities:', totalBalance);
+
+        totalBalance = parseFloat(totalBalance.toFixed(2));
+
+        const rooms = await Room.findAll({ where: { establishment_id: establishmentId } });
+        const tenantCounts = await Promise.all(rooms.map(async (room) => {
+            const tenantCountInRoom = await Tenant.count({ where: { room_id: room.room_id } });
+            return tenantCountInRoom;
+        }));
+
+        console.log('Tenant counts:', tenantCounts);
+
+        const totalTenants = tenantCounts.reduce((acc, count) => acc + count, 0);
+        if (totalTenants === 0) {
+            return res.status(400).json({ success: false, message: "No tenants found for this establishment." });
+        }
+
+        let perTenant = totalBalance / totalTenants;
+        perTenant = parseFloat(perTenant.toFixed(2));  
+
+        const newUtility = await Utility.create({
+            utilityType,
+            charge: parsedCharge, 
+            statementDate,
+            dueDate,
+            status,
+            room_id: roomId,
+            establishment_id: establishmentId,
+            totalBalance,
+            perTenant,
+        });
+
+        return res.status(201).json({ message: 'Utility added successfully!', utility: newUtility });
+    } catch (error) {
+        console.error('Error adding utility:', error);
+        if (!res.headersSent) {
+            return res.status(500).json({ success: false, message: 'Failed to add utility', error: error.message });
+        }
+    }
+};
+
+
 export const addTenant = async (req, res) => {
     const { 
         tenantFirstName, 
@@ -1145,6 +1286,26 @@ export const deleteUnit = (req, res) => {
     });
 };
 
+export const deleteUtility = (req, res) => {
+    const utilityId = req.params.utility_id;
+    const connection = connectDB();
+
+    connection.query('DELETE FROM Utilities WHERE utility_id = ?', [utilityId], (err, result) => {
+        connection.end();
+
+        if (err) {
+            console.error('Error deleting utility data:', err);
+            return res.status(500).json({ success: false, message: "Error deleting utility data" });
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: "Utility not found" });
+        }
+
+        res.json({ success: true, message: "Utility successfully deleted" });
+    });
+};
+
 export const getOccupiedUnits = async (req, res) => {
     const establishmentId = req.establishmentId; 
 
@@ -1172,6 +1333,8 @@ export const getOccupiedUnits = async (req, res) => {
         }
     }
 };
+
+
 
 export const getAvailableRooms = async (req, res) => {
     try {

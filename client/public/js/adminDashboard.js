@@ -23,29 +23,37 @@ document.addEventListener("DOMContentLoaded", () => {
     logoutButton.addEventListener("click", logout);
 });
 
-async function logout() {
-    const isConfirmed = confirm("Are you sure you want to log out?");
-    if (!isConfirmed) return;
+async function handleLogout() {
+    const isConfirmed = confirm("Are you sure you want to logout?");
+    
+    if (!isConfirmed) {
+        return;
+    }
 
     try {
-        const response = await fetch("/api/auth/adminLogout", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
+        const response = await fetch('/api/auth/adminLogout', {
+            method: 'POST',  
+            credentials: 'include',  
+            headers: {
+                'Content-Type': 'application/json',
+            },
         });
 
         const data = await response.json();
 
         if (response.ok) {
-            alert(data.message);
-            window.location.href = "/"; // Redirect to homepage after logout
+            alert(data.message);  
+            window.location.href = "/";  
         } else {
-            alert(data.message || "Logout failed. Please try again.");
+            alert(`Logout failed: ${data.message || 'An error occurred'}`);
         }
     } catch (error) {
-        alert("An error occurred during logout. Please try again later.");
-        console.error("Error:", error);
+        console.error('Error logging out:', error);
+        alert('An error occurred while logging out. Please try again.');
     }
 }
+
+document.getElementById('logoutButton').addEventListener('click', handleLogout);
 
 async function fetchTenants(searchTerm, establishmentId) {
     try {
@@ -311,3 +319,4 @@ function loadData(query = '') {
 searchInput.addEventListener('input', (event) => {
     loadData(event.target.value);
 });
+

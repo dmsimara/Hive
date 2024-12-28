@@ -1,5 +1,5 @@
 import express from "express";
-import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, deleteTenant, viewAdmins, viewUnits, addUnitView, addUnit, deleteUnit, getOccupiedUnits, editTenant, updateTenant, addEvent, viewEvents, editEvent, deleteEvent, getEvents, updateEvent, viewNotices, pinnedNotices, permanentNotices, addNotice, togglePinned, togglePermanent, deleteNotice, getAvailableRooms, getNotices, searchTenants, searchRooms, deleteAdmin, updateAdminPassword, updateTenantPassword, addFeedback } from "../controllers/auth.controllers.js";
+import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, deleteTenant, viewAdmins, viewUnits, addUnitView, addUnit, deleteUnit, getOccupiedUnits, editTenant, updateTenant, addEvent, viewEvents, editEvent, deleteEvent, getEvents, updateEvent, viewNotices, pinnedNotices, permanentNotices, addNotice, togglePinned, togglePermanent, deleteNotice, getAvailableRooms, getNotices, searchTenants, searchRooms, deleteAdmin, updateAdminPassword, updateTenantPassword, addFeedback, addUtility, viewUtilities, deleteUtility } from "../controllers/auth.controllers.js";
 import { verifyTenantToken, verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
@@ -16,9 +16,11 @@ router.get("/view-units", viewUnits);
 router.get("/addUnitView", addUnitView);
 router.post("/addUnit", addUnit);
 router.delete("/deleteUnit/:room_id", deleteUnit);
+router.delete("/delete/utility/:utility_id", deleteUtility);
 router.get("/occupied-units", getOccupiedUnits);
 router.post("/add/event", addEvent);
 router.get("/view/events", viewEvents);
+router.get("/view/utilities", verifyToken, viewUtilities);
 router.post("/edit/event", editEvent);
 router.delete("/delete/event/:eventId", deleteEvent);
 router.get("/get/events", getEvents);
@@ -32,12 +34,14 @@ router.patch("/view/notices/:noticeId/toggle_pinned", togglePinned);
 router.patch("/view/notices/:noticeId/toggle_permanent", togglePermanent);
 router.delete("/view/notices/:noticeId/delete", deleteNotice);
 router.get("/getAvailableRooms", getAvailableRooms);
+// router.get("/getTotalTenants", verifyToken, getTotalTenants);
 router.get("/search", searchTenants);
 router.get("/searchRooms", searchRooms);
 router.get("/searchTenants", findTenants);
 router.delete("/deleteAdmin/:admin_id", deleteAdmin);
 router.post("/update-password", verifyToken, updateAdminPassword);
 router.post("/submit-feedback", verifyToken, addFeedback);
+router.post("/add/utility", verifyToken, addUtility);
 
 
 // tenants
