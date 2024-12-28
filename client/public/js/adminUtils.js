@@ -66,7 +66,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Fetch available rooms when modal is shown
     document.getElementById("addUtilityModal").addEventListener("show.bs.modal", async () => {
         try {
             const response = await fetch('/api/auth/getAvailableRooms');
@@ -86,7 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Utility form submission
     utilityForm.addEventListener("submit", async function (event) {
         event.preventDefault();
 
@@ -100,7 +98,6 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         try {
-            // Send request to add utility
             const response = await fetch('/api/auth/add/utility', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -109,19 +106,16 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
 
             if (data.success) {
-                // If success, reset the form and hide modal
                 utilityForm.reset();
                 alert("Utility added successfully!");
 
                 const utilityModal = new bootstrap.Modal(document.getElementById('addUtilityModal'));
                 utilityModal.hide();
 
-                // Reload the page after a short delay
                 setTimeout(() => {
                     window.location.reload();
                 }, 1000);
             } else {
-                // If not success, show the error message
                 alert("Error adding utility: " + (data.message || "An unknown error occurred"));
             }
         } catch (error) {

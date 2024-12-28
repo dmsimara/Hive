@@ -1153,6 +1153,30 @@ export const addUnitView = async (req, res) => {
     });
 }
 
+export const editUtility = async (req, res) => {
+    const utilityId = req.params.utility_id;
+
+    if (!utilityId) {
+        return res.status(400).send('Utility ID is required');
+    }
+
+    try {
+        const utility = await Utility.findOne({
+            where: { utility_id: utilityId },
+        });
+
+        if (!utility) {
+            return res.status(404).send('Utility not found');
+        }
+
+        res.render('editUtility', { utility });
+    } catch (error) {
+        console.error('Error fetching utility data:', error);
+        res.status(500).send('Error fetching utility data');
+    }
+};
+
+
 export const editTenant = async (req, res) => {
     const tenantId = req.params.tenant_id; 
 
@@ -1173,6 +1197,36 @@ export const editTenant = async (req, res) => {
     } catch (error) {
         console.error('Error fetching tenant data:', error);
         res.status(500).send('Error fetching tenant data');
+    }
+};
+
+export const updateUtility = async (req, res) => {
+    const { utilityType, charge, statementDate, dueDate, status } = req.body;
+    const utilityId = req.params.utility_id;
+
+    try {
+        const connection = connectDB();
+
+        const updateQuery = `
+           UPDATE Utilities
+           SET utilityType = ?, charge = ?, statementDate = ?, dueDate = ?, status = ?
+           WHERE utility_id = ?
+        `;
+        const [updateResult] = await connection.promise().query(updateQuery, [
+            utilityType, charge, statementDate, dueDate, status, utilityId
+        ]);
+
+        if (updateResult.affectedRows > 0) {
+            const [rows] = await connection.promise().query('SELECT * FROM Utilities WHERE utility_id = ?', [utilityId]);
+            connection.end(); 
+            return res.json({ success: true, message: 'Utility updated successfully', utility: rows[0] });
+        } else {
+            connection.end();
+            return res.status(404).send("Utility not found or no changes made.");
+        }
+    } catch (error) {
+        console.error('Error updating utility:', error);
+        return res.status(500).json({ success: false, message: 'Error updating utility data', error: error.message });
     }
 };
 

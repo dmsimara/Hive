@@ -19,7 +19,7 @@ import Notice from "./models/notice.models.js";
 import Feedback from "./models/feedback.models.js";
 import Utility from "./models/utility.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
-import { addTenant, addTenantView, addUnitView, editTenant, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, updateEvent, updateTenant, viewAdmins, viewEvents, viewNotices, viewTenants, viewUnits, viewUtilities } from './controllers/auth.controllers.js';
+import { addTenant, addTenantView, addUnitView, editTenant, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, updateEvent, updateTenant, updateUtility, viewAdmins, viewEvents, viewNotices, viewTenants, viewUnits, viewUtilities } from './controllers/auth.controllers.js';
 import { createPool } from "mysql2";
 
 // Sets up `__filename` and `__dirname` in an ES module environment using Node.js.
@@ -331,6 +331,29 @@ app.get("/admin/dashboard/userManagement/editTenant/:tenant_id", verifyToken, as
     }
 });
 
+app.get("/admin/utilities/edit/:utility_id", verifyToken, async (req, res) => {
+    try {
+        const utility = await Utility.findOne({ where: { utility_id: req.params.utility_id } });
+        const admins = await viewAdmins(req, res);
+
+        if (!utility) {
+            return res.status(404).json({ success: false, message: 'Utility not found' });
+        }
+
+        const plainUtility = utility.get({ plain: true });
+
+        res.render("editUtility", {
+            title: "Hive",
+            styles: ["editUtility"],
+            rows: [plainUtility], 
+            admin: admins
+        })
+    } catch (error) {
+        
+    }
+})
+
+app.put('/api/auth/updateUtility/:utilityId', updateUtility);
 app.put('/api/auth/updateTenant/:tenantId', updateTenant);
 app.get('/api/auth/getAvailableRooms', verifyToken, getAvailableRooms);
 app.post("/api/auth/addTenant", verifyToken, addTenant); 

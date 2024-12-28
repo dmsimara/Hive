@@ -107,7 +107,7 @@
           <td>{{this.dueDate}}</td>
           <td>{{this.status}}</td>
           <td class="text-end">
-            <button class="btn btn-primary btn-sm edit-btn">Edit</button>
+            <a class="btn btn-primary btn-sm edit-btn" href="/admin/utilities/edit/{{this.utility_id}}">Edit</a>
             <button class="btn btn-danger btn-sm" onclick="deleteUtility({{this.utility_id}})">Delete</button>
           </td>
         </tr>
@@ -134,11 +134,11 @@
               <select name="utilityType" id="utilityType" class="form-select form-select-sm" required>
                 <option value="" disabled>Select Utility</option>
                 <option value="unit rental" selected>Unit Rental</option>
-                <option value="electricity consumption">Electricity</option>
-                <option value="water usage">Water</option>
-                <option value="internet connection">Internet</option>
-                <option value="maintenance fees">Maintenance</option>
-                <option value="dorm amenities">Dorm Amenities</option>
+                <option value="electricity consumption" selected>Electricity</option>
+                <option value="water usage" selected>Water</option>
+                <option value="internet connection" selected>Internet</option>
+                <option value="maintenance fees" selected>Maintenance</option>
+                <option value="dorm amenities" selected>Dorm Amenities</option>
               </select>
             </div>
 
@@ -176,10 +176,10 @@
               <select name="status" id="status" class="form-select form-select-sm" required>
                 <option value="" disabled>Select Status</option>
                 <option value="unpaid" selected>Unpaid</option>
-                <option value="paid">Paid</option>
-                <option value="overdue">Overdue</option>
-                <option value="partial">Partial</option>
-                <option value="cancelled">Cancelled</option>
+                <option value="paid" selected>Paid</option>
+                <option value="overdue" selected>Overdue</option>
+                <option value="partial" selected>Partial</option>
+                <option value="cancelled" selected>Cancelled</option>
               </select>
             </div>
 
