@@ -89,32 +89,37 @@
       <thead class="table-dark">
         <tr>
           <th scope="col">Room #</th>
-          <th scope="col">Utilities</th>
-          <th scope="col">Charge</th>
-          <th scope="col">Statement Date</th>
-          <th scope="col">Due Date</th>
-          <th scope="col">Status</th>
+          <th scope="col">Room Type</th>
+          <th scope="col">Shared Balance</th>
+          <th scope="col">Total Balance</th>
           <th scope="col" class="text-end">Action</th>
         </tr>
       </thead>
       <tbody id="results">
+        {{#if utilities.length}}
         {{#each utilities}}
-        <tr>
+        <tr class="room-row" data-room-number="{{this.roomNumber}}">
           <td>{{this.roomNumber}}</td>
-          <td>{{this.utilityType}}</td>
-          <td>{{this.charge}}</td>
-          <td>{{this.statementDate}}</td>
-          <td>{{this.dueDate}}</td>
-          <td>{{this.status}}</td>
+          <td>{{this.roomType}}</td>
+          <td>{{this.perTenant}}</td>
+          <td>{{this.totalBalance}}</td>
           <td class="text-end">
-            <a class="btn btn-primary btn-sm edit-btn" href="/admin/utilities/edit/{{this.utility_id}}">Edit</a>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#manageUtilityModal"
+              onclick="loadTenants({{this.room_id}})" class="btn manage-button btn-small">Manage</a>
             <button class="btn btn-danger btn-sm" onclick="deleteUtility({{this.utility_id}})">Delete</button>
           </td>
         </tr>
         {{/each}}
+        {{else}}
+        <tr>
+          <td colspan="5" class="text-center">No utilities added yet</td>
+        </tr>
+        {{/if}}
       </tbody>
     </table>
   </div>
+
+
 
   {{!-- Add Utility Modal --}}
   <div class="modal fade" id="addUtilityModal" tabindex="-1" aria-labelledby="addUtilityModalLabel" aria-hidden="true">
@@ -189,6 +194,39 @@
       </div>
     </div>
   </div>
+
+  {{!-- Manage Utilities Modal --}}
+  <div class="modal fade" id="manageUtilityModal" tabindex="-1" aria-labelledby="manageUtilityModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title manage-title" id="manageUtilityModalLabel">Utility List</h5>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered">
+            <thead class="maroon-header">
+              <tr>
+                <th scope="col">Utility Type</th>
+                <th scope="col">Charge</th>
+                <th scope="col">Statement Date</th>
+                <th scope="col">Due Date</th>
+                <th scope="col">Status</th>
+                <th scope="col" class="text-end">Action</th>
+              </tr>
+            </thead>
+            <tbody id="utilityList">
+
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script src="/js/adminUtils.js"></script>

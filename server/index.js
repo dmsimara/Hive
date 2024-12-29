@@ -196,6 +196,20 @@ const getTenantsByRoomId = async (roomId) => {
     }
 };
 
+const getUtilitiesByRoomId = async (room_id) => {
+    try {
+        const utilities = await Utility.findAll({
+            where: {
+                room_id: room_id
+            }
+        });
+        return utilities;
+    } catch (error) {
+        console.error('Error fetching utilities:', error);
+        return [];
+    }
+}
+
 const getRoomDetails = async (roomId) => {
     try {
         const room = await Room.findOne({
@@ -227,6 +241,19 @@ app.get('/admin/manage/unit/tenants/:room_id', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
+app.get('/admin/utilities/:room_id', async (req, res) => {
+    const { room_id } = req.params;
+    try {
+        const utilities = await getUtilitiesByRoomId(room_id);
+        console.log('Utilities:', utilities);  // Check the data here
+        res.json({ utilities });
+    } catch (error) {
+        console.error('Error fetching utilities:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 
 app.get('/admin/manage/unit/tenants', async (req, res) => {
     const roomId = req.query.room_id;

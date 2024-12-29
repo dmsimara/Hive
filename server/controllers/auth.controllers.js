@@ -820,7 +820,9 @@ export const viewUtilities = async (req) => {
                 statementDate: utility.statementDate,
                 dueDate: utility.dueDate,
                 status: utility.status,
-                roomId: utility.room_id,
+                perTenant: utility.perTenant,
+                totalBalance: utility.totalBalance,
+                room_id: utility.room_id,
                 roomNumber: utility.Room?.roomNumber,
                 roomType: utility.Room?.roomType,
                 floorNumber: utility.Room?.floorNumber,
@@ -1224,36 +1226,78 @@ export const updateUtility = async (req, res) => {
     const parsedCharge = parseFloat(charge);
 
     try {
-        const utility = await Utility.findOne({ where: { utility_id: utilityId } });
-        if (!utility) {
+        const connection = connectDB();
+
+        const [utilityRows] = await connection.promise().query(
+            'SELECT * FROM Utilities WHERE utility_id = ?',
+            [utilityId]
+        );
+
+        if (utilityRows.length === 0) {
+            connection.end();
             return res.status(404).json({ success: false, message: "Utility not found." });
         }
 
-        utility.charge = parsedCharge;
-        await utility.save();
-        console.log(`Updated Utility ID ${utility.utility_id} with charge: ${parsedCharge}`);
+        const utility = utilityRows[0];
+        
+        const updatedUtilityData = {
+            charge: parsedCharge,
+            utilityType: utilityType || utility.utilityType,
+            statementDate: statementDate || utility.statementDate,
+            dueDate: dueDate || utility.dueDate,
+            status: status || utility.status,
+        };
 
-        const utilitiesForRoom = await Utility.findAll({
-            where: {
-                establishment_id: utility.establishment_id,
-                room_id: utility.room_id,
-            },
-        });
+        const [updateUtilityResult] = await connection.promise().query(
+            'UPDATE Utilities SET charge = ?, utilityType = ?, statementDate = ?, dueDate = ?, status = ? WHERE utility_id = ?',
+            [
+                updatedUtilityData.charge,
+                updatedUtilityData.utilityType,
+                updatedUtilityData.statementDate,
+                updatedUtilityData.dueDate,
+                updatedUtilityData.status,
+                utilityId
+            ]
+        );
+
+        if (updateUtilityResult.affectedRows === 0) {
+            connection.end();
+            return res.status(500).json({ success: false, message: "Failed to update utility." });
+        }
+
+        console.log(`Updated Utility ID ${utility.utility_id} with charge: ${parsedCharge}, utilityType: ${updatedUtilityData.utilityType}, statementDate: ${updatedUtilityData.statementDate}, dueDate: ${updatedUtilityData.dueDate}, status: ${updatedUtilityData.status}`);
+
+        const [utilitiesForRoomRows] = await connection.promise().query(
+            'SELECT * FROM Utilities WHERE establishment_id = ? AND room_id = ?',
+            [utility.establishment_id, utility.room_id]
+        );
 
         let totalBalance = 0;
-        utilitiesForRoom.forEach((u) => {
-            totalBalance += parseFloat(u.charge || 0);  
+        utilitiesForRoomRows.forEach((u) => {
+            totalBalance += parseFloat(u.charge || 0);
         });
 
         console.log('Total Balance after update:', totalBalance);
 
-        const rooms = await Room.findAll({ where: { establishment_id: utility.establishment_id } });
-        const tenantCounts = await Promise.all(
-            rooms.map(async (room) => await Tenant.count({ where: { room_id: room.room_id } }))
+        const [rooms] = await connection.promise().query(
+            'SELECT * FROM Rooms WHERE establishment_id = ?',
+            [utility.establishment_id]
         );
+
+        const tenantCounts = await Promise.all(
+            rooms.map(async (room) => {
+                const [tenantCount] = await connection.promise().query(
+                    'SELECT COUNT(*) AS tenant_count FROM Tenants WHERE room_id = ?',
+                    [room.room_id]
+                );
+                return tenantCount[0].tenant_count;
+            })
+        );
+
         const totalTenants = tenantCounts.reduce((acc, count) => acc + count, 0);
 
         if (totalTenants === 0) {
+            connection.end();
             return res.status(400).json({ success: false, message: "No tenants found in the establishment." });
         }
 
@@ -1261,18 +1305,21 @@ export const updateUtility = async (req, res) => {
         console.log(`Per Tenant Share: ${perTenant}`);
 
         await Promise.all(
-            utilitiesForRoom.map(async (u) => {
-                u.totalBalance = totalBalance;
-                u.perTenant = perTenant;
-                await u.save();
+            utilitiesForRoomRows.map(async (u) => {
+                const [updateUtility] = await connection.promise().query(
+                    'UPDATE Utilities SET totalBalance = ?, perTenant = ? WHERE utility_id = ?',
+                    [totalBalance, perTenant, u.utility_id]
+                );
                 console.log(`Updated Utility ID ${u.utility_id} with Total Balance: ${totalBalance} and Per Tenant: ${perTenant}`);
             })
         );
 
+        connection.end();
+
         return res.json({
             success: true,
             message: "Utility updated successfully.",
-            utility,
+            utility: updatedUtilityData,
         });
     } catch (error) {
         console.error('Error updating utility:', error);
@@ -1283,6 +1330,7 @@ export const updateUtility = async (req, res) => {
         });
     }
 };
+
 
 export const updateTenant = async (req, res) => {
     const { tenantFirstName, tenantLastName, tenantEmail, mobileNum, gender, tenantGuardianName, tenantAddress, tenantGuardianNum } = req.body;

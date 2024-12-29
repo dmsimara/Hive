@@ -6,11 +6,11 @@ function toggleMenu() {
 
 // async function handleLogout() {
 //     const isConfirmed = confirm("Are you sure you want to logout?");
-    
+//     
 //     if (!isConfirmed) {
 //         return;
 //     }
-
+//
 //     try {
 //         const response = await fetch('/api/auth/adminLogout', {
 //             method: 'POST',  
@@ -19,9 +19,9 @@ function toggleMenu() {
 //                 'Content-Type': 'application/json',
 //             },
 //         });
-
+//
 //         const data = await response.json();
-
+//
 //         if (response.ok) {
 //             alert(data.message);  
 //             window.location.href = "/";  
@@ -103,25 +103,27 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(utilityData)
             });
+        
             const data = await response.json();
-
+        
             if (data.success) {
                 utilityForm.reset();
                 alert("Utility added successfully!");
-
+        
                 const utilityModal = new bootstrap.Modal(document.getElementById('addUtilityModal'));
                 utilityModal.hide();
-
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
             } else {
-                alert("Error adding utility: " + (data.message || "An unknown error occurred"));
+                alert(data.message || "An unknown error occurred");
             }
         } catch (error) {
             console.error('Error:', error);
             alert('There was an error adding the utility.');
+        } finally {
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
         }
+        
     });
 });
 
@@ -151,3 +153,86 @@ async function deleteUtility(utilityId) {
         alert('An error occurred while deleting the utility: ' + error.message);
     }
 }
+
+function loadTenants(room_id) {
+    fetch(`/admin/utilities/${room_id}`)  
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const utilityList = document.getElementById("utilityList");
+
+            if (utilityList) utilityList.innerHTML = ''; 
+
+            if (!data.utilities || data.utilities.length === 0) {
+                const row = document.createElement("tr");
+                row.innerHTML = `<td colspan="5" class="text-center">No utilities added yet</td>`;  
+                if (utilityList) utilityList.appendChild(row);
+            } else {
+                data.utilities.forEach(utility => {
+                    const row = document.createElement("tr");
+
+                    row.innerHTML = `
+                        <td>${utility.utilityType}</td>
+                        <td>${utility.charge}</td>
+                        <td>${utility.statementDate}</td>
+                        <td>${utility.dueDate} days</td>
+                        <td>${utility.status}</td>
+                        <td class="text-end">
+                            <a class="btn btn-primary btn-sm edit-btn" href="/admin/utilities/edit/${utility.utility_id}">Edit</a>
+                            <button class="btn btn-danger btn-small remove-btn" onclick="removeUtility('${utility.utility_id}')">Remove</button>
+                        </td>
+                    `;
+
+                    if (utilityList) utilityList.appendChild(row);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error loading utilities:', error);
+            alert("An error occurred while loading the utilities.");
+        });
+}
+
+async function removeUtility(utilityId) {
+    if (confirm("Are you sure you want to remove this utility?")) {
+        try {
+            const response = await fetch(`/api/auth/delete/utility/${utilityId}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert("Utility removed successfully");
+                location.reload();
+            } else {
+                alert("Error removing tenant");
+            }
+        } catch (error) {
+            console.error('Error removing utility:', error);
+        }
+    }
+}
+
+window.addEventListener('DOMContentLoaded', (event) => {
+    const roomRows = document.querySelectorAll('.room-row');
+    const seenRooms = new Set();
+  
+    roomRows.forEach(row => {
+      const roomNumber = row.dataset.roomNumber;
+  
+      if (seenRooms.has(roomNumber)) {
+        row.remove();  // Remove duplicate row
+      } else {
+        seenRooms.add(roomNumber);  // Mark this room as seen
+      }
+    });
+});
