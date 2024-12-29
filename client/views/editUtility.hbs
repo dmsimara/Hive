@@ -82,8 +82,7 @@
                     <option value="water usage" {{#if (eq this.utilityType "water usage" )}}selected{{/if}}>Water
                     </option>
                     <option value="internet connection" {{#if (eq this.utilityType "internet connection"
-                        )}}selected{{/if}}>
-                        Internet</option>
+                        )}}selected{{/if}}>Internet</option>
                     <option value="maintenance fees" {{#if (eq this.utilityType "maintenance fees" )}}selected{{/if}}>
                         Maintenance</option>
                     <option value="dorm amenities" {{#if (eq this.utilityType "dorm amenities" )}}selected{{/if}}>Dorm
@@ -114,14 +113,15 @@
             <div class="col">
                 <label for="editStatus" class="form-label">Status</label>
                 <select name="status" id="editStatus" class="form-select form-select-sm">
-                    <option value="unpaid" {{#if (eq this.status "unpaid" )}} selected{{/if}}>Unpaid</option>
-                    <option value="paid" {{#if (eq this.status "paid" )}} selected{{/if}}>Paid</option>
-                    <option value="overdue" {{#if (eq this.status "overdue" )}} selected{{/if}}>Overdue</option>
-                    <option value="partial" {{#if (eq this.status "partial" )}} selected{{/if}}>Partial</option>
-                    <option value="cancelled" {{#if (eq this.status "cancelled" )}} selected{{/if}}>Cancelled</option>
+                    <option value="unpaid" {{#if (eq this.status "unpaid" )}}selected{{/if}}>Unpaid</option>
+                    <option value="paid" {{#if (eq this.status "paid" )}}selected{{/if}}>Paid</option>
+                    <option value="overdue" {{#if (eq this.status "overdue" )}}selected{{/if}}>Overdue</option>
+                    <option value="partial" {{#if (eq this.status "partial" )}}selected{{/if}}>Partial</option>
+                    <option value="cancelled" {{#if (eq this.status "cancelled" )}}selected{{/if}}>Cancelled</option>
                 </select>
             </div>
         </div>
+
         <div class="d-flex justify-content-end mt-3">
             <button id="closeButton" type="button" class="btn btn-secondary btn-sm me-2">Close</button>
             <button id="editUtilityButton" type="submit" class="btn btn-primary btn-sm">Save Changes</button>
@@ -129,5 +129,6 @@
     </form>
     {{/each}}
 </div>
+
 
 <script src="/js/editUtility.js"></script>
