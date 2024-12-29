@@ -291,17 +291,6 @@ table {
   transition: all 0.3s ease; 
 }
 
-thead tr:first-child th {
-  background-color: var(--maroon) !important;
-  color: white !important;
-  text-transform: uppercase;
-  font-weight: 600;
-  padding: 16px 20px; 
-  text-align: center;
-  font-size: 14px;
-  border-bottom: 2px solid brown; 
-}
-
 table td {
   text-align: left;
   padding: 16px 20px;
@@ -331,18 +320,6 @@ table td:last-child, table th:last-child {
   margin: 15px 0 10px;
   border-radius: 5px; 
 }
-
-
-/* Status Badge */
-.status-badge {
-  display: inline-block;
-  padding: 2px 8px;
-  font-weight: 600;
-  color: var(--orange);
-  background-color: rgba(254, 127, 66, 0.18); 
-  border-radius: 20px;
-}
-
 
 /* Action Button - Edit */
 .action-button.edit {
@@ -378,27 +355,6 @@ table td:last-child, table th:last-child {
 .action-button.delete:hover {
   background-color: var(--dark-gray); 
 }
-
-
-/* Pagination */
-.pagination {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-
-.pagination a {
-  text-decoration: none;
-  padding: 8px 16px;
-  margin: 0 5px;
-  border-radius: 8px;
-  font-weight: 600;
-  color: var(--dark-gray);
-  border: 1px solid var(--gray);
-  transition: background-color 0.3s, color 0.3s;
-}
-
 
 .btn-edit {
   background-color: var(--orange); 

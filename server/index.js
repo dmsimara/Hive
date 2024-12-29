@@ -16,8 +16,10 @@ import Admin from "./models/admin.models.js";
 import Room from "./models/room.models.js";
 import Tenant from "./models/tenant.models.js";
 import Notice from "./models/notice.models.js";
+import Feedback from "./models/feedback.models.js";
+import Utility from "./models/utility.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
-import { addTenant, addTenantView, addUnitView, editTenant, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, updateEvent, updateTenant, viewAdmins, viewEvents, viewNotices, viewTenants, viewUnits } from './controllers/auth.controllers.js';
+import { addTenant, addTenantView, addUnitView, editTenant, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, updateEvent, updateTenant, updateUtility, viewAdmins, viewEvents, viewNotices, viewTenants, viewUnits, viewUtilities } from './controllers/auth.controllers.js';
 import { createPool } from "mysql2";
 
 // Sets up `__filename` and `__dirname` in an ES module environment using Node.js.
@@ -194,6 +196,20 @@ const getTenantsByRoomId = async (roomId) => {
     }
 };
 
+const getUtilitiesByRoomId = async (room_id) => {
+    try {
+        const utilities = await Utility.findAll({
+            where: {
+                room_id: room_id
+            }
+        });
+        return utilities;
+    } catch (error) {
+        console.error('Error fetching utilities:', error);
+        return [];
+    }
+}
+
 const getRoomDetails = async (roomId) => {
     try {
         const room = await Room.findOne({
@@ -225,6 +241,19 @@ app.get('/admin/manage/unit/tenants/:room_id', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
+app.get('/admin/utilities/:room_id', async (req, res) => {
+    const { room_id } = req.params;
+    try {
+        const utilities = await getUtilitiesByRoomId(room_id);
+        console.log('Utilities:', utilities);  // Check the data here
+        res.json({ utilities });
+    } catch (error) {
+        console.error('Error fetching utilities:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 
 app.get('/admin/manage/unit/tenants', async (req, res) => {
     const roomId = req.query.room_id;
@@ -329,6 +358,29 @@ app.get("/admin/dashboard/userManagement/editTenant/:tenant_id", verifyToken, as
     }
 });
 
+app.get("/admin/utilities/edit/:utility_id", verifyToken, async (req, res) => {
+    try {
+        const utility = await Utility.findOne({ where: { utility_id: req.params.utility_id } });
+        const admins = await viewAdmins(req, res);
+
+        if (!utility) {
+            return res.status(404).json({ success: false, message: 'Utility not found' });
+        }
+
+        const plainUtility = utility.get({ plain: true });
+
+        res.render("editUtility", {
+            title: "Hive",
+            styles: ["editUtility"],
+            rows: [plainUtility], 
+            admin: admins
+        })
+    } catch (error) {
+        
+    }
+})
+
+app.put('/api/auth/updateUtility/:utilityId', updateUtility);
 app.put('/api/auth/updateTenant/:tenantId', updateTenant);
 app.get('/api/auth/getAvailableRooms', verifyToken, getAvailableRooms);
 app.post("/api/auth/addTenant", verifyToken, addTenant); 
@@ -550,6 +602,28 @@ app.get("/admin/settings", verifyToken, async (req, res) => {
         res.status(500).send("An error occurred while retrieving admin data.");
     }
 });
+
+// ADMIN PAGES (UTILITIES) ---------------------------------------------------------------------------
+app.get("/admin/utilities", verifyToken, async (req, res) => {
+    try {
+        const admin = await viewAdmins(req);
+        const adminId = admin ? admin.admin_id : null;
+
+        const utilities = await viewUtilities(req);
+
+        res.render("adminUtils", {
+            title: "Hive",
+            styles: ["adminUtils"],
+            admin: admin || {},
+            admin_id: adminId,
+            utilities: utilities || []
+        });
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        res.status(500).send("An error occurred while retrieving data.");
+    }
+});
+
 
   
 // TENANT PAGES (DASHBOARD) -------------------------------------------------------------------------

@@ -4,6 +4,8 @@ import Room from '../models/room.models.js';
 import Establishment from '../models/establishment.models.js';
 import Calendar from '../models/calendar.models.js';
 import Notice from '../models/notice.models.js';
+import Feedback from '../models/feedback.models.js';
+import Utility from '../models/utility.models.js';
 import bcryptjs from 'bcryptjs';
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
@@ -780,6 +782,161 @@ export const viewAdmins = async (req) => {
     }
 };
 
+export const viewUtilities = async (req) => {
+    try {
+        const establishmentId = req.establishmentId;
+        const { roomId, utilityType } = req.query || {}; 
+
+        const conditions = { establishment_id: establishmentId };
+        if (roomId) {
+            conditions.room_id = roomId;
+        }
+        if (utilityType) {
+            conditions[Op.and] = Sequelize.where(
+                Sequelize.fn('LOWER', Sequelize.col('utilityType')),
+                'LIKE',
+                `%${utilityType.toLowerCase()}%`
+            );
+        }
+
+        const rows = await Utility.findAll({
+            where: conditions,
+            include: {
+                model: Room,
+                attributes: ['roomNumber', 'roomType', 'floorNumber'],
+            },
+        });
+
+        if (!rows || rows.length === 0) {
+            return []; 
+        }
+
+        return rows.map(row => {
+            const utility = row.get({ plain: true });
+            return {
+                utility_id: utility.utility_id,
+                utilityType: utility.utilityType,
+                charge: utility.charge,
+                statementDate: utility.statementDate,
+                dueDate: utility.dueDate,
+                status: utility.status,
+                perTenant: utility.perTenant,
+                totalBalance: utility.totalBalance,
+                room_id: utility.room_id,
+                roomNumber: utility.Room?.roomNumber,
+                roomType: utility.Room?.roomType,
+                floorNumber: utility.Room?.floorNumber,
+            };
+        });
+    } catch (error) {
+        console.error('Error fetching utilities:', error);
+        throw error;
+    }
+};
+
+export const addUtility = async (req, res) => {
+    const { utilityType, charge, statementDate, dueDate, status, roomId } = req.body;
+
+    if (!utilityType || !charge || !statementDate || !dueDate || !status || !roomId) {
+        return res.status(400).json({ success: false, message: "All fields are required." });
+    }
+
+    const parsedCharge = parseFloat(charge);
+    if (isNaN(parsedCharge) || parsedCharge <= 0) {
+        return res.status(400).json({ success: false, message: "Invalid charge value." });
+    }
+
+    try {
+        console.log('Incoming request data:', req.body);
+
+        const token = req.cookies.token;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const establishmentId = decoded.establishmentId;
+
+        console.log('Decoded JWT:', decoded);
+
+        const room = await Room.findOne({ where: { room_id: roomId, establishment_id: establishmentId } });
+        if (!room) {
+            return res.status(400).json({ success: false, message: "Room not found for this establishment." });
+        }
+
+        console.log('Querying Utilities for room:', {
+            establishmentId,
+            roomId,
+            utilityType,
+        });
+
+        const utilitiesForRoom = await Utility.findAll({
+            where: {
+                establishment_id: establishmentId,
+                room_id: roomId
+            }
+        });
+
+        console.log('Fetched utilities for room:', utilitiesForRoom);
+
+        let totalBalance = 0;
+        utilitiesForRoom.forEach((utility) => {
+            totalBalance += parseFloat(utility.charge) || 0; 
+        });
+
+        totalBalance += parsedCharge;
+
+        console.log('Total balance for the utilities:', totalBalance);
+
+        totalBalance = parseFloat(totalBalance.toFixed(2));
+
+        const rooms = await Room.findAll({ where: { establishment_id: establishmentId } });
+        const tenantCounts = await Promise.all(rooms.map(async (room) => {
+            const tenantCountInRoom = await Tenant.count({ where: { room_id: room.room_id } });
+            return tenantCountInRoom;
+        }));
+
+        console.log('Tenant counts:', tenantCounts);
+
+        const totalTenants = tenantCounts.reduce((acc, count) => acc + count, 0);
+        if (totalTenants === 0) {
+            return res.status(400).json({ success: false, message: "No tenants found for this establishment." });
+        }
+
+        let perTenant = totalBalance / totalTenants;
+        perTenant = parseFloat(perTenant.toFixed(2));  
+
+        await Utility.update(
+            {
+                totalBalance,
+                perTenant,
+            },
+            {
+                where: {
+                    establishment_id: establishmentId,
+                    room_id: roomId,
+                }
+            });
+
+        const newUtility = await Utility.create({
+            utilityType,
+            charge: parsedCharge, 
+            statementDate,
+            dueDate,
+            status,
+            room_id: roomId,
+            establishment_id: establishmentId,
+            totalBalance,
+            perTenant,
+        });
+
+        return res.status(201).json({ message: 'Utility added successfully!', utility: newUtility });
+    } catch (error) {
+        console.error('Error adding utility:', error);
+        if (!res.headersSent) {
+            return res.status(500).json({ success: false, message: 'Failed to add utility', error: error.message });
+        }
+    }
+};
+
+
+
 export const addTenant = async (req, res) => {
     const { 
         tenantFirstName, 
@@ -813,8 +970,6 @@ export const addTenant = async (req, res) => {
         const isStayFromValid = Date.parse(stayFrom);
         const isStayToValid = Date.parse(stayTo);
 
-        console.log('Parsed Stay From:', isStayFromValid, 'Parsed Stay To:', isStayToValid);
-
         if (isNaN(isStayFromValid) || isNaN(isStayToValid)) {
             return res.status(400).json({ success: false, message: "Invalid date format." });
         }
@@ -832,7 +987,6 @@ export const addTenant = async (req, res) => {
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             establishmentId = decoded.establishmentId;
-            console.log('Decoded JWT Token:', decoded);
         } catch (err) {
             return res.status(401).json({ success: false, message: "Invalid or expired token." });
         }
@@ -854,11 +1008,15 @@ export const addTenant = async (req, res) => {
         }
 
         const hashedPassword = await bcryptjs.hash(tenantPassword, 10);
-        console.log('Hashed Password:', hashedPassword);
 
         const room = await Room.findOne({ where: { room_id, establishmentId } });
         if (!room) {
             return res.status(400).json({ success: false, message: "Room not found." });
+        }
+
+        const establishment = await Establishment.findOne({ where: { establishment_id: establishmentId } });
+        if (!establishment) {
+            return res.status(404).json({ success: false, message: "Establishment not found." });
         }
 
         const newTenant = await Tenant.create({
@@ -877,12 +1035,29 @@ export const addTenant = async (req, res) => {
             tenantGuardianNum
         });
 
-        console.log('New Tenant Created:', newTenant);
-
         room.roomRemainingSlot -= 1;
         await room.save();
 
         generateTokenAndSetTenantCookie(res, newTenant.tenant_id, establishmentId);
+
+        // Send confirmation email
+        const subject = 'Account Creation Notification';
+        const html = `
+           <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
+              <h2 style="color: #4CAF50; text-align: center;">Account Creation Notification</h2>
+              <p style="text-align: left;">We are writing to inform you that an account has been created for you under the establishment <strong>${establishment.eName}</strong>.</p> 
+              <p style="text-align: left;">For your privacy and security, we strongly recommend that you update your password immediately after logging in.</p>
+              <p style="text-align: left;">If you have any questions or did not expect this account creation, please contact our support team immediately at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.</p>
+              <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
+              <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
+              <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+              <p style="font-size: 0.8em; color: #777; text-align: center;">
+                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.
+              </p>
+           </div>
+        `;
+
+        await sendMail(tenantEmail, subject, null, html);
 
         return res.status(201).json({
             success: true,
@@ -912,7 +1087,6 @@ export const addTenant = async (req, res) => {
         return res.status(500).json({ success: false, message: 'Failed to add tenant', error: error.message });
     }
 };
-
 
 export const addUnit = async (req, res) => {
     try {
@@ -950,6 +1124,36 @@ export const addUnit = async (req, res) => {
     }
 };
 
+export const addFeedback = async (req, res) => {
+    const adminId = req.adminId;  
+
+    try {
+      const { userName, userEmail, feedback, content } = req.body;
+
+      const newFeedback = await Feedback.create({
+        userName: userName,
+        tenant_id: null,   
+        admin_id: adminId,   
+        establishment_id: null,   
+        feedback_level: feedback,  
+        content: content,  
+        userEmail: userEmail,  
+      });
+  
+      // Send a success response
+      res.status(201).json({
+        message: 'Feedback submitted successfully!',
+        feedback: newFeedback,
+      });
+    } catch (error) {
+      console.error('Error saving feedback:', error);
+      res.status(500).json({
+        message: 'Error saving feedback.',
+        error: error.message,
+      });
+    }
+};
+
 export const addTenantView = async (req, res) => {
     res.render('addTenants', {
         title: "Hive",
@@ -963,6 +1167,30 @@ export const addUnitView = async (req, res) => {
         styles: ["addUnits"]
     });
 }
+
+export const editUtility = async (req, res) => {
+    const utilityId = req.params.utility_id;
+
+    if (!utilityId) {
+        return res.status(400).send('Utility ID is required');
+    }
+
+    try {
+        const utility = await Utility.findOne({
+            where: { utility_id: utilityId },
+        });
+
+        if (!utility) {
+            return res.status(404).send('Utility not found');
+        }
+
+        res.render('editUtility', { utility });
+    } catch (error) {
+        console.error('Error fetching utility data:', error);
+        res.status(500).send('Error fetching utility data');
+    }
+};
+
 
 export const editTenant = async (req, res) => {
     const tenantId = req.params.tenant_id; 
@@ -986,6 +1214,123 @@ export const editTenant = async (req, res) => {
         res.status(500).send('Error fetching tenant data');
     }
 };
+
+export const updateUtility = async (req, res) => {
+    const { utilityType, charge, statementDate, dueDate, status } = req.body;
+    const utilityId = req.params.utility_id;
+
+    if (!charge || isNaN(parseFloat(charge)) || parseFloat(charge) <= 0) {
+        return res.status(400).json({ success: false, message: "Invalid charge value." });
+    }
+
+    const parsedCharge = parseFloat(charge);
+
+    try {
+        const connection = connectDB();
+
+        const [utilityRows] = await connection.promise().query(
+            'SELECT * FROM Utilities WHERE utility_id = ?',
+            [utilityId]
+        );
+
+        if (utilityRows.length === 0) {
+            connection.end();
+            return res.status(404).json({ success: false, message: "Utility not found." });
+        }
+
+        const utility = utilityRows[0];
+        
+        const updatedUtilityData = {
+            charge: parsedCharge,
+            utilityType: utilityType || utility.utilityType,
+            statementDate: statementDate || utility.statementDate,
+            dueDate: dueDate || utility.dueDate,
+            status: status || utility.status,
+        };
+
+        const [updateUtilityResult] = await connection.promise().query(
+            'UPDATE Utilities SET charge = ?, utilityType = ?, statementDate = ?, dueDate = ?, status = ? WHERE utility_id = ?',
+            [
+                updatedUtilityData.charge,
+                updatedUtilityData.utilityType,
+                updatedUtilityData.statementDate,
+                updatedUtilityData.dueDate,
+                updatedUtilityData.status,
+                utilityId
+            ]
+        );
+
+        if (updateUtilityResult.affectedRows === 0) {
+            connection.end();
+            return res.status(500).json({ success: false, message: "Failed to update utility." });
+        }
+
+        console.log(`Updated Utility ID ${utility.utility_id} with charge: ${parsedCharge}, utilityType: ${updatedUtilityData.utilityType}, statementDate: ${updatedUtilityData.statementDate}, dueDate: ${updatedUtilityData.dueDate}, status: ${updatedUtilityData.status}`);
+
+        const [utilitiesForRoomRows] = await connection.promise().query(
+            'SELECT * FROM Utilities WHERE establishment_id = ? AND room_id = ?',
+            [utility.establishment_id, utility.room_id]
+        );
+
+        let totalBalance = 0;
+        utilitiesForRoomRows.forEach((u) => {
+            totalBalance += parseFloat(u.charge || 0);
+        });
+
+        console.log('Total Balance after update:', totalBalance);
+
+        const [rooms] = await connection.promise().query(
+            'SELECT * FROM Rooms WHERE establishment_id = ?',
+            [utility.establishment_id]
+        );
+
+        const tenantCounts = await Promise.all(
+            rooms.map(async (room) => {
+                const [tenantCount] = await connection.promise().query(
+                    'SELECT COUNT(*) AS tenant_count FROM Tenants WHERE room_id = ?',
+                    [room.room_id]
+                );
+                return tenantCount[0].tenant_count;
+            })
+        );
+
+        const totalTenants = tenantCounts.reduce((acc, count) => acc + count, 0);
+
+        if (totalTenants === 0) {
+            connection.end();
+            return res.status(400).json({ success: false, message: "No tenants found in the establishment." });
+        }
+
+        const perTenant = parseFloat((totalBalance / totalTenants).toFixed(2));
+        console.log(`Per Tenant Share: ${perTenant}`);
+
+        await Promise.all(
+            utilitiesForRoomRows.map(async (u) => {
+                const [updateUtility] = await connection.promise().query(
+                    'UPDATE Utilities SET totalBalance = ?, perTenant = ? WHERE utility_id = ?',
+                    [totalBalance, perTenant, u.utility_id]
+                );
+                console.log(`Updated Utility ID ${u.utility_id} with Total Balance: ${totalBalance} and Per Tenant: ${perTenant}`);
+            })
+        );
+
+        connection.end();
+
+        return res.json({
+            success: true,
+            message: "Utility updated successfully.",
+            utility: updatedUtilityData,
+        });
+    } catch (error) {
+        console.error('Error updating utility:', error);
+        return res.status(500).json({
+            success: false,
+            message: "Error updating utility data",
+            error: error.message,
+        });
+    }
+};
+
 
 export const updateTenant = async (req, res) => {
     const { tenantFirstName, tenantLastName, tenantEmail, mobileNum, gender, tenantGuardianName, tenantAddress, tenantGuardianNum } = req.body;
@@ -1097,6 +1442,81 @@ export const deleteUnit = (req, res) => {
     });
 };
 
+export const deleteUtility = async (req, res) => {
+    const utilityId = req.params.utility_id;
+    const connection = connectDB();
+
+    connection.query('SELECT charge, room_id, establishment_id FROM Utilities WHERE utility_id = ?', [utilityId], async (err, result) => {
+        if (err) {
+            connection.end();
+            console.error('Error fetching utility data:', err);
+            return res.status(500).json({ success: false, message: "Error fetching utility data" });
+        }
+
+        if (result.length === 0) {
+            connection.end();
+            return res.status(404).json({ success: false, message: "Utility not found" });
+        }
+
+        const utilityToDelete = result[0];
+        const { charge, room_id, establishment_id } = utilityToDelete;
+
+        connection.query('SELECT charge FROM Utilities WHERE room_id = ? AND establishment_id = ?', [room_id, establishment_id], async (err, utilities) => {
+            if (err) {
+                connection.end();
+                console.error('Error fetching utilities for the room:', err);
+                return res.status(500).json({ success: false, message: "Error fetching utilities for the room" });
+            }
+
+            let totalBalance = 0;
+            utilities.forEach(utility => {
+                totalBalance += parseFloat(utility.charge) || 0;
+            });
+
+            totalBalance -= charge; 
+
+            const rooms = await Room.findAll({ where: { establishment_id } });
+            const tenantCounts = await Promise.all(rooms.map(async (room) => {
+                const tenantCountInRoom = await Tenant.count({ where: { room_id: room.room_id } });
+                return tenantCountInRoom;
+            }));
+
+            const totalTenants = tenantCounts.reduce((acc, count) => acc + count, 0);
+            if (totalTenants === 0) {
+                connection.end();
+                return res.status(400).json({ success: false, message: "No tenants found for this establishment." });
+            }
+
+            let perTenant = totalBalance / totalTenants;
+            perTenant = parseFloat(perTenant.toFixed(2));
+
+            connection.query('UPDATE Utilities SET totalBalance = ?, perTenant = ? WHERE room_id = ? AND establishment_id = ?', [totalBalance, perTenant, room_id, establishment_id], (err, result) => {
+                if (err) {
+                    connection.end();
+                    console.error('Error updating utilities data:', err);
+                    return res.status(500).json({ success: false, message: "Error updating utilities data" });
+                }
+
+                connection.query('DELETE FROM Utilities WHERE utility_id = ?', [utilityId], (err, result) => {
+                    connection.end();
+
+                    if (err) {
+                        console.error('Error deleting utility data:', err);
+                        return res.status(500).json({ success: false, message: "Error deleting utility data" });
+                    }
+
+                    if (result.affectedRows === 0) {
+                        return res.status(404).json({ success: false, message: "Utility not found" });
+                    }
+
+                    res.json({ success: true, message: "Utility successfully removed" });
+                });
+            });
+        });
+    });
+};
+
+
 export const getOccupiedUnits = async (req, res) => {
     const establishmentId = req.establishmentId; 
 
@@ -1124,6 +1544,8 @@ export const getOccupiedUnits = async (req, res) => {
         }
     }
 };
+
+
 
 export const getAvailableRooms = async (req, res) => {
     try {

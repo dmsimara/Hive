@@ -1,0 +1,134 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <img class="navbar-brand" src="/images/hiveLight.png" alt="Hive Logo" width="100px" />
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-center">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="/admin/dashboard">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/dashboard/userManagement">Manage Tenant</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/manage/unit">Manage Unit</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/admin/utilities">Manage Utilities</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/announcements">Announcements</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/tracker">Tracker</a>
+                </li>
+            </ul>
+
+            <img src="{{#if admin.adminProfile}}/images/upload/{{admin.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+                alt="Profile" class="user-pic" onclick="toggleMenu()" />
+            <div class="sub-menu-wrap" id="subMenu">
+                <div class="sub-menu">
+                    <div class="user-info">
+                        <img src="{{#if admin.adminProfile}}/images/upload/{{admin.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+                            alt="Profile" width="40px" />
+                        <h3>{{admin.adminFirstName}} {{admin.adminLastName}}</h3>
+                    </div>
+                    <hr />
+                    <a href="/admin/dashboard/view/account" class="sub-menu-link">
+                        <i class="material-icons">person</i>
+                        <p>View Account</p>
+                        <span>></span>
+                    </a>
+                    <a href="/admin/settings" class="sub-menu-link">
+                        <i class="material-icons">settings</i>
+                        <p>Settings</p>
+                        <span>></span>
+                    </a>
+                    <a href="#" id="logoutButton" class="sub-menu-link">
+                        <i class="material-icons">logout</i>
+                        <p>Logout</p>
+                        <span>></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container pt-5 pb-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin/utilities">Manage Utilities</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit</li>
+        </ol>
+    </nav>
+
+    {{#each rows}}
+    <form action="/api/auth/editUtility/{{this.utility_id}}" id="editForm" class="row g-3 needs-validation"
+        method="POST">
+        <input type="hidden" name="utilityId" id="utilityId" value="{{this.utility_id}}">
+
+        <div class="row mb-3">
+            <div class="col">
+                <label for="editUtilityType" class="form-label">Utility Type</label>
+                <select name="utilityType" id="editUtilityType" class="form-select form-select-sm">
+                    <option value="unit rental" {{#if (eq this.utilityType "unit rental" )}}selected{{/if}}>Unit Rental
+                    </option>
+                    <option value="electricity consumption" {{#if (eq this.utilityType "electricity consumption"
+                        )}}selected{{/if}}>Electricity</option>
+                    <option value="water usage" {{#if (eq this.utilityType "water usage" )}}selected{{/if}}>Water
+                    </option>
+                    <option value="internet connection" {{#if (eq this.utilityType "internet connection"
+                        )}}selected{{/if}}>Internet</option>
+                    <option value="maintenance fees" {{#if (eq this.utilityType "maintenance fees" )}}selected{{/if}}>
+                        Maintenance</option>
+                    <option value="dorm amenities" {{#if (eq this.utilityType "dorm amenities" )}}selected{{/if}}>Dorm
+                        Amenities</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col">
+                <label for="editCharge" class="form-label">Charge</label>
+                <input type="number" class="form-control form-control-sm" id="editCharge" name="charge" min="0"
+                    step="0.01" value="{{this.charge}}">
+            </div>
+            <div class="col">
+                <label for="editStatementDate" class="form-label">Statement Date</label>
+                <input type="date" class="form-control form-control-sm" id="editStatementDate" name="statementDate"
+                    value="{{this.statementDate}}">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col">
+                <label for="editDueDate" class="form-label">Due Date</label>
+                <input type="date" class="form-control form-control-sm" id="editDueDate" name="dueDate"
+                    value="{{this.dueDate}}">
+            </div>
+            <div class="col">
+                <label for="editStatus" class="form-label">Status</label>
+                <select name="status" id="editStatus" class="form-select form-select-sm">
+                    <option value="unpaid" {{#if (eq this.status "unpaid" )}}selected{{/if}}>Unpaid</option>
+                    <option value="paid" {{#if (eq this.status "paid" )}}selected{{/if}}>Paid</option>
+                    <option value="overdue" {{#if (eq this.status "overdue" )}}selected{{/if}}>Overdue</option>
+                    <option value="partial" {{#if (eq this.status "partial" )}}selected{{/if}}>Partial</option>
+                    <option value="cancelled" {{#if (eq this.status "cancelled" )}}selected{{/if}}>Cancelled</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end mt-3">
+            <button id="closeButton" type="button" class="btn btn-secondary btn-sm me-2">Close</button>
+            <button id="editUtilityButton" type="submit" class="btn btn-primary btn-sm">Save Changes</button>
+        </div>
+    </form>
+    {{/each}}
+</div>
+
+
+<script src="/js/editUtility.js"></script>

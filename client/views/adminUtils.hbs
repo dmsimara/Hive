@@ -1,0 +1,232 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <img class="navbar-brand" src="/images/hiveLight.png" alt="Hive Logo" width="100px" />
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-center">
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="/admin/dashboard">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/dashboard/userManagement">Manage Tenant</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/manage/unit">Manage Unit</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/admin/utilities">Manage Utilities</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/announcements">Announcements</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/tracker">Tracker</a>
+        </li>
+      </ul>
+
+      <img src="{{#if admin.adminProfile}}/images/upload/{{admin.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+        alt="Profile" class="user-pic" onclick="toggleMenu()" />
+      <div class="sub-menu-wrap" id="subMenu">
+        <div class="sub-menu">
+          <div class="user-info">
+            <img
+              src="{{#if admin.adminProfile}}/images/upload/{{admin.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+              alt="Profile" width="40px" />
+            <h3>{{admin.adminFirstName}} {{admin.adminLastName}}</h3>
+          </div>
+          <hr />
+          <a href="/admin/dashboard/view/account" class="sub-menu-link">
+            <i class="material-icons">person</i>
+            <p>View Account</p>
+            <span>></span>
+          </a>
+          <a href="/admin/settings" class="sub-menu-link">
+            <i class="material-icons">settings</i>
+            <p>Settings</p>
+            <span>></span>
+          </a>
+          <a href="#" id="logoutButton" class="sub-menu-link">
+            <i class="material-icons">logout</i>
+            <p>Logout</p>
+            <span>></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="container pt-5 pb-5">
+  <div class="row">
+    <div class="row align-items-center">
+      <div class="col-6">
+        <i class="material-icons title-icon">receipt_long</i>
+        <h1>Utility Management</h1>
+      </div>
+      <div class="col-6 d-flex justify-content-end gap-2">
+        <form action="#" role="search" method="POST" class="d-flex" novalidate>
+          <input type="hidden" name="establishmentId" value="{{establishmentId}}">
+          <div class="search-bar">
+            <input type="search" class="form-control form-control-sm me-2" id="search" placeholder="Search"
+              name="search" aria-label="Search" autocomplete="off" required value="{{lastSearchTerm}}">
+            <span class="search-icon">
+              <i class="material-icons">search</i>
+            </span>
+          </div>
+        </form>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#addUtilityModal" class="btn btn-light btn-sm hover-orange">
+          + Add Utility
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-container table-responsive" style="max-height: 400px; overflow-y: auto;">
+    <table class="table table-bordered">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">Room #</th>
+          <th scope="col">Room Type</th>
+          <th scope="col">Shared Balance</th>
+          <th scope="col">Total Balance</th>
+          <th scope="col" class="text-end">Action</th>
+        </tr>
+      </thead>
+      <tbody id="results">
+        {{#if utilities.length}}
+        {{#each utilities}}
+        <tr class="room-row" data-room-number="{{this.roomNumber}}">
+          <td>{{this.roomNumber}}</td>
+          <td>{{this.roomType}}</td>
+          <td>{{this.perTenant}}</td>
+          <td>{{this.totalBalance}}</td>
+          <td class="text-end">
+            <a href="#" data-bs-toggle="modal" data-bs-target="#manageUtilityModal"
+              onclick="loadTenants({{this.room_id}})" class="btn manage-button btn-small">Manage</a>
+            <button class="btn btn-danger btn-sm" onclick="deleteUtility({{this.utility_id}})">Delete</button>
+          </td>
+        </tr>
+        {{/each}}
+        {{else}}
+        <tr>
+          <td colspan="5" class="text-center">No utilities added yet</td>
+        </tr>
+        {{/if}}
+      </tbody>
+    </table>
+  </div>
+
+
+
+  {{!-- Add Utility Modal --}}
+  <div class="modal fade" id="addUtilityModal" tabindex="-1" aria-labelledby="addUtilityModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addUtilityModalLabel">Add Utility</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/api/auth/addUtility" id="utilityForm" method="POST">
+            <input type="hidden" id="establishmentId" name="establishmentId" value="{{establishmentId}}">
+
+            <!-- Utility Type Select -->
+            <div class="row mb-3">
+              <label for="utilityType" class="form-label">Utility Type</label>
+              <select name="utilityType" id="utilityType" class="form-select form-select-sm" required>
+                <option value="" disabled>Select Utility</option>
+                <option value="unit rental" selected>Unit Rental</option>
+                <option value="electricity consumption" selected>Electricity</option>
+                <option value="water usage" selected>Water</option>
+                <option value="internet connection" selected>Internet</option>
+                <option value="maintenance fees" selected>Maintenance</option>
+                <option value="dorm amenities" selected>Dorm Amenities</option>
+              </select>
+            </div>
+
+            {{!-- Room Select --}}
+            <div class="row mb-3">
+              <label for="roomSelection" class="form-label">Assign Room</label>
+              <select class="form-select form-select-sm" id="roomSelection" name="roomId" required>
+                <option value="" disabled selected>Select a room</option>
+                <!-- Options will be populated dynamically -->
+              </select>
+            </div>
+
+            <!-- Charge Input -->
+            <div class="row mb-3">
+              <label for="charge" class="form-label">Charge</label>
+              <input type="number" class="form-control form-control-sm" id="charge" name="charge" required min="0"
+                step="0.01" placeholder="Enter charge">
+            </div>
+
+            <!-- Statement Date Input -->
+            <div class="row mb-3">
+              <label for="statementDate" class="form-label">Statement Date</label>
+              <input type="date" class="form-control form-control-sm" id="statementDate" name="statementDate" required>
+            </div>
+
+            <!-- Due Date Input -->
+            <div class="row mb-3">
+              <label for="dueDate" class="form-label">Due Date</label>
+              <input type="date" class="form-control form-control-sm" id="dueDate" name="dueDate" required>
+            </div>
+
+            <!-- Status Select -->
+            <div class="row mb-3">
+              <label for="status" class="form-label">Status</label>
+              <select name="status" id="status" class="form-select form-select-sm" required>
+                <option value="" disabled>Select Status</option>
+                <option value="unpaid" selected>Unpaid</option>
+                <option value="paid" selected>Paid</option>
+                <option value="overdue" selected>Overdue</option>
+                <option value="partial" selected>Partial</option>
+                <option value="cancelled" selected>Cancelled</option>
+              </select>
+            </div>
+
+            <button class="btn btn-primary btn-add" type="submit">Add Utility</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{!-- Manage Utilities Modal --}}
+  <div class="modal fade" id="manageUtilityModal" tabindex="-1" aria-labelledby="manageUtilityModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title manage-title" id="manageUtilityModalLabel">Utility List</h5>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered">
+            <thead class="maroon-header">
+              <tr>
+                <th scope="col">Utility Type</th>
+                <th scope="col">Charge</th>
+                <th scope="col">Statement Date</th>
+                <th scope="col">Due Date</th>
+                <th scope="col">Status</th>
+                <th scope="col" class="text-end">Action</th>
+              </tr>
+            </thead>
+            <tbody id="utilityList">
+
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="/js/adminUtils.js"></script>

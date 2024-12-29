@@ -1,7 +1,8 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <img class="navbar-brand" src="/images/hiveLight.png" alt="Hive Logo" width="100px"/>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <img class="navbar-brand" src="/images/hiveLight.png" alt="Hive Logo" width="100px" />
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -16,6 +17,9 @@
           <a class="nav-link active" href="/admin/manage/unit">Manage Unit</a>
         </li>
         <li class="nav-item">
+          <a href="/admin/utilities" class="nav-link">Manage Utilities</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="/admin/announcements">Announcements</a>
         </li>
         <li class="nav-item">
@@ -23,29 +27,34 @@
         </li>
       </ul>
 
-      <!-- Admin Profile Display -->
-      {{#each rows}}
-        <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}" alt="Profile" class="user-pic" onclick="toggleMenu()" aria-haspopup="true" aria-expanded="false"/>
-        <div class="sub-menu-wrap" id="subMenu" aria-hidden="true">
-          <div class="sub-menu">
-            <div class="user-info">
-              <img src="{{#if this.adminProfile}}/images/upload/{{this.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}" alt="Profile" width="40px"/>
-              <h3>{{this.adminFirstName}} {{this.adminLastName}}</h3>
-            </div>
-            <hr/>
-            <a href="/admin/dashboard/view/account" class="sub-menu-link">
-              <i class="material-icons">person</i>
-              <p>View Account</p>
-              <span>></span>
-            </a>
-            <a href="#" id="logoutButton" class="sub-menu-link">
-              <i class="material-icons">logout</i>
-              <p>Logout</p>
-              <span>></span>
-            </a>
+      <img src="{{#if admin.adminProfile}}/images/upload/{{admin.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+        alt="Profile" class="user-pic" onclick="toggleMenu()" />
+      <div class="sub-menu-wrap" id="subMenu">
+        <div class="sub-menu">
+          <div class="user-info">
+            <img
+              src="{{#if admin.adminProfile}}/images/upload/{{admin.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+              alt="Profile" width="40px" />
+            <h3>{{admin.adminFirstName}} {{admin.adminLastName}}</h3>
           </div>
+          <hr />
+          <a href="/admin/dashboard/view/account" class="sub-menu-link">
+            <i class="material-icons">person</i>
+            <p>View Account</p>
+            <span>></span>
+          </a>
+          <a href="/admin/settings" class="sub-menu-link">
+            <i class="material-icons">settings</i>
+            <p>Settings</p>
+            <span>></span>
+          </a>
+          <a href="#" id="logoutButton" class="sub-menu-link">
+            <i class="material-icons">logout</i>
+            <p>Logout</p>
+            <span>></span>
+          </a>
         </div>
-      {{/each}}
+      </div>
     </div>
   </div>
 </nav>

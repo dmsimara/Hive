@@ -17,12 +17,16 @@
           <a class="nav-link active" href="/admin/manage/unit">Manage Unit</a>
         </li>
         <li class="nav-item">
+          <a href="/admin/utilities" class="nav-link">Manage Utilities</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="/admin/announcements">Announcements</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/admin/tracker">Tracker</a>
         </li>
       </ul>
+
       <img src="{{#if admin.adminProfile}}/images/upload/{{admin.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
         alt="Profile" class="user-pic" onclick="toggleMenu()" />
       <div class="sub-menu-wrap" id="subMenu">
@@ -39,6 +43,11 @@
             <p>View Account</p>
             <span>></span>
           </a>
+          <a href="/admin/settings" class="sub-menu-link">
+            <i class="material-icons">settings</i>
+            <p>Settings</p>
+            <span>></span>
+          </a>
           <a href="#" id="logoutButton" class="sub-menu-link">
             <i class="material-icons">logout</i>
             <p>Logout</p>
@@ -49,13 +58,6 @@
     </div>
   </div>
 </nav>
-
-
-
-
-
-
-
 
 <div class="container pt-5 pb-5">
   <div class="row">
@@ -99,28 +101,7 @@
         </tr>
       </thead>
       <tbody id="results">
-        {{!-- {{#if units.length}}
-        {{#each units}}
-        <tr>
-          <th>{{this.room_id}}</th>
-          <td>{{this.floorNumber}}</td>
-          <td>{{this.roomNumber}}</td>
-          <td>{{this.roomType}}</td>
-          <td>{{this.roomTotalSlot}}</td>
-          <td>{{this.roomRemainingSlot}}</td>
-          <td class="text-end">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#manageUnitModal"
-              onclick="loadTenants('{{this.room_id}}')" class="btn manage-button btn-small">Manage</a>
-            <a href="#" type="button" onclick="deleteUnit('{{this.room_id}}')"
-              class="btn delete-button btn-small">Delete</a>
-          </td>
-        </tr>
-        {{/each}}
-        {{else}}
-        <tr>
-          <td colspan="7" class="text-center">No rooms found</td>
-        </tr>
-        {{/if}} --}}
+ 
       </tbody>
     </table>
   </div>
