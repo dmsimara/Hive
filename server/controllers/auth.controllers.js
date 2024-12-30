@@ -822,6 +822,7 @@ export const viewUtilities = async (req) => {
                 status: utility.status,
                 perTenant: utility.perTenant,
                 totalBalance: utility.totalBalance,
+                sharedBalance: utility.sharedBalance,
                 room_id: utility.room_id,
                 roomNumber: utility.Room?.roomNumber,
                 roomType: utility.Room?.roomType,
@@ -900,12 +901,12 @@ export const addUtility = async (req, res) => {
         }
 
         let perTenant = totalBalance / totalTenants;
-        perTenant = parseFloat(perTenant.toFixed(2));  
+        perTenant = parseFloat(perTenant.toFixed(2));
 
         await Utility.update(
             {
                 totalBalance,
-                perTenant,
+                sharedBalance: 0,  
             },
             {
                 where: {
@@ -916,15 +917,39 @@ export const addUtility = async (req, res) => {
 
         const newUtility = await Utility.create({
             utilityType,
-            charge: parsedCharge, 
+            charge: parsedCharge,
             statementDate,
             dueDate,
             status,
             room_id: roomId,
             establishment_id: establishmentId,
             totalBalance,
-            perTenant,
+            perTenant,  
+            sharedBalance: 0,   
         });
+
+        const utilitiesForRoomAfterUpdate = await Utility.findAll({
+            where: {
+                establishment_id: establishmentId,
+                room_id: roomId,
+            }
+        });
+
+        let sharedBalance = 0;
+        utilitiesForRoomAfterUpdate.forEach((utility) => {
+            sharedBalance += parseFloat(utility.perTenant) || 0;
+        });
+
+        sharedBalance = parseFloat(sharedBalance.toFixed(2));
+
+        await Utility.update(
+            { sharedBalance },
+            {
+                where: {
+                    establishment_id: establishmentId,
+                    room_id: roomId,
+                }
+            });
 
         return res.status(201).json({ message: 'Utility added successfully!', utility: newUtility });
     } catch (error) {
@@ -1239,7 +1264,7 @@ export const updateUtility = async (req, res) => {
         }
 
         const utility = utilityRows[0];
-        
+
         const updatedUtilityData = {
             charge: parsedCharge,
             utilityType: utilityType || utility.utilityType,
@@ -1301,16 +1326,28 @@ export const updateUtility = async (req, res) => {
             return res.status(400).json({ success: false, message: "No tenants found in the establishment." });
         }
 
-        const perTenant = parseFloat((totalBalance / totalTenants).toFixed(2));
-        console.log(`Per Tenant Share: ${perTenant}`);
-
-        await Promise.all(
+        const updatedUtilities = await Promise.all(
             utilitiesForRoomRows.map(async (u) => {
+                const perTenant = parseFloat((u.charge / totalTenants).toFixed(2));
                 const [updateUtility] = await connection.promise().query(
                     'UPDATE Utilities SET totalBalance = ?, perTenant = ? WHERE utility_id = ?',
                     [totalBalance, perTenant, u.utility_id]
                 );
-                console.log(`Updated Utility ID ${u.utility_id} with Total Balance: ${totalBalance} and Per Tenant: ${perTenant}`);
+                console.log(`Updated Utility ID ${u.utility_id} with Per Tenant: ${perTenant}`);
+                return { ...u, perTenant };
+            })
+        );
+
+        const sharedBalance = updatedUtilities.reduce((sum, u) => sum + (u.perTenant || 0), 0);
+        const sharedBalanceFixed = parseFloat(sharedBalance.toFixed(2));
+
+        await Promise.all(
+            updatedUtilities.map(async (u) => {
+                const [updateSharedBalance] = await connection.promise().query(
+                    'UPDATE Utilities SET sharedBalance = ? WHERE utility_id = ?',
+                    [sharedBalanceFixed, u.utility_id]
+                );
+                console.log(`Updated Utility ID ${u.utility_id} with Shared Balance: ${sharedBalanceFixed}`);
             })
         );
 
@@ -1330,7 +1367,6 @@ export const updateUtility = async (req, res) => {
         });
     }
 };
-
 
 export const updateTenant = async (req, res) => {
     const { tenantFirstName, tenantLastName, tenantEmail, mobileNum, gender, tenantGuardianName, tenantAddress, tenantGuardianNum } = req.body;
@@ -1487,10 +1523,10 @@ export const deleteUtility = async (req, res) => {
                 return res.status(400).json({ success: false, message: "No tenants found for this establishment." });
             }
 
-            let perTenant = totalBalance / totalTenants;
-            perTenant = parseFloat(perTenant.toFixed(2));
+            let sharedBalance = totalBalance / totalTenants;
+            sharedBalance = parseFloat(sharedBalance.toFixed(2));
 
-            connection.query('UPDATE Utilities SET totalBalance = ?, perTenant = ? WHERE room_id = ? AND establishment_id = ?', [totalBalance, perTenant, room_id, establishment_id], (err, result) => {
+            connection.query('UPDATE Utilities SET totalBalance = ?, sharedBalance = ? WHERE room_id = ? AND establishment_id = ?', [totalBalance, sharedBalance, room_id, establishment_id], (err, result) => {
                 if (err) {
                     connection.end();
                     console.error('Error updating utilities data:', err);

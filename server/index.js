@@ -853,34 +853,43 @@ app.get("/tenant/utilities", verifyTenantToken, setEstablishmentId, async (req, 
             'dorm amenities'
         ];
 
-        const utilities = await viewUtilities(req, res);
+        const utilities = await viewUtilities(req);
 
-        if (!utilities) {
+        // Debugging logs for utilities
+        console.log("Utilities fetched from database:", utilities);
+
+        if (!utilities || utilities.length === 0) {
             return res.status(404).send("No utilities found.");
         }
+
+        const totalBalance = utilities.reduce((sum, utility) => sum + parseFloat(utility.totalBalance || 0), 0);
+        const sharedBalance = utilities.reduce((sum, utility) => sum + parseFloat(utility.sharedBalance || 0), 0);
+
+        console.log("Calculated Total Balance:", totalBalance);
+        console.log("Calculated Shared Balance:", sharedBalance);
 
         const formattedUtilities = allUtilityTypes.map(utilityType => {
             const utility = utilities.find(u => u.utilityType === utilityType);
 
-            const charge = utility ? parseFloat(utility.charge) : 0.00;   
+            const charge = utility ? parseFloat(utility.charge) : 0.00;
 
             let perTenant = utility ? utility.perTenant : 0.00;
 
             if (perTenant === null || perTenant === undefined || isNaN(perTenant)) {
-                perTenant = 0.00; 
+                perTenant = 0.00;
             } else {
-                perTenant = parseFloat(perTenant).toFixed(2); 
+                perTenant = parseFloat(perTenant).toFixed(2);
             }
 
             return {
-                utilityType: getFormattedName(utilityType), 
-                charge: charge.toFixed(2), 
-                perTenant: perTenant, 
-                status: utility ? utility.status : 'N/A',  
-                iconClass: getIconClass(utilityType),       
-                sizeClass: getSizeClass(utilityType),      
-                statementDate: utility ? utility.statementDate : 'N/A', 
-                dueDate: utility ? utility.dueDate : 'N/A' 
+                utilityType: getFormattedName(utilityType),
+                charge: charge.toFixed(2),
+                perTenant: perTenant,
+                status: utility ? utility.status : 'N/A',
+                iconClass: getIconClass(utilityType),
+                sizeClass: getSizeClass(utilityType),
+                statementDate: utility ? utility.statementDate : 'N/A',
+                dueDate: utility ? utility.dueDate : 'N/A'
             };
         });
 
@@ -892,7 +901,7 @@ app.get("/tenant/utilities", verifyTenantToken, setEstablishmentId, async (req, 
             return res.status(404).send("Tenant not found");
         }
 
-        const roomId = tenant.get('room_id'); 
+        const roomId = tenant.get('room_id');
 
         const room = await Room.findOne({
             where: { room_id: roomId }
@@ -902,7 +911,7 @@ app.get("/tenant/utilities", verifyTenantToken, setEstablishmentId, async (req, 
             return res.status(404).send("Room not found");
         }
 
-        const roomNumber = room.get('roomNumber'); 
+        const roomNumber = room.get('roomNumber');
 
         const tenants = await getTenantsDashboard(roomId);
 
@@ -913,13 +922,16 @@ app.get("/tenant/utilities", verifyTenantToken, setEstablishmentId, async (req, 
             styles: ["ten-utilities"],
             tenants: plainTenants,
             roomNumber: roomNumber,
-            utilities: formattedUtilities
+            utilities: formattedUtilities,
+            totalBalance: totalBalance.toFixed(2),  
+            sharedBalance: sharedBalance.toFixed(2)  
         });
     } catch (error) {
         console.error('Error fetching tenant utilities:', error);
         res.status(500).send("Error fetching tenant utilities.");
     }
 });
+
 
 // TENANT PAGES (ROOM DEETS) ------------------------------------------------------------------------
 app.get("/tenant/room-details", verifyTenantToken, async (req, res) => {

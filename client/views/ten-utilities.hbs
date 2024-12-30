@@ -74,7 +74,7 @@
           <div class="bills">
             {{#each utilities}}
             <div class="bill">
-              <i class="{{this.iconClass}}"></i>
+              <i class="fas {{this.iconClass}}"></i>
               <p class="bill-title">{{this.utilityType}}</p>
               <div class="bill-dates">
                 <p><strong>Statement Date:</strong> {{this.statementDate}}</p>
@@ -93,13 +93,12 @@
         <aside class="right-side">
           <!-- Room Total Balance -->
           <div class="total-balance-card">
-            <h2>Room #01 Total Balance</h2>
-            <p class="main-balance">Php 12,479.34</p>
+            <h2>Room #{{roomNumber}}</h2>
+            <h2>Total Balance</h2>
+            <p class="main-balance">Php {{totalBalance}}</p>
             <div class="shared-balance-card">
               <h3>Shared Balance</h3>
-              <p>Php 3,119.84</p>
-              <!-- Paid Indicator -->
-              <span class="paid-indicator paid">Paid</span>
+              <p>Php {{sharedBalance}}</p>
             </div>
           </div>
 
