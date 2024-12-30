@@ -639,68 +639,145 @@ const getTenantsDashboard = async (roomId) => {
     }
 };
 
-app.get("/tenant/dashboard", verifyTenantToken, async (req, res) => {
-    const tenantId = req.tenantId; 
-    if (!tenantId) {
-        return res.status(400).send("Tenant ID not found in the token.");
-    }
-
+const setEstablishmentId = async (req, res, next) => {
     try {
-        const tenant = await Tenant.findOne({
-            where: { tenant_id: tenantId }
-        });
+        const { tenantId } = req;
+
+        if (!tenantId) {
+            return res.status(400).json({ error: "Tenant ID is missing." });
+        }
+
+        const tenant = await Tenant.findOne({ where: { tenant_id: tenantId } });
 
         if (!tenant) {
-            return res.status(404).send("Tenant not found");
+            return res.status(404).json({ error: "Tenant not found." });
         }
 
-        const roomId = tenant.get('room_id'); 
+        req.establishmentId = tenant.establishment_id;
 
-        const room = await Room.findOne({
-            where: { room_id: roomId }
+        if (!req.establishmentId) {
+            return res.status(400).json({ error: "Establishment ID is missing." });
+        }
+
+        req.roomId = tenant.get("room_id"); 
+        next(); 
+    } catch (error) {
+        console.error("Error setting establishment ID:", error.message);
+        return res.status(500).json({ error: "Internal server error." });
+    }
+};
+
+app.get("/tenant/dashboard", verifyTenantToken, setEstablishmentId, async (req, res) => {
+    const { establishmentId, roomId } = req;
+
+    try {
+        const allUtilityTypes = [
+            'electricity consumption',
+            'water usage',
+            'internet connection',
+            'unit rental',
+            'maintenance fees',
+            'dorm amenities'
+        ];
+
+        const utilities = await viewUtilities(req, res);
+
+        const formattedUtilities = allUtilityTypes.map(utilityType => {
+            const utility = utilities.find(u => u.utilityType === utilityType);
+
+            return {
+                utilityType: getFormattedName(utilityType), 
+                charge: utility ? utility.charge : 0.00,   
+                status: utility ? utility.status : 'N/A',   
+                iconClass: getIconClass(utilityType),         
+                sizeClass: getSizeClass(utilityType)          
+            };
         });
 
-        console.log('Room data:', room);
+        const room = await Room.findOne({ where: { room_id: roomId } });
 
         if (!room) {
-            return res.status(404).send("Room not found");
+            return res.status(404).json({ error: "Room not found." });
         }
 
-        const roomNumber = room.get('roomNumber');
-        const roomTotalSlot = room.get('roomTotalSlot'); 
-        const roomRemainingSlot = room.get('roomRemainingSlot'); 
+        const roomNumber = room.get("roomNumber");
+        const roomTotalSlot = parseInt(room.get("roomTotalSlot"), 10) || 0;
+        const roomRemainingSlot = parseInt(room.get("roomRemainingSlot"), 10) || 0;
 
-        console.log('roomTotalSlot:', roomTotalSlot);
-        console.log('roomRemainingSlot:', roomRemainingSlot);
-
-        const roomTotalSlotInt = parseInt(roomTotalSlot, 10) || 0;
-        const roomRemainingSlotInt = parseInt(roomRemainingSlot, 10) || 0;
-
-        console.log('roomTotalSlotInt:', roomTotalSlotInt);
-        console.log('roomRemainingSlotInt:', roomRemainingSlotInt);
-
-        if (isNaN(roomTotalSlotInt) || isNaN(roomRemainingSlotInt)) {
-            return res.status(400).send("Invalid room slot values.");
+        if (isNaN(roomTotalSlot) || isNaN(roomRemainingSlot)) {
+            return res.status(400).json({ error: "Invalid room slot values." });
         }
 
-        const rentedSlot = roomTotalSlotInt - roomRemainingSlotInt;
+        const rentedSlot = roomTotalSlot - roomRemainingSlot;
 
         const tenants = await getTenantsDashboard(roomId);
 
-        const plainTenants = tenants.map(tenant => tenant.get({ plain: true }));
+        const plainTenants = tenants.map((tenant) => tenant.get({ plain: true }));
 
         res.render("tenantDashboard", {
             title: "Hive",
             styles: ["ten-dashboard"],
             tenants: plainTenants,
-            roomNumber: roomNumber,
-            rentedSlot: rentedSlot 
+            roomNumber,
+            rentedSlot,
+            utilities: formattedUtilities,  
         });
     } catch (error) {
-        console.error('Error fetching tenants:', error);
-        res.status(500).send("Error fetching tenant data.");
+        console.error("Error fetching tenant dashboard data:", error);
+        res.status(500).json({ error: "Internal server error." });
     }
 });
+
+function getFormattedName(utilityType) {
+    switch (utilityType) {
+        case 'electricity consumption':
+            return 'Electricity';
+        case 'water usage':
+            return 'Water';
+        case 'internet connection':
+            return 'WiFi/Internet';
+        case 'unit rental':
+            return 'Unit Rent';
+        case 'maintenance fees':
+            return 'Maintenance Fees';
+        case 'dorm amenities':
+            return 'Dorm Amenities';
+        default:
+            return utilityType; 
+    }
+}
+
+function getIconClass(utilityType) {
+    switch (utilityType) {
+        case 'electricity consumption': 
+            return 'fa-bolt';
+        case 'water usage':
+            return 'fa-tint';
+        case 'internet connection':
+            return 'fa-wifi';
+        case 'unit rental':
+            return 'fa-home';
+        case 'maintenance fees':
+            return 'fa-tools';
+        case 'dorm amenities':
+            return 'fa-bed';
+        default:
+            return '';
+    }
+}
+
+function getSizeClass(utilityType) {
+    switch (utilityType) {
+        case 'Electricity':
+        case 'Unit Rent':
+            return 'card-large';
+        case 'Water':
+        case 'Maintenance Fees':
+            return 'card-medium';
+        default:
+            return 'card-small';
+    }
+}
 
 // TENANT PAGES (ANNOUNCEMENT) ----------------------------------------------------------------------
 app.get("/tenant/announcement", verifyTenantToken, async (req, res) => {
