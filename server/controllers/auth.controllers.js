@@ -823,6 +823,7 @@ export const viewUtilities = async (req) => {
                 perTenant: utility.perTenant,
                 totalBalance: utility.totalBalance,
                 sharedBalance: utility.sharedBalance,
+                month: utility.month,
                 room_id: utility.room_id,
                 roomNumber: utility.Room?.roomNumber,
                 roomType: utility.Room?.roomType,
@@ -832,6 +833,68 @@ export const viewUtilities = async (req) => {
     } catch (error) {
         console.error('Error fetching utilities:', error);
         throw error;
+    }
+};
+
+export const utilityHistories = async (req, res) => {
+    try {
+        const establishmentId = req.establishmentId;
+        const { roomId } = req.query || {}; 
+
+        const conditions = { establishment_id: establishmentId };
+        if (roomId) {
+            conditions.room_id = roomId;
+        }
+
+        const rows = await Utility.findAll({
+            where: conditions,
+            attributes: [
+                [Sequelize.fn('DATE_FORMAT', Sequelize.col('statementDate'), '%Y-%m'), 'month'], 
+                'totalBalance',
+                'sharedBalance',
+                'room_id',
+            ],
+            include: {
+                model: Room,
+                attributes: ['roomNumber', 'roomType', 'floorNumber'],
+            },
+            group: [
+                Sequelize.fn('DATE_FORMAT', Sequelize.col('statementDate'), '%Y-%m'), 
+                'room_id',
+            ],
+            order: [[Sequelize.fn('DATE_FORMAT', Sequelize.col('statementDate'), '%Y-%m'), 'DESC']], 
+        });
+
+        if (!rows || rows.length === 0) {
+            return []; 
+        }
+
+        const utilitiesPerMonth = [];
+        const seenMonths = new Set();
+
+        rows.forEach(row => {
+            const utility = row.get({ plain: true });
+
+            const month = utility.month;
+            if (!seenMonths.has(month)) {
+                seenMonths.add(month);  
+
+                utilitiesPerMonth.push({
+                    month: utility.month,
+                    totalBalance: parseFloat(utility.totalBalance).toFixed(2),  
+                    sharedBalance: parseFloat(utility.sharedBalance).toFixed(2),  
+                    room_id: utility.room_id,
+                    roomNumber: utility.Room?.roomNumber, 
+                    roomType: utility.Room?.roomType,
+                    floorNumber: utility.Room?.floorNumber,
+                });
+            }
+        });
+
+        return utilitiesPerMonth;  
+    } catch (error) {
+        console.error('Error fetching utility histories:', error);
+        return [];  
     }
 };
 
@@ -867,23 +930,28 @@ export const addUtility = async (req, res) => {
             utilityType,
         });
 
+        const statementMonthYear = new Date(statementDate);
+        const month = statementMonthYear.toLocaleString('default', { month: 'long' });
+        const year = statementMonthYear.getFullYear();
+
         const utilitiesForRoom = await Utility.findAll({
             where: {
                 establishment_id: establishmentId,
-                room_id: roomId
+                room_id: roomId,
+                month: `${month} ${year}`, 
             }
         });
 
-        console.log('Fetched utilities for room:', utilitiesForRoom);
+        console.log('Fetched utilities for room in month:', utilitiesForRoom);
 
         let totalBalance = 0;
         utilitiesForRoom.forEach((utility) => {
-            totalBalance += parseFloat(utility.charge) || 0; 
+            totalBalance += parseFloat(utility.charge) || 0;
         });
 
-        totalBalance += parsedCharge;
+        totalBalance += parsedCharge;  
 
-        console.log('Total balance for the utilities:', totalBalance);
+        console.log('Total balance for the utilities in this month:', totalBalance);
 
         totalBalance = parseFloat(totalBalance.toFixed(2));
 
@@ -900,18 +968,19 @@ export const addUtility = async (req, res) => {
             return res.status(400).json({ success: false, message: "No tenants found for this establishment." });
         }
 
-        let perTenant = totalBalance / totalTenants;
+        let perTenant = parsedCharge / totalTenants;
         perTenant = parseFloat(perTenant.toFixed(2));
 
         await Utility.update(
             {
                 totalBalance,
-                sharedBalance: 0,  
+                sharedBalance: 0, 
             },
             {
                 where: {
                     establishment_id: establishmentId,
                     room_id: roomId,
+                    month: `${month} ${year}`,  
                 }
             });
 
@@ -924,14 +993,16 @@ export const addUtility = async (req, res) => {
             room_id: roomId,
             establishment_id: establishmentId,
             totalBalance,
-            perTenant,  
-            sharedBalance: 0,   
+            perTenant,
+            sharedBalance: 0,
+            month: `${month} ${year}`,  
         });
 
         const utilitiesForRoomAfterUpdate = await Utility.findAll({
             where: {
                 establishment_id: establishmentId,
                 room_id: roomId,
+                month: `${month} ${year}`, 
             }
         });
 
@@ -948,6 +1019,7 @@ export const addUtility = async (req, res) => {
                 where: {
                     establishment_id: establishmentId,
                     room_id: roomId,
+                    month: `${month} ${year}`,   
                 }
             });
 
@@ -959,8 +1031,6 @@ export const addUtility = async (req, res) => {
         }
     }
 };
-
-
 
 export const addTenant = async (req, res) => {
     const { 
@@ -1065,7 +1135,6 @@ export const addTenant = async (req, res) => {
 
         generateTokenAndSetTenantCookie(res, newTenant.tenant_id, establishmentId);
 
-        // Send confirmation email
         const subject = 'Account Creation Notification';
         const html = `
            <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
@@ -1290,10 +1359,10 @@ export const updateUtility = async (req, res) => {
             return res.status(500).json({ success: false, message: "Failed to update utility." });
         }
 
-        console.log(`Updated Utility ID ${utility.utility_id} with charge: ${parsedCharge}, utilityType: ${updatedUtilityData.utilityType}, statementDate: ${updatedUtilityData.statementDate}, dueDate: ${updatedUtilityData.dueDate}, status: ${updatedUtilityData.status}`);
+        console.log(`Updated Utility ID ${utility.utility_id} with new charge and dates.`);
 
         const [utilitiesForRoomRows] = await connection.promise().query(
-            'SELECT * FROM Utilities WHERE establishment_id = ? AND room_id = ?',
+            'SELECT * FROM Utilities WHERE establishment_id = ? AND room_id = ? AND YEAR(statementDate) = YEAR(CURRENT_DATE()) AND MONTH(statementDate) = MONTH(CURRENT_DATE())',
             [utility.establishment_id, utility.room_id]
         );
 
@@ -1367,6 +1436,7 @@ export const updateUtility = async (req, res) => {
         });
     }
 };
+
 
 export const updateTenant = async (req, res) => {
     const { tenantFirstName, tenantLastName, tenantEmail, mobileNum, gender, tenantGuardianName, tenantAddress, tenantGuardianNum } = req.body;
@@ -1482,76 +1552,88 @@ export const deleteUtility = async (req, res) => {
     const utilityId = req.params.utility_id;
     const connection = connectDB();
 
-    connection.query('SELECT charge, room_id, establishment_id FROM Utilities WHERE utility_id = ?', [utilityId], async (err, result) => {
-        if (err) {
-            connection.end();
-            console.error('Error fetching utility data:', err);
-            return res.status(500).json({ success: false, message: "Error fetching utility data" });
-        }
+    try {
+        const [utilityRows] = await connection.promise().query(
+            'SELECT charge, room_id, establishment_id, statementDate FROM Utilities WHERE utility_id = ?',
+            [utilityId]
+        );
 
-        if (result.length === 0) {
+        if (utilityRows.length === 0) {
             connection.end();
             return res.status(404).json({ success: false, message: "Utility not found" });
         }
 
-        const utilityToDelete = result[0];
-        const { charge, room_id, establishment_id } = utilityToDelete;
+        const utilityToDelete = utilityRows[0];
+        const { charge, room_id, establishment_id, statementDate } = utilityToDelete;
 
-        connection.query('SELECT charge FROM Utilities WHERE room_id = ? AND establishment_id = ?', [room_id, establishment_id], async (err, utilities) => {
-            if (err) {
-                connection.end();
-                console.error('Error fetching utilities for the room:', err);
-                return res.status(500).json({ success: false, message: "Error fetching utilities for the room" });
-            }
+        const [utilitiesForRoomRows] = await connection.promise().query(
+            'SELECT * FROM Utilities WHERE establishment_id = ? AND room_id = ? AND YEAR(statementDate) = YEAR(CURRENT_DATE()) AND MONTH(statementDate) = MONTH(CURRENT_DATE())',
+            [establishment_id, room_id]
+        );
 
-            let totalBalance = 0;
-            utilities.forEach(utility => {
-                totalBalance += parseFloat(utility.charge) || 0;
-            });
-
-            totalBalance -= charge; 
-
-            const rooms = await Room.findAll({ where: { establishment_id } });
-            const tenantCounts = await Promise.all(rooms.map(async (room) => {
-                const tenantCountInRoom = await Tenant.count({ where: { room_id: room.room_id } });
-                return tenantCountInRoom;
-            }));
-
-            const totalTenants = tenantCounts.reduce((acc, count) => acc + count, 0);
-            if (totalTenants === 0) {
-                connection.end();
-                return res.status(400).json({ success: false, message: "No tenants found for this establishment." });
-            }
-
-            let sharedBalance = totalBalance / totalTenants;
-            sharedBalance = parseFloat(sharedBalance.toFixed(2));
-
-            connection.query('UPDATE Utilities SET totalBalance = ?, sharedBalance = ? WHERE room_id = ? AND establishment_id = ?', [totalBalance, sharedBalance, room_id, establishment_id], (err, result) => {
-                if (err) {
-                    connection.end();
-                    console.error('Error updating utilities data:', err);
-                    return res.status(500).json({ success: false, message: "Error updating utilities data" });
-                }
-
-                connection.query('DELETE FROM Utilities WHERE utility_id = ?', [utilityId], (err, result) => {
-                    connection.end();
-
-                    if (err) {
-                        console.error('Error deleting utility data:', err);
-                        return res.status(500).json({ success: false, message: "Error deleting utility data" });
-                    }
-
-                    if (result.affectedRows === 0) {
-                        return res.status(404).json({ success: false, message: "Utility not found" });
-                    }
-
-                    res.json({ success: true, message: "Utility successfully removed" });
-                });
-            });
+        let totalBalance = 0;
+        utilitiesForRoomRows.forEach((u) => {
+            totalBalance += parseFloat(u.charge || 0);
         });
-    });
-};
 
+        totalBalance -= charge;
+
+        const [rooms] = await connection.promise().query(
+            'SELECT * FROM Rooms WHERE establishment_id = ?',
+            [establishment_id]
+        );
+
+        const tenantCounts = await Promise.all(
+            rooms.map(async (room) => {
+                const [tenantCount] = await connection.promise().query(
+                    'SELECT COUNT(*) AS tenant_count FROM Tenants WHERE room_id = ?',
+                    [room.room_id]
+                );
+                return tenantCount[0].tenant_count;
+            })
+        );
+
+        const totalTenants = tenantCounts.reduce((acc, count) => acc + count, 0);
+
+        if (totalTenants === 0) {
+            connection.end();
+            return res.status(400).json({ success: false, message: "No tenants found in the establishment." });
+        }
+
+        let sharedBalance = totalBalance / totalTenants;
+        sharedBalance = parseFloat(sharedBalance.toFixed(2));
+
+        const [updateUtilitiesResult] = await connection.promise().query(
+            'UPDATE Utilities SET totalBalance = ?, sharedBalance = ? WHERE room_id = ? AND establishment_id = ? AND YEAR(statementDate) = YEAR(CURRENT_DATE()) AND MONTH(statementDate) = MONTH(CURRENT_DATE())',
+            [totalBalance, sharedBalance, room_id, establishment_id]
+        );
+
+        const [deleteUtilityResult] = await connection.promise().query(
+            'DELETE FROM Utilities WHERE utility_id = ?',
+            [utilityId]
+        );
+
+        if (deleteUtilityResult.affectedRows === 0) {
+            connection.end();
+            return res.status(404).json({ success: false, message: "Utility not found" });
+        }
+
+        connection.end();
+
+        return res.json({
+            success: true,
+            message: "Utility successfully removed",
+        });
+    } catch (error) {
+        console.error('Error deleting utility:', error);
+        connection.end();
+        return res.status(500).json({
+            success: false,
+            message: "Error deleting utility data",
+            error: error.message,
+        });
+    }
+};
 
 export const getOccupiedUnits = async (req, res) => {
     const establishmentId = req.establishmentId; 
@@ -1580,8 +1662,6 @@ export const getOccupiedUnits = async (req, res) => {
         }
     }
 };
-
-
 
 export const getAvailableRooms = async (req, res) => {
     try {

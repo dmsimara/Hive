@@ -122,25 +122,29 @@
             <thead>
               <tr>
                 <th>Month</th>
-                <th><i class="fas fa-wallet"></i> Total Balance</th>
+                <th><i class="fas fa-wallet"></i> Total Charge</th>
                 <th><i class="fas fa-users"></i> Shared Balance</th>
               </tr>
             </thead>
             <tbody>
+              {{#each utilitiesHistory}}
               <tr>
-                <td>Aug 2024 - Sept 2024</td>
-                <td>Php 13,178.89</td>
-                <td>Php 3,294.73</td>
+                <td>{{this.month}}</td>
+                <td>Php {{this.totalBalance}}</td>
+                <td>Php {{this.sharedBalance}}</td> <!-- Show sharedBalance -->
               </tr>
+              {{else}}
               <tr>
-                <td>July 2024 - Aug 2024</td>
-                <td>Php 12,592.12</td>
-                <td>Php 3,148.03</td>
+                <td colspan="3">No utilities history available.</td>
               </tr>
+              {{/each}}
             </tbody>
           </table>
         </div>
       </section>
+
+
+
 
 
       <script src="/js/ten-utilities.js"></script>

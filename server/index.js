@@ -19,7 +19,7 @@ import Notice from "./models/notice.models.js";
 import Feedback from "./models/feedback.models.js";
 import Utility from "./models/utility.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
-import { addTenant, addTenantView, addUnitView, editTenant, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, updateEvent, updateTenant, updateUtility, viewAdmins, viewEvents, viewNotices, viewTenants, viewUnits, viewUtilities } from './controllers/auth.controllers.js';
+import { addTenant, addTenantView, addUnitView, editTenant, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, updateEvent, updateTenant, updateUtility, utilityHistories, viewAdmins, viewEvents, viewNotices, viewTenants, viewUnits, viewUtilities } from './controllers/auth.controllers.js';
 import { createPool } from "mysql2";
 
 // Sets up `__filename` and `__dirname` in an ES module environment using Node.js.
@@ -853,23 +853,115 @@ app.get("/tenant/utilities", verifyTenantToken, setEstablishmentId, async (req, 
             'dorm amenities'
         ];
 
-        const utilities = await viewUtilities(req);
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth();  
+        const currentYear = currentDate.getFullYear();
 
-        // Debugging logs for utilities
-        console.log("Utilities fetched from database:", utilities);
+        const utilities = await viewUtilities(req);  
+        console.log("Utilities fetched from viewUtilities:", utilities);
 
         if (!utilities || utilities.length === 0) {
-            return res.status(404).send("No utilities found.");
+            const formattedUtilities = allUtilityTypes.map(utilityType => ({
+                utilityType: getFormattedName(utilityType),
+                charge: "0.00",
+                perTenant: "0.00",
+                status: 'N/A',
+                iconClass: getIconClass(utilityType),
+                sizeClass: getSizeClass(utilityType),
+                statementDate: 'N/A',
+                dueDate: 'N/A'
+            }));
+
+            const tenant = await Tenant.findOne({ where: { tenant_id: tenantId } });
+            if (!tenant) {
+                return res.status(404).send("Tenant not found");
+            }
+
+            const roomId = tenant.get('room_id');
+            const room = await Room.findOne({ where: { room_id: roomId } });
+
+            if (!room) {
+                return res.status(404).send("Room not found");
+            }
+
+            const roomNumber = room.get('roomNumber');
+            const tenants = await getTenantsDashboard(roomId);
+
+            const plainTenants = tenants.map(tenant => tenant.get({ plain: true }));
+
+            res.render("ten-utilities", {
+                title: "Hive",
+                styles: ["ten-utilities"],
+                tenants: plainTenants,
+                roomNumber: roomNumber,
+                utilities: formattedUtilities,
+                totalBalance: "0.00",
+                sharedBalance: "0.00",
+                utilitiesHistory: []
+            });
+            return;
         }
 
-        const totalBalance = utilities.reduce((sum, utility) => sum + parseFloat(utility.totalBalance || 0), 0);
-        const sharedBalance = utilities.reduce((sum, utility) => sum + parseFloat(utility.sharedBalance || 0), 0);
+        const filteredUtilities = utilities.filter(utility => {
+            const statementDate = new Date(utility.statementDate);
+            const dueDate = new Date(utility.dueDate);
+            
+            return (
+                (statementDate.getMonth() === currentMonth && statementDate.getFullYear() === currentYear) ||
+                (dueDate.getMonth() === currentMonth && dueDate.getFullYear() === currentYear)
+            );
+        });
 
-        console.log("Calculated Total Balance:", totalBalance);
-        console.log("Calculated Shared Balance:", sharedBalance);
+        if (filteredUtilities.length === 0) {
+            const formattedUtilities = allUtilityTypes.map(utilityType => ({
+                utilityType: getFormattedName(utilityType),
+                charge: "0.00",
+                perTenant: "0.00",
+                status: 'N/A',
+                iconClass: getIconClass(utilityType),
+                sizeClass: getSizeClass(utilityType),
+                statementDate: 'N/A',
+                dueDate: 'N/A'
+            }));
+
+            const tenant = await Tenant.findOne({ where: { tenant_id: tenantId } });
+            if (!tenant) {
+                return res.status(404).send("Tenant not found");
+            }
+
+            const roomId = tenant.get('room_id');
+            const room = await Room.findOne({ where: { room_id: roomId } });
+
+            if (!room) {
+                return res.status(404).send("Room not found");
+            }
+
+            const roomNumber = room.get('roomNumber');
+            const tenants = await getTenantsDashboard(roomId);
+
+            const plainTenants = tenants.map(tenant => tenant.get({ plain: true }));
+
+            res.render("ten-utilities", {
+                title: "Hive",
+                styles: ["ten-utilities"],
+                tenants: plainTenants,
+                roomNumber: roomNumber,
+                utilities: formattedUtilities,
+                totalBalance: "0.00",
+                sharedBalance: "0.00",
+                utilitiesHistory: []
+            });
+            return;
+        }
+
+        const totalBalance = parseFloat(filteredUtilities[0].totalBalance || 0).toFixed(2);
+        const sharedBalance = parseFloat(filteredUtilities[0].sharedBalance || 0).toFixed(2);
+
+        console.log("Calculated Total Balance for current month:", totalBalance);
+        console.log("Calculated Shared Balance for current month:", sharedBalance);
 
         const formattedUtilities = allUtilityTypes.map(utilityType => {
-            const utility = utilities.find(u => u.utilityType === utilityType);
+            const utility = filteredUtilities.find(u => u.utilityType === utilityType);
 
             const charge = utility ? parseFloat(utility.charge) : 0.00;
 
@@ -893,29 +985,27 @@ app.get("/tenant/utilities", verifyTenantToken, setEstablishmentId, async (req, 
             };
         });
 
-        const tenant = await Tenant.findOne({
-            where: { tenant_id: tenantId }
-        });
+        const tenant = await Tenant.findOne({ where: { tenant_id: tenantId } });
 
         if (!tenant) {
             return res.status(404).send("Tenant not found");
         }
 
         const roomId = tenant.get('room_id');
-
-        const room = await Room.findOne({
-            where: { room_id: roomId }
-        });
+        const room = await Room.findOne({ where: { room_id: roomId } });
 
         if (!room) {
             return res.status(404).send("Room not found");
         }
 
         const roomNumber = room.get('roomNumber');
-
         const tenants = await getTenantsDashboard(roomId);
 
         const plainTenants = tenants.map(tenant => tenant.get({ plain: true }));
+
+        const utilitiesHistory = await utilityHistories(req, res);
+
+        console.log('Utilities History:', utilitiesHistory);
 
         res.render("ten-utilities", {
             title: "Hive",
@@ -923,8 +1013,9 @@ app.get("/tenant/utilities", verifyTenantToken, setEstablishmentId, async (req, 
             tenants: plainTenants,
             roomNumber: roomNumber,
             utilities: formattedUtilities,
-            totalBalance: totalBalance.toFixed(2),  
-            sharedBalance: sharedBalance.toFixed(2)  
+            totalBalance: totalBalance,
+            sharedBalance: sharedBalance,
+            utilitiesHistory  
         });
     } catch (error) {
         console.error('Error fetching tenant utilities:', error);
