@@ -835,13 +835,55 @@ app.get("/tenant/announcement", verifyTenantToken, async (req, res) => {
 });
 
 // TENANT PAGES (UTILITIES) -------------------------------------------------------------------------
-app.get("/tenant/utilities", verifyTenantToken, async (req, res) => {
+app.get("/tenant/utilities", verifyTenantToken, setEstablishmentId, async (req, res) => {
     const tenantId = req.tenantId;
+    const { establishmentId } = req;
+
     if (!tenantId) {
         return res.status(400).send("Tenant ID not found in the token.");
     }
 
     try {
+        const allUtilityTypes = [
+            'electricity consumption',
+            'water usage',
+            'internet connection',
+            'unit rental',
+            'maintenance fees',
+            'dorm amenities'
+        ];
+
+        const utilities = await viewUtilities(req, res);
+
+        if (!utilities) {
+            return res.status(404).send("No utilities found.");
+        }
+
+        const formattedUtilities = allUtilityTypes.map(utilityType => {
+            const utility = utilities.find(u => u.utilityType === utilityType);
+
+            const charge = utility ? parseFloat(utility.charge) : 0.00;   
+
+            let perTenant = utility ? utility.perTenant : 0.00;
+
+            if (perTenant === null || perTenant === undefined || isNaN(perTenant)) {
+                perTenant = 0.00; 
+            } else {
+                perTenant = parseFloat(perTenant).toFixed(2); 
+            }
+
+            return {
+                utilityType: getFormattedName(utilityType), 
+                charge: charge.toFixed(2), 
+                perTenant: perTenant, 
+                status: utility ? utility.status : 'N/A',  
+                iconClass: getIconClass(utilityType),       
+                sizeClass: getSizeClass(utilityType),      
+                statementDate: utility ? utility.statementDate : 'N/A', 
+                dueDate: utility ? utility.dueDate : 'N/A' 
+            };
+        });
+
         const tenant = await Tenant.findOne({
             where: { tenant_id: tenantId }
         });
@@ -850,7 +892,7 @@ app.get("/tenant/utilities", verifyTenantToken, async (req, res) => {
             return res.status(404).send("Tenant not found");
         }
 
-        const roomId = tenant.get('room_id');
+        const roomId = tenant.get('room_id'); 
 
         const room = await Room.findOne({
             where: { room_id: roomId }
@@ -860,7 +902,7 @@ app.get("/tenant/utilities", verifyTenantToken, async (req, res) => {
             return res.status(404).send("Room not found");
         }
 
-        const roomNumber = room.get('roomNumber');
+        const roomNumber = room.get('roomNumber'); 
 
         const tenants = await getTenantsDashboard(roomId);
 
@@ -870,7 +912,8 @@ app.get("/tenant/utilities", verifyTenantToken, async (req, res) => {
             title: "Hive",
             styles: ["ten-utilities"],
             tenants: plainTenants,
-            roomNumber: roomNumber
+            roomNumber: roomNumber,
+            utilities: formattedUtilities
         });
     } catch (error) {
         console.error('Error fetching tenant utilities:', error);
