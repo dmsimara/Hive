@@ -6,6 +6,8 @@ import Calendar from '../models/calendar.models.js';
 import Notice from '../models/notice.models.js';
 import Feedback from '../models/feedback.models.js';
 import Utility from '../models/utility.models.js';
+import Activity from '../models/activity.models.js';
+import History from '../models/history.models.js';
 import bcryptjs from 'bcryptjs';
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
@@ -14,6 +16,7 @@ import { connectDB } from '../db/connectDB.js';
 import { Sequelize, Op } from 'sequelize';
 import { format, startOfWeek, endOfWeek, addHours } from 'date-fns';
 import { sendMail } from '../nodemailer/mail.js';
+import moment from 'moment-timezone';
 
 export const adminRegister = async (req, res) => {
     const { adminFirstName, adminLastName, adminEmail, adminPassword, eName } = req.body;
@@ -83,7 +86,7 @@ export const adminRegister = async (req, res) => {
             message: "Registration successful. Please check your email to verify your account.",
             admin: {
                 ...admin.dataValues,
-                adminPassword: undefined, // Remove sensitive data
+                adminPassword: undefined, 
             },
         });
     } catch (error) {
@@ -102,11 +105,10 @@ export const verifyEmail = async (req, res) => {
     const {code} = req.body;
 
     try {
-        // Find admin with the matching verification code and check expiration
         const admin = await Admin.findOne({
             where: {
                 verificationToken: code,
-                verificationTokenExpiresAt: { [Op.gt]: Date.now() }, // Ensure expiration is in the future
+                verificationTokenExpiresAt: { [Op.gt]: Date.now() }, 
             },
             include: {
                 model: Establishment,  
@@ -122,7 +124,6 @@ export const verifyEmail = async (req, res) => {
             });
         }
 
-        // Mark admin as verified and clear verification data
         admin.isVerified = true;
         admin.verificationToken = null;
         admin.verificationTokenExpiresAt = null;
@@ -176,7 +177,6 @@ export const adminLogin = async (req, res) => {
             return res.status(400).json({ success: false, message: "Admin not found" });
         }
 
-        // Check if the admin email is verified
         if (!admin.isVerified) {
             return res.status(400).json({ success: false, message: "Please verify your email before logging in." });
         }
@@ -203,6 +203,8 @@ export const adminLogin = async (req, res) => {
         admin.lastLogin = new Date();
         await admin.save();
 
+        logActivity(admin.admin_id, 'login_success', `Admin ${admin.adminFirstName} (${adminEmail}) logged in successfully`);
+
         res.status(201).json({
             success: true,
             message: "Admin logged in successfully",
@@ -213,9 +215,48 @@ export const adminLogin = async (req, res) => {
         });
     } catch (error) {
         console.log("Error in login:", error);
+        logActivity(null, 'login_error', `Error during login attempt for admin email: ${adminEmail}. Error: ${error.message}`);
         res.status(400).json({ success: false, message: error.message });
     }
 };
+
+export function logActivity(adminId, actionType, actionDetails = '') {
+    const connection = connectDB();   
+
+    const query = `
+        INSERT INTO activities (admin_id, actionType, actionDetails) 
+        VALUES (?, ?, ?)
+    `;
+
+    connection.query(query, [adminId, actionType, actionDetails], (err, results) => {
+        if (err) {
+            console.error('Error logging activity:', err);
+            return;
+        }
+        console.log('Activity logged successfully:', results.insertId);
+    });
+
+    connection.end();  
+}
+
+export function logHistory(tenantId, actionType, actionDetails = '') {
+    const connection = connectDB(); 
+
+    const query = `
+        INSERT INTO histories (tenant_id, actionType, actionDetails) 
+        VALUES (?, ?, ?)
+    `;
+
+    connection.query(query, [tenantId, actionType, actionDetails], (err, results) => {
+        if (err) {
+            console.error('Error logging history:', err);
+            return;
+        }
+        console.log('History logged successfully:', results.insertId);
+    });
+
+    connection.end(); 
+}
 
 export const tenantLogin = async (req, res) => {
     const { tenantEmail, tenantPassword } = req.body;
@@ -238,35 +279,109 @@ export const tenantLogin = async (req, res) => {
 
         await tenant.save();
 
+        logHistory(tenant.tenant_id, 'login_success', `Tenant ${tenant.tenantName} (Email: ${tenantEmail}) logged in successfully`);
+
         res.status(201).json({
             success: true,
             message: "Tenant logged in successfully",
-            admin: {
+            tenant: {
                 ...tenant.dataValues,
                 tenantPassword: undefined,
             },
         });
     } catch (error) {
         console.log("Error in login:", error);
+        logHistory(null, 'login_error', `Error during login attempt for tenant email: ${tenantEmail}. Error: ${error.message}`);
         res.status(400).json({ success: false, message: error.message});
     }
 }
 
 export const adminLogout = async (req, res) => {
-    res.clearCookie("token");
-    res.status(200).json({
-        success: true,
-        message: "Logged out successfully"
-    });
-}
+    try {
+        res.clearCookie("token");
+
+        const adminId = req.adminId;
+
+        if (!adminId) {
+            return res.status(400).json({
+                success: false,
+                message: "Admin ID not found for logging activity."
+            });
+        }
+
+        const admin = await Admin.findOne({
+            where: { admin_id: adminId }
+        });
+
+        if (!admin) {
+            return res.status(404).json({
+                success: false,
+                message: "Admin not found for logging out."
+            });
+        }
+
+        const timestamp = moment().tz('Asia/Manila').format('YYYY-MM-DD HH:mm:ss');
+
+        const logMessage = `Admin ${admin.adminFirstName} ${admin.adminLastName} logged out successfully at ${timestamp}.`;
+
+        logActivity(adminId, 'admin logout', logMessage);
+
+        res.status(200).json({
+            success: true,
+            message: "Logged out successfully"
+        });
+    } catch (error) {
+        console.error("Error during logout:", error);
+        res.status(500).json({
+            success: false,
+            message: "An error occurred during logout."
+        });
+    }
+};
 
 export const tenantLogout = async (req, res) => {
-    res.clearCookie("tenantToken");
-    res.status(200).json({
-        success: true,
-        message: "Logged out successfully"
-    });
-}
+    try {
+        res.clearCookie("tenantToken");
+
+        const tenantId = req.tenantId;
+
+        if (!tenantId) {
+            return res.status(400).json({
+                success: false,
+                message: "Tenant ID not found for logging activity."
+            });
+        }
+
+        const tenant = await Tenant.findOne({
+            where: { tenant_id: tenantId }
+        });
+
+        if (!tenant) {
+            return res.status(404).json({
+                success: false,
+                message: "Tenant not found for logging out."
+            });
+        }
+
+        const timestamp = moment().tz('Asia/Manila').format('YYYY-MM-DD HH:mm:ss');
+
+        const logMessage = `Tenant ${tenant.tenantFirstName} ${tenant.tenantLastName} logged out successfully at ${timestamp}.`;
+
+        logHistory(tenantId, 'tenant logout', logMessage);
+
+        res.status(200).json({
+            success: true,
+            message: "Logged out successfully"
+        });
+    } catch (error) {
+        console.error("Error during logout:", error);
+        res.status(500).json({
+            success: false,
+            message: "An error occurred during logout."
+        });
+    }
+};
+
 
 export const forgotPassword = async (req, res) => {
     const { adminEmail } = req.body;
@@ -280,7 +395,6 @@ export const forgotPassword = async (req, res) => {
             return res.status(400).json({ success: false, message: "Admin not found" });
         };
 
-        // generating reset token
         const resetToken = crypto.randomBytes(20).toString("hex");
         const resetTokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000;
 
@@ -288,7 +402,6 @@ export const forgotPassword = async (req, res) => {
         admin.resetPasswordExpiresAt = resetTokenExpiresAt;
         await admin.save();
 
-        // send email
         const subject = 'Password Reset Request';
         const html = `
            <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
@@ -348,6 +461,9 @@ export const resetPassword = async (req, res) => {
         admin.resetPasswordExpiresAt = undefined;
 
         await admin.save();
+
+        const logMessage = `Admin ${admin.adminFirstName} ${admin.adminLastName} reset their password successfully.`;
+        logActivity(admin.admin_id, 'password reset', logMessage);
         
         // send email
         const subject = 'Password Reset Confirmation';
@@ -393,7 +509,6 @@ export const updateAdminPassword = async (req, res) => {
     try {
         console.log("Admin ID from middleware:", adminId); 
 
-        // Find the admin by ID
         const admin = await Admin.findOne({ where: { admin_id: adminId } });
 
         if (!admin) {
@@ -401,23 +516,25 @@ export const updateAdminPassword = async (req, res) => {
             return res.status(404).json({ success: false, message: "Admin not found" });
         }
 
-        // Verify current password
+        const { adminFirstName } = admin;
+
         const isMatch = await bcryptjs.compare(currentPassword, admin.adminPassword);
         if (!isMatch) {
             console.error("Current password does not match for Admin ID:", adminId); 
             return res.status(400).json({ success: false, message: "Current password is incorrect" });
         }
 
-        // Hash the new password
         const hashedPassword = await bcryptjs.hash(newPassword, 10);
 
-        // Update the password
         admin.adminPassword = hashedPassword;
         await admin.save();
 
+        const successMessage = `Password successfully updated for ${adminFirstName} (Admin ID: ${adminId}).`;
+        console.log(successMessage);
+        logActivity(adminId, 'password reset', successMessage);
+
         console.log("Password successfully updated for Admin ID:", adminId); 
 
-        // Send confirmation email
         const subject = 'Password Change Confirmation';
         const html = `
            <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
@@ -452,7 +569,6 @@ export const updateTenantPassword = async (req, res) => {
     try {
         console.log("Tenant ID from middleware:", tenantId); 
 
-        // Find the tenant by ID
         const tenant = await Tenant.findOne({ where: { tenant_id: tenantId } });
 
         if (!tenant) {
@@ -460,23 +576,25 @@ export const updateTenantPassword = async (req, res) => {
             return res.status(404).json({ success: false, message: "Tenant not found" });
         }
 
-        // Verify current password
+        const { tenantFirstName } = tenant;
+
         const isMatch = await bcryptjs.compare(currentPassword, tenant.tenantPassword);
         if (!isMatch) {
             console.error("Current password does not match for Tenant ID:", tenantId); 
             return res.status(400).json({ success: false, message: "Current password is incorrect" });
         }
 
-        // Hash the new password
         const hashedPassword = await bcryptjs.hash(newPassword, 10);
 
-        // Update the password
         tenant.tenantPassword = hashedPassword;
         await tenant.save();
 
+        const successMessage = `Password successfully updated for ${tenantFirstName} (Tenant ID: ${tenantId}).`;
+        console.log(successMessage);
+        logHistory(tenantId, 'password reset', successMessage);
+
         console.log("Password successfully updated for Tenant ID:", tenantId); 
 
-        // Send confirmation email
         const subject = 'Password Change Confirmation';
         const html = `
            <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
@@ -916,6 +1034,7 @@ export const addUtility = async (req, res) => {
         const token = req.cookies.token;
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const establishmentId = decoded.establishmentId;
+        const adminId = decoded.adminId;
 
         console.log('Decoded JWT:', decoded);
 
@@ -998,6 +1117,8 @@ export const addUtility = async (req, res) => {
             month: `${month} ${year}`,  
         });
 
+        logActivity(adminId, 'create', `Added new utility: ${utilityType} for Room ID: ${roomId}, Month: ${month} ${year}`);
+
         const utilitiesForRoomAfterUpdate = await Utility.findAll({
             where: {
                 establishment_id: establishmentId,
@@ -1026,6 +1147,7 @@ export const addUtility = async (req, res) => {
         return res.status(201).json({ message: 'Utility added successfully!', utility: newUtility });
     } catch (error) {
         console.error('Error adding utility:', error);
+        logActivity(decoded.adminId, 'error', errorMessage);
         if (!res.headersSent) {
             return res.status(500).json({ success: false, message: 'Failed to add utility', error: error.message });
         }
@@ -1130,6 +1252,8 @@ export const addTenant = async (req, res) => {
             tenantGuardianNum
         });
 
+        logActivity(decoded.adminId, 'create', `Added tenant: ${tenantFirstName} ${tenantLastName}`);
+
         room.roomRemainingSlot -= 1;
         await room.save();
 
@@ -1211,6 +1335,8 @@ export const addUnit = async (req, res) => {
             establishmentId
         });
 
+        logActivity(decoded.adminId, 'create', `Added room ${roomNumber} on floor ${floorNumber}`);
+
         res.status(201).json({ message: 'Room added successfully!', room: newRoom });
     } catch (error) {
         console.error('Error adding room:', error);
@@ -1233,6 +1359,8 @@ export const addFeedback = async (req, res) => {
         content: content,  
         userEmail: userEmail,  
       });
+
+      logActivity(adminId, 'create', `Added feedback from ${userName}`);
   
       // Send a success response
       res.status(201).json({
@@ -1312,6 +1440,7 @@ export const editTenant = async (req, res) => {
 export const updateUtility = async (req, res) => {
     const { utilityType, charge, statementDate, dueDate, status } = req.body;
     const utilityId = req.params.utility_id;
+    const adminId = req.adminId;
 
     if (!charge || isNaN(parseFloat(charge)) || parseFloat(charge) <= 0) {
         return res.status(400).json({ success: false, message: "Invalid charge value." });
@@ -1360,6 +1489,9 @@ export const updateUtility = async (req, res) => {
         }
 
         console.log(`Updated Utility ID ${utility.utility_id} with new charge and dates.`);
+
+        logActivity(adminId, 'update', `Updated utility: ${updatedUtilityData.utilityType} for Room ID ${utility.room_id} with new charge and dates for Utility ID ${utilityId}`);
+
 
         const [utilitiesForRoomRows] = await connection.promise().query(
             'SELECT * FROM Utilities WHERE establishment_id = ? AND room_id = ? AND YEAR(statementDate) = YEAR(CURRENT_DATE()) AND MONTH(statementDate) = MONTH(CURRENT_DATE())',
@@ -1442,6 +1574,21 @@ export const updateTenant = async (req, res) => {
     const { tenantFirstName, tenantLastName, tenantEmail, mobileNum, gender, tenantGuardianName, tenantAddress, tenantGuardianNum } = req.body;
     const tenantId = req.params.tenantId;
 
+    let establishmentId;
+    let adminId;
+
+    try {
+        const token = req.cookies.token; 
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        
+        establishmentId = decoded.establishmentId;
+        adminId = decoded.adminId;
+        console.log('Decoded JWT Token:', decoded); 
+
+    } catch (err) {
+        return res.status(401).json({ success: false, message: "Invalid or expired token." });
+    }
+
     try {
         const connection = connectDB();
 
@@ -1456,7 +1603,10 @@ export const updateTenant = async (req, res) => {
 
         if (updateResult.affectedRows > 0) {
             const [rows] = await connection.promise().query('SELECT * FROM Tenants WHERE tenant_id = ?', [tenantId]);
-            connection.end(); 
+
+            logActivity(adminId, 'update', `Updated tenant ID ${tenantId}: ${tenantFirstName} ${tenantLastName}.`);
+
+            connection.end();
             return res.json({ success: true, message: 'Tenant updated successfully', tenant: rows[0] });
         } else {
             connection.end();
@@ -1467,6 +1617,7 @@ export const updateTenant = async (req, res) => {
         return res.status(500).send('An error occurred while updating tenant data');
     }
 };
+
 
 export const deleteAdmin = async (req, res) => {
     const adminId = req.params.admin_id;
@@ -1491,6 +1642,8 @@ export const deleteAdmin = async (req, res) => {
         }
 
         await admin.destroy();
+
+        logActivity(adminId, 'delete', `Deleted admin account ID ${adminId}.`);
         return res.status(200).json({ success: true, message: 'Admin deleted successfully' });
     } catch (error) {
         console.error('Error deleting admin:', error);
@@ -1502,6 +1655,7 @@ export const deleteAdmin = async (req, res) => {
 export const deleteTenant = async (req, res) => {
     const tenantId = req.params.tenant_id;
     console.log('tenantId received by backend:', tenantId); 
+    const adminId = req.adminId;
 
     if (!tenantId) {
         return res.status(400).json({ success: false, message: 'Tenant ID is required' });
@@ -1513,6 +1667,8 @@ export const deleteTenant = async (req, res) => {
             return res.status(404).json({ success: false, message: 'Tenant not found' });
         }
 
+        const tenantName = `${tenant.tenantFirstName} ${tenant.tenantLastName}`;
+
         const room = await Room.findByPk(tenant.room_id);  
         if (room) {
             room.roomRemainingSlot += 1;
@@ -1521,9 +1677,11 @@ export const deleteTenant = async (req, res) => {
         }
 
         await tenant.destroy();
+        logActivity(adminId, 'delete', `Deleted tenant ${tenantName} (ID: ${tenantId}). Tenant was assigned to room ID ${tenant.room_id}.`);
         return res.status(200).json({ success: true, message: 'Tenant deleted successfully' });
     } catch (error) {
         console.error('Error deleting tenant:', error);
+        logActivity(adminId, 'error', `Failed to delete tenant ID ${tenantId}. Error: ${error.message}`);
         return res.status(500).json({ success: false, message: 'An error occurred while deleting the tenant' });
     }
 };
@@ -1531,26 +1689,47 @@ export const deleteTenant = async (req, res) => {
 export const deleteUnit = (req, res) => {
     const roomId = req.params.room_id;
     const connection = connectDB();
+    const adminId = req.adminId;
 
-    connection.query('DELETE FROM Rooms WHERE room_id = ?', [roomId], (err, result) => {
-        connection.end();
-
+    connection.query('SELECT * FROM Rooms WHERE room_id = ?', [roomId], (err, rows) => {
         if (err) {
-            console.error('Error deleting room data:', err);
-            return res.status(500).json({ success: false, message: "Error deleting room data" });
+            connection.end();
+            console.error('Error retrieving room details:', err);
+            return res.status(500).json({ success: false, message: "Error retrieving room details" });
         }
 
-        if (result.affectedRows === 0) {
+        if (rows.length === 0) {
+            connection.end();
             return res.status(404).json({ success: false, message: "Room not found" });
         }
 
-        res.json({ success: true, message: "Room successfully removed" });
+        const room = rows[0];  
+        const roomName = room.roomNumber; 
+
+        connection.query('DELETE FROM Rooms WHERE room_id = ?', [roomId], (err, result) => {
+            connection.end();
+
+            if (err) {
+                console.error('Error deleting room data:', err);
+                return res.status(500).json({ success: false, message: "Error deleting room data" });
+            }
+
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ success: false, message: "Room not found" });
+            }
+
+            logActivity(adminId, 'delete', `Admin ID ${adminId} deleted room ID ${roomName}.`);
+
+            res.json({ success: true, message: "Room successfully removed" });
+        });
     });
 };
+
 
 export const deleteUtility = async (req, res) => {
     const utilityId = req.params.utility_id;
     const connection = connectDB();
+    const adminId = req.adminId;
 
     try {
         const [utilityRows] = await connection.promise().query(
@@ -1620,12 +1799,15 @@ export const deleteUtility = async (req, res) => {
 
         connection.end();
 
+        logActivity(adminId, 'delete', `Admin ID ${adminId} deleted ${utilityType} (Utility ID: ${utilityId}).`);
+
         return res.json({
             success: true,
             message: "Utility successfully removed",
         });
     } catch (error) {
         console.error('Error deleting utility:', error);
+        logActivity(adminId, 'delete_error', `Admin ID ${adminId} encountered an error while deleting utility ID ${utilityId}. Error: ${error.message}`);
         connection.end();
         return res.status(500).json({
             success: false,
@@ -1755,6 +1937,8 @@ export const addEvent = async (req, res) => {
 
         console.log('New Event Created:', newEvent);
 
+        logActivity(adminId, 'create', `Admin ID ${adminId} added a new event with name: ${event_name}.`);
+
         return res.status(201).json({
             success: true,
             message: "Event added successfully",
@@ -1768,6 +1952,7 @@ export const addEvent = async (req, res) => {
         });
     } catch (error) {
         console.error('Error adding event:', error);
+        logActivity(req.adminId, 'create_error', `Admin ID ${req.adminId} encountered an error while adding event. Error: ${error.message}`);
         return res.status(500).json({ success: false, message: 'Failed to add event', error: error.message });
     }
 };
@@ -1862,6 +2047,7 @@ export const editEvent = async (req, res) => {
 export const updateEvent = async (req, res) => {
     const { event_name, event_description, start, end, status } = req.body;
     const eventId = req.params.eventId;  
+    const adminId = req.adminId;
 
     if (!event_name || !event_description || !start || !end || !status) {
         return res.status(400).json({ 
@@ -1892,6 +2078,9 @@ export const updateEvent = async (req, res) => {
                 [eventId]
             );
             connection.end();
+
+            logActivity(adminId, 'update', `Admin ID ${adminId} updated event "${rows[0].event_name}" (Event ID: ${eventId}).`);
+
             return res.json({ 
                 success: true, 
                 message: 'Event updated successfully', 
@@ -1899,6 +2088,7 @@ export const updateEvent = async (req, res) => {
             });
         } else {
             connection.end();
+            logActivity(adminId, 'update_error', `Admin ID ${adminId} attempted to update event "${event_name}" (Event ID: ${eventId}), but no changes were made or event not found.`);
             return res.status(404).json({ 
                 success: false, 
                 message: 'Event not found or no changes made.' 
@@ -1906,6 +2096,7 @@ export const updateEvent = async (req, res) => {
         }
     } catch (err) {
         console.error('Error updating event:', err);
+        logActivity(adminId, 'update_error', `Admin ID ${adminId} encountered an error while updating event "${event_name}" (Event ID: ${eventId}). Error: ${err.message}`);
         return res.status(500).json({ 
             success: false, 
             message: 'An error occurred while updating event data' 
@@ -1915,6 +2106,7 @@ export const updateEvent = async (req, res) => {
 
 export const deleteEvent = async (req, res) => {
     const { eventId } = req.params;
+    const adminId = req.adminId;
 
     try {
         const result = await Calendar.destroy({
@@ -1922,12 +2114,14 @@ export const deleteEvent = async (req, res) => {
         });
 
         if (result > 0) {
+            logActivity(adminId, 'delete_success', `Admin ID ${adminId} successfully deleted event "${event.event_name}" (Event ID: ${eventId}).`);
             return res.json({ success: true, message: 'Event deleted successfully' });
         } else {
             return res.status(404).json({ success: false, message: 'Event not found' });
         }
     } catch (error) {
         console.error('Error deleting event:', error);
+        logActivity(adminId, 'delete_error', `Admin ID ${adminId} encountered an error while deleting event "${eventId}". Error: ${error.message}`);
         return res.status(500).json({ success: false, message: 'Failed to delete event' });
     }
 };
@@ -2172,6 +2366,8 @@ export const addNotice = async (req, res) => {
             establishment_id: establishmentId,
         });
 
+        logActivity(adminId, 'create', `Admin ID ${adminId} successfully added a new notice with title: "${newNotice.title}".`);
+
         return res.status(201).json({
             success: true,
             message: "Notice added successfully",
@@ -2186,6 +2382,7 @@ export const addNotice = async (req, res) => {
         });
     } catch (error) {
         console.error('Error adding notice:', error);
+        logActivity(req.adminId, 'create_error', `Admin ID ${req.adminId} encountered an error while adding a new notice. Error: ${error.message}`);
         return res.status(500).json({
             success: false, 
             message: 'Failed to add notice',
@@ -2275,19 +2472,33 @@ export const togglePermanent = async (req, res) => {
 
 export const deleteNotice = async (req, res) => {
     const { noticeId } = req.params;
+    const adminId = req.adminId;
 
     try {
+        const notice = await Notice.findOne({
+            where: { notice_id: noticeId }
+        });
+
+        if (!notice) {
+            return res.status(404).json({ success: false, message: 'Notice not found' });
+        }
+
         const result = await Notice.destroy({
-            where: { notice_id: noticeId } 
+            where: { notice_id: noticeId }
         });
 
         if (result > 0) {
+            logActivity(adminId, 'delete', `Admin ID ${adminId} successfully deleted Notice with title: "${notice.title}" (Notice ID: ${noticeId}).`);
+
             return res.json({ success: true, message: 'Notice deleted successfully' });
         } else {
             return res.status(404).json({ success: false, message: 'Notice not found' });
         }
     } catch (error) {
         console.error('Error deleting notice:', error);
+
+        logActivity(adminId, 'delete_error', `Admin ID ${adminId} encountered an error while deleting Notice ID: ${noticeId}. Error: ${error.message}`);
+
         return res.status(500).json({ success: false, message: 'Failed to delete notice' });
     }
 };

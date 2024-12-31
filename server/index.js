@@ -19,7 +19,7 @@ import Notice from "./models/notice.models.js";
 import Feedback from "./models/feedback.models.js";
 import Utility from "./models/utility.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
-import { addTenant, addTenantView, addUnitView, editTenant, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, updateEvent, updateTenant, updateUtility, utilityHistories, viewAdmins, viewEvents, viewNotices, viewTenants, viewUnits, viewUtilities } from './controllers/auth.controllers.js';
+import { addTenant, addTenantView, addUnitView, editTenant, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, logActivity, updateEvent, updateTenant, updateUtility, utilityHistories, viewAdmins, viewEvents, viewNotices, viewTenants, viewUnits, viewUtilities } from './controllers/auth.controllers.js';
 import { createPool } from "mysql2";
 
 // Sets up `__filename` and `__dirname` in an ES module environment using Node.js.
@@ -119,6 +119,9 @@ app.get("/admin/register/verifyEmail", (req, res) => {
 app.get("/tenant/login", (req, res) => {
     res.render("tenantLogin", { title: "Hive", styles: ["tenantLogin"] });
 });
+
+// ADMIN ACTIVITY LOG ---------------------------------------------------------------------------------
+
 
 // ADMIN PAGES (DASHBOARD) ----------------------------------------------------------------------------
 app.get("/admin/dashboard", verifyToken, async (req, res) => {
@@ -436,11 +439,13 @@ app.post("/admin/dashboard/edit/account", verifyToken, async (req, res) => {
                     adminProfile = sampleFile.name;  
 
                     await updateAdminDetails(req.body, adminProfile);  
+                    logActivity(req.adminId, 'update', `Admin updated their profile.`);
                     return res.json({ success: true, message: 'Admin details updated successfully.' });
                 });
             });
         } else {
             await updateAdminDetails(req.body, adminProfile);  
+            logActivity(req.adminId, 'update', `Admin updated their profile.`);
             return res.json({ success: true, message: 'Admin details updated successfully.' });
         }
     } catch (error) {
