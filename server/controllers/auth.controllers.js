@@ -6,6 +6,8 @@ import Calendar from '../models/calendar.models.js';
 import Notice from '../models/notice.models.js';
 import Feedback from '../models/feedback.models.js';
 import Utility from '../models/utility.models.js';
+import Activity from '../models/activity.models.js';
+import History from '../models/history.models.js';
 import bcryptjs from 'bcryptjs';
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
@@ -14,6 +16,7 @@ import { connectDB } from '../db/connectDB.js';
 import { Sequelize, Op } from 'sequelize';
 import { format, startOfWeek, endOfWeek, addHours } from 'date-fns';
 import { sendMail } from '../nodemailer/mail.js';
+import moment from 'moment-timezone';
 
 export const adminRegister = async (req, res) => {
     const { adminFirstName, adminLastName, adminEmail, adminPassword, eName } = req.body;
@@ -83,7 +86,7 @@ export const adminRegister = async (req, res) => {
             message: "Registration successful. Please check your email to verify your account.",
             admin: {
                 ...admin.dataValues,
-                adminPassword: undefined, // Remove sensitive data
+                adminPassword: undefined, 
             },
         });
     } catch (error) {
@@ -102,11 +105,10 @@ export const verifyEmail = async (req, res) => {
     const {code} = req.body;
 
     try {
-        // Find admin with the matching verification code and check expiration
         const admin = await Admin.findOne({
             where: {
                 verificationToken: code,
-                verificationTokenExpiresAt: { [Op.gt]: Date.now() }, // Ensure expiration is in the future
+                verificationTokenExpiresAt: { [Op.gt]: Date.now() }, 
             },
             include: {
                 model: Establishment,  
@@ -122,7 +124,6 @@ export const verifyEmail = async (req, res) => {
             });
         }
 
-        // Mark admin as verified and clear verification data
         admin.isVerified = true;
         admin.verificationToken = null;
         admin.verificationTokenExpiresAt = null;
@@ -176,7 +177,6 @@ export const adminLogin = async (req, res) => {
             return res.status(400).json({ success: false, message: "Admin not found" });
         }
 
-        // Check if the admin email is verified
         if (!admin.isVerified) {
             return res.status(400).json({ success: false, message: "Please verify your email before logging in." });
         }
@@ -203,6 +203,8 @@ export const adminLogin = async (req, res) => {
         admin.lastLogin = new Date();
         await admin.save();
 
+        logActivity(admin.admin_id, 'login_success', `Admin ${admin.adminFirstName} (${adminEmail}) logged in successfully`);
+
         res.status(201).json({
             success: true,
             message: "Admin logged in successfully",
@@ -213,9 +215,48 @@ export const adminLogin = async (req, res) => {
         });
     } catch (error) {
         console.log("Error in login:", error);
+        logActivity(null, 'login_error', `Error during login attempt for admin email: ${adminEmail}. Error: ${error.message}`);
         res.status(400).json({ success: false, message: error.message });
     }
 };
+
+export function logActivity(adminId, actionType, actionDetails = '') {
+    const connection = connectDB();   
+
+    const query = `
+        INSERT INTO activities (admin_id, actionType, actionDetails) 
+        VALUES (?, ?, ?)
+    `;
+
+    connection.query(query, [adminId, actionType, actionDetails], (err, results) => {
+        if (err) {
+            console.error('Error logging activity:', err);
+            return;
+        }
+        console.log('Activity logged successfully:', results.insertId);
+    });
+
+    connection.end();  
+}
+
+export function logHistory(tenantId, actionType, actionDetails = '') {
+    const connection = connectDB(); 
+
+    const query = `
+        INSERT INTO histories (tenant_id, actionType, actionDetails) 
+        VALUES (?, ?, ?)
+    `;
+
+    connection.query(query, [tenantId, actionType, actionDetails], (err, results) => {
+        if (err) {
+            console.error('Error logging history:', err);
+            return;
+        }
+        console.log('History logged successfully:', results.insertId);
+    });
+
+    connection.end(); 
+}
 
 export const tenantLogin = async (req, res) => {
     const { tenantEmail, tenantPassword } = req.body;
@@ -238,35 +279,109 @@ export const tenantLogin = async (req, res) => {
 
         await tenant.save();
 
+        logHistory(tenant.tenant_id, 'login_success', `Tenant ${tenant.tenantName} (Email: ${tenantEmail}) logged in successfully`);
+
         res.status(201).json({
             success: true,
             message: "Tenant logged in successfully",
-            admin: {
+            tenant: {
                 ...tenant.dataValues,
                 tenantPassword: undefined,
             },
         });
     } catch (error) {
         console.log("Error in login:", error);
+        logHistory(null, 'login_error', `Error during login attempt for tenant email: ${tenantEmail}. Error: ${error.message}`);
         res.status(400).json({ success: false, message: error.message});
     }
 }
 
 export const adminLogout = async (req, res) => {
-    res.clearCookie("token");
-    res.status(200).json({
-        success: true,
-        message: "Logged out successfully"
-    });
-}
+    try {
+        res.clearCookie("token");
+
+        const adminId = req.adminId;
+
+        if (!adminId) {
+            return res.status(400).json({
+                success: false,
+                message: "Admin ID not found for logging activity."
+            });
+        }
+
+        const admin = await Admin.findOne({
+            where: { admin_id: adminId }
+        });
+
+        if (!admin) {
+            return res.status(404).json({
+                success: false,
+                message: "Admin not found for logging out."
+            });
+        }
+
+        const timestamp = moment().tz('Asia/Manila').format('YYYY-MM-DD HH:mm:ss');
+
+        const logMessage = `Admin ${admin.adminFirstName} ${admin.adminLastName} logged out successfully at ${timestamp}.`;
+
+        logActivity(adminId, 'admin logout', logMessage);
+
+        res.status(200).json({
+            success: true,
+            message: "Logged out successfully"
+        });
+    } catch (error) {
+        console.error("Error during logout:", error);
+        res.status(500).json({
+            success: false,
+            message: "An error occurred during logout."
+        });
+    }
+};
 
 export const tenantLogout = async (req, res) => {
-    res.clearCookie("tenantToken");
-    res.status(200).json({
-        success: true,
-        message: "Logged out successfully"
-    });
-}
+    try {
+        res.clearCookie("tenantToken");
+
+        const tenantId = req.tenantId;
+
+        if (!tenantId) {
+            return res.status(400).json({
+                success: false,
+                message: "Tenant ID not found for logging activity."
+            });
+        }
+
+        const tenant = await Tenant.findOne({
+            where: { tenant_id: tenantId }
+        });
+
+        if (!tenant) {
+            return res.status(404).json({
+                success: false,
+                message: "Tenant not found for logging out."
+            });
+        }
+
+        const timestamp = moment().tz('Asia/Manila').format('YYYY-MM-DD HH:mm:ss');
+
+        const logMessage = `Tenant ${tenant.tenantFirstName} ${tenant.tenantLastName} logged out successfully at ${timestamp}.`;
+
+        logHistory(tenantId, 'tenant logout', logMessage);
+
+        res.status(200).json({
+            success: true,
+            message: "Logged out successfully"
+        });
+    } catch (error) {
+        console.error("Error during logout:", error);
+        res.status(500).json({
+            success: false,
+            message: "An error occurred during logout."
+        });
+    }
+};
+
 
 export const forgotPassword = async (req, res) => {
     const { adminEmail } = req.body;
@@ -280,7 +395,6 @@ export const forgotPassword = async (req, res) => {
             return res.status(400).json({ success: false, message: "Admin not found" });
         };
 
-        // generating reset token
         const resetToken = crypto.randomBytes(20).toString("hex");
         const resetTokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000;
 
@@ -288,7 +402,6 @@ export const forgotPassword = async (req, res) => {
         admin.resetPasswordExpiresAt = resetTokenExpiresAt;
         await admin.save();
 
-        // send email
         const subject = 'Password Reset Request';
         const html = `
            <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
@@ -348,6 +461,9 @@ export const resetPassword = async (req, res) => {
         admin.resetPasswordExpiresAt = undefined;
 
         await admin.save();
+
+        const logMessage = `Admin ${admin.adminFirstName} ${admin.adminLastName} reset their password successfully.`;
+        logActivity(admin.admin_id, 'password reset', logMessage);
         
         // send email
         const subject = 'Password Reset Confirmation';
@@ -387,63 +503,74 @@ export const resetPassword = async (req, res) => {
 }
 
 export const updateAdminPassword = async (req, res) => {
-    const adminId = req.adminId; 
+    const adminId = req.adminId;  
     const { currentPassword, newPassword } = req.body;
 
     try {
-        console.log("Admin ID from middleware:", adminId); 
+        console.log("Admin ID from middleware:", adminId);  
 
-        // Find the admin by ID
         const admin = await Admin.findOne({ where: { admin_id: adminId } });
 
         if (!admin) {
-            console.error("Admin not found for Admin ID:", adminId); 
+            console.error("Admin not found for Admin ID:", adminId);  
             return res.status(404).json({ success: false, message: "Admin not found" });
         }
 
-        // Verify current password
+        const { adminFirstName } = admin;
+
         const isMatch = await bcryptjs.compare(currentPassword, admin.adminPassword);
         if (!isMatch) {
-            console.error("Current password does not match for Admin ID:", adminId); 
+            console.error("Current password does not match for Admin ID:", adminId);  
             return res.status(400).json({ success: false, message: "Current password is incorrect" });
         }
 
-        // Hash the new password
         const hashedPassword = await bcryptjs.hash(newPassword, 10);
 
-        // Update the password
         admin.adminPassword = hashedPassword;
         await admin.save();
 
-        console.log("Password successfully updated for Admin ID:", adminId); 
+        const successMessage = `Password successfully updated for ${adminFirstName} (Admin ID: ${adminId}).`;
+        console.log(successMessage);
 
-        // Send confirmation email
+        try {
+            console.log(`Logging activity for admin ID: ${adminId}`);
+            logActivity(adminId, 'password reset', successMessage);
+        } catch (logError) {
+            console.error("Error logging activity:", logError);
+        }
+
         const subject = 'Password Change Confirmation';
         const html = `
-           <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
-              <h2 style="color: #4CAF50; text-align: center;">Password Change Confirmation</h2>
-              <p style="text-align: left;">We are writing to confirm that your password for your Hive admin account has been successfully updated.</p>
-              <p style="text-align: left;">If you did not initiate this change, please contact our support team immediately at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.</p>
-              <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
-              <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
-              <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
-              <p style="font-size: 0.8em; color: #777; text-align: center;">
-                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.
-              </p>
-           </div>
+            <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
+                <h2 style="color: #4CAF50; text-align: center;">Password Change Confirmation</h2>
+                <p style="text-align: left;">We are writing to confirm that your password for your Hive admin account has been successfully updated.</p>
+                <p style="text-align: left;">If you did not initiate this change, please contact our support team immediately at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.</p>
+                <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
+                <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
+                <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+                <p style="font-size: 0.8em; color: #777; text-align: center;">
+                   This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.
+                </p>
+            </div>
         `;
 
-        await sendMail(admin.adminEmail, subject, null, html);
+        try {
+            console.log(`Sending email to admin: ${admin.adminEmail}`);
+            await sendMail(admin.adminEmail, subject, null, html);
+        } catch (emailError) {
+            console.error("Error sending email:", emailError);
+        }
 
         res.status(200).json({
             success: true,
             message: "Password updated successfully",
         });
     } catch (error) {
-        console.error("Error in updateAdminPassword:", error);  
+        console.error("Error in updateAdminPassword:", error);
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
 
 export const updateTenantPassword = async (req, res) => {
     const tenantId = req.tenantId; 
@@ -452,7 +579,6 @@ export const updateTenantPassword = async (req, res) => {
     try {
         console.log("Tenant ID from middleware:", tenantId); 
 
-        // Find the tenant by ID
         const tenant = await Tenant.findOne({ where: { tenant_id: tenantId } });
 
         if (!tenant) {
@@ -460,23 +586,25 @@ export const updateTenantPassword = async (req, res) => {
             return res.status(404).json({ success: false, message: "Tenant not found" });
         }
 
-        // Verify current password
+        const { tenantFirstName } = tenant;
+
         const isMatch = await bcryptjs.compare(currentPassword, tenant.tenantPassword);
         if (!isMatch) {
             console.error("Current password does not match for Tenant ID:", tenantId); 
             return res.status(400).json({ success: false, message: "Current password is incorrect" });
         }
 
-        // Hash the new password
         const hashedPassword = await bcryptjs.hash(newPassword, 10);
 
-        // Update the password
         tenant.tenantPassword = hashedPassword;
         await tenant.save();
 
+        const successMessage = `Password successfully updated for ${tenantFirstName} (Tenant ID: ${tenantId}).`;
+        console.log(successMessage);
+        logHistory(tenantId, 'password reset', successMessage);
+
         console.log("Password successfully updated for Tenant ID:", tenantId); 
 
-        // Send confirmation email
         const subject = 'Password Change Confirmation';
         const html = `
            <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
@@ -577,6 +705,32 @@ export const viewTenants = async (req) => {
     } catch (error) {
         console.error('Error fetching tenants:', error);
         throw new Error('Error fetching tenants'); 
+    }
+};
+
+export const viewActivities = async (req, res) => {
+    const adminId = req.params.adminId;
+
+    if (!adminId) {
+        return res.status(400).json({ success: false, message: 'Admin ID is required.' });
+    }
+
+    const connection = connectDB(); 
+
+    try {
+        const query = 'SELECT * FROM activities WHERE admin_id = ? ORDER BY timestamp DESC';
+        const [results] = await connection.promise().query(query, [adminId]); 
+
+        if (!results.length) {
+            return res.json({ success: true, message: 'No activities found for this admin.', activities: [] });
+        }
+
+        return res.json({ success: true, activities: results });
+    } catch (error) {
+        console.error('Error fetching activity log:', error);
+        return res.status(500).json({ success: false, message: 'Internal server error' });
+    } finally {
+        connection.end(); 
     }
 };
 
@@ -822,6 +976,8 @@ export const viewUtilities = async (req) => {
                 status: utility.status,
                 perTenant: utility.perTenant,
                 totalBalance: utility.totalBalance,
+                sharedBalance: utility.sharedBalance,
+                month: utility.month,
                 room_id: utility.room_id,
                 roomNumber: utility.Room?.roomNumber,
                 roomType: utility.Room?.roomType,
@@ -831,6 +987,68 @@ export const viewUtilities = async (req) => {
     } catch (error) {
         console.error('Error fetching utilities:', error);
         throw error;
+    }
+};
+
+export const utilityHistories = async (req, res) => {
+    try {
+        const establishmentId = req.establishmentId;
+        const { roomId } = req.query || {}; 
+
+        const conditions = { establishment_id: establishmentId };
+        if (roomId) {
+            conditions.room_id = roomId;
+        }
+
+        const rows = await Utility.findAll({
+            where: conditions,
+            attributes: [
+                [Sequelize.fn('DATE_FORMAT', Sequelize.col('statementDate'), '%Y-%m'), 'month'], 
+                'totalBalance',
+                'sharedBalance',
+                'room_id',
+            ],
+            include: {
+                model: Room,
+                attributes: ['roomNumber', 'roomType', 'floorNumber'],
+            },
+            group: [
+                Sequelize.fn('DATE_FORMAT', Sequelize.col('statementDate'), '%Y-%m'), 
+                'room_id',
+            ],
+            order: [[Sequelize.fn('DATE_FORMAT', Sequelize.col('statementDate'), '%Y-%m'), 'DESC']], 
+        });
+
+        if (!rows || rows.length === 0) {
+            return []; 
+        }
+
+        const utilitiesPerMonth = [];
+        const seenMonths = new Set();
+
+        rows.forEach(row => {
+            const utility = row.get({ plain: true });
+
+            const month = utility.month;
+            if (!seenMonths.has(month)) {
+                seenMonths.add(month);  
+
+                utilitiesPerMonth.push({
+                    month: utility.month,
+                    totalBalance: parseFloat(utility.totalBalance).toFixed(2),  
+                    sharedBalance: parseFloat(utility.sharedBalance).toFixed(2),  
+                    room_id: utility.room_id,
+                    roomNumber: utility.Room?.roomNumber, 
+                    roomType: utility.Room?.roomType,
+                    floorNumber: utility.Room?.floorNumber,
+                });
+            }
+        });
+
+        return utilitiesPerMonth;  
+    } catch (error) {
+        console.error('Error fetching utility histories:', error);
+        return [];  
     }
 };
 
@@ -852,6 +1070,7 @@ export const addUtility = async (req, res) => {
         const token = req.cookies.token;
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const establishmentId = decoded.establishmentId;
+        const adminId = decoded.adminId;
 
         console.log('Decoded JWT:', decoded);
 
@@ -866,23 +1085,28 @@ export const addUtility = async (req, res) => {
             utilityType,
         });
 
+        const statementMonthYear = new Date(statementDate);
+        const month = statementMonthYear.toLocaleString('default', { month: 'long' });
+        const year = statementMonthYear.getFullYear();
+
         const utilitiesForRoom = await Utility.findAll({
             where: {
                 establishment_id: establishmentId,
-                room_id: roomId
+                room_id: roomId,
+                month: `${month} ${year}`, 
             }
         });
 
-        console.log('Fetched utilities for room:', utilitiesForRoom);
+        console.log('Fetched utilities for room in month:', utilitiesForRoom);
 
         let totalBalance = 0;
         utilitiesForRoom.forEach((utility) => {
-            totalBalance += parseFloat(utility.charge) || 0; 
+            totalBalance += parseFloat(utility.charge) || 0;
         });
 
-        totalBalance += parsedCharge;
+        totalBalance += parsedCharge;  
 
-        console.log('Total balance for the utilities:', totalBalance);
+        console.log('Total balance for the utilities in this month:', totalBalance);
 
         totalBalance = parseFloat(totalBalance.toFixed(2));
 
@@ -899,24 +1123,25 @@ export const addUtility = async (req, res) => {
             return res.status(400).json({ success: false, message: "No tenants found for this establishment." });
         }
 
-        let perTenant = totalBalance / totalTenants;
-        perTenant = parseFloat(perTenant.toFixed(2));  
+        let perTenant = parsedCharge / totalTenants;
+        perTenant = parseFloat(perTenant.toFixed(2));
 
         await Utility.update(
             {
                 totalBalance,
-                perTenant,
+                sharedBalance: 0, 
             },
             {
                 where: {
                     establishment_id: establishmentId,
                     room_id: roomId,
+                    month: `${month} ${year}`,  
                 }
             });
 
         const newUtility = await Utility.create({
             utilityType,
-            charge: parsedCharge, 
+            charge: parsedCharge,
             statementDate,
             dueDate,
             status,
@@ -924,18 +1149,46 @@ export const addUtility = async (req, res) => {
             establishment_id: establishmentId,
             totalBalance,
             perTenant,
+            sharedBalance: 0,
+            month: `${month} ${year}`,  
         });
+
+        logActivity(adminId, 'create', `Added new utility: ${utilityType} for Room ID: ${roomId}, Month: ${month} ${year}`);
+
+        const utilitiesForRoomAfterUpdate = await Utility.findAll({
+            where: {
+                establishment_id: establishmentId,
+                room_id: roomId,
+                month: `${month} ${year}`, 
+            }
+        });
+
+        let sharedBalance = 0;
+        utilitiesForRoomAfterUpdate.forEach((utility) => {
+            sharedBalance += parseFloat(utility.perTenant) || 0;
+        });
+
+        sharedBalance = parseFloat(sharedBalance.toFixed(2));
+
+        await Utility.update(
+            { sharedBalance },
+            {
+                where: {
+                    establishment_id: establishmentId,
+                    room_id: roomId,
+                    month: `${month} ${year}`,   
+                }
+            });
 
         return res.status(201).json({ message: 'Utility added successfully!', utility: newUtility });
     } catch (error) {
         console.error('Error adding utility:', error);
+        logActivity(decoded.adminId, 'error', errorMessage);
         if (!res.headersSent) {
             return res.status(500).json({ success: false, message: 'Failed to add utility', error: error.message });
         }
     }
 };
-
-
 
 export const addTenant = async (req, res) => {
     const { 
@@ -1035,12 +1288,13 @@ export const addTenant = async (req, res) => {
             tenantGuardianNum
         });
 
+        logActivity(decoded.adminId, 'create', `Added tenant: ${tenantFirstName} ${tenantLastName}`);
+
         room.roomRemainingSlot -= 1;
         await room.save();
 
         generateTokenAndSetTenantCookie(res, newTenant.tenant_id, establishmentId);
 
-        // Send confirmation email
         const subject = 'Account Creation Notification';
         const html = `
            <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
@@ -1117,6 +1371,8 @@ export const addUnit = async (req, res) => {
             establishmentId
         });
 
+        logActivity(decoded.adminId, 'create', `Added room ${roomNumber} on floor ${floorNumber}`);
+
         res.status(201).json({ message: 'Room added successfully!', room: newRoom });
     } catch (error) {
         console.error('Error adding room:', error);
@@ -1125,32 +1381,57 @@ export const addUnit = async (req, res) => {
 };
 
 export const addFeedback = async (req, res) => {
-    const adminId = req.adminId;  
+    const adminId = req.adminId;
 
     try {
-      const { userName, userEmail, feedback, content } = req.body;
+        const { userName, feedback, content } = req.body;
 
-      const newFeedback = await Feedback.create({
-        userName: userName,
-        tenant_id: null,   
-        admin_id: adminId,   
-        establishment_id: null,   
-        feedback_level: feedback,  
-        content: content,  
-        userEmail: userEmail,  
-      });
-  
-      // Send a success response
-      res.status(201).json({
-        message: 'Feedback submitted successfully!',
-        feedback: newFeedback,
-      });
+        const adminDetails = await Admin.findByPk(adminId); 
+        if (!adminDetails || !adminDetails.adminEmail) {
+            throw new Error('Admin email not found.');
+        }
+
+        const adminEmail = adminDetails.adminEmail;
+
+        const newFeedback = await Feedback.create({
+            userName: userName,
+            tenant_id: null,
+            admin_id: adminId,
+            establishment_id: null,
+            feedback_level: feedback,
+            content: content,
+        });
+
+        logActivity(adminId, 'create', `Added feedback from ${userName}`);
+
+        const subject = 'Feedback Received Confirmation';
+        const html = `
+           <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
+              <h2 style="color: #4CAF50; text-align: center;">Feedback Received</h2>
+              <p style="text-align: left;">Dear <strong>${userName}</strong>,</p>
+              <p style="text-align: left;">Thank you for sharing your feedback with us. We have received your comments and appreciate you taking the time to help us improve.</p>
+              <p style="text-align: left;">Our team will review your feedback and take appropriate action as necessary.</p>
+              <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
+              <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
+              <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+              <p style="font-size: 0.8em; color: #777; text-align: center;">
+                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.
+              </p>
+           </div>
+        `;
+
+        await sendMail(adminEmail, subject, null, html);
+
+        res.status(201).json({
+            message: 'Feedback submitted successfully!',
+            feedback: newFeedback,
+        });
     } catch (error) {
-      console.error('Error saving feedback:', error);
-      res.status(500).json({
-        message: 'Error saving feedback.',
-        error: error.message,
-      });
+        console.error('Error saving feedback:', error);
+        res.status(500).json({
+            message: 'Error saving feedback.',
+            error: error.message,
+        });
     }
 };
 
@@ -1218,6 +1499,7 @@ export const editTenant = async (req, res) => {
 export const updateUtility = async (req, res) => {
     const { utilityType, charge, statementDate, dueDate, status } = req.body;
     const utilityId = req.params.utility_id;
+    const adminId = req.adminId;
 
     if (!charge || isNaN(parseFloat(charge)) || parseFloat(charge) <= 0) {
         return res.status(400).json({ success: false, message: "Invalid charge value." });
@@ -1239,7 +1521,7 @@ export const updateUtility = async (req, res) => {
         }
 
         const utility = utilityRows[0];
-        
+
         const updatedUtilityData = {
             charge: parsedCharge,
             utilityType: utilityType || utility.utilityType,
@@ -1265,10 +1547,13 @@ export const updateUtility = async (req, res) => {
             return res.status(500).json({ success: false, message: "Failed to update utility." });
         }
 
-        console.log(`Updated Utility ID ${utility.utility_id} with charge: ${parsedCharge}, utilityType: ${updatedUtilityData.utilityType}, statementDate: ${updatedUtilityData.statementDate}, dueDate: ${updatedUtilityData.dueDate}, status: ${updatedUtilityData.status}`);
+        console.log(`Updated Utility ID ${utility.utility_id} with new charge and dates.`);
+
+        logActivity(adminId, 'update', `Updated utility: ${updatedUtilityData.utilityType} for Room ID ${utility.room_id} with new charge and dates for Utility ID ${utilityId}`);
+
 
         const [utilitiesForRoomRows] = await connection.promise().query(
-            'SELECT * FROM Utilities WHERE establishment_id = ? AND room_id = ?',
+            'SELECT * FROM Utilities WHERE establishment_id = ? AND room_id = ? AND YEAR(statementDate) = YEAR(CURRENT_DATE()) AND MONTH(statementDate) = MONTH(CURRENT_DATE())',
             [utility.establishment_id, utility.room_id]
         );
 
@@ -1301,16 +1586,28 @@ export const updateUtility = async (req, res) => {
             return res.status(400).json({ success: false, message: "No tenants found in the establishment." });
         }
 
-        const perTenant = parseFloat((totalBalance / totalTenants).toFixed(2));
-        console.log(`Per Tenant Share: ${perTenant}`);
-
-        await Promise.all(
+        const updatedUtilities = await Promise.all(
             utilitiesForRoomRows.map(async (u) => {
+                const perTenant = parseFloat((u.charge / totalTenants).toFixed(2));
                 const [updateUtility] = await connection.promise().query(
                     'UPDATE Utilities SET totalBalance = ?, perTenant = ? WHERE utility_id = ?',
                     [totalBalance, perTenant, u.utility_id]
                 );
-                console.log(`Updated Utility ID ${u.utility_id} with Total Balance: ${totalBalance} and Per Tenant: ${perTenant}`);
+                console.log(`Updated Utility ID ${u.utility_id} with Per Tenant: ${perTenant}`);
+                return { ...u, perTenant };
+            })
+        );
+
+        const sharedBalance = updatedUtilities.reduce((sum, u) => sum + (u.perTenant || 0), 0);
+        const sharedBalanceFixed = parseFloat(sharedBalance.toFixed(2));
+
+        await Promise.all(
+            updatedUtilities.map(async (u) => {
+                const [updateSharedBalance] = await connection.promise().query(
+                    'UPDATE Utilities SET sharedBalance = ? WHERE utility_id = ?',
+                    [sharedBalanceFixed, u.utility_id]
+                );
+                console.log(`Updated Utility ID ${u.utility_id} with Shared Balance: ${sharedBalanceFixed}`);
             })
         );
 
@@ -1336,6 +1633,21 @@ export const updateTenant = async (req, res) => {
     const { tenantFirstName, tenantLastName, tenantEmail, mobileNum, gender, tenantGuardianName, tenantAddress, tenantGuardianNum } = req.body;
     const tenantId = req.params.tenantId;
 
+    let establishmentId;
+    let adminId;
+
+    try {
+        const token = req.cookies.token; 
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        
+        establishmentId = decoded.establishmentId;
+        adminId = decoded.adminId;
+        console.log('Decoded JWT Token:', decoded); 
+
+    } catch (err) {
+        return res.status(401).json({ success: false, message: "Invalid or expired token." });
+    }
+
     try {
         const connection = connectDB();
 
@@ -1350,7 +1662,10 @@ export const updateTenant = async (req, res) => {
 
         if (updateResult.affectedRows > 0) {
             const [rows] = await connection.promise().query('SELECT * FROM Tenants WHERE tenant_id = ?', [tenantId]);
-            connection.end(); 
+
+            logActivity(adminId, 'update', `Updated tenant ID ${tenantId}: ${tenantFirstName} ${tenantLastName}.`);
+
+            connection.end();
             return res.json({ success: true, message: 'Tenant updated successfully', tenant: rows[0] });
         } else {
             connection.end();
@@ -1361,6 +1676,7 @@ export const updateTenant = async (req, res) => {
         return res.status(500).send('An error occurred while updating tenant data');
     }
 };
+
 
 export const deleteAdmin = async (req, res) => {
     const adminId = req.params.admin_id;
@@ -1385,6 +1701,8 @@ export const deleteAdmin = async (req, res) => {
         }
 
         await admin.destroy();
+
+        logActivity(adminId, 'delete', `Deleted admin account ID ${adminId}.`);
         return res.status(200).json({ success: true, message: 'Admin deleted successfully' });
     } catch (error) {
         console.error('Error deleting admin:', error);
@@ -1396,6 +1714,7 @@ export const deleteAdmin = async (req, res) => {
 export const deleteTenant = async (req, res) => {
     const tenantId = req.params.tenant_id;
     console.log('tenantId received by backend:', tenantId); 
+    const adminId = req.adminId;
 
     if (!tenantId) {
         return res.status(400).json({ success: false, message: 'Tenant ID is required' });
@@ -1407,6 +1726,8 @@ export const deleteTenant = async (req, res) => {
             return res.status(404).json({ success: false, message: 'Tenant not found' });
         }
 
+        const tenantName = `${tenant.tenantFirstName} ${tenant.tenantLastName}`;
+
         const room = await Room.findByPk(tenant.room_id);  
         if (room) {
             room.roomRemainingSlot += 1;
@@ -1415,9 +1736,11 @@ export const deleteTenant = async (req, res) => {
         }
 
         await tenant.destroy();
+        logActivity(adminId, 'delete', `Deleted tenant ${tenantName} (ID: ${tenantId}). Tenant was assigned to room ID ${tenant.room_id}.`);
         return res.status(200).json({ success: true, message: 'Tenant deleted successfully' });
     } catch (error) {
         console.error('Error deleting tenant:', error);
+        logActivity(adminId, 'error', `Failed to delete tenant ID ${tenantId}. Error: ${error.message}`);
         return res.status(500).json({ success: false, message: 'An error occurred while deleting the tenant' });
     }
 };
@@ -1425,97 +1748,133 @@ export const deleteTenant = async (req, res) => {
 export const deleteUnit = (req, res) => {
     const roomId = req.params.room_id;
     const connection = connectDB();
+    const adminId = req.adminId;
 
-    connection.query('DELETE FROM Rooms WHERE room_id = ?', [roomId], (err, result) => {
-        connection.end();
-
+    connection.query('SELECT * FROM Rooms WHERE room_id = ?', [roomId], (err, rows) => {
         if (err) {
-            console.error('Error deleting room data:', err);
-            return res.status(500).json({ success: false, message: "Error deleting room data" });
+            connection.end();
+            console.error('Error retrieving room details:', err);
+            return res.status(500).json({ success: false, message: "Error retrieving room details" });
         }
 
-        if (result.affectedRows === 0) {
+        if (rows.length === 0) {
+            connection.end();
             return res.status(404).json({ success: false, message: "Room not found" });
         }
 
-        res.json({ success: true, message: "Room successfully removed" });
-    });
-};
+        const room = rows[0];  
+        const roomName = room.roomNumber; 
 
-export const deleteUtility = async (req, res) => {
-    const utilityId = req.params.utility_id;
-    const connection = connectDB();
-
-    connection.query('SELECT charge, room_id, establishment_id FROM Utilities WHERE utility_id = ?', [utilityId], async (err, result) => {
-        if (err) {
+        connection.query('DELETE FROM Rooms WHERE room_id = ?', [roomId], (err, result) => {
             connection.end();
-            console.error('Error fetching utility data:', err);
-            return res.status(500).json({ success: false, message: "Error fetching utility data" });
-        }
 
-        if (result.length === 0) {
-            connection.end();
-            return res.status(404).json({ success: false, message: "Utility not found" });
-        }
-
-        const utilityToDelete = result[0];
-        const { charge, room_id, establishment_id } = utilityToDelete;
-
-        connection.query('SELECT charge FROM Utilities WHERE room_id = ? AND establishment_id = ?', [room_id, establishment_id], async (err, utilities) => {
             if (err) {
-                connection.end();
-                console.error('Error fetching utilities for the room:', err);
-                return res.status(500).json({ success: false, message: "Error fetching utilities for the room" });
+                console.error('Error deleting room data:', err);
+                return res.status(500).json({ success: false, message: "Error deleting room data" });
             }
 
-            let totalBalance = 0;
-            utilities.forEach(utility => {
-                totalBalance += parseFloat(utility.charge) || 0;
-            });
-
-            totalBalance -= charge; 
-
-            const rooms = await Room.findAll({ where: { establishment_id } });
-            const tenantCounts = await Promise.all(rooms.map(async (room) => {
-                const tenantCountInRoom = await Tenant.count({ where: { room_id: room.room_id } });
-                return tenantCountInRoom;
-            }));
-
-            const totalTenants = tenantCounts.reduce((acc, count) => acc + count, 0);
-            if (totalTenants === 0) {
-                connection.end();
-                return res.status(400).json({ success: false, message: "No tenants found for this establishment." });
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ success: false, message: "Room not found" });
             }
 
-            let perTenant = totalBalance / totalTenants;
-            perTenant = parseFloat(perTenant.toFixed(2));
+            logActivity(adminId, 'delete', `Admin ID ${adminId} deleted room ID ${roomName}.`);
 
-            connection.query('UPDATE Utilities SET totalBalance = ?, perTenant = ? WHERE room_id = ? AND establishment_id = ?', [totalBalance, perTenant, room_id, establishment_id], (err, result) => {
-                if (err) {
-                    connection.end();
-                    console.error('Error updating utilities data:', err);
-                    return res.status(500).json({ success: false, message: "Error updating utilities data" });
-                }
-
-                connection.query('DELETE FROM Utilities WHERE utility_id = ?', [utilityId], (err, result) => {
-                    connection.end();
-
-                    if (err) {
-                        console.error('Error deleting utility data:', err);
-                        return res.status(500).json({ success: false, message: "Error deleting utility data" });
-                    }
-
-                    if (result.affectedRows === 0) {
-                        return res.status(404).json({ success: false, message: "Utility not found" });
-                    }
-
-                    res.json({ success: true, message: "Utility successfully removed" });
-                });
-            });
+            res.json({ success: true, message: "Room successfully removed" });
         });
     });
 };
 
+
+export const deleteUtility = async (req, res) => {
+    const utilityId = req.params.utility_id;
+    const connection = connectDB();
+    const adminId = req.adminId;
+
+    try {
+        const [utilityRows] = await connection.promise().query(
+            'SELECT charge, room_id, establishment_id, statementDate FROM Utilities WHERE utility_id = ?',
+            [utilityId]
+        );
+
+        if (utilityRows.length === 0) {
+            connection.end();
+            return res.status(404).json({ success: false, message: "Utility not found" });
+        }
+
+        const utilityToDelete = utilityRows[0];
+        const { charge, room_id, establishment_id, statementDate } = utilityToDelete;
+
+        const [utilitiesForRoomRows] = await connection.promise().query(
+            'SELECT * FROM Utilities WHERE establishment_id = ? AND room_id = ? AND YEAR(statementDate) = YEAR(CURRENT_DATE()) AND MONTH(statementDate) = MONTH(CURRENT_DATE())',
+            [establishment_id, room_id]
+        );
+
+        let totalBalance = 0;
+        utilitiesForRoomRows.forEach((u) => {
+            totalBalance += parseFloat(u.charge || 0);
+        });
+
+        totalBalance -= charge;
+
+        const [rooms] = await connection.promise().query(
+            'SELECT * FROM Rooms WHERE establishment_id = ?',
+            [establishment_id]
+        );
+
+        const tenantCounts = await Promise.all(
+            rooms.map(async (room) => {
+                const [tenantCount] = await connection.promise().query(
+                    'SELECT COUNT(*) AS tenant_count FROM Tenants WHERE room_id = ?',
+                    [room.room_id]
+                );
+                return tenantCount[0].tenant_count;
+            })
+        );
+
+        const totalTenants = tenantCounts.reduce((acc, count) => acc + count, 0);
+
+        if (totalTenants === 0) {
+            connection.end();
+            return res.status(400).json({ success: false, message: "No tenants found in the establishment." });
+        }
+
+        let sharedBalance = totalBalance / totalTenants;
+        sharedBalance = parseFloat(sharedBalance.toFixed(2));
+
+        const [updateUtilitiesResult] = await connection.promise().query(
+            'UPDATE Utilities SET totalBalance = ?, sharedBalance = ? WHERE room_id = ? AND establishment_id = ? AND YEAR(statementDate) = YEAR(CURRENT_DATE()) AND MONTH(statementDate) = MONTH(CURRENT_DATE())',
+            [totalBalance, sharedBalance, room_id, establishment_id]
+        );
+
+        const [deleteUtilityResult] = await connection.promise().query(
+            'DELETE FROM Utilities WHERE utility_id = ?',
+            [utilityId]
+        );
+
+        if (deleteUtilityResult.affectedRows === 0) {
+            connection.end();
+            return res.status(404).json({ success: false, message: "Utility not found" });
+        }
+
+        connection.end();
+
+        logActivity(adminId, 'delete', `Admin ID ${adminId} deleted ${utilityType} (Utility ID: ${utilityId}).`);
+
+        return res.json({
+            success: true,
+            message: "Utility successfully removed",
+        });
+    } catch (error) {
+        console.error('Error deleting utility:', error);
+        logActivity(adminId, 'delete_error', `Admin ID ${adminId} encountered an error while deleting utility ID ${utilityId}. Error: ${error.message}`);
+        connection.end();
+        return res.status(500).json({
+            success: false,
+            message: "Error deleting utility data",
+            error: error.message,
+        });
+    }
+};
 
 export const getOccupiedUnits = async (req, res) => {
     const establishmentId = req.establishmentId; 
@@ -1544,8 +1903,6 @@ export const getOccupiedUnits = async (req, res) => {
         }
     }
 };
-
-
 
 export const getAvailableRooms = async (req, res) => {
     try {
@@ -1639,6 +1996,8 @@ export const addEvent = async (req, res) => {
 
         console.log('New Event Created:', newEvent);
 
+        logActivity(adminId, 'create', `Admin ID ${adminId} added a new event with name: ${event_name}.`);
+
         return res.status(201).json({
             success: true,
             message: "Event added successfully",
@@ -1652,6 +2011,7 @@ export const addEvent = async (req, res) => {
         });
     } catch (error) {
         console.error('Error adding event:', error);
+        logActivity(req.adminId, 'create_error', `Admin ID ${req.adminId} encountered an error while adding event. Error: ${error.message}`);
         return res.status(500).json({ success: false, message: 'Failed to add event', error: error.message });
     }
 };
@@ -1746,6 +2106,7 @@ export const editEvent = async (req, res) => {
 export const updateEvent = async (req, res) => {
     const { event_name, event_description, start, end, status } = req.body;
     const eventId = req.params.eventId;  
+    const adminId = req.adminId;
 
     if (!event_name || !event_description || !start || !end || !status) {
         return res.status(400).json({ 
@@ -1776,6 +2137,9 @@ export const updateEvent = async (req, res) => {
                 [eventId]
             );
             connection.end();
+
+            logActivity(adminId, 'update', `Admin ID ${adminId} updated event "${rows[0].event_name}" (Event ID: ${eventId}).`);
+
             return res.json({ 
                 success: true, 
                 message: 'Event updated successfully', 
@@ -1783,6 +2147,7 @@ export const updateEvent = async (req, res) => {
             });
         } else {
             connection.end();
+            logActivity(adminId, 'update_error', `Admin ID ${adminId} attempted to update event "${event_name}" (Event ID: ${eventId}), but no changes were made or event not found.`);
             return res.status(404).json({ 
                 success: false, 
                 message: 'Event not found or no changes made.' 
@@ -1790,6 +2155,7 @@ export const updateEvent = async (req, res) => {
         }
     } catch (err) {
         console.error('Error updating event:', err);
+        logActivity(adminId, 'update_error', `Admin ID ${adminId} encountered an error while updating event "${event_name}" (Event ID: ${eventId}). Error: ${err.message}`);
         return res.status(500).json({ 
             success: false, 
             message: 'An error occurred while updating event data' 
@@ -1799,6 +2165,7 @@ export const updateEvent = async (req, res) => {
 
 export const deleteEvent = async (req, res) => {
     const { eventId } = req.params;
+    const adminId = req.adminId;
 
     try {
         const result = await Calendar.destroy({
@@ -1806,12 +2173,14 @@ export const deleteEvent = async (req, res) => {
         });
 
         if (result > 0) {
+            logActivity(adminId, 'delete_success', `Admin ID ${adminId} successfully deleted event "${event.event_name}" (Event ID: ${eventId}).`);
             return res.json({ success: true, message: 'Event deleted successfully' });
         } else {
             return res.status(404).json({ success: false, message: 'Event not found' });
         }
     } catch (error) {
         console.error('Error deleting event:', error);
+        logActivity(adminId, 'delete_error', `Admin ID ${adminId} encountered an error while deleting event "${eventId}". Error: ${error.message}`);
         return res.status(500).json({ success: false, message: 'Failed to delete event' });
     }
 };
@@ -2056,6 +2425,8 @@ export const addNotice = async (req, res) => {
             establishment_id: establishmentId,
         });
 
+        logActivity(adminId, 'create', `Admin ID ${adminId} successfully added a new notice with title: "${newNotice.title}".`);
+
         return res.status(201).json({
             success: true,
             message: "Notice added successfully",
@@ -2070,6 +2441,7 @@ export const addNotice = async (req, res) => {
         });
     } catch (error) {
         console.error('Error adding notice:', error);
+        logActivity(req.adminId, 'create_error', `Admin ID ${req.adminId} encountered an error while adding a new notice. Error: ${error.message}`);
         return res.status(500).json({
             success: false, 
             message: 'Failed to add notice',
@@ -2159,19 +2531,33 @@ export const togglePermanent = async (req, res) => {
 
 export const deleteNotice = async (req, res) => {
     const { noticeId } = req.params;
+    const adminId = req.adminId;
 
     try {
+        const notice = await Notice.findOne({
+            where: { notice_id: noticeId }
+        });
+
+        if (!notice) {
+            return res.status(404).json({ success: false, message: 'Notice not found' });
+        }
+
         const result = await Notice.destroy({
-            where: { notice_id: noticeId } 
+            where: { notice_id: noticeId }
         });
 
         if (result > 0) {
+            logActivity(adminId, 'delete', `Admin ID ${adminId} successfully deleted Notice with title: "${notice.title}" (Notice ID: ${noticeId}).`);
+
             return res.json({ success: true, message: 'Notice deleted successfully' });
         } else {
             return res.status(404).json({ success: false, message: 'Notice not found' });
         }
     } catch (error) {
         console.error('Error deleting notice:', error);
+
+        logActivity(adminId, 'delete_error', `Admin ID ${adminId} encountered an error while deleting Notice ID: ${noticeId}. Error: ${error.message}`);
+
         return res.status(500).json({ success: false, message: 'Failed to delete notice' });
     }
 };

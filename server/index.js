@@ -12,6 +12,7 @@ import fileUpload from "express-fileupload";
 import fs from 'fs';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
+import bcryptjs from 'bcryptjs';
 import Admin from "./models/admin.models.js";
 import Room from "./models/room.models.js";
 import Tenant from "./models/tenant.models.js";
@@ -19,7 +20,7 @@ import Notice from "./models/notice.models.js";
 import Feedback from "./models/feedback.models.js";
 import Utility from "./models/utility.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
-import { addTenant, addTenantView, addUnitView, editTenant, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, updateEvent, updateTenant, updateUtility, viewAdmins, viewEvents, viewNotices, viewTenants, viewUnits, viewUtilities } from './controllers/auth.controllers.js';
+import { addTenant, addTenantView, addUnitView, editTenant, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, logActivity, updateAdminPassword, updateEvent, updateTenant, updateUtility, utilityHistories, viewActivities, viewAdmins, viewEvents, viewNotices, viewTenants, viewUnits, viewUtilities } from './controllers/auth.controllers.js';
 import { createPool } from "mysql2";
 
 // Sets up `__filename` and `__dirname` in an ES module environment using Node.js.
@@ -119,6 +120,9 @@ app.get("/admin/register/verifyEmail", (req, res) => {
 app.get("/tenant/login", (req, res) => {
     res.render("tenantLogin", { title: "Hive", styles: ["tenantLogin"] });
 });
+
+// ADMIN ACTIVITY LOG ---------------------------------------------------------------------------------
+
 
 // ADMIN PAGES (DASHBOARD) ----------------------------------------------------------------------------
 app.get("/admin/dashboard", verifyToken, async (req, res) => {
@@ -246,7 +250,7 @@ app.get('/admin/utilities/:room_id', async (req, res) => {
     const { room_id } = req.params;
     try {
         const utilities = await getUtilitiesByRoomId(room_id);
-        console.log('Utilities:', utilities);  // Check the data here
+        console.log('Utilities:', utilities);  
         res.json({ utilities });
     } catch (error) {
         console.error('Error fetching utilities:', error);
@@ -436,11 +440,13 @@ app.post("/admin/dashboard/edit/account", verifyToken, async (req, res) => {
                     adminProfile = sampleFile.name;  
 
                     await updateAdminDetails(req.body, adminProfile);  
+                    logActivity(req.adminId, 'update', `Admin updated their profile.`);
                     return res.json({ success: true, message: 'Admin details updated successfully.' });
                 });
             });
         } else {
             await updateAdminDetails(req.body, adminProfile);  
+            logActivity(req.adminId, 'update', `Admin updated their profile.`);
             return res.json({ success: true, message: 'Admin details updated successfully.' });
         }
     } catch (error) {
@@ -603,6 +609,99 @@ app.get("/admin/settings", verifyToken, async (req, res) => {
     }
 });
 
+app.get("/admin/settings/activity-log/:adminID", verifyToken, async (req, res) => {
+    try {
+        const { adminID } = req.params;
+        const admin = await viewAdmins(req, res, adminID); 
+
+        if (!admin) {
+            return res.status(404).send("Admin not found.");
+        }
+
+        const adminId = admin ? admin.admin_id : null;
+
+        res.render("activityLog", {
+            title: "Hive",
+            styles: ["activityLog"],
+            admin: admin || {},  
+            admin_id: adminId    
+        });
+    } catch (error) {
+        console.error('Error fetching admin:', error);
+        res.status(500).send("An error occurred while retrieving admin data.");
+    }
+});
+
+app.get("/admin/settings/feedback-support", verifyToken, async (req, res) => {
+    try {
+        const { adminID } = req.params;
+        const admin = await viewAdmins(req, res, adminID); 
+
+        if (!admin) {
+            return res.status(404).send("Admin not found.");
+        }
+
+        const adminId = admin ? admin.admin_id : null;
+
+        res.render("feedback", {
+            title: "Hive",
+            styles: ["feedback"],
+            admin: admin || {},  
+            admin_id: adminId    
+        });
+    } catch (error) {
+        console.error('Error fetching admin:', error);
+        res.status(500).send("An error occurred while retrieving admin data.");
+    }
+})
+
+app.get("/admin/settings/password-reset", verifyToken, async (req, res) => {
+    try {
+        const adminId = req.adminId;
+        const admins = await viewAdmins(req, res, adminId);
+
+        const admin = await Admin.findOne({ where: { admin_id: adminId } });
+        if (!admin) {
+            console.error("Admin not found for ID:", adminId);
+            return res.status(404).send("Admin not found.");
+        }
+
+        res.render("passwordReset", {
+            title: "Hive",
+            styles: ["passwordReset"],
+            admin,
+            admin_id: adminId,
+            admins: admins,
+        });
+    } catch (error) {
+        console.error("Error fetching admin:", error);
+        res.status(500).send("An error occurred while retrieving admin data.");
+    }
+});
+app.get("/admin/settings/delete-account/:admin_id", verifyToken, async (req, res) => {
+    try {
+        const { adminID } = req.params;
+        const admin = await viewAdmins(req, res, adminID); 
+
+        if (!admin) {
+            return res.status(404).send("Admin not found.");
+        }
+
+        const adminId = admin ? admin.admin_id : null;
+
+        res.render("deleteAdmin", {
+            title: "Hive",
+            styles: ["deleteAdmin"],
+            admin: admin || {},  
+            admin_id: adminId    
+        });
+    } catch (error) {
+        console.error('Error fetching admin:', error);
+        res.status(500).send("An error occurred while retrieving admin data.");
+    }
+});
+
+
 // ADMIN PAGES (UTILITIES) ---------------------------------------------------------------------------
 app.get("/admin/utilities", verifyToken, async (req, res) => {
     try {
@@ -611,19 +710,61 @@ app.get("/admin/utilities", verifyToken, async (req, res) => {
 
         const utilities = await viewUtilities(req);
 
+        if (!utilities || utilities.length === 0) {
+            return res.render("adminUtils", {
+                title: "Hive",
+                styles: ["adminUtils"],
+                admin: admin || {},
+                admin_id: adminId,
+                utilities: [],
+                noUtilities: true 
+            });
+        }
+
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth();
+        const currentYear = currentDate.getFullYear();
+
+        const currentMonthUtilities = utilities.filter(utility => {
+            const statementDate = new Date(utility.statementDate);
+            const dueDate = new Date(utility.dueDate);
+
+            return (
+                (statementDate.getMonth() === currentMonth && statementDate.getFullYear() === currentYear) ||
+                (dueDate.getMonth() === currentMonth && dueDate.getFullYear() === currentYear)
+            );
+        });
+
+        let displayUtilities;
+
+        if (currentMonthUtilities.length > 0) {
+            displayUtilities = currentMonthUtilities;
+        } else {
+            displayUtilities = utilities;
+        }
+
+        const formattedUtilities = displayUtilities.map(utility => ({
+            roomNumber: utility.roomNumber || "N/A",
+            roomType: utility.roomType || "N/A",
+            sharedBalance: utility.sharedBalance ? parseFloat(utility.sharedBalance).toFixed(2) : "0.00",
+            totalBalance: utility.totalBalance ? parseFloat(utility.totalBalance).toFixed(2) : "0.00",
+            room_id: utility.room_id,
+            utility_id: utility.utility_id
+        }));
+
         res.render("adminUtils", {
             title: "Hive",
             styles: ["adminUtils"],
             admin: admin || {},
             admin_id: adminId,
-            utilities: utilities || []
+            utilities: formattedUtilities,
+            noUtilities: false 
         });
     } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
         res.status(500).send("An error occurred while retrieving data.");
     }
 });
-
 
   
 // TENANT PAGES (DASHBOARD) -------------------------------------------------------------------------
@@ -639,68 +780,162 @@ const getTenantsDashboard = async (roomId) => {
     }
 };
 
-app.get("/tenant/dashboard", verifyTenantToken, async (req, res) => {
-    const tenantId = req.tenantId; 
-    if (!tenantId) {
-        return res.status(400).send("Tenant ID not found in the token.");
-    }
-
+const setEstablishmentId = async (req, res, next) => {
     try {
-        const tenant = await Tenant.findOne({
-            where: { tenant_id: tenantId }
-        });
+        const { tenantId } = req;
+
+        if (!tenantId) {
+            return res.status(400).json({ error: "Tenant ID is missing." });
+        }
+
+        const tenant = await Tenant.findOne({ where: { tenant_id: tenantId } });
 
         if (!tenant) {
-            return res.status(404).send("Tenant not found");
+            return res.status(404).json({ error: "Tenant not found." });
         }
 
-        const roomId = tenant.get('room_id'); 
+        req.establishmentId = tenant.establishment_id;
 
-        const room = await Room.findOne({
-            where: { room_id: roomId }
+        if (!req.establishmentId) {
+            return res.status(400).json({ error: "Establishment ID is missing." });
+        }
+
+        req.roomId = tenant.get("room_id"); 
+        next(); 
+    } catch (error) {
+        console.error("Error setting establishment ID:", error.message);
+        return res.status(500).json({ error: "Internal server error." });
+    }
+};
+
+app.get("/tenant/dashboard", verifyTenantToken, setEstablishmentId, async (req, res) => {
+    const { establishmentId, roomId } = req;
+
+    try {
+        const allUtilityTypes = [
+            'electricity consumption',
+            'water usage',
+            'internet connection',
+            'unit rental',
+            'maintenance fees',
+            'dorm amenities'
+        ];
+
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth();
+        const currentYear = currentDate.getFullYear();
+
+        const utilities = await viewUtilities(req, res);
+
+        // Filter utilities for the current month and year
+        const filteredUtilities = utilities.filter(utility => {
+            const statementDate = new Date(utility.statementDate);
+            const dueDate = new Date(utility.dueDate);
+
+            return (
+                (statementDate.getMonth() === currentMonth && statementDate.getFullYear() === currentYear) ||
+                (dueDate.getMonth() === currentMonth && dueDate.getFullYear() === currentYear)
+            );
         });
 
-        console.log('Room data:', room);
+        // Format utilities for rendering
+        const formattedUtilities = allUtilityTypes.map(utilityType => {
+            const utility = filteredUtilities.find(u => u.utilityType === utilityType);
+
+            return {
+                utilityType: getFormattedName(utilityType), 
+                charge: utility ? parseFloat(utility.charge).toFixed(2) : "0.00",   
+                status: utility ? utility.status : 'N/A',   
+                iconClass: getIconClass(utilityType),         
+                sizeClass: getSizeClass(utilityType)          
+            };
+        });
+
+        const room = await Room.findOne({ where: { room_id: roomId } });
 
         if (!room) {
-            return res.status(404).send("Room not found");
+            return res.status(404).json({ error: "Room not found." });
         }
 
-        const roomNumber = room.get('roomNumber');
-        const roomTotalSlot = room.get('roomTotalSlot'); 
-        const roomRemainingSlot = room.get('roomRemainingSlot'); 
+        const roomNumber = room.get("roomNumber");
+        const roomTotalSlot = parseInt(room.get("roomTotalSlot"), 10) || 0;
+        const roomRemainingSlot = parseInt(room.get("roomRemainingSlot"), 10) || 0;
 
-        console.log('roomTotalSlot:', roomTotalSlot);
-        console.log('roomRemainingSlot:', roomRemainingSlot);
-
-        const roomTotalSlotInt = parseInt(roomTotalSlot, 10) || 0;
-        const roomRemainingSlotInt = parseInt(roomRemainingSlot, 10) || 0;
-
-        console.log('roomTotalSlotInt:', roomTotalSlotInt);
-        console.log('roomRemainingSlotInt:', roomRemainingSlotInt);
-
-        if (isNaN(roomTotalSlotInt) || isNaN(roomRemainingSlotInt)) {
-            return res.status(400).send("Invalid room slot values.");
+        if (isNaN(roomTotalSlot) || isNaN(roomRemainingSlot)) {
+            return res.status(400).json({ error: "Invalid room slot values." });
         }
 
-        const rentedSlot = roomTotalSlotInt - roomRemainingSlotInt;
+        const rentedSlot = roomTotalSlot - roomRemainingSlot;
 
         const tenants = await getTenantsDashboard(roomId);
 
-        const plainTenants = tenants.map(tenant => tenant.get({ plain: true }));
+        const plainTenants = tenants.map((tenant) => tenant.get({ plain: true }));
 
         res.render("tenantDashboard", {
             title: "Hive",
             styles: ["ten-dashboard"],
             tenants: plainTenants,
-            roomNumber: roomNumber,
-            rentedSlot: rentedSlot 
+            roomNumber,
+            rentedSlot,
+            utilities: formattedUtilities,  
         });
     } catch (error) {
-        console.error('Error fetching tenants:', error);
-        res.status(500).send("Error fetching tenant data.");
+        console.error("Error fetching tenant dashboard data:", error);
+        res.status(500).json({ error: "Internal server error." });
     }
 });
+
+
+function getFormattedName(utilityType) {
+    switch (utilityType) {
+        case 'electricity consumption':
+            return 'Electricity';
+        case 'water usage':
+            return 'Water';
+        case 'internet connection':
+            return 'WiFi/Internet';
+        case 'unit rental':
+            return 'Unit Rent';
+        case 'maintenance fees':
+            return 'Maintenance Fees';
+        case 'dorm amenities':
+            return 'Dorm Amenities';
+        default:
+            return utilityType; 
+    }
+}
+
+function getIconClass(utilityType) {
+    switch (utilityType) {
+        case 'electricity consumption': 
+            return 'fa-bolt';
+        case 'water usage':
+            return 'fa-tint';
+        case 'internet connection':
+            return 'fa-wifi';
+        case 'unit rental':
+            return 'fa-home';
+        case 'maintenance fees':
+            return 'fa-tools';
+        case 'dorm amenities':
+            return 'fa-bed';
+        default:
+            return '';
+    }
+}
+
+function getSizeClass(utilityType) {
+    switch (utilityType) {
+        case 'Electricity':
+        case 'Unit Rent':
+            return 'card-large';
+        case 'Water':
+        case 'Maintenance Fees':
+            return 'card-medium';
+        default:
+            return 'card-small';
+    }
+}
 
 // TENANT PAGES (ANNOUNCEMENT) ----------------------------------------------------------------------
 app.get("/tenant/announcement", verifyTenantToken, async (req, res) => {
@@ -758,42 +993,191 @@ app.get("/tenant/announcement", verifyTenantToken, async (req, res) => {
 });
 
 // TENANT PAGES (UTILITIES) -------------------------------------------------------------------------
-app.get("/tenant/utilities", verifyTenantToken, async (req, res) => {
+app.get("/tenant/utilities", verifyTenantToken, setEstablishmentId, async (req, res) => {
     const tenantId = req.tenantId;
+    const { establishmentId } = req;
+
     if (!tenantId) {
         return res.status(400).send("Tenant ID not found in the token.");
     }
 
     try {
-        const tenant = await Tenant.findOne({
-            where: { tenant_id: tenantId }
+        const allUtilityTypes = [
+            'electricity consumption',
+            'water usage',
+            'internet connection',
+            'unit rental',
+            'maintenance fees',
+            'dorm amenities'
+        ];
+
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth();
+        const currentYear = currentDate.getFullYear();
+
+        const utilities = await viewUtilities(req);
+        console.log("Utilities fetched from viewUtilities:", utilities);
+
+        if (!utilities || utilities.length === 0) {
+            const formattedUtilities = allUtilityTypes.map(utilityType => ({
+                utilityType: getFormattedName(utilityType),
+                charge: "0.00",
+                perTenant: "0.00",
+                status: 'N/A',
+                iconClass: getIconClass(utilityType),
+                sizeClass: getSizeClass(utilityType),
+                statementDate: 'N/A',
+                dueDate: 'N/A'
+            }));
+
+            const tenant = await Tenant.findOne({ where: { tenant_id: tenantId } });
+            if (!tenant) {
+                return res.status(404).send("Tenant not found");
+            }
+
+            const roomId = tenant.get('room_id');
+            const room = await Room.findOne({ where: { room_id: roomId } });
+
+            if (!room) {
+                return res.status(404).send("Room not found");
+            }
+
+            const roomNumber = room.get('roomNumber');
+            const tenants = await getTenantsDashboard(roomId);
+
+            const plainTenants = tenants.map(tenant => tenant.get({ plain: true }));
+
+            const utilitiesHistory = await utilityHistories(req, res);
+
+            res.render("ten-utilities", {
+                title: "Hive",
+                styles: ["ten-utilities"],
+                tenants: plainTenants,
+                roomNumber: roomNumber,
+                utilities: formattedUtilities,
+                totalBalance: "0.00",
+                sharedBalance: "0.00",
+                utilitiesHistory: utilitiesHistory || []
+            });
+            return;
+        }
+
+        const filteredUtilities = utilities.filter(utility => {
+            const statementDate = new Date(utility.statementDate);
+            const dueDate = new Date(utility.dueDate);
+
+            return (
+                (statementDate.getMonth() === currentMonth && statementDate.getFullYear() === currentYear) ||
+                (dueDate.getMonth() === currentMonth && dueDate.getFullYear() === currentYear)
+            );
         });
+
+        if (filteredUtilities.length === 0) {
+            const formattedUtilities = allUtilityTypes.map(utilityType => ({
+                utilityType: getFormattedName(utilityType),
+                charge: "0.00",
+                perTenant: "0.00",
+                status: 'N/A',
+                iconClass: getIconClass(utilityType),
+                sizeClass: getSizeClass(utilityType),
+                statementDate: 'N/A',
+                dueDate: 'N/A'
+            }));
+
+            const tenant = await Tenant.findOne({ where: { tenant_id: tenantId } });
+            if (!tenant) {
+                return res.status(404).send("Tenant not found");
+            }
+
+            const roomId = tenant.get('room_id');
+            const room = await Room.findOne({ where: { room_id: roomId } });
+
+            if (!room) {
+                return res.status(404).send("Room not found");
+            }
+
+            const roomNumber = room.get('roomNumber');
+            const tenants = await getTenantsDashboard(roomId);
+
+            const plainTenants = tenants.map(tenant => tenant.get({ plain: true }));
+
+            const utilitiesHistory = await utilityHistories(req, res);
+
+            res.render("ten-utilities", {
+                title: "Hive",
+                styles: ["ten-utilities"],
+                tenants: plainTenants,
+                roomNumber: roomNumber,
+                utilities: formattedUtilities,
+                totalBalance: "0.00",
+                sharedBalance: "0.00",
+                utilitiesHistory: utilitiesHistory || []
+            });
+            return;
+        }
+
+        const totalBalance = parseFloat(filteredUtilities[0].totalBalance || 0).toFixed(2);
+        const sharedBalance = parseFloat(filteredUtilities[0].sharedBalance || 0).toFixed(2);
+
+        console.log("Calculated Total Balance for current month:", totalBalance);
+        console.log("Calculated Shared Balance for current month:", sharedBalance);
+
+        const formattedUtilities = allUtilityTypes.map(utilityType => {
+            const utility = filteredUtilities.find(u => u.utilityType === utilityType);
+
+            const charge = utility ? parseFloat(utility.charge) : 0.00;
+
+            let perTenant = utility ? utility.perTenant : 0.00;
+
+            if (perTenant === null || perTenant === undefined || isNaN(perTenant)) {
+                perTenant = 0.00;
+            } else {
+                perTenant = parseFloat(perTenant).toFixed(2);
+            }
+
+            return {
+                utilityType: getFormattedName(utilityType),
+                charge: charge.toFixed(2),
+                perTenant: perTenant,
+                status: utility ? utility.status : 'N/A',
+                iconClass: getIconClass(utilityType),
+                sizeClass: getSizeClass(utilityType),
+                statementDate: utility ? utility.statementDate : 'N/A',
+                dueDate: utility ? utility.dueDate : 'N/A'
+            };
+        });
+
+        const tenant = await Tenant.findOne({ where: { tenant_id: tenantId } });
 
         if (!tenant) {
             return res.status(404).send("Tenant not found");
         }
 
         const roomId = tenant.get('room_id');
-
-        const room = await Room.findOne({
-            where: { room_id: roomId }
-        });
+        const room = await Room.findOne({ where: { room_id: roomId } });
 
         if (!room) {
             return res.status(404).send("Room not found");
         }
 
         const roomNumber = room.get('roomNumber');
-
         const tenants = await getTenantsDashboard(roomId);
 
         const plainTenants = tenants.map(tenant => tenant.get({ plain: true }));
+
+        const utilitiesHistory = await utilityHistories(req, res);
+
+        console.log('Utilities History:', utilitiesHistory);
 
         res.render("ten-utilities", {
             title: "Hive",
             styles: ["ten-utilities"],
             tenants: plainTenants,
-            roomNumber: roomNumber
+            roomNumber: roomNumber,
+            utilities: formattedUtilities,
+            totalBalance: totalBalance,
+            sharedBalance: sharedBalance,
+            utilitiesHistory: utilitiesHistory || []
         });
     } catch (error) {
         console.error('Error fetching tenant utilities:', error);

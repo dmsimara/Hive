@@ -72,80 +72,33 @@
             </div>
           </div>
           <div class="bills">
-            <!-- Unit Rental Bill -->
+            {{#each utilities}}
             <div class="bill">
-              <i class="fas fa-home"></i>
-              <p class="bill-title">Unit Rental</p>
+              <i class="fas {{this.iconClass}}"></i>
+              <p class="bill-title">{{this.utilityType}}</p>
               <div class="bill-dates">
-                <p><strong>Statement Date:</strong> October 15, 2024</p>
-                <p><strong>Due Date:</strong> October 23, 2024</p>
+                <p><strong>Statement Date:</strong> {{this.statementDate}}</p>
+                <p><strong>Due Date:</strong> {{this.dueDate}}</p>
               </div>
-              <p class="bill-amount">Php 8,000</p>
-              <p class="bill-tenant-share">Php 2,000 per tenant</p>
+              <p class="bill-amount">Php {{this.charge}}</p>
+              <p class="bill-tenant-share">Php {{this.perTenant}} per tenant</p>
             </div>
-
-            <!-- Electricity Consumption Bill -->
-            <div class="bill">
-              <i class="fas fa-bolt"></i>
-              <p class="bill-title">Electricity Consumption</p>
-              <div class="bill-dates">
-                <p><strong>Statement Date:</strong> October 5, 2024</p>
-                <p><strong>Due Date:</strong> October 23, 2024</p>
-              </div>
-              <p class="bill-amount">Php 2,345.67</p>
-              <p class="bill-tenant-share">Php 586.42 per tenant</p>
-            </div>
-
-            <!-- Water Usage Bill -->
-            <div class="bill">
-              <i class="fas fa-tint"></i>
-              <p class="bill-title">Water Usage</p>
-              <div class="bill-dates">
-                <p><strong>Statement Date:</strong> October 10, 2024</p>
-                <p><strong>Due Date:</strong> October 23, 2024</p>
-              </div>
-              <p class="bill-amount">Php 345.67</p>
-              <p class="bill-tenant-share">Php 86.42 per tenant</p>
-            </div>
-
-            <!-- Internet Connection Bill -->
-            <div class="bill">
-              <i class="fas fa-wifi"></i>
-              <p class="bill-title">Internet Connection</p>
-              <div class="bill-dates">
-                <p><strong>Statement Date:</strong> October 1, 2024</p>
-                <p><strong>Due Date:</strong> October 23, 2024</p>
-              </div>
-              <p class="bill-amount">Php 1,499</p>
-              <p class="bill-tenant-share">Php 374.75 per tenant</p>
-            </div>
-
-            <!-- Maintenance Fees Bill -->
-            <div class="bill">
-              <i class="fas fa-tools"></i>
-              <p class="bill-title">Maintenance Fees</p>
-              <div class="bill-dates">
-                <p><strong>Statement Date:</strong> October 1, 2024</p>
-                <p><strong>Due Date:</strong> October 23, 2024</p>
-              </div>
-              <p class="bill-amount">Php 600</p>
-              <p class="bill-tenant-share">Php 150 per tenant</p>
-            </div>
+            {{/each}}
           </div>
         </section>
+
 
 
         <!-- Right Side Cards -->
         <aside class="right-side">
           <!-- Room Total Balance -->
           <div class="total-balance-card">
-            <h2>Room #01 Total Balance</h2>
-            <p class="main-balance">Php 12,479.34</p>
+            <h2>Room #{{roomNumber}}</h2>
+            <h2>Total Balance</h2>
+            <p class="main-balance">Php {{totalBalance}}</p>
             <div class="shared-balance-card">
               <h3>Shared Balance</h3>
-              <p>Php 3,119.84</p>
-              <!-- Paid Indicator -->
-              <span class="paid-indicator paid">Paid</span>
+              <p>Php {{sharedBalance}}</p>
             </div>
           </div>
 
@@ -169,25 +122,29 @@
             <thead>
               <tr>
                 <th>Month</th>
-                <th><i class="fas fa-wallet"></i> Total Balance</th>
+                <th><i class="fas fa-wallet"></i> Total Charge</th>
                 <th><i class="fas fa-users"></i> Shared Balance</th>
               </tr>
             </thead>
             <tbody>
+              {{#each utilitiesHistory}}
               <tr>
-                <td>Aug 2024 - Sept 2024</td>
-                <td>Php 13,178.89</td>
-                <td>Php 3,294.73</td>
+                <td>{{this.month}}</td>
+                <td>Php {{this.totalBalance}}</td>
+                <td>Php {{this.sharedBalance}}</td> <!-- Show sharedBalance -->
               </tr>
+              {{else}}
               <tr>
-                <td>July 2024 - Aug 2024</td>
-                <td>Php 12,592.12</td>
-                <td>Php 3,148.03</td>
+                <td colspan="3">No utilities history available.</td>
               </tr>
+              {{/each}}
             </tbody>
           </table>
         </div>
       </section>
+
+
+
 
 
       <script src="/js/ten-utilities.js"></script>
