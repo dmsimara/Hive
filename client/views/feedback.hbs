@@ -1,0 +1,142 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <img class="navbar-brand" src="/images/hiveLight.png" alt="Hive Logo" width="100px" />
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-center">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="/admin/dashboard">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/dashboard/userManagement">Manage Tenant</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/manage/unit">Manage Unit</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/admin/utilities" class="nav-link">Manage Utilities</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/announcements">Announcements</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/tracker">Tracker</a>
+                </li>
+            </ul>
+
+            <img src="{{#if admin.adminProfile}}/images/upload/{{admin.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+                alt="Profile" class="user-pic" onclick="toggleMenu()" />
+            <div class="sub-menu-wrap" id="subMenu">
+                <div class="sub-menu">
+                    <div class="user-info">
+                        <img src="{{#if admin.adminProfile}}/images/upload/{{admin.adminProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+                            alt="Profile" width="40px" />
+                        <h3>{{admin.adminFirstName}} {{admin.adminLastName}}</h3>
+                    </div>
+                    <hr />
+                    <a href="/admin/dashboard/view/account" class="sub-menu-link">
+                        <i class="material-icons">person</i>
+                        <p>View Account</p>
+                        <span>></span>
+                    </a>
+                    <a href="/admin/settings" class="sub-menu-link">
+                        <i class="material-icons">settings</i>
+                        <p>Settings</p>
+                        <span>></span>
+                    </a>
+                    <a href="#" id="logoutButton" class="sub-menu-link">
+                        <i class="material-icons">logout</i>
+                        <p>Logout</p>
+                        <span>></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container pt-5 pb-5">
+    <div class="headerContainer">
+        <h2 class="account-title">Account Settings</h2>
+        <a href="/admin/dashboard/view/account" class="viewProfile"><i class="material-icons">person</i>View Profile</a>
+    </div>
+
+    <div class="sidebarPageContainer">
+        <div class="sidebarContainer">
+            <ul>
+                <li><a href="/admin/settings" class="sidebar-link"><i class="material-icons">nightlight_round</i>Dark
+                        Mode</a></li>
+                <li><a href="/admin/settings/feedback-support" class="sidebar-link"><i
+                            class="material-icons">mail</i>Feedback &
+                        Support</a></li>
+                <li><a href="/admin/settings/password-reset" class="sidebar-link"><i
+                            class="material-icons">lock_reset</i>Password Reset</a></li>
+                <li><a href="/admin/settings/activity-log/{{admin_id}}" class="sidebar-link"><i
+                            class="material-icons">timeline</i>Activity
+                        Log</a></li>
+                <li><a href="/admin/settings/delete-account/{{admin_id}}" class="sidebar-link"><i
+                            class="material-icons">delete</i>Delete
+                        Account</a></li>
+            </ul>
+        </div>
+
+        <div class="pageContainer">
+            <form id="feedbackForm">
+                <label for="userName">Name:</label>
+                <input type="text" id="userName" name="userName" placeholder="Enter your name" required>
+
+                <label for="userEmail">Email:</label>
+                <input type="email" id="userEmail" name="userEmail" placeholder="Enter your email" required>
+
+                <div class="emoji-feedback">
+                    <p>How would you rate your experience?</p>
+                    <label>
+                        <input type="radio" name="feedback" id="feedback" value="1" required>
+                        <div class="emoji-container">
+                            <span class="emoji">😞</span>
+                            <span class="label-text">Worst</span>
+                        </div>
+                    </label>
+                    <label>
+                        <input type="radio" name="feedback" id="feedback" value="2">
+                        <div class="emoji-container">
+                            <span class="emoji">😟</span>
+                            <span class="label-text">Not Good</span>
+                        </div>
+                    </label>
+                    <label>
+                        <input type="radio" name="feedback" id="feedback" value="3">
+                        <div class="emoji-container">
+                            <span class="emoji">😐</span>
+                            <span class="label-text">Fine</span>
+                        </div>
+                    </label>
+                    <label>
+                        <input type="radio" name="feedback" id="feedback" value="4">
+                        <div class="emoji-container">
+                            <span class="emoji">🙂</span>
+                            <span class="label-text">Look Good</span>
+                        </div>
+                    </label>
+                    <label>
+                        <input type="radio" name="feedback" id="feedback" value="5">
+                        <div class="emoji-container">
+                            <span class="emoji">😃</span>
+                            <span class="label-text">Very Good</span>
+                        </div>
+                    </label>
+                </div>
+
+                <textarea name="content" placeholder="Optional comments..."></textarea>
+
+                <button type="submit">Submit Feedback</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script src="/js/feedback.js"></script>

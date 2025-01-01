@@ -22,12 +22,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    credentials: 'include',
+                    credentials: 'include', 
                 });
 
                 if (response.ok) {
                     console.log('Logout successful');
-                    window.location.href = '/'; 
+                    window.location.href = '/'
                 } else {
                     const errorData = await response.json();
                     console.error('Logout failed:', errorData.message);
@@ -68,52 +68,3 @@ function deleteAdmin(adminId) {
             alert('An error occurred while deleting the admin account: ' + error.message);
         });
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-    const form = document.querySelector('form');
-    
-    form.addEventListener('submit', function (event) {
-        event.preventDefault(); 
-
-        const currentPassword = document.getElementById('currentPassword').value;
-        const newPassword = document.getElementById('newPassword').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
-
-        if (newPassword !== confirmPassword) {
-            alert("New password and confirm password do not match.");
-            return;
-        }
-
-        if (!currentPassword || !newPassword || !confirmPassword) {
-            alert("Please fill in all fields.");
-            return;
-        }
-
-        const adminId = document.getElementById('adminId') ? document.getElementById('adminId').value : null;
-
-        fetch('/api/auth/update-password', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                currentPassword: currentPassword,
-                newPassword: newPassword,
-                adminId: adminId, 
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Password updated successfully!');
-                window.location.reload();  
-            } else {
-                alert('Error updating password: ' + (data.message || 'Unknown error'));
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while updating the password: ' + error.message);
-        });
-    });
-});

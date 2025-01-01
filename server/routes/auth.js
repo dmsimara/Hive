@@ -1,5 +1,5 @@
 import express from "express";
-import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, deleteTenant, viewAdmins, viewUnits, addUnitView, addUnit, deleteUnit, getOccupiedUnits, editTenant, updateTenant, addEvent, viewEvents, editEvent, deleteEvent, getEvents, updateEvent, viewNotices, pinnedNotices, permanentNotices, addNotice, togglePinned, togglePermanent, deleteNotice, getAvailableRooms, getNotices, searchTenants, searchRooms, deleteAdmin, updateAdminPassword, updateTenantPassword, addFeedback, addUtility, viewUtilities, deleteUtility, editUtility, updateUtility, utilityHistories } from "../controllers/auth.controllers.js";
+import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, deleteTenant, viewAdmins, viewUnits, addUnitView, addUnit, deleteUnit, getOccupiedUnits, editTenant, updateTenant, addEvent, viewEvents, editEvent, deleteEvent, getEvents, updateEvent, viewNotices, pinnedNotices, permanentNotices, addNotice, togglePinned, togglePermanent, deleteNotice, getAvailableRooms, getNotices, searchTenants, searchRooms, deleteAdmin, updateAdminPassword, updateTenantPassword, addFeedback, addUtility, viewUtilities, deleteUtility, editUtility, updateUtility, utilityHistories, viewActivities } from "../controllers/auth.controllers.js";
 import { verifyTenantToken, verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
@@ -34,7 +34,6 @@ router.patch("/view/notices/:noticeId/toggle_pinned", togglePinned);
 router.patch("/view/notices/:noticeId/toggle_permanent", togglePermanent);
 router.delete("/view/notices/:noticeId/delete", verifyToken, deleteNotice);
 router.get("/getAvailableRooms", getAvailableRooms);
-// router.get("/getTotalTenants", verifyToken, getTotalTenants);
 router.get("/search", searchTenants);
 router.get("/searchRooms", searchRooms);
 router.get("/searchTenants", findTenants);
@@ -45,6 +44,7 @@ router.post("/add/utility", verifyToken, addUtility);
 router.get("/editUtility/:utility_id", editUtility);
 router.post("/editUtility/:utility_id", verifyToken, updateUtility);
 router.get("/utilityHistory", utilityHistories);
+router.get("/activity-log/:adminId", verifyToken, viewActivities);
 
 // tenants
 router.get("/view-tenants", viewTenants);

@@ -503,16 +503,16 @@ export const resetPassword = async (req, res) => {
 }
 
 export const updateAdminPassword = async (req, res) => {
-    const adminId = req.adminId; 
+    const adminId = req.adminId;  
     const { currentPassword, newPassword } = req.body;
 
     try {
-        console.log("Admin ID from middleware:", adminId); 
+        console.log("Admin ID from middleware:", adminId);  
 
         const admin = await Admin.findOne({ where: { admin_id: adminId } });
 
         if (!admin) {
-            console.error("Admin not found for Admin ID:", adminId); 
+            console.error("Admin not found for Admin ID:", adminId);  
             return res.status(404).json({ success: false, message: "Admin not found" });
         }
 
@@ -520,7 +520,7 @@ export const updateAdminPassword = async (req, res) => {
 
         const isMatch = await bcryptjs.compare(currentPassword, admin.adminPassword);
         if (!isMatch) {
-            console.error("Current password does not match for Admin ID:", adminId); 
+            console.error("Current password does not match for Admin ID:", adminId);  
             return res.status(400).json({ success: false, message: "Current password is incorrect" });
         }
 
@@ -531,36 +531,46 @@ export const updateAdminPassword = async (req, res) => {
 
         const successMessage = `Password successfully updated for ${adminFirstName} (Admin ID: ${adminId}).`;
         console.log(successMessage);
-        logActivity(adminId, 'password reset', successMessage);
 
-        console.log("Password successfully updated for Admin ID:", adminId); 
+        try {
+            console.log(`Logging activity for admin ID: ${adminId}`);
+            logActivity(adminId, 'password reset', successMessage);
+        } catch (logError) {
+            console.error("Error logging activity:", logError);
+        }
 
         const subject = 'Password Change Confirmation';
         const html = `
-           <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
-              <h2 style="color: #4CAF50; text-align: center;">Password Change Confirmation</h2>
-              <p style="text-align: left;">We are writing to confirm that your password for your Hive admin account has been successfully updated.</p>
-              <p style="text-align: left;">If you did not initiate this change, please contact our support team immediately at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.</p>
-              <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
-              <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
-              <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
-              <p style="font-size: 0.8em; color: #777; text-align: center;">
-                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.
-              </p>
-           </div>
+            <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
+                <h2 style="color: #4CAF50; text-align: center;">Password Change Confirmation</h2>
+                <p style="text-align: left;">We are writing to confirm that your password for your Hive admin account has been successfully updated.</p>
+                <p style="text-align: left;">If you did not initiate this change, please contact our support team immediately at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.</p>
+                <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
+                <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
+                <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+                <p style="font-size: 0.8em; color: #777; text-align: center;">
+                   This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.
+                </p>
+            </div>
         `;
 
-        await sendMail(admin.adminEmail, subject, null, html);
+        try {
+            console.log(`Sending email to admin: ${admin.adminEmail}`);
+            await sendMail(admin.adminEmail, subject, null, html);
+        } catch (emailError) {
+            console.error("Error sending email:", emailError);
+        }
 
         res.status(200).json({
             success: true,
             message: "Password updated successfully",
         });
     } catch (error) {
-        console.error("Error in updateAdminPassword:", error);  
+        console.error("Error in updateAdminPassword:", error);
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
 
 export const updateTenantPassword = async (req, res) => {
     const tenantId = req.tenantId; 
@@ -695,6 +705,32 @@ export const viewTenants = async (req) => {
     } catch (error) {
         console.error('Error fetching tenants:', error);
         throw new Error('Error fetching tenants'); 
+    }
+};
+
+export const viewActivities = async (req, res) => {
+    const adminId = req.params.adminId;
+
+    if (!adminId) {
+        return res.status(400).json({ success: false, message: 'Admin ID is required.' });
+    }
+
+    const connection = connectDB(); 
+
+    try {
+        const query = 'SELECT * FROM activities WHERE admin_id = ? ORDER BY timestamp DESC';
+        const [results] = await connection.promise().query(query, [adminId]); 
+
+        if (!results.length) {
+            return res.json({ success: true, message: 'No activities found for this admin.', activities: [] });
+        }
+
+        return res.json({ success: true, activities: results });
+    } catch (error) {
+        console.error('Error fetching activity log:', error);
+        return res.status(500).json({ success: false, message: 'Internal server error' });
+    } finally {
+        connection.end(); 
     }
 };
 

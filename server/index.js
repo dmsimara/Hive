@@ -12,6 +12,7 @@ import fileUpload from "express-fileupload";
 import fs from 'fs';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
+import bcryptjs from 'bcryptjs';
 import Admin from "./models/admin.models.js";
 import Room from "./models/room.models.js";
 import Tenant from "./models/tenant.models.js";
@@ -19,7 +20,7 @@ import Notice from "./models/notice.models.js";
 import Feedback from "./models/feedback.models.js";
 import Utility from "./models/utility.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
-import { addTenant, addTenantView, addUnitView, editTenant, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, logActivity, updateEvent, updateTenant, updateUtility, utilityHistories, viewAdmins, viewEvents, viewNotices, viewTenants, viewUnits, viewUtilities } from './controllers/auth.controllers.js';
+import { addTenant, addTenantView, addUnitView, editTenant, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, logActivity, updateAdminPassword, updateEvent, updateTenant, updateUtility, utilityHistories, viewActivities, viewAdmins, viewEvents, viewNotices, viewTenants, viewUnits, viewUtilities } from './controllers/auth.controllers.js';
 import { createPool } from "mysql2";
 
 // Sets up `__filename` and `__dirname` in an ES module environment using Node.js.
@@ -607,6 +608,100 @@ app.get("/admin/settings", verifyToken, async (req, res) => {
         res.status(500).send("An error occurred while retrieving admin data.");
     }
 });
+
+app.get("/admin/settings/activity-log/:adminID", verifyToken, async (req, res) => {
+    try {
+        const { adminID } = req.params;
+        const admin = await viewAdmins(req, res, adminID); 
+
+        if (!admin) {
+            return res.status(404).send("Admin not found.");
+        }
+
+        const adminId = admin ? admin.admin_id : null;
+
+        res.render("activityLog", {
+            title: "Hive",
+            styles: ["activityLog"],
+            admin: admin || {},  
+            admin_id: adminId    
+        });
+    } catch (error) {
+        console.error('Error fetching admin:', error);
+        res.status(500).send("An error occurred while retrieving admin data.");
+    }
+});
+
+app.get("/admin/settings/feedback-support", verifyToken, async (req, res) => {
+    try {
+        const { adminID } = req.params;
+        const admin = await viewAdmins(req, res, adminID); 
+
+        if (!admin) {
+            return res.status(404).send("Admin not found.");
+        }
+
+        const adminId = admin ? admin.admin_id : null;
+
+        res.render("feedback", {
+            title: "Hive",
+            styles: ["feedback"],
+            admin: admin || {},  
+            admin_id: adminId    
+        });
+    } catch (error) {
+        console.error('Error fetching admin:', error);
+        res.status(500).send("An error occurred while retrieving admin data.");
+    }
+})
+
+app.get("/admin/settings/password-reset", verifyToken, async (req, res) => {
+    try {
+        const adminId = req.adminId;
+        const admins = await viewAdmins(req, res, adminId);
+
+        const admin = await Admin.findOne({ where: { admin_id: adminId } });
+        if (!admin) {
+            console.error("Admin not found for ID:", adminId);
+            return res.status(404).send("Admin not found.");
+        }
+
+        res.render("passwordReset", {
+            title: "Hive",
+            styles: ["passwordReset"],
+            admin,
+            admin_id: adminId,
+            admins: admins,
+        });
+    } catch (error) {
+        console.error("Error fetching admin:", error);
+        res.status(500).send("An error occurred while retrieving admin data.");
+    }
+});
+
+app.get("/admin/settings/delete-account/:admin_id", verifyToken, async (req, res) => {
+    try {
+        const { adminID } = req.params;
+        const admin = await viewAdmins(req, res, adminID); 
+
+        if (!admin) {
+            return res.status(404).send("Admin not found.");
+        }
+
+        const adminId = admin ? admin.admin_id : null;
+
+        res.render("deleteAdmin", {
+            title: "Hive",
+            styles: ["deleteAdmin"],
+            admin: admin || {},  
+            admin_id: adminId    
+        });
+    } catch (error) {
+        console.error('Error fetching admin:', error);
+        res.status(500).send("An error occurred while retrieving admin data.");
+    }
+});
+
 
 // ADMIN PAGES (UTILITIES) ---------------------------------------------------------------------------
 app.get("/admin/utilities", verifyToken, async (req, res) => {
