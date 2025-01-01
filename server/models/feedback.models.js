@@ -44,7 +44,7 @@ const Feedback = sequelize.define('Feedback', {
   },
   submitted_at: {
     type: DataTypes.DATE,
-    defaultValue: Sequelize.NOW // This automatically sets the current timestamp
+    defaultValue: Sequelize.NOW 
   },
   userEmail: {
     type: DataTypes.STRING,

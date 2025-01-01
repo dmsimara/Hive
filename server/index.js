@@ -250,7 +250,7 @@ app.get('/admin/utilities/:room_id', async (req, res) => {
     const { room_id } = req.params;
     try {
         const utilities = await getUtilitiesByRoomId(room_id);
-        console.log('Utilities:', utilities);  // Check the data here
+        console.log('Utilities:', utilities);  
         res.json({ utilities });
     } catch (error) {
         console.error('Error fetching utilities:', error);
@@ -678,7 +678,6 @@ app.get("/admin/settings/password-reset", verifyToken, async (req, res) => {
         res.status(500).send("An error occurred while retrieving admin data.");
     }
 });
-
 app.get("/admin/settings/delete-account/:admin_id", verifyToken, async (req, res) => {
     try {
         const { adminID } = req.params;
@@ -711,19 +710,61 @@ app.get("/admin/utilities", verifyToken, async (req, res) => {
 
         const utilities = await viewUtilities(req);
 
+        if (!utilities || utilities.length === 0) {
+            return res.render("adminUtils", {
+                title: "Hive",
+                styles: ["adminUtils"],
+                admin: admin || {},
+                admin_id: adminId,
+                utilities: [],
+                noUtilities: true 
+            });
+        }
+
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth();
+        const currentYear = currentDate.getFullYear();
+
+        const currentMonthUtilities = utilities.filter(utility => {
+            const statementDate = new Date(utility.statementDate);
+            const dueDate = new Date(utility.dueDate);
+
+            return (
+                (statementDate.getMonth() === currentMonth && statementDate.getFullYear() === currentYear) ||
+                (dueDate.getMonth() === currentMonth && dueDate.getFullYear() === currentYear)
+            );
+        });
+
+        let displayUtilities;
+
+        if (currentMonthUtilities.length > 0) {
+            displayUtilities = currentMonthUtilities;
+        } else {
+            displayUtilities = utilities;
+        }
+
+        const formattedUtilities = displayUtilities.map(utility => ({
+            roomNumber: utility.roomNumber || "N/A",
+            roomType: utility.roomType || "N/A",
+            sharedBalance: utility.sharedBalance ? parseFloat(utility.sharedBalance).toFixed(2) : "0.00",
+            totalBalance: utility.totalBalance ? parseFloat(utility.totalBalance).toFixed(2) : "0.00",
+            room_id: utility.room_id,
+            utility_id: utility.utility_id
+        }));
+
         res.render("adminUtils", {
             title: "Hive",
             styles: ["adminUtils"],
             admin: admin || {},
             admin_id: adminId,
-            utilities: utilities || []
+            utilities: formattedUtilities,
+            noUtilities: false 
         });
     } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
         res.status(500).send("An error occurred while retrieving data.");
     }
 });
-
 
   
 // TENANT PAGES (DASHBOARD) -------------------------------------------------------------------------
@@ -780,14 +821,30 @@ app.get("/tenant/dashboard", verifyTenantToken, setEstablishmentId, async (req, 
             'dorm amenities'
         ];
 
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth();
+        const currentYear = currentDate.getFullYear();
+
         const utilities = await viewUtilities(req, res);
 
+        // Filter utilities for the current month and year
+        const filteredUtilities = utilities.filter(utility => {
+            const statementDate = new Date(utility.statementDate);
+            const dueDate = new Date(utility.dueDate);
+
+            return (
+                (statementDate.getMonth() === currentMonth && statementDate.getFullYear() === currentYear) ||
+                (dueDate.getMonth() === currentMonth && dueDate.getFullYear() === currentYear)
+            );
+        });
+
+        // Format utilities for rendering
         const formattedUtilities = allUtilityTypes.map(utilityType => {
-            const utility = utilities.find(u => u.utilityType === utilityType);
+            const utility = filteredUtilities.find(u => u.utilityType === utilityType);
 
             return {
                 utilityType: getFormattedName(utilityType), 
-                charge: utility ? utility.charge : 0.00,   
+                charge: utility ? parseFloat(utility.charge).toFixed(2) : "0.00",   
                 status: utility ? utility.status : 'N/A',   
                 iconClass: getIconClass(utilityType),         
                 sizeClass: getSizeClass(utilityType)          
@@ -827,6 +884,7 @@ app.get("/tenant/dashboard", verifyTenantToken, setEstablishmentId, async (req, 
         res.status(500).json({ error: "Internal server error." });
     }
 });
+
 
 function getFormattedName(utilityType) {
     switch (utilityType) {
@@ -954,10 +1012,10 @@ app.get("/tenant/utilities", verifyTenantToken, setEstablishmentId, async (req, 
         ];
 
         const currentDate = new Date();
-        const currentMonth = currentDate.getMonth();  
+        const currentMonth = currentDate.getMonth();
         const currentYear = currentDate.getFullYear();
 
-        const utilities = await viewUtilities(req);  
+        const utilities = await viewUtilities(req);
         console.log("Utilities fetched from viewUtilities:", utilities);
 
         if (!utilities || utilities.length === 0) {
@@ -989,6 +1047,8 @@ app.get("/tenant/utilities", verifyTenantToken, setEstablishmentId, async (req, 
 
             const plainTenants = tenants.map(tenant => tenant.get({ plain: true }));
 
+            const utilitiesHistory = await utilityHistories(req, res);
+
             res.render("ten-utilities", {
                 title: "Hive",
                 styles: ["ten-utilities"],
@@ -997,7 +1057,7 @@ app.get("/tenant/utilities", verifyTenantToken, setEstablishmentId, async (req, 
                 utilities: formattedUtilities,
                 totalBalance: "0.00",
                 sharedBalance: "0.00",
-                utilitiesHistory: []
+                utilitiesHistory: utilitiesHistory || []
             });
             return;
         }
@@ -1005,7 +1065,7 @@ app.get("/tenant/utilities", verifyTenantToken, setEstablishmentId, async (req, 
         const filteredUtilities = utilities.filter(utility => {
             const statementDate = new Date(utility.statementDate);
             const dueDate = new Date(utility.dueDate);
-            
+
             return (
                 (statementDate.getMonth() === currentMonth && statementDate.getFullYear() === currentYear) ||
                 (dueDate.getMonth() === currentMonth && dueDate.getFullYear() === currentYear)
@@ -1041,6 +1101,8 @@ app.get("/tenant/utilities", verifyTenantToken, setEstablishmentId, async (req, 
 
             const plainTenants = tenants.map(tenant => tenant.get({ plain: true }));
 
+            const utilitiesHistory = await utilityHistories(req, res);
+
             res.render("ten-utilities", {
                 title: "Hive",
                 styles: ["ten-utilities"],
@@ -1049,7 +1111,7 @@ app.get("/tenant/utilities", verifyTenantToken, setEstablishmentId, async (req, 
                 utilities: formattedUtilities,
                 totalBalance: "0.00",
                 sharedBalance: "0.00",
-                utilitiesHistory: []
+                utilitiesHistory: utilitiesHistory || []
             });
             return;
         }
@@ -1115,14 +1177,13 @@ app.get("/tenant/utilities", verifyTenantToken, setEstablishmentId, async (req, 
             utilities: formattedUtilities,
             totalBalance: totalBalance,
             sharedBalance: sharedBalance,
-            utilitiesHistory  
+            utilitiesHistory: utilitiesHistory || []
         });
     } catch (error) {
         console.error('Error fetching tenant utilities:', error);
         res.status(500).send("Error fetching tenant utilities.");
     }
 });
-
 
 // TENANT PAGES (ROOM DEETS) ------------------------------------------------------------------------
 app.get("/tenant/room-details", verifyTenantToken, async (req, res) => {

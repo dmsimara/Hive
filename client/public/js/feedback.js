@@ -47,16 +47,15 @@ document.addEventListener('DOMContentLoaded', () => {
             event.preventDefault();
 
             const userName = document.querySelector("#userName").value.trim();
-            const userEmail = document.querySelector("#userEmail").value.trim();
             const feedback = document.querySelector('input[name="feedback"]:checked')?.value;
             const content = document.querySelector("textarea[name='content']").value.trim();
 
-            if (!userName || !userEmail || !feedback) {
+            if (!userName || !content || !feedback) {
                 alert("Please fill in all required fields.");
                 return;
             }
 
-            const feedbackData = { userName, userEmail, feedback, content };
+            const feedbackData = { userName, feedback, content };
 
             try {
                 const response = await fetch("/api/auth/submit-feedback", {

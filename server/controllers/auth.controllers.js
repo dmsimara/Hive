@@ -1381,34 +1381,57 @@ export const addUnit = async (req, res) => {
 };
 
 export const addFeedback = async (req, res) => {
-    const adminId = req.adminId;  
+    const adminId = req.adminId;
 
     try {
-      const { userName, userEmail, feedback, content } = req.body;
+        const { userName, feedback, content } = req.body;
 
-      const newFeedback = await Feedback.create({
-        userName: userName,
-        tenant_id: null,   
-        admin_id: adminId,   
-        establishment_id: null,   
-        feedback_level: feedback,  
-        content: content,  
-        userEmail: userEmail,  
-      });
+        const adminDetails = await Admin.findByPk(adminId); 
+        if (!adminDetails || !adminDetails.adminEmail) {
+            throw new Error('Admin email not found.');
+        }
 
-      logActivity(adminId, 'create', `Added feedback from ${userName}`);
-  
-      // Send a success response
-      res.status(201).json({
-        message: 'Feedback submitted successfully!',
-        feedback: newFeedback,
-      });
+        const adminEmail = adminDetails.adminEmail;
+
+        const newFeedback = await Feedback.create({
+            userName: userName,
+            tenant_id: null,
+            admin_id: adminId,
+            establishment_id: null,
+            feedback_level: feedback,
+            content: content,
+        });
+
+        logActivity(adminId, 'create', `Added feedback from ${userName}`);
+
+        const subject = 'Feedback Received Confirmation';
+        const html = `
+           <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
+              <h2 style="color: #4CAF50; text-align: center;">Feedback Received</h2>
+              <p style="text-align: left;">Dear <strong>${userName}</strong>,</p>
+              <p style="text-align: left;">Thank you for sharing your feedback with us. We have received your comments and appreciate you taking the time to help us improve.</p>
+              <p style="text-align: left;">Our team will review your feedback and take appropriate action as necessary.</p>
+              <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
+              <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
+              <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+              <p style="font-size: 0.8em; color: #777; text-align: center;">
+                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.
+              </p>
+           </div>
+        `;
+
+        await sendMail(adminEmail, subject, null, html);
+
+        res.status(201).json({
+            message: 'Feedback submitted successfully!',
+            feedback: newFeedback,
+        });
     } catch (error) {
-      console.error('Error saving feedback:', error);
-      res.status(500).json({
-        message: 'Error saving feedback.',
-        error: error.message,
-      });
+        console.error('Error saving feedback:', error);
+        res.status(500).json({
+            message: 'Error saving feedback.',
+            error: error.message,
+        });
     }
 };
 
