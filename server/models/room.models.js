@@ -67,4 +67,5 @@ Establishment.hasMany(Room, { foreignKey: 'establishment_id' });
     })
     .catch(err => console.error('Error creating table:', err));
   
+  export { sequelize };
   export default Room;

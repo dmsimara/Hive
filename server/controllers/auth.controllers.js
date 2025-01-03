@@ -15,6 +15,7 @@ import jwt from "jsonwebtoken";
 import { generateTokenAndSetCookie, generateTokenAndSetTenantCookie } from '../utils/generateTokenAndSetCookie.js';
 import { connectDB } from '../db/connectDB.js';
 import { Sequelize, Op } from 'sequelize';
+import { sequelize } from '../models/room.models.js';
 import { format, startOfWeek, endOfWeek, addHours } from 'date-fns';
 import { sendMail } from '../nodemailer/mail.js';
 import moment from 'moment-timezone';
@@ -1373,51 +1374,141 @@ export const addRequest = async (req, res) => {
 
         const roomId = tenant.room_id;
 
-        const newRequest = await Request.create({
-            visitorName,
-            contactInfo,
-            purpose,
-            visitDate,
-            tenant_id: tenantId,  
-            establishment_id: establishmentId, 
-            room_id: roomId  
-        });
-
-        logHistory(tenantId, 'create', `Tenant ${tenant.tenantFirstName} added a new visit request on ${visitDate} for ${visitorName}`);
-
-        const subject = 'Visitor Request Received Confirmation';
-        const html = `
-           <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
-              <h2 style="color: #4CAF50; text-align: center; margin-bottom: 20px;">Visitor Request Received</h2>
-              <p style="text-align: left; font-size: 1.1em; margin-bottom: 10px;">Dear <strong>${tenant.tenantFirstName}</strong>,</p>
-              <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">We have received the request for a visitor to come and see you. Your request is currently being reviewed by our team.</p>
-              <p style="text-align: left; font-size: 1em; margin-bottom: 20px;">Please be patient as we process the request. Once the admin has made a decision regarding the visitor's entry, you will receive another email with further instructions.</p>
-              
-              <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
-           
-              <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
-              <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
-           
-              <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
-           
-              <p style="font-size: 0.8em; color: #777; text-align: center;">
-                 This is an automated email. Please do not reply. For support, contact us at 
-                 <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.
-              </p>
-           </div>
-        `;
+        const t = await sequelize.transaction();
 
         try {
-            await sendMail(tenant.tenantEmail, subject, null, html);
+            const newRequest = await Request.create({
+                visitorName,
+                contactInfo,
+                purpose,
+                visitDate,
+                tenant_id: tenantId,  
+                establishment_id: establishmentId, 
+                room_id: roomId  
+            }, { transaction: t });
+
+            await Room.update(
+                { requestCount: sequelize.literal('requestCount + 1') }, 
+                { where: { room_id: roomId }, transaction: t }
+            );
+
+            await t.commit();
+
+            logHistory(tenantId, 'create', `Tenant ${tenant.tenantFirstName} added a new visit request on ${visitDate} for ${visitorName}`);
+
+            const subject = 'Visitor Request Received Confirmation';
+            const html = `
+               <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
+                  <h2 style="color: #4CAF50; text-align: center; margin-bottom: 20px;">Visitor Request Received</h2>
+                  <p style="text-align: left; font-size: 1.1em; margin-bottom: 10px;">Dear <strong>${tenant.tenantFirstName}</strong>,</p>
+                  <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">We have received the request for a visitor to come and see you. Your request is currently being reviewed by our team.</p>
+                  <p style="text-align: left; font-size: 1em; margin-bottom: 20px;">Please be patient as we process the request. Once the admin has made a decision regarding the visitor's entry, you will receive another email with further instructions.</p>
+              
+                  <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+                  
+                  <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
+                  <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
+                  
+                  <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+                  
+                  <p style="font-size: 0.8em; color: #777; text-align: center;">
+                     This is an automated email. Please do not reply. For support, contact us at 
+                     <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.
+                  </p>
+               </div>
+            `;
+
+            try {
+                await sendMail(tenant.tenantEmail, subject, null, html);
+            } catch (error) {
+                console.error("Error sending email:", error);
+                return res.status(500).json({ message: 'Failed to send email' });
+            }
+
+            res.status(201).json({ message: 'Request added successfully!', request: newRequest });
+        } catch (error) {
+            await t.rollback();
+            console.error('Error adding request:', error);
+            res.status(500).json({ message: 'Failed to add request', error: error.message });
+        }
+    } catch (error) {
+        console.error('Error adding request:', error);
+        res.status(500).json({ message: 'Failed to add request', error: error.message });
+    }
+};
+
+
+export const cancelRequest = async (req, res) => {
+    try {
+        const tenantId = req.tenantId; 
+        const { requestId } = req.params; 
+
+        const request = await Request.findOne({
+            where: { request_id: requestId },
+        });
+
+        if (!request) {
+            return res.status(404).json({ message: 'Request not found' });
+        }
+
+        const { visitorName, visitDate, room_id } = request;
+
+        const tenant = await Tenant.findOne({
+            where: { tenant_id: tenantId },
+            attributes: ['tenantFirstName', 'tenantEmail'], 
+        });
+
+        if (!tenant) {
+            return res.status(404).json({ message: 'Tenant not found' });
+        }
+
+        const { tenantFirstName, tenantEmail } = tenant; 
+
+        request.status = 'cancelled';
+        await request.save();
+
+        logHistory(tenantId, 'delete', `Tenant ${tenantId} cancelled a visit request on ${visitDate} for ${visitorName}`);
+
+        if (room_id) {
+            await Room.update(
+                { requestCount: sequelize.literal('requestCount - 1') }, 
+                { where: { room_id: room_id } }
+            );
+        }
+
+        const subject = 'Visitor Entry Cancellation Confirmation';
+        const html = `
+            <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
+                <h2 style="color: #4CAF50; text-align: center; margin-bottom: 20px;">Visitor Entry Cancellation Request Received</h2>
+                <p style="text-align: left; font-size: 1.1em; margin-bottom: 10px;">Dear <strong>${tenantFirstName}</strong>,</p>
+                <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">We have received your request to cancel the visitor entry for <strong>${visitorName}</strong> scheduled for <strong>${visitDate}</strong>.</p>
+                <p style="text-align: left; font-size: 1em; margin-bottom: 20px;">Your request is currently being reviewed. If you have made this cancellation by mistake or wish to undo it, please reach out to your admin immediately for assistance.</p>
+                
+                <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+                
+                <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
+                <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
+                
+                <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+                
+                <p style="font-size: 0.8em; color: #777; text-align: center;">
+                   This is an automated email. Please do not reply. For support, contact us at 
+                   <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.
+                </p>
+            </div>
+        `;
+        
+        try {
+            await sendMail(tenantEmail, subject, null, html);
         } catch (error) {
             console.error("Error sending email:", error);
             return res.status(500).json({ message: 'Failed to send email' });
         }
 
-        res.status(201).json({ message: 'Request added successfully!', request: newRequest });
+        res.status(200).json({ message: 'Request cancelled successfully!', request });
     } catch (error) {
-        console.error('Error adding request:', error);
-        res.status(500).json({ message: 'Failed to add request', error: error.message });
+        console.error('Error cancelling request:', error);
+        res.status(500).json({ message: 'Failed to cancel request', error: error.message });
     }
 };
 
