@@ -1529,7 +1529,7 @@ export const cancelRequest = async (req, res) => {
 
 export const addUnit = async (req, res) => {
     try {
-        const { roomNumber, roomType, roomTotalSlot, roomRemainingSlot, floorNumber } = req.body;
+        const { roomNumber, roomType, roomTotalSlot, roomRemainingSlot, floorNumber, visitorLimit } = req.body;
 
         const token = req.cookies.token; 
         const decoded = jwt.verify(token, process.env.JWT_SECRET); 
@@ -1553,6 +1553,7 @@ export const addUnit = async (req, res) => {
             roomTotalSlot,
             roomRemainingSlot: roomTotalSlot,
             floorNumber,
+            visitorLimit,
             establishmentId
         });
 
