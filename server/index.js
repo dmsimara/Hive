@@ -827,7 +827,6 @@ app.get("/tenant/dashboard", verifyTenantToken, setEstablishmentId, async (req, 
 
         const utilities = await viewUtilities(req, res);
 
-        // Filter utilities for the current month and year
         const filteredUtilities = utilities.filter(utility => {
             const statementDate = new Date(utility.statementDate);
             const dueDate = new Date(utility.dueDate);
@@ -838,7 +837,6 @@ app.get("/tenant/dashboard", verifyTenantToken, setEstablishmentId, async (req, 
             );
         });
 
-        // Format utilities for rendering
         const formattedUtilities = allUtilityTypes.map(utilityType => {
             const utility = filteredUtilities.find(u => u.utilityType === utilityType);
 
@@ -1332,6 +1330,35 @@ const updateTenantDetails = async (body, tenantProfile) => {
     const tenantId = body.tenant_id;
     await Tenant.update(tenantDetails, { where: { tenant_id: tenantId } });
 };
+
+// TENANT PAGES (SETTINGS) -------------------------------------------------------------------------
+app.get("/tenant/settings", verifyTenantToken, setEstablishmentId, async (req, res) => {
+    const { tenantId, establishmentId } = req;
+
+    try {
+        if (!tenantId || !establishmentId) {
+            return res.status(400).json({ error: "Tenant or establishment ID is missing." });
+        }
+
+        const tenant = await Tenant.findOne({ where: { tenant_id: tenantId, establishmentId } });
+
+        if (!tenant) {
+            return res.status(404).json({ error: "Tenant not found." });
+        }
+
+        const plainTenant = tenant.get({ plain: true });
+
+        res.render("tenantSettings", {
+            title: "Hive",
+            styles: ["tenantSettings"],
+            tenant: plainTenant,
+        });
+    } catch (error) {
+        console.error("Error fetching tenant settings data:", error.message);
+        res.status(500).json({ error: "Internal server error." });
+    }
+});
+
 
 // Starts the server on the specified port, connects to the database, and logs a message when the server is running.
 app.listen(PORT, () => {

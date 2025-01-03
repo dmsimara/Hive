@@ -8,6 +8,7 @@ import Feedback from '../models/feedback.models.js';
 import Utility from '../models/utility.models.js';
 import Activity from '../models/activity.models.js';
 import History from '../models/history.models.js';
+import Request from '../models/request.models.js';
 import bcryptjs from 'bcryptjs';
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
@@ -1341,6 +1342,14 @@ export const addTenant = async (req, res) => {
         return res.status(500).json({ success: false, message: 'Failed to add tenant', error: error.message });
     }
 };
+
+export const addRequest = async (req, res) => {
+    try {
+        const token = req.cookies.tenantToken; 
+    } catch (error) {
+        
+    }
+}
 
 export const addUnit = async (req, res) => {
     try {
