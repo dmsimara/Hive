@@ -710,6 +710,96 @@ export const viewTenants = async (req) => {
     }
 };
 
+export const viewVisitorsTenant = async (req, res) => {
+    const tenantId = req.tenantId;
+
+    if (!tenantId) {
+        return res.status(400).json({
+            success: false,
+            message: 'Tenant ID is required',
+        });
+    }
+
+    const connection = connectDB();
+
+    try {
+        const query = `
+            SELECT * 
+            FROM requests 
+            WHERE tenant_id = ? 
+              AND establishment_id = (
+                SELECT establishment_id 
+                FROM tenants 
+                WHERE tenant_id = ?
+              )
+            ORDER BY requestDate ASC
+        `;
+
+        const [results] = await connection.promise().query(query, [tenantId, tenantId]);
+
+        if (!results.length) {
+            return res.json({
+                success: true,
+                message: 'No visitors found for this tenant.',
+                visitors: [],
+            });
+        }
+
+        return res.json({
+            success: true,
+            visitors: results,
+        });
+    } catch (error) {
+        console.error('Error fetching tenant visitors log:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+        });
+    } finally {
+        connection.end();
+    }
+};
+
+export const viewVisitorsAdmin = async (req, res) => {
+    const establishmentId = req.establishmentId;
+
+    if (!establishmentId) {
+        return res.status(400).json({
+            success: false,
+            message: 'Establishment ID is required',
+        });
+    }
+
+    const connection = connectDB();
+
+    try {
+        const query = 'SELECT * FROM requests WHERE establishment_id = ? ORDER BY requestDate ASC';
+        const [results] = await connection.promise().query(query, [establishmentId]);
+
+        if (!results.length) {
+            return res.json({
+                success: true,
+                message: 'No visitors found for this establishment.',
+                visitors: [],
+            });
+        }
+
+        return res.json({
+            success: true,
+            visitors: results,
+        });
+    } catch (error) {
+        console.error('Error fetching admin visitors log:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+        });
+    } finally {
+        connection.end();
+    }
+};
+
+
 export const viewActivities = async (req, res) => {
     const adminId = req.params.adminId;
 
