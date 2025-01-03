@@ -1359,6 +1359,34 @@ app.get("/tenant/settings", verifyTenantToken, setEstablishmentId, async (req, r
     }
 });
 
+// TENANT PAGES (VISITORS LOG) -------------------------------------------------------------------------
+app.get("/tenant/visitors", verifyTenantToken, setEstablishmentId, async (req, res) => {
+    const { tenantId, establishmentId } = req;
+
+    try {
+        if (!tenantId || !establishmentId) {
+            return res.status(400).json({ error: "Tenant or establishment ID is missing." });
+        }
+
+        const tenant = await Tenant.findOne({ where: { tenant_id: tenantId, establishmentId } });
+
+        if (!tenant) {
+            return res.status(404).json({ error: "Tenant not found." });
+        }
+
+        const plainTenant = tenant.get({ plain: true });
+
+        res.render("tenantVisitors", {
+            title: "Hive",
+            styles: ["tenantVisitors"],
+            tenant: plainTenant,
+        });
+    } catch (error) {
+        console.error("Error fetching tenant visitors data:", error.message);
+        res.status(500).json({ error: "Internal server error." });
+    }
+});
+
 
 // Starts the server on the specified port, connects to the database, and logs a message when the server is running.
 app.listen(PORT, () => {

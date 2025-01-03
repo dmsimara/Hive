@@ -19,7 +19,7 @@ const Request = sequelize.define('Request', {
         allowNull: false,
     },
     tenant_id: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         field: 'tenant_id',
         allowNull: false,
         references: {
@@ -72,8 +72,8 @@ const Request = sequelize.define('Request', {
         type: DataTypes.DATE,
         defaultValue: Sequelize.NOW
     },
-    establishmentId: { 
-        type: DataTypes.INTEGER,
+    establishment_id: { 
+        type: Sequelize.INTEGER,
         field: 'establishment_id', 
         references: {
             model: 'Establishment',

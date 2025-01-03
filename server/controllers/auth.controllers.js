@@ -280,7 +280,7 @@ export const tenantLogin = async (req, res) => {
 
         await tenant.save();
 
-        logHistory(tenant.tenant_id, 'login_success', `Tenant ${tenant.tenantName} (Email: ${tenantEmail}) logged in successfully`);
+        logHistory(tenant.tenant_id, 'login_success', `Tenant ${tenant.tenantFirstName} (Email: ${tenantEmail}) logged in successfully`);
 
         res.status(201).json({
             success: true,
@@ -1345,11 +1345,83 @@ export const addTenant = async (req, res) => {
 
 export const addRequest = async (req, res) => {
     try {
-        const token = req.cookies.tenantToken; 
+        const { visitorName, contactInfo, purpose, visitDate } = req.body;
+
+        const token = req.cookies.tenantToken;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        console.log("Decoded token:", decoded); 
+
+        const tenantId = decoded.tenantId;
+
+        if (!tenantId) {
+            return res.status(400).json({ message: 'Invalid token: missing tenant ID' });
+        }
+
+        const tenant = await Tenant.findOne({
+            where: { tenant_id: tenantId },
+            include: Establishment 
+        });
+
+        if (!tenant) {
+            return res.status(404).json({ message: 'Tenant not found' });
+        }
+
+        const establishmentId = tenant.establishmentId; 
+
+        console.log('Establishment ID from Tenant:', establishmentId);
+
+        const roomId = tenant.room_id;
+
+        const newRequest = await Request.create({
+            visitorName,
+            contactInfo,
+            purpose,
+            visitDate,
+            tenant_id: tenantId,  
+            establishment_id: establishmentId, 
+            room_id: roomId  
+        });
+
+        logHistory(tenantId, 'create', `Tenant ${tenant.tenantFirstName} added a new visit request on ${visitDate} for ${visitorName}`);
+
+        const subject = 'Visitor Request Received Confirmation';
+        const html = `
+           <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
+              <h2 style="color: #4CAF50; text-align: center; margin-bottom: 20px;">Visitor Request Received</h2>
+              <p style="text-align: left; font-size: 1.1em; margin-bottom: 10px;">Dear <strong>${tenant.tenantFirstName}</strong>,</p>
+              <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">We have received the request for a visitor to come and see you. Your request is currently being reviewed by our team.</p>
+              <p style="text-align: left; font-size: 1em; margin-bottom: 20px;">Please be patient as we process the request. Once the admin has made a decision regarding the visitor's entry, you will receive another email with further instructions.</p>
+              
+              <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+           
+              <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
+              <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
+           
+              <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+           
+              <p style="font-size: 0.8em; color: #777; text-align: center;">
+                 This is an automated email. Please do not reply. For support, contact us at 
+                 <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.
+              </p>
+           </div>
+        `;
+
+        try {
+            await sendMail(tenant.tenantEmail, subject, null, html);
+        } catch (error) {
+            console.error("Error sending email:", error);
+            return res.status(500).json({ message: 'Failed to send email' });
+        }
+
+        res.status(201).json({ message: 'Request added successfully!', request: newRequest });
     } catch (error) {
-        
+        console.error('Error adding request:', error);
+        res.status(500).json({ message: 'Failed to add request', error: error.message });
     }
-}
+};
+
+
 
 export const addUnit = async (req, res) => {
     try {
