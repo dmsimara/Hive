@@ -1361,18 +1361,31 @@ export const addRequest = async (req, res) => {
 
         const tenant = await Tenant.findOne({
             where: { tenant_id: tenantId },
-            include: Establishment 
+            include: Room 
         });
 
         if (!tenant) {
             return res.status(404).json({ message: 'Tenant not found' });
         }
 
-        const establishmentId = tenant.establishmentId; 
-
+        const establishmentId = tenant.establishmentId;
         console.log('Establishment ID from Tenant:', establishmentId);
 
         const roomId = tenant.room_id;
+
+        const room = await Room.findOne({
+            where: { room_id: roomId }
+        });
+
+        if (!room) {
+            return res.status(404).json({ message: 'Room not found' });
+        }
+
+        const visitorLimit = room.visitorLimit || 0;  
+
+        if (visitorLimit === 0) {
+            return res.status(400).json({ message: 'This room does not accept visitors' });
+        }
 
         const t = await sequelize.transaction();
 
@@ -1382,13 +1395,13 @@ export const addRequest = async (req, res) => {
                 contactInfo,
                 purpose,
                 visitDate,
-                tenant_id: tenantId,  
-                establishment_id: establishmentId, 
-                room_id: roomId  
+                tenant_id: tenantId,
+                establishment_id: establishmentId,
+                room_id: roomId
             }, { transaction: t });
 
             await Room.update(
-                { requestCount: sequelize.literal('requestCount + 1') }, 
+                { requestCount: sequelize.literal('requestCount + 1') },
                 { where: { room_id: roomId }, transaction: t }
             );
 
@@ -1398,24 +1411,24 @@ export const addRequest = async (req, res) => {
 
             const subject = 'Visitor Request Received Confirmation';
             const html = `
-               <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
-                  <h2 style="color: #4CAF50; text-align: center; margin-bottom: 20px;">Visitor Request Received</h2>
-                  <p style="text-align: left; font-size: 1.1em; margin-bottom: 10px;">Dear <strong>${tenant.tenantFirstName}</strong>,</p>
-                  <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">We have received the request for a visitor to come and see you. Your request is currently being reviewed by our team.</p>
-                  <p style="text-align: left; font-size: 1em; margin-bottom: 20px;">Please be patient as we process the request. Once the admin has made a decision regarding the visitor's entry, you will receive another email with further instructions.</p>
-              
-                  <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
-                  
-                  <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
-                  <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
-                  
-                  <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
-                  
-                  <p style="font-size: 0.8em; color: #777; text-align: center;">
-                     This is an automated email. Please do not reply. For support, contact us at 
-                     <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.
-                  </p>
-               </div>
+                <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
+                    <h2 style="color: #4CAF50; text-align: center; margin-bottom: 20px;">Visitor Request Received</h2>
+                    <p style="text-align: left; font-size: 1.1em; margin-bottom: 10px;">Dear <strong>${tenant.tenantFirstName}</strong>,</p>
+                    <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">We have received the request for a visitor to come and see you. Your request is currently being reviewed by our team.</p>
+                    <p style="text-align: left; font-size: 1em; margin-bottom: 20px;">Please be patient as we process the request. Once the admin has made a decision regarding the visitor's entry, you will receive another email with further instructions.</p>
+                
+                    <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+                    
+                    <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
+                    <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
+                    
+                    <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+                    
+                    <p style="font-size: 0.8em; color: #777; text-align: center;">
+                        This is an automated email. Please do not reply. For support, contact us at 
+                        <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.
+                    </p>
+                </div>
             `;
 
             try {
