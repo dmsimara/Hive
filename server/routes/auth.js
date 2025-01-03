@@ -48,7 +48,6 @@ router.get("/editUtility/:utility_id", editUtility);
 router.post("/editUtility/:utility_id", verifyToken, updateUtility);
 router.get("/utilityHistory", utilityHistories);
 router.get("/activity-log/:adminId", verifyToken, viewActivities);
-
 // tenants
 router.get("/view-tenants", viewTenants);
 router.post("/addTenant", addTenant);
