@@ -56,7 +56,6 @@ const Feedback = sequelize.define('Feedback', {
   }
 }, { timestamps: false });
 
-/* Associations */
 Feedback.belongsTo(Tenant, { foreignKey: 'tenant_id' });
 Feedback.belongsTo(Admin, { foreignKey: 'admin_id' });
 Feedback.belongsTo(Establishment, { foreignKey: 'establishment_id' });

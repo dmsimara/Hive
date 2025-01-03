@@ -36,6 +36,21 @@ const Room = sequelize.define('Room', {
       type: DataTypes.INTEGER,
       allowNull: false
   },
+  requestCount: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+    allowNull: true
+  },
+  visitorLimit: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+    allowNull: true
+  },
+  originalVisitorLimit: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+    allowNull: true
+  },
   establishmentId: { 
     type: DataTypes.INTEGER,
     field: 'establishment_id', 
@@ -57,4 +72,5 @@ Establishment.hasMany(Room, { foreignKey: 'establishment_id' });
     })
     .catch(err => console.error('Error creating table:', err));
   
+  export { sequelize };
   export default Room;
