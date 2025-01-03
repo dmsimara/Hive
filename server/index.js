@@ -296,11 +296,10 @@ app.get('/api/auth/admin/totalUnits', async (req, res) => {
         res.status(500).json({ message: 'Failed to calculate total units' });
     }
 });
-  
-// ADMIN PAGES (USER MANAGEMENT) ---------------------------------------------------------------------
 
 app.get("/admin/manage/unit/add", verifyToken, addUnitView);
-
+  
+// ADMIN PAGES (USER MANAGEMENT) ---------------------------------------------------------------------
 app.get("/admin/dashboard/userManagement", verifyToken, async (req, res) => {
     try {
         const { tenants, success } = await viewTenants(req);  

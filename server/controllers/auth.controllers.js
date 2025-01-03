@@ -1525,7 +1525,134 @@ export const cancelRequest = async (req, res) => {
     }
 };
 
-
+export const updateRequestStatus = async (req, res) => {
+    try {
+      const adminId = req.adminId;
+      const { requestId } = req.params;
+      const { status, adminComments } = req.body;
+  
+      if (!['pending', 'approved', 'rejected', 'cancelled'].includes(status)) {
+        return res.status(400).json({ message: 'Invalid status' });
+      }
+  
+      const request = await Request.findOne({ where: { request_id: requestId } });
+  
+      if (!request) {
+        return res.status(404).json({ message: 'Request not found' });
+      }
+  
+      const room = await Room.findOne({ where: { room_id: request.room_id } });
+      
+      if (!room) {
+        return res.status(404).json({ message: 'Associated room not found' });
+      }
+      
+      if (status === 'approved') {
+        if (room.visitorLimit <= 0) {
+            return res.status(400).json({ message: 'Visitor limit reached for this room' });
+        }
+        room.requestCount = Math.max(0, room.requestCount - 1);  
+        room.visitorLimit -= 1; 
+      } else if (status === 'rejected') {
+        room.requestCount = Math.max(0, room.requestCount - 1); 
+      }
+    
+      request.status = status;
+      request.adminComments = adminComments || request.adminComments;
+      request.decisionTimestamp = new Date();
+      
+      await request.save();
+      await room.save();
+  
+      const tenant = await Tenant.findOne({ where: { tenant_id: request.tenant_id } });
+  
+      if (!tenant) {
+        return res.status(404).json({ message: 'Tenant not found' });
+      }
+  
+      logActivity(adminId, 'update', `Admin ${adminId} ${request.status} a visitor entry from ${tenant.tenantFirstName}.`);
+  
+      const subject = 'Visitor Entry Request Decision';
+      let html;
+  
+      if (status === 'approved') {
+        html = `
+           <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
+              <h2 style="color: #4CAF50; text-align: center; margin-bottom: 20px;">Visitor Entry Request Approved</h2>
+              <p style="text-align: left; font-size: 1.1em; margin-bottom: 10px;">Dear <strong>${tenant.tenantFirstName}</strong>,</p>
+              <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">Your visitor request has been reviewed and approved.</p>
+              <p style="text-align: left; font-size: 1em; margin-bottom: 20px;">The decision is: <strong>Approved</strong></p>
+              <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">For your reference, here are the details of the visitor request:</p>
+              <ul style="font-size: 1em; margin-left: 20px; list-style-type: disc;">
+                 <li><strong>Visitor Name:</strong> ${request.visitorName}</li>
+                 <li><strong>Contact Information:</strong> ${request.contactInfo || 'Not provided'}</li>
+                 <li><strong>Purpose:</strong> ${request.purpose || 'Not specified'}</li>
+                 <li><strong>Visit Date:</strong> ${new Date(request.visitDate).toLocaleDateString()}</li>
+              </ul>
+              <p style="text-align: left; font-size: 1em; margin-bottom: 20px;">For security purposes, please ensure that the visitor brings a valid ID for verification when they arrive.</p>
+              
+              <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+              
+              <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
+              <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
+              
+              <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+              
+              <p style="font-size: 0.8em; color: #777; text-align: center;">
+                 This is an automated email. Please do not reply. For support, contact us at 
+                 <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.
+              </p>
+           </div>
+        `;
+      } else if (status === 'rejected') {
+        html = `
+           <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
+              <h2 style="color: #F44336; text-align: center; margin-bottom: 20px;">Visitor Entry Request Rejected</h2>
+              <p style="text-align: left; font-size: 1.1em; margin-bottom: 10px;">Dear <strong>${tenant.tenantFirstName}</strong>,</p>
+              <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">We regret to inform you that your visitor request has been rejected.</p>
+              <p style="text-align: left; font-size: 1em; margin-bottom: 20px;">The decision is: <strong>Rejected</strong></p>
+              <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">Here are the details of the visitor request:</p>
+              <ul style="font-size: 1em; margin-left: 20px; list-style-type: disc;">
+                 <li><strong>Visitor Name:</strong> ${request.visitorName}</li>
+                 <li><strong>Contact Information:</strong> ${request.contactInfo || 'Not provided'}</li>
+                 <li><strong>Purpose:</strong> ${request.purpose || 'Not specified'}</li>
+                 <li><strong>Visit Date:</strong> ${new Date(request.visitDate).toLocaleDateString()}</li>
+              </ul>
+              <p style="text-align: left; font-size: 1em; margin-bottom: 10px;"><strong>Reason for Rejection:</strong> ${request.adminComments || 'No specific reason provided.'}</p>
+              <p style="text-align: left; font-size: 1em; margin-bottom: 20px;">This decision was made due to certain reasons. If you would like to dispute this decision, please do not hesitate to contact the admin for further assistance.</p>
+              
+              <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+              
+              <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
+              <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
+              
+              <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+              
+              <p style="font-size: 0.8em; color: #777; text-align: center;">
+              This is an automated email. Please do not reply. For support, contact us at 
+              <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.
+              </p>
+           </div>
+        `;
+      }
+  
+      try {
+        await sendMail(tenant.tenantEmail, subject, null, html);
+      } catch (error) {
+        console.error("Error sending email:", error);
+        return res.status(500).json({ message: 'Failed to send email' });
+      }
+  
+      res.status(200).json({
+        message: `Request status updated to ${status}`,
+        request: request,
+      });
+    } catch (error) {
+      console.error('Error updating request status:', error);
+      res.status(500).json({ message: 'Failed to update request status', error: error.message });
+    }
+};
+  
 
 export const addUnit = async (req, res) => {
     try {
@@ -1554,6 +1681,7 @@ export const addUnit = async (req, res) => {
             roomRemainingSlot: roomTotalSlot,
             floorNumber,
             visitorLimit,
+            originalVisitorLimit: visitorLimit,
             establishmentId
         });
 

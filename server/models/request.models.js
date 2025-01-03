@@ -72,6 +72,10 @@ const Request = sequelize.define('Request', {
         type: DataTypes.DATE,
         defaultValue: Sequelize.NOW
     },
+    decisionTimestamp: {
+        type: DataTypes.DATE,
+        allowNull: true,
+    },
     establishment_id: { 
         type: Sequelize.INTEGER,
         field: 'establishment_id', 

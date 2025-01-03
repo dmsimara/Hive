@@ -46,6 +46,11 @@ const Room = sequelize.define('Room', {
     defaultValue: 0,
     allowNull: true
   },
+  originalVisitorLimit: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+    allowNull: true
+  },
   establishmentId: { 
     type: DataTypes.INTEGER,
     field: 'establishment_id', 

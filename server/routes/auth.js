@@ -1,5 +1,5 @@
 import express from "express";
-import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, deleteTenant, viewAdmins, viewUnits, addUnitView, addUnit, deleteUnit, getOccupiedUnits, editTenant, updateTenant, addEvent, viewEvents, editEvent, deleteEvent, getEvents, updateEvent, viewNotices, pinnedNotices, permanentNotices, addNotice, togglePinned, togglePermanent, deleteNotice, getAvailableRooms, getNotices, searchTenants, searchRooms, deleteAdmin, updateAdminPassword, updateTenantPassword, addFeedback, addUtility, viewUtilities, deleteUtility, editUtility, updateUtility, utilityHistories, viewActivities, addRequest, cancelRequest } from "../controllers/auth.controllers.js";
+import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, deleteTenant, viewAdmins, viewUnits, addUnitView, addUnit, deleteUnit, getOccupiedUnits, editTenant, updateTenant, addEvent, viewEvents, editEvent, deleteEvent, getEvents, updateEvent, viewNotices, pinnedNotices, permanentNotices, addNotice, togglePinned, togglePermanent, deleteNotice, getAvailableRooms, getNotices, searchTenants, searchRooms, deleteAdmin, updateAdminPassword, updateTenantPassword, addFeedback, addUtility, viewUtilities, deleteUtility, editUtility, updateUtility, utilityHistories, viewActivities, addRequest, cancelRequest, updateRequestStatus } from "../controllers/auth.controllers.js";
 import { verifyTenantToken, verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
@@ -21,6 +21,7 @@ router.get("/occupied-units", getOccupiedUnits);
 router.post("/add/event", addEvent);
 router.post("/add/request", verifyTenantToken, addRequest);
 router.patch('/requests/:requestId/cancel', verifyTenantToken, cancelRequest);
+router.post('/requests/:requestId/decision', verifyToken, updateRequestStatus);
 router.get("/view/events", viewEvents);
 router.get("/view/utilities", verifyToken, viewUtilities);
 router.post("/edit/event", editEvent);
