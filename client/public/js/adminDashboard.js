@@ -320,3 +320,13 @@ searchInput.addEventListener('input', (event) => {
     loadData(event.target.value);
 });
 
+// Check if dark theme is enabled in the user's preferences
+const isDarkTheme = document.body.classList.contains('dark-theme');
+
+// Set the logo image based on the theme
+const logo = document.getElementById('logo');
+if (isDarkTheme) {
+    logo.src = '/images/hiveDark.png';  // Set dark theme logo
+} else {
+    logo.src = '/images/hiveLight.png'; // Set light theme logo
+}
