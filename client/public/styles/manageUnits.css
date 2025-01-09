@@ -381,12 +381,12 @@ p {
 }
 
  .add-room-button {
-  background: linear-gradient(to right, var(--orange), var(--maroon), var(--gray));
-  color: white;
-  font-weight: 600;
-  padding: 10px 15px;
+  background: white;
+  color: var(--orange);
+  font-weight: 400;
+  padding: 8px 10px;
   border-radius: 8px;
-  border: none;
+  border: 2px solid var(--orange);
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s;
   white-space: nowrap;  
@@ -394,12 +394,12 @@ p {
 }
 
 .dark-theme .add-room-button {
-  background: linear-gradient(to right, var(--brownish-yellow), var(--brown), var(--light-brown));
-  color: white;
-  font-weight: 600;
-  padding: 10px 15px;
+  background: transparent;
+  color: var(--brownish-yellow);
+  font-weight: 400;
+  padding: 8px 10px;
   border-radius: 8px;
-  border: none;
+  border: 2px solid var(--d-yellow);
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s;
   white-space: nowrap;  
@@ -411,7 +411,7 @@ p {
 }
 
 .add-room-button:hover {
-  background: rgba(254, 127, 66, 0.8);
+  background: var(--orange);
   border: none;
   color: white;
   transform: scale(1.02);  
