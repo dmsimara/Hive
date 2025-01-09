@@ -414,7 +414,7 @@ thead tr:first-child th {
     border-right: 2px solid var(--brown);
 }
 
-.dark-theme thead tr:first-child th {
+.dark-theme .table1 thead tr:first-child th {
     background-color: var(--brown) !important;
     color: white !important;
     text-transform: uppercase;
@@ -425,6 +425,18 @@ thead tr:first-child th {
     border-bottom: 2px solid var(--brown);
     border-right: 2px solid var(--brown);
   }
+
+  .dark-theme .tableModal thead tr:first-child th {
+    background-color: var(--light-brown) !important; 
+    color: white !important;  
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 12px;
+    text-align: center;
+    font-size: 14px;
+    border-bottom: 2px solid var(--light-brown);
+    border-right: 2px solid var(--light-brown);
+}
 
 thead tr:first-child th.text-end {
     text-align: center !important;
@@ -730,12 +742,43 @@ input[type="number"] {
     text-align: center;
 }
 
+.dark-theme .edit-btn {
+    background-color: var(--d-yellow);
+    color: white;
+    font-weight: 600;
+    padding: 8px 20px; 
+    border-radius: 8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: -10px;
+    box-sizing: border-box; 
+    min-width: 110px; 
+    display: inline-block; 
+    text-align: center;
+}
+
 .remove-btn {
     background-color: var(--maroon);
     color: white;
     font-weight: 600;
-    padding: 8px 20px; 
-    border-radius: 1px; 
+    padding: 8px 15px !important; 
+    border-radius: 8px !important; 
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-sizing: border-box; 
+    min-width: 110px;
+    display: inline-block; 
+    text-align: center; 
+}
+
+.dark-theme .remove-btn {
+    background-color: var(--red);
+    color: white;
+    font-weight: 600;
+    padding: 8px 15px !important; 
+    border-radius: 8px !important; 
     border: 1px solid transparent;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -751,16 +794,48 @@ input[type="number"] {
     color: var(--orange);
 }
 
+.dark-theme .edit-btn:hover {
+    background: transparent;
+    border: 1px solid var(--d-yellow);
+    color: var(--d-yellow);
+}
+
 .remove-btn:hover {
     background-color: white;
     border: 1px solid var(--maroon);
     color: var(--maroon);
 }
 
+.dark-theme .remove-btn:hover {
+    background: transparent;
+    border: 1px solid var(--red);
+    color: var(--red);
+}
 
 .manage-title {
     font-weight: 700;
     color: black;
     margin-left: 10px;
     font-size: 22px;
+}
+
+.dark-theme .btn-secondary {
+    background: transparent;
+    color: var(--dimgray);
+    font-weight: 600;
+    padding: 8px 15px !important; 
+    border-radius: 8px !important; 
+    border: 1px solid var(--dimgray);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-sizing: border-box; 
+    min-width: 110px;
+    display: inline-block; 
+    text-align: center; 
+}
+
+.dark-theme .btn-secondary:hover {
+    background-color: var(--dimgray);
+    border: 1px solid transparent;
+    color: var(--white);
 }
