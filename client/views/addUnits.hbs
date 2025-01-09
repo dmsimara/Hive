@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <img class="navbar-brand" src="/images/hiveLight.png" alt="Hive Logo" width="100px" />
+    <img class="navbar-brand logo" id="logo" src="/images/hiveLight.png" alt="Hive Logo" width="100px" />
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -71,25 +71,25 @@
 
   <form action="/api/auth/addUnit" class="row g-3 needs-validation" method="POST" id="addForm">
     <input type="hidden" name="establishmentId" value="{{establishmentId}}">
-    
+
     <div class="col-md-6">
       <label for="floorNumber" class="form-label">Floor Number</label>
       <input type="number" class="form-control" id="floorNumber" name="floorNumber" required>
       <div class="invalid-feedback">Please enter a floor number.</div>
     </div>
-    
+
     <div class="col-md-6">
       <label for="roomNumber" class="form-label">Room Number</label>
       <input type="number" class="form-control" id="roomNumber" name="roomNumber" required>
       <div class="invalid-feedback">Please enter a room number.</div>
     </div>
-    
+
     <div class="col-md-6">
       <label for="roomType" class="form-label">Room Type</label>
       <input type="text" class="form-control" id="roomType" name="roomType" required>
       <div class="invalid-feedback">Please enter a room type.</div>
     </div>
-    
+
     <div class="col-md-6">
       <label for="roomTotalSlot" class="form-label">Total Slots</label>
       <input type="number" class="form-control" id="roomTotalSlot" name="roomTotalSlot" required>
@@ -110,3 +110,16 @@
 </div>
 
 <script src="/js/addUnits.js"></script>
+<script>
+    window.onload = function() {
+    const theme = localStorage.getItem('theme');
+
+    const logo = document.getElementById('logo');
+
+    if (theme === 'dark') {
+        logo.src = '/images/hiveDark.png';
+    } else {
+        logo.src = '/images/hiveLight.png';
+    }
+};
+</script>
