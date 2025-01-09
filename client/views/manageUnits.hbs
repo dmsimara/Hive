@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <img class="navbar-brand" src="/images/hiveLight.png" alt="Hive Logo" width="100px" />
+    <img class="navbar-brand logo" id="logo" src="/images/hiveLight.png" alt="Hive Logo" width="100px" />
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -72,10 +72,10 @@
       <div class="col-6">
         <div class="d-flex justify-content-end align-items-center gap-2">
           <form class="d-flex" role="search" method="POST" action="/api/auth/find-units" novalidate>
-          <input type="hidden" name="establishmentId" value="{{establishmentId}}">
+            <input type="hidden" name="establishmentId" value="{{establishmentId}}">
             <div class="search-bar">
-              <input class="form-control me-2 search" type="search" id="search" autocomplete="off" placeholder="Search" name="searchUnits"
-                value="{{lastSearchTerm}}">
+              <input class="form-control me-2 search" type="search" id="search" autocomplete="off" placeholder="Search"
+                name="searchUnits" value="{{lastSearchTerm}}">
               <span class="search-icon">
                 <i class="material-icons">search</i>
               </span>
@@ -101,7 +101,7 @@
         </tr>
       </thead>
       <tbody id="results">
- 
+
       </tbody>
     </table>
   </div>
@@ -142,3 +142,16 @@
 </div>
 
 <script src="/js/manageUnits.js"></script>
+<script>
+    window.onload = function() {
+    const theme = localStorage.getItem('theme');
+
+    const logo = document.getElementById('logo');
+
+    if (theme === 'dark') {
+        logo.src = '/images/hiveDark.png';
+    } else {
+        logo.src = '/images/hiveLight.png';
+    }
+};
+</script>
