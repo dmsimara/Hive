@@ -293,7 +293,7 @@ body {
     display: inline-flex; 
     align-items: center; 
     border: 1px solid var(--brownish-yellow);
-    color: var(--maroon);
+    color: var(--brownish-yellow);
     padding: 8px 30px;
     text-align: center;
     font-size: 16px; 
@@ -302,11 +302,15 @@ body {
     text-decoration: none;
     border-radius: 10px;
     transition: background 0.3s ease;
-    background: var(--dimgray);
+    background: var(--white);
 }
 
 .view:hover {
     opacity: 0.8;
+}
+
+.dark-theme .view:hover {
+    background: transparent;
 }
 
 .material-icons {
@@ -320,6 +324,15 @@ body {
     font-weight: 600;
     top: -30px;
     margin-bottom: 0;
+}
+
+.dark-theme .container h3 {
+    position: relative;
+    left: -15em;
+    font-weight: 600;
+    top: -30px;
+    margin-bottom: 0;
+    color: var(--white);
 }
 
 .container .dots {
@@ -341,11 +354,38 @@ body {
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0), 0 3px 18px rgba(0, 0, 0, 0.13);
 }
 
+.dark-theme .card {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    width: 100%;
+    padding: 50px 30px;
+    max-width: 800px;
+    border-radius: 1em;
+    background-color: rgba(105, 105, 105, 0.5);
+    margin-top: -20em;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0), 0 3px 18px rgba(0, 0, 0, 0.13);
+}
+
 .card__profile img {
     width: 300px; 
     height: 300px; 
     object-fit: cover;
     border: 2px solid var(--maroon);
+    margin-right: 60px;
+    margin-left: 20px;
+    border-radius: 1em;
+    object-fit: cover; 
+    display: block;
+    overflow: hidden; 
+    aspect-ratio: 1 / 1; 
+}
+
+.dark-theme .card__profile img {
+    width: 300px; 
+    height: 300px; 
+    object-fit: cover;
+    border: 2px solid var(--brownish-yellow);
     margin-right: 60px;
     margin-left: 20px;
     border-radius: 1em;
@@ -373,12 +413,29 @@ body {
     color: var(--dark-gray);
 }
 
+.dark-theme .card__title h1,
+.dark-theme .card__email h1,
+.dark-theme .card__about h1 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--white);
+}
+
 .card__title h2,
 .card__email h2,
 .card__about h2 {
     font-size: 16px;
     font-weight: 600;
     color: var(--gray);
+    margin-bottom: 10px;
+}
+
+.dark-theme .card__title h2,
+.dark-theme .card__email h2,
+.dark-theme .card__about h2 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
     margin-bottom: 10px;
 }
 
