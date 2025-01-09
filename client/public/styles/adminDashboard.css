@@ -417,7 +417,6 @@ body {
 
 .dark-theme .card-body {
     background: linear-gradient(315deg, var(--maroon), var(--orange), var(--text));
-
     display: flex;
     flex-direction: column;
     border-radius: 30px;
