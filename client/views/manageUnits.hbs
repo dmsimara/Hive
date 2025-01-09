@@ -67,14 +67,14 @@
           <i class="material-icons title-icon">lock_open</i>
           <h1>Unit Management</h1>
         </div>
-        <p>Occupied Units: <span style="color: rgb(122, 75, 71);">{{occupiedUnits}}</span></p>
+        <p class="occupied">Occupied Units: <span>{{occupiedUnits}}</span></p>
       </div>
       <div class="col-6">
         <div class="d-flex justify-content-end align-items-center gap-2">
           <form class="d-flex" role="search" method="POST" action="/api/auth/find-units" novalidate>
           <input type="hidden" name="establishmentId" value="{{establishmentId}}">
             <div class="search-bar">
-              <input class="form-control me-2" type="search" id="search" autocomplete="off" placeholder="Search" name="searchUnits"
+              <input class="form-control me-2 search" type="search" id="search" autocomplete="off" placeholder="Search" name="searchUnits"
                 value="{{lastSearchTerm}}">
               <span class="search-icon">
                 <i class="material-icons">search</i>
