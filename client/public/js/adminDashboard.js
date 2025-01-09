@@ -200,7 +200,7 @@ function openTenantModal(tenant) {
 document.addEventListener('DOMContentLoaded', function () {
     var rentTitle = document.querySelector('.rent-title');
     rentTitle.style.fontWeight = '700'; 
-    rentTitle.style.color = '#333'; 
+    rentTitle.style.color = '#fff'; 
     rentTitle.style.marginBottom = '10px';
 
     var canvas = document.getElementById('rentPieChart');
@@ -247,7 +247,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     labels: {
                         boxWidth: 20,
                         padding: 10,
-                        color: '#333',  
+                        color: '#fff',  
                         font: {
                             weight: 'bold', 
                         } 
@@ -320,13 +320,11 @@ searchInput.addEventListener('input', (event) => {
     loadData(event.target.value);
 });
 
-// Check if dark theme is enabled in the user's preferences
 const isDarkTheme = document.body.classList.contains('dark-theme');
 
-// Set the logo image based on the theme
 const logo = document.getElementById('logo');
 if (isDarkTheme) {
-    logo.src = '/images/hiveDark.png';  // Set dark theme logo
+    logo.src = '/images/hiveDark.png'; 
 } else {
-    logo.src = '/images/hiveLight.png'; // Set light theme logo
+    logo.src = '/images/hiveLight.png'; 
 }

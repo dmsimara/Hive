@@ -64,13 +64,13 @@
     <div class="row align-items-center">
       <div class="col-6">
         <i class="material-icons title-icon">receipt_long</i>
-        <h1>Utility Management</h1>
+        <h1 class="header">Utility Management</h1>
       </div>
       <div class="col-6 d-flex justify-content-end gap-2">
         <form action="#" role="search" method="POST" class="d-flex" novalidate>
           <input type="hidden" name="establishmentId" value="{{establishmentId}}">
           <div class="search-bar">
-            <input type="search" class="form-control form-control-sm me-2" id="search" placeholder="Search"
+            <input type="search" class="form-control form-control-sm me-2 search" id="search" placeholder="Search"
               name="search" aria-label="Search" autocomplete="off" required value="{{lastSearchTerm}}">
             <span class="search-icon">
               <i class="material-icons">search</i>
@@ -85,7 +85,7 @@
   </div>
 
   <div class="table-container table-responsive" style="max-height: 400px; overflow-y: auto;">
-    <table class="table table-bordered">
+    <table class="table table-bordered table1">
       <thead class="table-dark">
         <tr>
           <th scope="col">Room #</th>
@@ -207,7 +207,7 @@
           <h5 class="modal-title manage-title" id="manageUtilityModalLabel">Utility List</h5>
         </div>
         <div class="modal-body">
-          <table class="table table-bordered">
+          <table class="table table-bordered tableModal">
             <thead class="maroon-header">
               <tr>
                 <th scope="col">Utility Type</th>

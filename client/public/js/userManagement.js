@@ -190,10 +190,10 @@ function loadData(query = '') {
                             <td>${result.mobileNum}</td>
                             <td class="text-end">
                                 <a href="/admin/dashboard/userManagement/editTenant/${result.tenant_id}" class="btn btn-edit btn-sm">
-                                    <i class="material-icons">edit</i> Edit
+                                    <i class="material-icons edit-icon">edit</i> Edit
                                 </a>
                                 <a href="#" onclick="deleteTenant(${result.tenant_id})" class="btn btn-delete btn-sm">
-                                    <i class="material-icons">person_remove</i> Delete
+                                    <i class="material-icons person-icon">person_remove</i> Delete
                                 </a>
                             </td>
                         </tr>
