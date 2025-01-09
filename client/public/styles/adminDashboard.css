@@ -488,7 +488,7 @@ body {
     aspect-ratio: 1 / 1; 
 }
 
-.img-fluid {
+.dark-theme .img-fluid {
     border-radius: 50%;
     height: 150px;
     width: 150px;
@@ -590,6 +590,11 @@ body {
     border-radius: 15px;
 }
 
+.dark-theme .bills-container {
+    border: 2.5px solid #0c0807;
+    border-radius: 15px;
+}
+
 .bills-header {
     display: flex;
     justify-content: space-between;
@@ -615,8 +620,19 @@ body {
     transition: opacity 0.3s ease;
 }
 
+.dark-theme .bills-header .btn-edit {
+    background: linear-gradient(to right, var(--brownish-yellow), var(--brown));
+    padding: 5px 30px;
+    color: white;
+    margin-right: 15px;
+    font-weight: 500;
+    border: none;
+    transition: opacity 0.3s ease;
+    opacity: 0.5;
+}
+
 .bills-header .btn-edit:hover {
-    opacity: 0.7;
+    opacity: 1;
 }
 
 .edit-icon {
@@ -643,6 +659,14 @@ table thead.table-dark th {
     text-align: center;
 }
 
+.dark-theme  thead.table-dark th {
+    background: var(--brownish-yellow) !important;
+    color: #fff !important;
+    font-weight: bold;
+    text-align: center;
+    opacity: 0.5;
+}
+
 table tbody {
     overflow: hidden;
 }
@@ -662,6 +686,16 @@ table tbody td.paid {
     display: inline-block;
 }
 
+.dark-theme  tbody td.paid {
+    color: white;
+    background-color: var(--d-yellow);
+    font-weight: bold;
+    text-align: center;
+    border-radius: 50px;
+    padding: 3px 15px;
+    display: inline-block;
+}
+
 table tbody td.unpaid {
     color: white;
     background-color: var(--maroon);
@@ -672,9 +706,19 @@ table tbody td.unpaid {
     display: inline-block;
 }
 
+.dark-theme tbody td.unpaid {
+    color: white;
+    background-color: var(--red);
+    font-weight: bold;
+    text-align: center;
+    border-radius: 50px;
+    padding: 3px 15px;
+    display: inline-block;
+}
+
 .close-modal {
     border: 1px solid transparent;
-    background: var(--orange);
+    background: var(--d-yellow);
     color: white;
     transition: all 0.3s ease;
 }
@@ -684,6 +728,13 @@ table tbody td.unpaid {
     opacity: 0.4;
     background: white;
     color: var(--orange);
+}
+
+.dark-theme .close-modal:hover {
+    border: 1px solid var(--d-yellow);
+    opacity: 0.4;
+    background: white;
+    color: var(--d-yellow);
 }
 
 
@@ -1027,6 +1078,11 @@ table tbody td.unpaid {
     font-weight: 700;
     font-size: 30px;
     margin-bottom: 20px;
+    color: var(--white);
+}
+
+.dark-theme .analytics-container p,
+.dark-theme .analytics-container h5 {
     color: var(--white);
 }
 
