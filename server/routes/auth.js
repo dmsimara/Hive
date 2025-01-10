@@ -1,5 +1,5 @@
 import express from "express";
-import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, deleteTenant, viewAdmins, viewUnits, addUnitView, addUnit, deleteUnit, getOccupiedUnits, editTenant, updateTenant, addEvent, viewEvents, editEvent, deleteEvent, getEvents, updateEvent, viewNotices, pinnedNotices, permanentNotices, addNotice, togglePinned, togglePermanent, deleteNotice, getAvailableRooms, getNotices, searchTenants, searchRooms, deleteAdmin, updateAdminPassword, updateTenantPassword, addFeedback, addUtility, viewUtilities, deleteUtility, editUtility, updateUtility, utilityHistories, viewActivities, addRequest, cancelRequest, updateRequestStatus, viewVisitorsAdmin, viewVisitorsTenant } from "../controllers/auth.controllers.js";
+import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, deleteTenant, viewAdmins, viewUnits, addUnitView, addUnit, deleteUnit, getOccupiedUnits, editTenant, updateTenant, addEvent, viewEvents, editEvent, deleteEvent, getEvents, updateEvent, viewNotices, pinnedNotices, permanentNotices, addNotice, togglePinned, togglePermanent, deleteNotice, getAvailableRooms, getNotices, searchTenants, searchRooms, deleteAdmin, updateAdminPassword, updateTenantPassword, addFeedback, addUtility, viewUtilities, deleteUtility, editUtility, updateUtility, utilityHistories, viewActivities, addRegularRequest, cancelRequest, approvedRequest, viewVisitorsAdmin, viewVisitorsTenant, addOvernightRequest, rejectedRequest, checkin, checkout } from "../controllers/auth.controllers.js";
 import { verifyTenantToken, verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
@@ -19,9 +19,13 @@ router.delete("/deleteUnit/:room_id", verifyToken, deleteUnit);
 router.delete("/delete/utility/:utility_id", verifyToken, deleteUtility);
 router.get("/occupied-units", getOccupiedUnits);
 router.post("/add/event", addEvent);
-router.post("/add/request", verifyTenantToken, addRequest);
+router.post("/add/regular/request", verifyTenantToken, addRegularRequest);
+router.post("/add/overnight/request", verifyTenantToken, addOvernightRequest);
 router.patch('/requests/:requestId/cancel', verifyTenantToken, cancelRequest);
-router.post('/requests/:requestId/decision', verifyToken, updateRequestStatus);
+router.post('/requests/:requestId/approved', verifyToken, approvedRequest);
+router.post("/requests/:requestId/rejected", verifyToken, rejectedRequest);
+router.post("/request/checkin", verifyToken, checkin);
+router.post("/request/checkout", verifyToken, checkout);
 router.get("/view/events", viewEvents);
 router.get("/view/utilities", verifyToken, viewUtilities);
 router.get("/admin/view/visitors", verifyToken, viewVisitorsAdmin);

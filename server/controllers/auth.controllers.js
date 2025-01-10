@@ -8,6 +8,7 @@ import Feedback from '../models/feedback.models.js';
 import Utility from '../models/utility.models.js';
 import Activity from '../models/activity.models.js';
 import History from '../models/history.models.js';
+import Fix from '../models/fix.models.js';
 import Request from '../models/request.models.js';
 import bcryptjs from 'bcryptjs';
 import crypto from "crypto";
@@ -1434,9 +1435,9 @@ export const addTenant = async (req, res) => {
     }
 };
 
-export const addRequest = async (req, res) => {
+export const addRegularRequest = async (req, res) => {
     try {
-        const { visitorName, contactInfo, purpose, visitDate } = req.body;
+        const { visitorName, contactInfo, purpose, visitDateFrom, visitDateTo, visitorAffiliation } = req.body;
 
         const token = req.cookies.tenantToken;
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -1484,41 +1485,50 @@ export const addRequest = async (req, res) => {
                 visitorName,
                 contactInfo,
                 purpose,
-                visitDate,
+                visitDateFrom,
+                visitDateTo,
+                visitorAffiliation,
                 tenant_id: tenantId,
                 establishment_id: establishmentId,
-                room_id: roomId
+                room_id: roomId,
+                status: "approved"
             }, { transaction: t });
-
-            await Room.update(
-                { requestCount: sequelize.literal('requestCount + 1') },
-                { where: { room_id: roomId }, transaction: t }
-            );
 
             await t.commit();
 
-            logHistory(tenantId, 'create', `Tenant ${tenant.tenantFirstName} added a new visit request on ${visitDate} for ${visitorName}`);
+            logHistory(tenantId, 'create', `Tenant ${tenant.tenantFirstName} added a new visit request on ${visitDateFrom} for ${visitorName}`);
 
             const subject = 'Visitor Request Received Confirmation';
             const html = `
-                <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
-                    <h2 style="color: #4CAF50; text-align: center; margin-bottom: 20px;">Visitor Request Received</h2>
-                    <p style="text-align: left; font-size: 1.1em; margin-bottom: 10px;">Dear <strong>${tenant.tenantFirstName}</strong>,</p>
-                    <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">We have received the request for a visitor to come and see you. Your request is currently being reviewed by our team.</p>
-                    <p style="text-align: left; font-size: 1em; margin-bottom: 20px;">Please be patient as we process the request. Once the admin has made a decision regarding the visitor's entry, you will receive another email with further instructions.</p>
-                
-                    <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
-                    
-                    <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
-                    <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
-                    
-                    <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
-                    
-                    <p style="font-size: 0.8em; color: #777; text-align: center;">
-                        This is an automated email. Please do not reply. For support, contact us at 
-                        <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.
-                    </p>
-                </div>
+               <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
+                  <h2 style="color: #4CAF50; text-align: center; margin-bottom: 20px;">Visitor Request Approved</h2>
+                  <p style="text-align: left; font-size: 1.1em; margin-bottom: 10px;">Dear <strong>${tenant.tenantFirstName}</strong>,</p>
+                  <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">We have approved your request for a visitor to come and see you. Below is an overview of the visitor details:</p>
+               
+                  <ul style="text-align: left; font-size: 1em; margin-bottom: 20px; padding-left: 20px;">
+                     <li><strong>Visitor Name:</strong> ${visitorName}</li>
+                     <li><strong>Contact Information:</strong> ${contactInfo}</li>
+                     <li><strong>Visit Date (From):</strong> ${visitDateFrom}</li>
+                     <li><strong>Visit Date (To):</strong> ${visitDateTo}</li>
+                  </ul>
+               
+                  <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">Please ensure that the visitor brings a valid ID for security checking upon entry.</p>
+                  <p style="text-align: left; font-size: 1em; margin-bottom: 20px; color: #FF5722;">
+                     <strong>Note:</strong> This approval is for a <strong>regular visit only</strong>. Overnight visit requests must be submitted at least a day before the visit date.
+                  </p>
+               
+                  <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+               
+                  <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
+                  <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
+               
+                  <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+               
+                  <p style="font-size: 0.8em; color: #777; text-align: center;">
+                     This is an automated email. Please do not reply. For support, contact us at 
+                     <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.
+                  </p>
+               </div>
             `;
 
             try {
@@ -1540,6 +1550,125 @@ export const addRequest = async (req, res) => {
     }
 };
 
+export const addOvernightRequest = async (req, res) => {
+    try {
+        const { visitorName, contactInfo, purpose, visitDateFrom, visitDateTo, visitorAffiliation } = req.body;
+
+        const token = req.cookies.tenantToken;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        console.log("Decoded token:", decoded); 
+
+        const tenantId = decoded.tenantId;
+
+        if (!tenantId) {
+            return res.status(400).json({ message: 'Invalid token: missing tenant ID' });
+        }
+
+        const tenant = await Tenant.findOne({
+            where: { tenant_id: tenantId },
+            include: Room 
+        });
+
+        if (!tenant) {
+            return res.status(404).json({ message: 'Tenant not found' });
+        }
+
+        const establishmentId = tenant.establishmentId;
+        console.log('Establishment ID from Tenant:', establishmentId);
+
+        const roomId = tenant.room_id;
+
+        const room = await Room.findOne({
+            where: { room_id: roomId }
+        });
+
+        if (!room) {
+            return res.status(404).json({ message: 'Room not found' });
+        }
+
+        const visitorLimit = room.visitorLimit || 0;  
+
+        if (visitorLimit === 0) {
+            return res.status(400).json({ message: 'This room does not accept visitors' });
+        }
+
+        const t = await sequelize.transaction();
+
+        try {
+            const newRequest = await Request.create({
+                visitorName,
+                contactInfo,
+                purpose,
+                visitDateFrom,
+                visitDateTo,
+                visitorAffiliation,
+                tenant_id: tenantId,
+                establishment_id: establishmentId,
+                room_id: roomId,
+                visitType: "overnight",
+            }, { transaction: t });
+
+            await Room.update(
+                { requestCount: sequelize.literal('requestCount + 1') },
+                { where: { room_id: roomId }, transaction: t }
+            );
+
+            await t.commit();
+
+            logHistory(tenantId, 'create', `Tenant ${tenant.tenantFirstName} added a new visit request on ${visitDateFrom} for ${visitorName}`);
+
+            const subject = 'Overnight Visitor Request Received Confirmation';
+            const html = `
+               <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
+                  <h2 style="color: #4CAF50; text-align: center; margin-bottom: 20px;">Overnight Visitor Request Received</h2>
+                  <p style="text-align: left; font-size: 1.1em; margin-bottom: 10px;">Dear <strong>${tenant.tenantFirstName}</strong>,</p>
+                  <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">We have received your request for an overnight visitor to stay. Your request is currently under review by our admin team. Below is a summary of the details you provided:</p>
+               
+                  <ul style="text-align: left; font-size: 1em; margin-bottom: 20px; padding-left: 20px;">
+                     <li><strong>Visitor Name:</strong> ${visitorName}</li>
+                     <li><strong>Contact Information:</strong> ${contactInfo}</li>
+                     <li><strong>Visit Date (From):</strong> ${visitDateFrom}</li>
+                     <li><strong>Visit Date (To):</strong> ${visitDateTo}</li>
+                  </ul>
+               
+                  <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">Please wait for the admin's approval. Once a decision has been made, you will receive another email with further instructions.</p>
+                  <p style="text-align: left; font-size: 1em; margin-bottom: 20px; color: #FF5722;">
+                     <strong>Urgent Request:</strong> If your request is urgent, please contact the admin directly for expedited processing.
+                  </p>
+               
+                  <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+               
+                  <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
+                  <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
+               
+                  <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+               
+                  <p style="font-size: 0.8em; color: #777; text-align: center;">
+                     This is an automated email. Please do not reply. For support, contact us at 
+                     <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.
+                  </p>
+               </div>
+            `;
+
+            try {
+                await sendMail(tenant.tenantEmail, subject, null, html);
+            } catch (error) {
+                console.error("Error sending email:", error);
+                return res.status(500).json({ message: 'Failed to send email' });
+            }
+
+            res.status(201).json({ message: 'Request added successfully!', request: newRequest });
+        } catch (error) {
+            await t.rollback();
+            console.error('Error adding request:', error);
+            res.status(500).json({ message: 'Failed to add request', error: error.message });
+        }
+    } catch (error) {
+        console.error('Error adding request:', error);
+        res.status(500).json({ message: 'Failed to add request', error: error.message });
+    }
+};
 
 export const cancelRequest = async (req, res) => {
     try {
@@ -1615,15 +1744,11 @@ export const cancelRequest = async (req, res) => {
     }
 };
 
-export const updateRequestStatus = async (req, res) => {
+export const approvedRequest = async (req, res) => {
     try {
       const adminId = req.adminId;
       const { requestId } = req.params;
-      const { status, adminComments } = req.body;
-  
-      if (!['pending', 'approved', 'rejected', 'cancelled'].includes(status)) {
-        return res.status(400).json({ message: 'Invalid status' });
-      }
+      const { adminComments } = req.body;
   
       const request = await Request.findOne({ where: { request_id: requestId } });
   
@@ -1632,25 +1757,21 @@ export const updateRequestStatus = async (req, res) => {
       }
   
       const room = await Room.findOne({ where: { room_id: request.room_id } });
-      
+  
       if (!room) {
         return res.status(404).json({ message: 'Associated room not found' });
       }
-      
-      if (status === 'approved') {
-        if (room.visitorLimit <= 0) {
-            return res.status(400).json({ message: 'Visitor limit reached for this room' });
-        }
-        room.requestCount = Math.max(0, room.requestCount - 1);  
-        room.visitorLimit -= 1; 
-      } else if (status === 'rejected') {
-        room.requestCount = Math.max(0, room.requestCount - 1); 
+  
+      if (room.visitorLimit <= 0) {
+        return res.status(400).json({ message: 'Visitor limit reached for this room' });
       }
-    
-      request.status = status;
+  
+      room.requestCount = Math.max(0, room.requestCount - 1);
+  
+      request.status = 'approved';
       request.adminComments = adminComments || request.adminComments;
       request.decisionTimestamp = new Date();
-      
+  
       await request.save();
       await room.save();
   
@@ -1660,71 +1781,33 @@ export const updateRequestStatus = async (req, res) => {
         return res.status(404).json({ message: 'Tenant not found' });
       }
   
-      logActivity(adminId, 'update', `Admin ${adminId} ${request.status} a visitor entry from ${tenant.tenantFirstName}.`);
+      logActivity(adminId, 'update', `Admin ${adminId} approved a visitor entry from ${tenant.tenantFirstName}.`);
   
-      const subject = 'Visitor Entry Request Decision';
-      let html;
-  
-      if (status === 'approved') {
-        html = `
-           <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
-              <h2 style="color: #4CAF50; text-align: center; margin-bottom: 20px;">Visitor Entry Request Approved</h2>
-              <p style="text-align: left; font-size: 1.1em; margin-bottom: 10px;">Dear <strong>${tenant.tenantFirstName}</strong>,</p>
-              <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">Your visitor request has been reviewed and approved.</p>
-              <p style="text-align: left; font-size: 1em; margin-bottom: 20px;">The decision is: <strong>Approved</strong></p>
-              <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">For your reference, here are the details of the visitor request:</p>
-              <ul style="font-size: 1em; margin-left: 20px; list-style-type: disc;">
-                 <li><strong>Visitor Name:</strong> ${request.visitorName}</li>
-                 <li><strong>Contact Information:</strong> ${request.contactInfo || 'Not provided'}</li>
-                 <li><strong>Purpose:</strong> ${request.purpose || 'Not specified'}</li>
-                 <li><strong>Visit Date:</strong> ${new Date(request.visitDate).toLocaleDateString()}</li>
-              </ul>
-              <p style="text-align: left; font-size: 1em; margin-bottom: 20px;">For security purposes, please ensure that the visitor brings a valid ID for verification when they arrive.</p>
-              
-              <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
-              
-              <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
-              <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
-              
-              <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
-              
-              <p style="font-size: 0.8em; color: #777; text-align: center;">
-                 This is an automated email. Please do not reply. For support, contact us at 
-                 <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.
-              </p>
-           </div>
-        `;
-      } else if (status === 'rejected') {
-        html = `
-           <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
-              <h2 style="color: #F44336; text-align: center; margin-bottom: 20px;">Visitor Entry Request Rejected</h2>
-              <p style="text-align: left; font-size: 1.1em; margin-bottom: 10px;">Dear <strong>${tenant.tenantFirstName}</strong>,</p>
-              <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">We regret to inform you that your visitor request has been rejected.</p>
-              <p style="text-align: left; font-size: 1em; margin-bottom: 20px;">The decision is: <strong>Rejected</strong></p>
-              <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">Here are the details of the visitor request:</p>
-              <ul style="font-size: 1em; margin-left: 20px; list-style-type: disc;">
-                 <li><strong>Visitor Name:</strong> ${request.visitorName}</li>
-                 <li><strong>Contact Information:</strong> ${request.contactInfo || 'Not provided'}</li>
-                 <li><strong>Purpose:</strong> ${request.purpose || 'Not specified'}</li>
-                 <li><strong>Visit Date:</strong> ${new Date(request.visitDate).toLocaleDateString()}</li>
-              </ul>
-              <p style="text-align: left; font-size: 1em; margin-bottom: 10px;"><strong>Reason for Rejection:</strong> ${request.adminComments || 'No specific reason provided.'}</p>
-              <p style="text-align: left; font-size: 1em; margin-bottom: 20px;">This decision was made due to certain reasons. If you would like to dispute this decision, please do not hesitate to contact the admin for further assistance.</p>
-              
-              <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
-              
-              <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
-              <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
-              
-              <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
-              
-              <p style="font-size: 0.8em; color: #777; text-align: center;">
-              This is an automated email. Please do not reply. For support, contact us at 
-              <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.
-              </p>
-           </div>
-        `;
-      }
+      const subject = 'Overnight Visitor Request Approved';
+      const html = `
+        <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
+          <h2 style="color: #4CAF50; text-align: center; margin-bottom: 20px;">Overnight Visitor Request Approved</h2>
+          <p style="text-align: left; font-size: 1.1em; margin-bottom: 10px;">Dear <strong>${tenant.tenantFirstName}</strong>,</p>
+          <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">We are pleased to inform you that your overnight visitor request has been approved. Below is an overview of the visitor details:</p>
+          <ul style="text-align: left; font-size: 1em; margin-bottom: 20px; padding-left: 20px;">
+            <li><strong>Visitor Name:</strong> ${request.visitorName}</li>
+            <li><strong>Contact Information:</strong> ${request.contactInfo || 'Not provided'}</li>
+            <li><strong>Purpose:</strong> ${request.purpose || 'Not specified'}</li>
+            <li><strong>Visit Date (From):</strong> ${new Date(request.visitDateFrom).toLocaleDateString()}</li>
+            <li><strong>Visit Date (To):</strong> ${new Date(request.visitDateTo).toLocaleDateString()}</li>
+          </ul>
+
+          <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">Please ensure that the visitor brings a valid ID for security checking upon entry. Overnight visitors are required to comply with all property rules and regulations during their stay.</p>
+          <p style="text-align: left; font-size: 1em; margin-bottom: 10px; color: #FF5722;">
+            <strong>Note:</strong> Overnight visit approvals are subject to the property’s overnight policies. Any extensions beyond the approved dates must be requested separately and will require additional approval.
+          </p>
+          <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+          <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
+          <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
+          <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+          <p style="font-size: 0.8em; color: #777; text-align: center;">This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.</p>
+        </div>
+      `;
   
       try {
         await sendMail(tenant.tenantEmail, subject, null, html);
@@ -1734,15 +1817,211 @@ export const updateRequestStatus = async (req, res) => {
       }
   
       res.status(200).json({
-        message: `Request status updated to ${status}`,
+        message: 'Request status updated to approved',
         request: request,
       });
     } catch (error) {
-      console.error('Error updating request status:', error);
-      res.status(500).json({ message: 'Failed to update request status', error: error.message });
+      console.error('Error approving request:', error);
+      res.status(500).json({ message: 'Failed to approve request', error: error.message });
+    }
+  };
+  
+  export const rejectedRequest = async (req, res) => {
+    try {
+      const adminId = req.adminId;
+      const { requestId } = req.params;
+      const { adminComments } = req.body;
+  
+      const request = await Request.findOne({ where: { request_id: requestId } });
+  
+      if (!request) {
+        return res.status(404).json({ message: 'Request not found' });
+      }
+  
+      const room = await Room.findOne({ where: { room_id: request.room_id } });
+  
+      if (!room) {
+        return res.status(404).json({ message: 'Associated room not found' });
+      }
+  
+      room.requestCount = Math.max(0, room.requestCount - 1);
+  
+      request.status = 'rejected';
+      request.adminComments = adminComments || 'No specific reason provided.';
+      request.decisionTimestamp = new Date();
+  
+      await request.save();
+      await room.save();
+  
+      const tenant = await Tenant.findOne({ where: { tenant_id: request.tenant_id } });
+  
+      if (!tenant) {
+        return res.status(404).json({ message: 'Tenant not found' });
+      }
+  
+      logActivity(adminId, 'update', `Admin ${adminId} rejected an overnight visitor entry from ${tenant.tenantFirstName}.`);
+  
+      const subject = 'Overnight Visitor Request Rejected';
+      const html = `
+        <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
+          <h2 style="color: #F44336; text-align: center; margin-bottom: 20px;">Overnight Visitor Request Rejected</h2>
+          <p style="text-align: left; font-size: 1.1em; margin-bottom: 10px;">Dear <strong>${tenant.tenantFirstName}</strong>,</p>
+          <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">We regret to inform you that your overnight visitor request has been rejected. Below is an overview of the visitor details:</p>
+  
+          <ul style="text-align: left; font-size: 1em; margin-bottom: 20px; padding-left: 20px;">
+              <li><strong>Visitor Name:</strong> ${request.visitorName}</li>
+              <li><strong>Contact Information:</strong> ${request.contactInfo}</li>
+              <li><strong>Visit Date (From):</strong> ${new Date(request.visitDateFrom).toLocaleDateString()}</li>
+              <li><strong>Visit Date (To):</strong> ${new Date(request.visitDateTo).toLocaleDateString()}</li>
+          </ul>
+  
+          <p style="text-align: left; font-size: 1em; margin-bottom: 10px;"><strong>Reason for Rejection:</strong> ${request.adminComments}</p>
+  
+          <p style="text-align: left; font-size: 1em; margin-bottom: 20px; color: #FF5722;">
+              <strong>Note:</strong> Overnight visit approvals are subject to the property’s overnight policies. Any extensions beyond the approved dates must be requested separately and will require additional approval.
+          </p>
+  
+          <p style="text-align: left; font-size: 1em; margin-bottom: 20px; color: #FF5722;">
+              <strong>If you wish to dispute this decision, please do not hesitate to contact the admin.</strong>
+          </p>
+  
+          <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+          
+          <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
+          <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
+          
+          <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+          
+          <p style="font-size: 0.8em; color: #777; text-align: center;">
+              This is an automated email. Please do not reply. For support, contact us at 
+              <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.
+          </p>
+        </div>
+      `;
+  
+      try {
+        await sendMail(tenant.tenantEmail, subject, null, html);
+      } catch (error) {
+        console.error("Error sending email:", error);
+        return res.status(500).json({ message: 'Failed to send email' });
+      }
+  
+      res.status(200).json({
+        message: 'Overnight visitor request status updated to rejected',
+        request: request,
+      });
+    } catch (error) {
+      console.error('Error rejecting overnight request:', error);
+      res.status(500).json({ message: 'Failed to reject overnight request', error: error.message });
     }
 };
-  
+
+export const checkin = async (req, res) => {
+    try {
+        const { requestId } = req.body; 
+
+        if (!requestId) {
+            return res.status(400).json({ message: 'Request ID is required' });
+        }
+
+        const request = await Request.findOne({
+            where: { request_id: requestId },
+            include: Room
+        });
+
+        if (!request) {
+            return res.status(404).json({ message: 'Request not found' });
+        }
+
+        if (request.checkin) {
+            return res.status(400).json({ message: 'Visitor has already checked in' });
+        }
+
+        const room = request.Room; 
+        if (room.visitorLimit <= 0) {
+            return res.status(400).json({ message: 'No available spots left in this room' });
+        }
+
+        const t = await sequelize.transaction();
+
+        try {
+            await Room.update(
+                { visitorLimit: sequelize.literal('visitorLimit - 1') },
+                { where: { room_id: room.room_id }, transaction: t }
+            );
+
+            await Request.update(
+                { checkin: true },
+                { where: { request_id: requestId }, transaction: t }
+            );
+
+            await t.commit();
+
+            logHistory(request.tenant_id, 'checkin', `Visitor ${request.visitorName} checked in for request ID: ${requestId}`);
+
+            res.status(200).json({ message: 'Visitor checked in successfully', request });
+        } catch (error) {
+            await t.rollback();
+            console.error('Error during checkin:', error);
+            res.status(500).json({ message: 'Failed to check in visitor', error: error.message });
+        }
+    } catch (error) {
+        console.error('Error during checkin process:', error);
+        res.status(500).json({ message: 'Failed to process checkin', error: error.message });
+    }
+};
+
+export const checkout = async (req, res) => {
+    try {
+        const { requestId } = req.body; 
+
+        if (!requestId) {
+            return res.status(400).json({ message: 'Request ID is required' });
+        }
+
+        const request = await Request.findOne({
+            where: { request_id: requestId },
+            include: Room
+        });
+
+        if (!request) {
+            return res.status(404).json({ message: 'Request not found' });
+        }
+
+        if (!request.checkin) {
+            return res.status(400).json({ message: 'Visitor has not checked in yet' });
+        }
+
+        const room = request.Room; 
+
+        const t = await sequelize.transaction();
+
+        try {
+            await Room.update(
+                { visitorLimit: sequelize.literal('visitorLimit + 1') },
+                { where: { room_id: room.room_id }, transaction: t }
+            );
+
+            await Request.update(
+                { checkin: false },
+                { where: { request_id: requestId }, transaction: t }
+            );
+
+            await t.commit();
+
+            logHistory(request.tenant_id, 'checkout', `Visitor ${request.visitorName} checked out for request ID: ${requestId}`);
+
+            res.status(200).json({ message: 'Visitor checked out successfully', request });
+        } catch (error) {
+            await t.rollback();
+            console.error('Error during checkout:', error);
+            res.status(500).json({ message: 'Failed to checkout visitor', error: error.message });
+        }
+    } catch (error) {
+        console.error('Error during checkout process:', error);
+        res.status(500).json({ message: 'Failed to process checkout', error: error.message });
+    }
+};
 
 export const addUnit = async (req, res) => {
     try {
