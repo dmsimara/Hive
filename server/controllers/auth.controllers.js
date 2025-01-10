@@ -1435,6 +1435,238 @@ export const addTenant = async (req, res) => {
     }
 };
 
+export const addMaintenance = async (req, res) => {
+    try {
+        const { type, description, urgency, scheduledDate, contactNum } = req.body;
+
+        if (!type || !urgency || !contactNum) {
+            return res.status(400).json({ message: 'Missing required fields' });
+        }
+
+        const token = req.cookies.tenantToken;
+        if (!token) {
+            return res.status(400).json({ message: 'No token provided' });
+        }
+
+        let decoded;
+        try {
+            decoded = jwt.verify(token, process.env.JWT_SECRET);
+        } catch (err) {
+            return res.status(400).json({ message: 'Invalid or expired token' });
+        }
+
+        console.log("Decoded token:", decoded); 
+
+        const tenantId = decoded.tenantId;
+        const tenant = await Tenant.findOne({ where: { tenant_id: tenantId }, include: Room });
+
+        if (!tenant) {
+            return res.status(404).json({ message: 'Tenant not found' });
+        }
+
+        const establishmentId = tenant.establishmentId;
+        console.log('Establishment ID from Tenant:', establishmentId);
+
+        const roomId = tenant.room_id;
+        const room = await Room.findOne({ where: { room_id: roomId } });
+
+        if (!room) {
+            return res.status(404).json({ message: 'Room not found' });
+        }
+
+        const newMaintenance = await Fix.create({
+            type,
+            description,
+            urgency,
+            scheduledDate,
+            contactNum,
+            tenant_id: tenantId,
+            establishment_id: establishmentId,
+            room_id: roomId,
+        });
+
+        logHistory(tenantId, 'create', `Tenant ${tenant.tenantFirstName} added a new fix request on ${scheduledDate} for ${type}`);
+
+        const subject = 'Fix Request Received Confirmation';
+        const html = `
+           <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
+              <h2 style="color: #4CAF50; text-align: center; margin-bottom: 20px;">Fix Request Received</h2>
+              <p style="text-align: left; font-size: 1.1em; margin-bottom: 10px;">Dear <strong>${tenant.tenantFirstName}</strong>,</p>
+              <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">We have received your request for a fix service. Please wait for a follow-up email when the service is in progress, along with the name of the assigned personnel.</p>
+              
+              <p style="text-align: left; font-size: 1em; margin-bottom: 20px;">We appreciate your patience during this process. You will receive another notification once the service begins.</p>
+              
+              <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+              
+              <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
+              <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
+              
+              <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+              
+              <p style="font-size: 0.8em; color: #777; text-align: center;">
+              This is an automated email. Please do not reply. For support, contact us at 
+              <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.
+              </p>
+            </div>
+        `;
+
+        try {
+            await sendMail(tenant.tenantEmail, subject, null, html);
+        } catch (error) {
+            console.error("Error sending email:", error);
+            return res.status(500).json({ message: 'Failed to send email' });
+        }
+
+        res.status(201).json({ message: 'Fix added successfully!', maintenance: newMaintenance });
+    } catch (error) {
+        console.error('Error adding fix:', error);
+        res.status(500).json({ message: 'Failed to add fix', error: error.message });
+    }
+};
+
+export const updateMaintenance = async (req, res) => {
+    try {
+      const adminId = req.adminId;
+      const { maintenance_id } = req.params;
+      const { assignedPerson, status } = req.body;
+
+      const maintenance = await Fix.findOne({ where: { maintenance_id: maintenance_id } });
+
+      if (!maintenance) {
+        return res.status(404).json({ message: 'Maintenance not found' });
+      }
+
+      maintenance.assignedPerson = assignedPerson;
+      maintenance.status = status;
+
+      await maintenance.save();
+
+      const tenant = await Tenant.findOne({ where: { tenant_id: maintenance.tenant_id } });
+
+      if (!tenant) {
+        return res.status(404).json({ message: 'Tenant not found' });
+      }
+
+      logActivity(adminId, 'update', `Admin ${adminId} assigned personnel to a maintenance request for ${tenant.tenantFirstName}.`);
+
+      const subject = 'Fix Request Reviewed - Personnel Assigned';
+      const html = `
+        <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
+          <h2 style="color: #4CAF50; text-align: center; margin-bottom: 20px;">Fix Request Reviewed - Personnel Assigned</h2>
+          <p style="text-align: left; font-size: 1.1em; margin-bottom: 10px;">Dear <strong>${tenant.tenantFirstName}</strong>,</p>
+          <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">We would like to inform you that your fix request has been reviewed by the admin, and the following personnel has been assigned to handle the service:</p>
+          <ul style="text-align: left; font-size: 1em; margin-bottom: 20px; padding-left: 20px;">
+            <li><strong>Service Type:</strong> ${maintenance.type}</li>
+            <li><strong>Scheduled Date:</strong> ${new Date(maintenance.scheduledDate).toLocaleDateString()}</li>
+            <li><strong>Assigned Personnel:</strong> ${maintenance.assignedPerson}</li>
+          </ul>
+
+          <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">The assigned personnel will contact you if further details are required before proceeding with the service. Please ensure that the area is accessible on the scheduled date for the team to complete the task.</p>
+          <p style="text-align: left; font-size: 1em; margin-bottom: 20px; color: #FF5722;">
+            <strong>Note:</strong> If you have any questions or concerns regarding this service, feel free to reach out to us at the contact provided below.
+          </p>
+
+          <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+
+          <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
+          <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
+
+          <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+
+          <p style="font-size: 0.8em; color: #777; text-align: center;">
+            This is an automated email. Please do not reply. For support, contact us at 
+            <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.
+          </p>
+        </div>
+      `;
+
+      try {
+        await sendMail(tenant.tenantEmail, subject, null, html);
+      } catch (error) {
+        console.error("Error sending email:", error);
+        return res.status(500).json({ message: 'Failed to send email' });
+      }
+
+      res.status(200).json({
+        message: 'Maintenance status updated successfully.',
+        maintenance: {
+          maintenance_id: maintenance.maintenance_id,
+          assignedPerson: maintenance.assignedPerson,
+          status: maintenance.status,
+          tenantFirstName: tenant.tenantFirstName,
+          tenantEmail: tenant.tenantEmail,
+          type: maintenance.type,
+          scheduledDate: maintenance.scheduledDate,
+        },
+      });
+    } catch (error) {
+      console.error('Error updating maintenance:', error);
+      res.status(500).json({ message: 'Failed to update maintenance', error: error.message });
+    }
+};
+
+export const doneMaintenance = async (req, res) => {
+    try {
+      const adminId = req.adminId; 
+      const { maintenance_id } = req.params;  
+      const currentDate = new Date();  
+  
+      const maintenance = await Fix.findOne({ where: { maintenance_id } });
+  
+      if (!maintenance) {
+        return res.status(404).json({ message: 'Maintenance not found' });
+      }
+  
+      maintenance.resolvedDate = currentDate;
+      maintenance.status = 'completed';
+  
+      await maintenance.save();
+  
+      logActivity(adminId, 'update', `Admin ${adminId} marked the maintenance as done for ${maintenance.tenantFirstName}.`);
+  
+      const tenant = await Tenant.findOne({ where: { tenant_id: maintenance.tenant_id } });
+      if (tenant) {
+        const subject = 'Fix Request Resolved';
+        const html = `
+          <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
+            <h2 style="color: #4CAF50; text-align: center; margin-bottom: 20px;">Fix Request Resolved</h2>
+            <p style="text-align: left; font-size: 1.1em; margin-bottom: 10px;">Dear <strong>${tenant.tenantFirstName}</strong>,</p>
+            <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">We are happy to inform you that the fix request for ${maintenance.type} has been successfully resolved on ${currentDate.toLocaleDateString()} at ${currentDate.toLocaleTimeString()}.</p>
+            <p style="text-align: left; font-size: 1em; margin-bottom: 20px;">Thank you for your patience during the process. If you need further assistance, feel free to reach out.</p>
+          
+            <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+            
+            <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
+            <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
+
+            <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+
+            <p style="font-size: 0.8em; color: #777; text-align: center;">
+              This is an automated email. Please do not reply. For support, contact us at 
+              <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.
+            </p>
+          </div>
+        `;
+  
+        try {
+          await sendMail(tenant.tenantEmail, subject, null, html);
+        } catch (error) {
+          console.error("Error sending email:", error);
+          return res.status(500).json({ message: 'Failed to send email' });
+        }
+      }
+  
+      res.status(200).json({
+        message: 'Maintenance marked as done successfully',
+        maintenance,
+      });
+    } catch (error) {
+      console.error('Error marking maintenance as done:', error);
+      res.status(500).json({ message: 'Failed to mark maintenance as done', error: error.message });
+    }
+};
+  
+
 export const addRegularRequest = async (req, res) => {
     try {
         const { visitorName, contactInfo, purpose, visitDateFrom, visitDateTo, visitorAffiliation } = req.body;
@@ -1824,9 +2056,9 @@ export const approvedRequest = async (req, res) => {
       console.error('Error approving request:', error);
       res.status(500).json({ message: 'Failed to approve request', error: error.message });
     }
-  };
+};
   
-  export const rejectedRequest = async (req, res) => {
+export const rejectedRequest = async (req, res) => {
     try {
       const adminId = req.adminId;
       const { requestId } = req.params;
