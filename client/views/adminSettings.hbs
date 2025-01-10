@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <img class="navbar-brand" src="/images/hiveLight.png" alt="Hive Logo" width="100px" />
+    <img class="navbar-brand logo" id="logo" src="/images/hiveLight.png" alt="Hive Logo" width="100px" />
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -70,12 +70,16 @@
       <ul>
         <li><a href="/admin/settings" class="sidebar-link"><i class="material-icons">nightlight_round</i>Dark
             Mode</a></li>
-        <li><a href="/admin/settings/feedback-support" class="sidebar-link"><i class="material-icons">mail</i>Feedback &amp;
+        <li><a href="/admin/settings/feedback-support" class="sidebar-link"><i class="material-icons">mail</i>Feedback
+            &amp;
             Support</a></li>
-        <li><a href="/admin/settings/password-reset" class="sidebar-link"><i class="material-icons">lock_reset</i>Password Reset</a></li>
-        <li><a href="/admin/settings/activity-log/{{admin_id}}" class="sidebar-link"><i class="material-icons">timeline</i>Activity
+        <li><a href="/admin/settings/password-reset" class="sidebar-link"><i
+              class="material-icons">lock_reset</i>Password Reset</a></li>
+        <li><a href="/admin/settings/activity-log/{{admin_id}}" class="sidebar-link"><i
+              class="material-icons">timeline</i>Activity
             Log</a></li>
-        <li><a href="/admin/settings/delete-account/{{admin_id}}" class="sidebar-link"><i class="material-icons">delete</i>Delete
+        <li><a href="/admin/settings/delete-account/{{admin_id}}" class="sidebar-link"><i
+              class="material-icons">delete</i>Delete
             Account</a></li>
       </ul>
     </div>
@@ -91,3 +95,16 @@
 </div>
 
 <script src="/js/adminSettings.js"></script>
+<script>
+    window.onload = function() {
+    const theme = localStorage.getItem('theme');
+
+    const logo = document.getElementById('logo');
+
+    if (theme === 'dark') {
+        logo.src = '/images/hiveDark.png';
+    } else {
+        logo.src = '/images/hiveLight.png';
+    }
+};
+</script>

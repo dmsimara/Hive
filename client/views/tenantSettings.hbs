@@ -4,7 +4,7 @@
             <div class="d-flex">
                 <div class="logo">
                     <a href="/tenant/dashboard">
-                        <img src="/images/hiveLight.png" alt="Hive Logo" class="logo-img">
+                        <img src="/images/hiveLight.png" id="logo" alt="Hive Logo" class="logo-img">
                     </a>
                 </div>
             </div>
@@ -35,13 +35,27 @@
                         <span>Announcement</span>
                     </a>
                 </li>
+                 </li>
                 <li class="sidebar-item active">
+                    <a href="/tenant/visitors" class="sidebar-link">
+                        <i class="fas fa-clipboard-check"></i>
+                        <span>Visitors</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/tenant/maintenance" class="sidebar-link">
+                        <i class="fas fa-tools"></i>
+                        <span>Maintenance</span>
+                
+                </li>
+            </ul>
+            </li>
+                <li class="sidebar-item">
                     <a href="/tenant/settings" class="sidebar-link">
                         <i class="fa-solid fa-gear"></i>
                         <span>Settings</span>
                     </a>
                 </li>
-            </ul>
             <div class="sidebar-footer">
                 <a href="#" id="logoutButton" class="logout-button sidebar-link">
                     <i class="fas fa-sign-out-alt"></i>
@@ -63,3 +77,16 @@
 </div>
 
 <script src="/js/tenantSettings.js"></script>
+<script>
+    window.onload = function() {
+    const theme = localStorage.getItem('theme');
+
+    const logo = document.getElementById('logo');
+
+    if (theme === 'dark') {
+        logo.src = '/images/hiveDark.png';
+    } else {
+        logo.src = '/images/hiveLight.png';
+    }
+};
+</script>

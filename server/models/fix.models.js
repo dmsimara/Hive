@@ -11,12 +11,12 @@ const sequelize = new Sequelize(process.env.DATABASE, process.env.DATABASE_USER,
   dialect: 'mysql', 
 });
 
-const Request = sequelize.define('Request', {
-    request_id: {
+const Fix = sequelize.define('Fix', {
+    maintenance_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-        allowNull: false,
+        allowNull: false
     },
     tenant_id: {
         type: Sequelize.INTEGER,
@@ -38,80 +38,51 @@ const Request = sequelize.define('Request', {
         },
         onDelete: 'CASCADE'
     },
-    visitorName: {
+    type: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    visitorAffiliation: {  
-        type: DataTypes.STRING,
-        allowNull: true,
-    },
-    contactInfo: {
-        type: DataTypes.STRING,
-        allowNull: true
-    },
-    purpose: {
+    description: {
         type: DataTypes.TEXT,
         allowNull: true
     },
-    visitDateFrom: {  
-        type: DataTypes.DATE,
-        allowNull: false
-    },
-    visitDateTo: { 
-        type: DataTypes.DATE,
-        allowNull: false
-    },
-    visitType: {  
+    urgency: {
         type: DataTypes.ENUM(
-            'regular',
-            'overnight'
+            'urgent',
+            'scheduled'
         ),
-        allowNull: false,
-        defaultValue: 'regular'
+        allowNull: false
+    },
+    scheduledDate: {
+        type: DataTypes.DATE,
+        allowNull: true
     },
     status: {
         type: DataTypes.ENUM(
             'pending',
-            'approved',
-            'rejected',
-            'cancelled'
+            'in progress',
+            'completed'
         ),
-        allowNull: false,
+        allowNull: true,
         defaultValue: 'pending'
     },
-    adminComments: {
-        type: DataTypes.TEXT,
-        allowNull: true
-    },
-    requestDate: {
+    submissionDate: {
         type: DataTypes.DATE,
         defaultValue: Sequelize.NOW
     },
-    decisionTimestamp: {
+    resolvedDate: {
         type: DataTypes.DATE,
-        allowNull: true,
+        allowNull: true
     },
-    checkin: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false,
-    },
-    establishment_id: { 
-        type: Sequelize.INTEGER,
-        field: 'establishment_id', 
-        references: {
-            model: 'Establishment',
-            key: 'establishment_id'
-        },
-        allowNull: false,
-        onDelete: 'CASCADE'
+    assignedPerson: {
+        type: DataTypes.STRING,
+        allowNull: true
     }
 }, { timestamps: false });
 
-Request.belongsTo(Tenant, { foreignKey: 'tenant_id' });
-Request.belongsTo(Room, { foreignKey: 'room_id' });
-Request.belongsTo(Establishment, { foreignKey: 'establishment_id' });
+Fix.belongsTo(Tenant, { foreignKey: 'tenant_id' });
+Fix.belongsTo(Room, { foreignKey: 'room_id' });
+Fix.belongsTo(Establishment, { foreignKey: 'establishment_id' });
 
 sequelize.sync()
   .then(() => {
@@ -119,4 +90,4 @@ sequelize.sync()
   })
   .catch(err => console.error('Error updating table:', err));
 
-export default Request;
+export default Fix;
