@@ -53,6 +53,9 @@ const Fix = sequelize.define('Fix', {
         ),
         allowNull: false
     },
+    contactNum: {
+        type: DataTypes.STRING(15)
+    },
     scheduledDate: {
         type: DataTypes.DATE,
         allowNull: true
