@@ -14,6 +14,23 @@
     --background-color: rgb(245, 245, 245);
 }
 
+.dark-theme {
+    --background-color: #2A1617;  
+    --text-color: #FCFAC3;   
+    --brownish-yellow: #FF9E00;   
+    --brown: #995F00; 
+    --red: #D20000;
+    --d-yellow: #FAB020;
+    --white: #fff;
+    --dark-brown: #331800;
+    --light-brown: #654321;
+    --dark-grey: #0c0807;
+    --dimgray: #696969;
+    --reddish-brown: #DB6D5E;
+    --red-brown: #4B2B2D;
+    --redy-brown: #4F2124;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -36,6 +53,15 @@ html {
     gap: 20px; 
 }
 
+.dark-theme .dashboard-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--background-color);
+    overflow: auto;
+    gap: 20px; 
+}
+
 .sidebar {
     position: sticky;
     top: 0;
@@ -52,8 +78,34 @@ html {
     overflow-y: auto;
 }
 
+.dark-theme .sidebar {
+    position: sticky;
+    top: 0;
+    background-color: var(--background-color);
+    width: 300px;
+    min-width: 300px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transition: all .25s ease-in-out;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    height: 100vh;
+    overflow-y: auto;
+}
+
 .sidebar-card {
     background-color: #FFFFFF;
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.dark-theme .sidebar-card {
+    background-color: var(--red-brown);
     border-radius: 15px;
     padding: 15px;
     display: flex;
@@ -92,6 +144,18 @@ html {
     transition: all 0.3s ease;
 }
 
+.sidebar-item {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    color: white !important;
+    font-size: 1em;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
 .sidebar-item:hover {
     background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
 }
@@ -99,6 +163,14 @@ html {
 .sidebar-item a {
     text-decoration: none;
     color: var(--dark-gray);
+    font-size: 18px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.dark-theme .sidebar-item a {
+    text-decoration: none;
+    color: var(--white);
     font-size: 18px;
     font-weight: 500;
     transition: color 0.3s ease;
@@ -124,6 +196,11 @@ html {
 .sidebar p {
     font-size: 0.9em;
     color: #666;
+}
+
+.dark-theme .sidebar p {
+    font-size: 0.9em;
+    color: white;
 }
 
 
@@ -155,6 +232,18 @@ html {
     transition: color 0.3s ease;
 }
 
+.dark-theme .logout-button {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--white);
+    font-weight: 600;
+    font-size: 1em;
+    padding: 10px;
+    border-radius: 8px;
+    transition: color 0.3s ease;
+}
+
 .logout-button:hover {
     background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
     color: white;
@@ -163,6 +252,11 @@ html {
 .logout-button i {
     margin-right: 10px;
     color: #A22F05;
+}
+
+.dark-theme .logout-button i {
+    margin-right: 10px;
+    color: white;
 }
 
 .logout-button:hover i {
@@ -233,9 +327,24 @@ main::-webkit-scrollbar-track:hover {
     margin-bottom: 0px;
 }
 
+
+.dark-theme .header-left h3 {
+    font-size: 1.2em;
+    color: white;
+    margin-bottom: 0px;
+}
+
 .header-left h1 {
     font-size: 2.5em;
     color: #333;
+    font-weight: bold;
+    margin: 0;
+   
+}
+
+.dark-theme .header-left h1 {
+    font-size: 2.5em;
+    color: var(--reddish-brown);
     font-weight: bold;
     margin: 0;
    
@@ -279,6 +388,14 @@ main::-webkit-scrollbar-track:hover {
 .notification-icon {
     font-size: 1.5em;
     color: #555;
+    cursor: pointer;
+    margin-top: 0px;
+    margin-left: 0px;
+}
+
+.dark-theme .notification-icon {
+    font-size: 1.5em;
+    color: white;
     cursor: pointer;
     margin-top: 0px;
     margin-left: 0px;
@@ -686,6 +803,19 @@ main::-webkit-scrollbar-track:hover {
 
 }
 
+.dark-theme .filter-link {
+    text-decoration: none;
+    color: white;
+    /* text color */
+    font-weight: bold;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: var(--brownish-yellow);
+    transition: background-color 0.3s, color 0.3s;
+
+}
+
 
 
 
@@ -695,12 +825,23 @@ main::-webkit-scrollbar-track:hover {
     color: white;
 }
 
+.dark-theme .filter-link:hover {
+    background-color: var(--brown);
+    color: white;
+}
+
 
 
 
 /* Active filter link styling */
 .filter-link.active {
     background-color: #680202;
+    color: white;
+    /* text color */
+}
+
+.dark-theme .filter-link.active {
+    background-color: var(--light-brown);
     color: white;
     /* text color */
 }
@@ -814,7 +955,13 @@ main::-webkit-scrollbar-track:hover {
     font-size: 12px;
 }
 
-
+.dark-theme .permanent-badge {
+    background-color: var(--brownish-yellow);
+    color: white;
+    padding: 3px 6px;
+    border-radius: 5px;
+    font-size: 12px;
+}
 
 
 /* for styling individual notice item */
@@ -831,11 +978,38 @@ main::-webkit-scrollbar-track:hover {
     
 }
 
+.dark-theme .notice-item {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 15px;
+    padding: 15px;
+    background-color: var(--red-brown);
+    color: #333333;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    
+}
+
 
 /* Adjust the width for individual notice content */
 .notice-item .notice-title {
     font-size: 24px;
     color: #FF6B45;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.dark-theme .notice-item {
+    font-size: 24px;
+    color: white;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.dark-theme .notice-title {
+    font-size: 24px;
+    color: var(--brownish-yellow);
     font-weight: bold;
     margin-bottom: 15px;
 }
@@ -849,4 +1023,22 @@ main::-webkit-scrollbar-track:hover {
     margin-bottom: 10px;
     line-height: 1.5;
     
+}
+
+.dark-theme .notice-content {
+    font-size: 16px;
+    color: white;
+    margin-bottom: 10px;
+    line-height: 1.5;
+    
+}
+
+.notice-date {
+    color: var(--dark-gray);
+    font-size: 13px;
+}
+
+.dark-theme .notice-date {
+    color: white;
+    font-size: 13px;
 }

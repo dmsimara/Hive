@@ -14,6 +14,23 @@
     --background-color: rgb(245, 245, 245);
 }
 
+.dark-theme {
+    --background-color: #2A1617;  
+    --text-color: #FCFAC3;   
+    --brownish-yellow: #FF9E00;   
+    --brown: #995F00; 
+    --red: #D20000;
+    --d-yellow: #FAB020;
+    --white: #fff;
+    --dark-brown: #331800;
+    --light-brown: #654321;
+    --dark-grey: #0c0807;
+    --dimgray: #696969;
+    --reddish-brown: #DB6D5E;
+    --red-brown: #4B2B2D;
+    --redy-brown: #4F2124;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -36,6 +53,15 @@ html {
     gap: 20px; 
 }
 
+.dark-theme .dashboard-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--background-color);
+    overflow: auto;
+    gap: 20px; 
+}
+
 .sidebar {
     position: sticky;
     top: 0;
@@ -52,8 +78,34 @@ html {
     overflow-y: auto;
 }
 
+.dark-theme .sidebar {
+    position: sticky;
+    top: 0;
+    background-color: var(--background-color);
+    width: 300px;
+    min-width: 300px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transition: all .25s ease-in-out;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    height: 100vh;
+    overflow-y: auto;
+}
+
 .sidebar-card {
     background-color: #FFFFFF;
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.dark-theme .sidebar-card {
+    background-color: var(--red-brown);
     border-radius: 15px;
     padding: 15px;
     display: flex;
@@ -92,6 +144,18 @@ html {
     transition: all 0.3s ease;
 }
 
+.dark-theme .sidebar-item {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    color: white !important;
+    font-size: 1em;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
 .sidebar-item:hover {
     background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
 }
@@ -99,6 +163,14 @@ html {
 .sidebar-item a {
     text-decoration: none;
     color: var(--dark-gray);
+    font-size: 18px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.dark-theme .sidebar-item a {
+    text-decoration: none;
+    color: var(--white);
     font-size: 18px;
     font-weight: 500;
     transition: color 0.3s ease;
@@ -124,6 +196,11 @@ html {
 .sidebar p {
     font-size: 0.9em;
     color: #666;
+}
+
+.dark-theme .sidebar p {
+    font-size: 0.9em;
+    color: white;
 }
 
 
@@ -155,6 +232,18 @@ html {
     transition: color 0.3s ease;
 }
 
+.dark-theme .logout-button {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--white);
+    font-weight: 600;
+    font-size: 1em;
+    padding: 10px;
+    border-radius: 8px;
+    transition: color 0.3s ease;
+}
+
 .logout-button:hover {
     background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
     color: white;
@@ -163,6 +252,11 @@ html {
 .logout-button i {
     margin-right: 10px;
     color: #A22F05;
+}
+
+.dark-theme .logout-button i {
+    margin-right: 10px;
+    color: white;
 }
 
 .logout-button:hover i {
@@ -221,15 +315,33 @@ html {
     color: #888;
 }
 
+.dark-theme .header-left h3 {
+    font-size: 1.2em;
+    color: white;
+}
+
 .header-left h1 {
     font-size: 2.5em;
     margin-top: 5px;
+}
+
+.dark-theme .header-left h1 {
+    font-size: 2.5em;
+    margin-top: 5px;
+    color: var(--reddish-brown);
 }
 
 .header-right {
     display: flex;
     align-items: center;
     gap: 15px;
+}
+
+.dark-theme .header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: var(--white);
 }
 
 .date-picker {
@@ -252,7 +364,7 @@ html {
 }
 
 .room-header {
-    background: linear-gradient(to right, #cc3e22, #ff825c);
+    background: linear-gradient(to right, #7D2E28, #B42A1D, #FD7F42);
     padding: 50px 50px;
     border-radius: 15px;
     color: white;
@@ -271,10 +383,11 @@ html {
 }
 
 .utilities-overview {
-    background-color: #F8F8F8;
+    background-color: var(--background-color);
+    color: var(--white);
     padding: 20px;
     border-radius: 12px;
-    border: 3px solid #FFA45B;
+    border: 3px solid var(--reddish-brown);
     margin-top: 20px;
 
 }
@@ -297,6 +410,7 @@ html {
 
 .date-card {
     background-color: #f8f8f8;
+    color: #000000;
     padding: 5px 10px;
     border-radius: 12px;
     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
@@ -322,10 +436,28 @@ html {
     grid-template-columns: 1.5fr 1fr 0.8fr;
     gap: 15px;
     margin-top: 20px;
+
+}
+
+.dark-theme .utilities-cards, 
+.dark-theme .utilities-cards * {
+  color: white !important; /* Ensure all descendants have white font color */
 }
 
 .card {
     background-color: #fff;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+}
+
+.dark-theme .card {
+    background-color: var(--red-brown);
     padding: 15px;
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -358,6 +490,12 @@ html {
     margin-top: 5px;
 }
 
+.dark-theme .card .due-date {
+    font-size: 0.8em;
+    color: #fff;
+    margin-top: 5px;
+}
+
 .status {
     position: absolute;
     top: 10px;
@@ -365,7 +503,17 @@ html {
     padding: 5px 10px;
     font-size: 0.7em;
     border-radius: 50px;
-    color: white;
+    color: var(--dark-gray);
+}
+
+.dark-theme .status {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    font-size: 0.7em;
+    border-radius: 50px;
+    color: var(--white) !important;
 }
 
 .status.pending {
@@ -395,6 +543,20 @@ html {
 .preview-section {
     flex: 1;
     margin-left: 20px;
+    background-color: white; 
+    border-radius: 12px; 
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
+    display: flex; 
+    flex-direction: column; 
+    gap: 16px; 
+  }
+
+.dark-theme .preview-section {
+    background: var(--red-brown);
+    flex: 1;
+    margin-left: 20px;
+    color: var(--white)
 }
 
 .preview-title {
@@ -422,10 +584,31 @@ html {
     margin: auto;
 }
 
+.dark-theme .preview-card {
+    flex: 1;
+    background-color: var(--dark-brown);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    height: 120px;
+    max-width: 300px;
+    margin: auto;
+}
+
 .preview-card i {
     font-size: 3em;
     margin-right: 20px;
     color: black;
+}
+
+.dark-theme .preview-card i {
+    font-size: 3em;
+    margin-right: 20px;
+    color: white;
 }
 
 .card-info h3 {
