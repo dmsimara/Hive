@@ -132,16 +132,18 @@ html {
     flex-grow: 1;
 }
 
+
 .sidebar-item {
-    list-style-type: none;
+    list-style-type: none; 
     display: flex;
     align-items: center;
     color: #333;
     font-size: 1em;
     padding: 10px;
-    border-radius: 8px;
+    border-radius: 8px; 
     cursor: pointer;
     transition: all 0.3s ease;
+    margin-bottom: 5px;
 }
 
 .dark-theme .sidebar-item {
