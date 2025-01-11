@@ -1414,6 +1414,90 @@ app.get("/tenant/maintenance", verifyTenantToken, setEstablishmentId, async (req
     }
 });
 
+// TENANT PAGES (CUSTOMIZE - SETTINGS) -------------------------------------------------------------------------
+app.get("/tenant/customize", verifyTenantToken, setEstablishmentId, async (req, res) => {
+    const { tenantId, establishmentId } = req;
+
+    try {
+        if (!tenantId || !establishmentId) {
+            return res.status(400).json({ error: "Tenant or establishment ID is missing." });
+        }
+
+        const tenant = await Tenant.findOne({ where: { tenant_id: tenantId, establishmentId } });
+
+        if (!tenant) {
+            return res.status(404).json({ error: "Tenant not found." });
+        }
+
+        const plainTenant = tenant.get({ plain: true });
+
+        res.render("ten-customize", {
+            title: "Hive",
+            styles: ["ten-customize"],
+            tenant: plainTenant,
+        });
+    } catch (error) {
+        console.error("Error fetching tenant visitors data:", error.message);
+        res.status(500).json({ error: "Internal server error." });
+    }
+});
+
+// TENANT PAGES (FEEDBACK - SETTINGS) -------------------------------------------------------------------------
+app.get("/tenant/feedback", verifyTenantToken, setEstablishmentId, async (req, res) => {
+    const { tenantId, establishmentId } = req;
+
+    try {
+        if (!tenantId || !establishmentId) {
+            return res.status(400).json({ error: "Tenant or establishment ID is missing." });
+        }
+
+        const tenant = await Tenant.findOne({ where: { tenant_id: tenantId, establishmentId } });
+
+        if (!tenant) {
+            return res.status(404).json({ error: "Tenant not found." });
+        }
+
+        const plainTenant = tenant.get({ plain: true });
+
+        res.render("ten-feedback", {
+            title: "Hive",
+            styles: ["ten-feedback"],
+            tenant: plainTenant,
+        });
+    } catch (error) {
+        console.error("Error fetching tenant visitors data:", error.message);
+        res.status(500).json({ error: "Internal server error." });
+    }
+});
+
+// TENANT PAGES (RESET PASSWORD - SETTINGS) -------------------------------------------------------------------------
+app.get("/tenant/reset-password", verifyTenantToken, setEstablishmentId, async (req, res) => {
+    const { tenantId, establishmentId } = req;
+
+    try {
+        if (!tenantId || !establishmentId) {
+            return res.status(400).json({ error: "Tenant or establishment ID is missing." });
+        }
+
+        const tenant = await Tenant.findOne({ where: { tenant_id: tenantId, establishmentId } });
+
+        if (!tenant) {
+            return res.status(404).json({ error: "Tenant not found." });
+        }
+
+        const plainTenant = tenant.get({ plain: true });
+
+        res.render("ten-reset-password", {
+            title: "Hive",
+            styles: ["ten-reset-password"],
+            tenant: plainTenant,
+        });
+    } catch (error) {
+        console.error("Error fetching tenant visitors data:", error.message);
+        res.status(500).json({ error: "Internal server error." });
+    }
+});
+
 // Starts the server on the specified port, connects to the database, and logs a message when the server is running.
 app.listen(PORT, () => {
     connectDB();
