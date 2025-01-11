@@ -536,70 +536,103 @@ main {
   cursor: pointer;
 }
 
- /* Utilities Bills Section */
- .bills {
-   display: flex;
-   flex-direction: column;
-   gap: 15px;
- }
- 
- 
- .bill {
+/* Utilities Bills Section */
+.bills {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+
+.bill {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 15px;
   background: #fff;
   border-radius: 8px;
-  border: 1px solid #6F4F37; 
+  border: 1px solid #6F4F37;
+  transition: background-color 0.3s ease, background 0.3s ease, color 0.3s ease; /* Smooth transitions */
+}
+
+.bill:hover {
+  background: linear-gradient(to bottom, #B32C19, #FC8042); /* Gradient background on hover */
+  color: #fff; /* Changes text color to white */
+}
+
+.bill:hover .bill-title,
+.bill:hover .bill-amount,
+.bill:hover .shared-amount,
+.bill:hover i {
+  color: #fff; /* Ensures all text and icons turn white */
+}
+
+.bill:hover .bill-dates p {
+  color: #fff; /* Ensures the .bill-dates p text turns white on hover */
 }
 
 .dark-theme .bill {
   background: var(--red-brown);
-  border-radius: 8px;
-  border: 1px solid #6F4F37; 
+  border: 1px solid #6F4F37;
+  transition: background-color 0.3s ease, background 0.3s ease, color 0.3s ease;
+}
+
+.dark-theme .bill:hover {
+  background: linear-gradient(to bottom, #B32C19, #FC8042); /* Gradient background on hover */
+  color: #fff; /* Changes text color to white */
+}
+
+.dark-theme .bill:hover .bill-title,
+.dark-theme .bill:hover .bill-amount,
+.dark-theme .bill:hover .shared-amount,
+.dark-theme .bill:hover i {
+  color: #fff; /* Ensures all text and icons turn white */
+}
+
+.dark-theme .bill:hover .bill-dates p {
+  color: #fff; /* Ensures the .bill-dates p text turns white on hover */
 }
 
 .bill-amount, .shared-amount {
   font-size: 1rem;
   font-weight: bold;
   color: #444;
-  align-self: center; 
+  align-self: center;
 }
- 
+
 .dark-theme .bill-amount, .shared-amount {
   color: white;
 }
- 
- .bill i {
-   font-size: 1.5rem;
-   color: #FF6B45;
- }
 
- .dark-theme .bill i {
+.bill i {
+  font-size: 1.5rem;
+  color: #FF6B45;
+}
+
+.dark-theme .bill i {
   font-size: 1.5rem;
   color: var(--brownish-yellow);
 }
- 
- 
- .bill-title {
-   flex: 1;
-   margin: 0 10px;
-   font-size: 1rem;
-   font-weight: 500;
-   color: #333;
- }
 
- .dark-theme .bill-title {
+.bill-title {
+  flex: 1;
+  margin: 0 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.dark-theme .bill-title {
   color: white;
 }
- 
- 
- .bill-amount {
-   font-size: 1rem;
-   font-weight: bold;
-   color: #444;
- }
+
+.bill-amount {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #444;
+}
+
+
 
 
  
@@ -837,22 +870,25 @@ main {
 .bill-dates p {
   font-size: 0.8rem;
   color: #666;
-  margin: 2px 0 0 0; 
+  margin: 2px 0 0 0;
+ 
 }
 
-.dark-theme .bill-dates p {
-  font-size: 0.8rem;
-  color: white;
-  margin: 2px 0 0 0; 
-}
 
 /* Style for the tenant share below the bill amount, aligning it to the right */
 .bill-tenant-share {
   font-size: 0.8rem;
   color: #666;
   margin: 2px 0 0 0;
-  align-self: flex-end; 
+  align-self: flex-end;
+  transition: color 0.3s ease; /* Smooth transition for color change */
 }
+
+/* Hover effect on the parent .bill container for .bill-tenant-share */
+.bill:hover .bill-tenant-share {
+  color: #fff; /* Ensures .bill-tenant-share text turns white on hover */
+}
+
 
 .dark-theme .bill-tenant-share {
   font-size: 0.8rem;
