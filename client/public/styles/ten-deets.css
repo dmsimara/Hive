@@ -14,6 +14,23 @@
     --background-color: rgb(245, 245, 245);
 }
 
+.dark-theme {
+    --background-color: #2A1617;  
+    --text-color: #FCFAC3;   
+    --brownish-yellow: #FF9E00;   
+    --brown: #995F00; 
+    --red: #D20000;
+    --d-yellow: #FAB020;
+    --white: #fff;
+    --dark-brown: #331800;
+    --light-brown: #654321;
+    --dark-grey: #0c0807;
+    --dimgray: #696969;
+    --reddish-brown: #DB6D5E;
+    --red-brown: #4B2B2D;
+    --redy-brown: #4F2124;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -36,6 +53,15 @@ html {
     gap: 20px;
 }
 
+.dark-theme .dashboard-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--background-color);
+    overflow: auto;
+    gap: 20px;
+}
+
 .sidebar {
     position: sticky;
     top: 0;
@@ -52,8 +78,34 @@ html {
     overflow-y: auto;
 }
 
+.dark-theme .sidebar {
+    position: sticky;
+    top: 0;
+    background-color: var(--background-color);
+    width: 300px;
+    min-width: 300px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transition: all .25s ease-in-out;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    height: 100vh;
+    overflow-y: auto;
+}
+
 .sidebar-card {
     background-color: #FFFFFF;
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.dark-theme .sidebar-card {
+    background-color: var(--red-brown);
     border-radius: 15px;
     padding: 15px;
     display: flex;
@@ -92,6 +144,18 @@ html {
     transition: all 0.3s ease;
 }
 
+.dark-theme .sidebar-item {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    color: white !important;
+    font-size: 1em;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
 .sidebar-item:hover {
     background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
 }
@@ -99,6 +163,14 @@ html {
 .sidebar-item a {
     text-decoration: none;
     color: var(--dark-gray);
+    font-size: 18px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.dark-theme .sidebar-item a {
+    text-decoration: none;
+    color: var(--white);
     font-size: 18px;
     font-weight: 500;
     transition: color 0.3s ease;
@@ -124,6 +196,11 @@ html {
 .sidebar p {
     font-size: 0.9em;
     color: #666;
+}
+
+.dark-theme .sidebar p {
+    font-size: 0.9em;
+    color: white;
 }
 
 
@@ -155,6 +232,18 @@ html {
     transition: color 0.3s ease;
 }
 
+.dark-theme .logout-button {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--white);
+    font-weight: 600;
+    font-size: 1em;
+    padding: 10px;
+    border-radius: 8px;
+    transition: color 0.3s ease;
+}
+
 .logout-button:hover {
     background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
     color: white;
@@ -163,6 +252,11 @@ html {
 .logout-button i {
     margin-right: 10px;
     color: #A22F05;
+}
+
+.dark-theme .logout-button i {
+    margin-right: 10px;
+    color: white;
 }
 
 .logout-button:hover i {
@@ -278,6 +372,12 @@ main::-webkit-scrollbar-track:hover {
     font-size: 1.5em;
 }
 
+.dark-theme .tenants-title {
+    margin: 0;
+    font-size: 1.5em;
+    color: var(--white);
+}
+
 .edit-info-btn {
     background: white;
     color: var(--dark-gray);
@@ -319,7 +419,23 @@ main::-webkit-scrollbar-track:hover {
 }
 
 .tenant-card.tenants-template {
-    background: linear-gradient(to bottom, rgba(10, 10, 10, 0.8) 0%, rgba(255, 127, 50, 1) 100%);
+    background: linear-gradient(to bottom, var(--gray), var(--maroon), var(--orange));
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    align-items: center;
+    gap: 15px;
+    width: 260px;
+    text-align: center;
+    transition: transform 0.3s ease, background 0.5s ease, color 0.3s ease;
+    position: relative; 
+    padding-top: 60px;
+}
+
+.tenant-card.tenants-template {
+    background: linear-gradient(to bottom,var(--gray), var(--maroon), var(--orange));
     color: white;
     padding: 30px;
     border-radius: 15px;
@@ -395,6 +511,18 @@ main::-webkit-scrollbar-track:hover {
     overflow: visible;  
 }
 
+.dark-theme .penalty-wrapper {
+    max-width: 200px;
+    background: var(--red-brown);
+    border-radius: 20px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    position: relative; 
+    padding-top: 50px; 
+    margin-top: 18px;
+    text-align: center; 
+    overflow: visible;  
+}
+
 .penalty-wrapper .material-icons {
     position: absolute;
     top: -5%;  
@@ -402,6 +530,16 @@ main::-webkit-scrollbar-track:hover {
     transform: translateX(-50%);  
     font-size: 5em;  
     color: var(--dark-gray);  
+    z-index: 2; 
+}
+
+.dark-theme .penalty-wrapper .material-icons {
+    position: absolute;
+    top: -5%;  
+    left: 50%;  
+    transform: translateX(-50%);  
+    font-size: 5em;  
+    color: #B32C1A;  
     z-index: 2; 
 }
 
@@ -415,9 +553,27 @@ main::-webkit-scrollbar-track:hover {
     padding-left: 10px;
 }
 
+.dark-theme .penalty-title {
+    margin-top: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--white);
+    text-align: left; 
+    width: 100%; 
+    padding-left: 10px;
+}
+
 
 .penalty-container, .keycard-container {
     background-color: #F5F5F5;  
+    padding: 30px;
+    border-radius: 5px;
+    width: 100%;  
+    margin-bottom: -18px;
+}
+
+.dark-theme .penalty-container, .keycard-container {
+    background-color: var(--background-color) ;  
     padding: 30px;
     border-radius: 5px;
     width: 100%;  
@@ -448,6 +604,21 @@ main::-webkit-scrollbar-track:hover {
     box-sizing: border-box;
 }
 
+.dark-theme .tenants-info {
+    background-color: var(--background-color);
+    border: 3px solid var(--reddish-brown);
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    font-size: 0.9em;
+    max-width: 1000px;
+    margin-bottom: 20px;
+    height: auto;
+    box-sizing: border-box;
+    color: var(--white);
+}
+
 .tenant-info-cards {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -465,6 +636,20 @@ main::-webkit-scrollbar-track:hover {
     padding: 15px;
     border-radius: 10px;
     border: 1px solid #ddd;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.dark-theme .tenant-info-card {
+    display: flex;
+    gap: 20px;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    flex: 1;
+    background-color: var(--red-brown);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid var(--reddish-brown);
     justify-content: flex-start;
     align-items: center;
 }
@@ -540,8 +725,32 @@ main::-webkit-scrollbar-track:hover {
     gap: 20px;
 }
 
+.dark-theme .room-number-card {
+    background-color: var(--red-brown);
+    color: #6F4F27;
+    padding: 30px;
+    padding-top: 50px;
+    border-radius: 10px;
+    text-align: center;
+    width: 400px;
+    height: 800px;
+    margin: 0 auto;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 14px 100px rgba(0, 0, 0, 0.1);
+    display: flex;  
+    flex-direction: column;  
+    align-items: center; 
+    justify-content: flex-start;  
+    gap: 20px;
+}
+
 .room-number-card:hover {
     background-color: #f0f0f0;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.dark-theme .room-number-card:hover {
+    background-color: var(--redy-brown);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
@@ -559,6 +768,26 @@ main::-webkit-scrollbar-track:hover {
     margin: 0 auto;
     box-shadow:
         0 0 0 10px white,  
+        0 0 0 20px var(--maroon),  
+        0 8px 20px rgba(0, 0, 0, 0.6);
+    text-align: center; 
+    margin-top: 15px;
+}
+
+.dark-theme .circle {
+    position: relative;
+    background-color: #2a1617;  
+    color: white; 
+    border-radius: 50%;
+    width: 200px;  
+    height: 200px;
+    display: flex;
+    flex-direction: column;  
+    align-items: center;  
+    justify-content: center;  
+    margin: 0 auto;
+    box-shadow:
+        0 0 0 10px var(--red-brown),  
         0 0 0 20px var(--maroon),  
         0 8px 20px rgba(0, 0, 0, 0.6);
     text-align: center; 
@@ -584,6 +813,7 @@ main::-webkit-scrollbar-track:hover {
     margin-top: 5px; 
 }
 
+
 .room-status-wrapper {
     display: flex; 
     align-items: center;  
@@ -605,6 +835,13 @@ main::-webkit-scrollbar-track:hover {
     flex-direction: column; 
     justify-content: flex-start; 
     color: #333;  
+}
+
+.dark-theme .room-status-text {
+    display: flex;  
+    flex-direction: column; 
+    justify-content: flex-start; 
+    color: white;  
 }
 
 .room-status-text p {
@@ -664,11 +901,26 @@ main::-webkit-scrollbar-track:hover {
     align-items: center;
     justify-content: flex-start; 
     gap: 10px;
+    
 }
 
 .first-row .row-container {
     margin-right: 20px;
     margin-top: 20px;
+}
+
+.dark-theme .first-row .row-container {
+    margin-right: 20px;
+    margin-top: 20px;
+    color: white;
+}
+
+.dark-theme .second-row .row-container {
+    color: white;
+}
+
+.dark-theme .third-row .row-container {
+    color: white;
 }
 
 .end-row {
@@ -710,3 +962,11 @@ main::-webkit-scrollbar-track:hover {
     margin: 0;
     line-height: 1.2;
 }
+
+.dark-theme .header h1{
+color: var(--white);
+}
+
+.dark-theme .header h2{
+    color: var(--reddish-brown);
+    }
