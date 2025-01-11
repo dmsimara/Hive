@@ -14,6 +14,23 @@
     --background-color: rgb(245, 245, 245);
 }
 
+.dark-theme {
+  --background-color: #2A1617;  
+  --text-color: #FCFAC3;   
+  --brownish-yellow: #FF9E00;   
+  --brown: #995F00; 
+  --red: #D20000;
+  --d-yellow: #FAB020;
+  --white: #fff;
+  --dark-brown: #331800;
+  --light-brown: #654321;
+  --dark-grey: #0c0807;
+  --dimgray: #696969;
+  --reddish-brown: #DB6D5E;
+  --red-brown: #4B2B2D;
+  --redy-brown: #4F2124;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -33,6 +50,15 @@ body, html {
     background-color: #F9F9F9;
     overflow: auto;
     gap: 20px;
+}
+
+.dark-theme .dashboard-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--background-color);
+  overflow: auto;
+  gap: 20px;
 }
 
 main::-webkit-scrollbar {
@@ -74,6 +100,22 @@ main::-webkit-scrollbar-track:hover {
     overflow-y: auto; 
 }
 
+.dark-theme .sidebar {
+  position: sticky;
+  top: 0; 
+  background-color: var(--background-color);
+  width: 300px;
+  min-width: 300px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  transition: all .25s ease-in-out;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  height: 100vh;
+  overflow-y: auto; 
+}
+
 .sidebar-card {
     background-color: #FFFFFF;
     border-radius: 15px;
@@ -82,6 +124,16 @@ main::-webkit-scrollbar-track:hover {
     flex-direction: column;
     height: 100%;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.dark-theme .sidebar-card {
+  background-color: var(--red-brown);
+  border-radius: 15px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
 
@@ -126,6 +178,14 @@ main::-webkit-scrollbar-track:hover {
     transition: color 0.3s ease;
 }
 
+.dark-theme .sidebar-item a {
+  text-decoration: none;
+  color: var(--white);
+  font-size: 18px;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
 .sidebar-item:hover a {
     color: white;
 }
@@ -133,6 +193,11 @@ main::-webkit-scrollbar-track:hover {
 .sidebar-item i {
     margin-right: 10px;
     color: #333;
+}
+
+.dark-theme .sidebar-item i {
+  margin-right: 10px;
+  color: white;
 }
 
 .sidebar-item.active {
@@ -151,6 +216,11 @@ main::-webkit-scrollbar-track:hover {
 .sidebar p {
     font-size: 0.9em;
     color: #666;
+}
+
+.dark-theme .sidebar p {
+  font-size: 0.9em;
+  color: white;
 }
 
 
@@ -182,6 +252,18 @@ main::-webkit-scrollbar-track:hover {
     transition: color 0.3s ease;
 }
 
+.dark-theme .logout-button {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--white);
+  font-weight: 600;
+  font-size: 1em;
+  padding: 10px;
+  border-radius: 8px;
+  transition: color 0.3s ease;
+}
+
 .logout-button:hover {
     background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
     color: white; 
@@ -190,6 +272,11 @@ main::-webkit-scrollbar-track:hover {
 .logout-button i {
     margin-right: 10px;
     color: #A22F05;
+}
+
+.dark-theme .logout-button i {
+  margin-right: 10px;
+  color: white;
 }
 
 .logout-button:hover i {
@@ -234,16 +321,29 @@ main {
  
  .welcome-text {
    font-size: 1.2rem;
-   color: #555; /* Muted color for a secondary focus */
+   color: #555; 
    margin: 0;
  }
+
+ .dark-theme .welcome-text {
+  font-size: 1.2rem;
+  color: white; 
+  margin: 0;
+}
 
  .dashboard-title {
    font-size: 2rem;
    font-weight: bold;
-   color: #333; /* Stronger emphasis color */
-   margin: 0.2rem 0 0 0; /* Adds slight spacing */
+   color: #333; 
+   margin: 0.2rem 0 0 0; 
  }
+
+ .dark-theme .dashboard-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--reddish-brown); 
+  margin: 0.2rem 0 0 0; 
+}
  
  
  /* Right Section: Date Picker and Notification Icon */
@@ -289,6 +389,15 @@ main {
    border-radius: 8px;
    border: 3px solid #B62B1B; 
  }
+
+ .dark-theme .utilities-section {
+  width: 65%;
+  background: var(--background-color);
+  padding: 20px;
+  border-radius: 8px;
+  border: 3px solid var(--reddish-brown);
+  color: var(--white); 
+}
  
  
  /* Right side: Room Balance and Usage */
@@ -363,12 +472,27 @@ main {
    border-radius: 8px;
    text-align: center;
  }
+
+ .dark-theme .usage-summary-card {
+  background: var(--red-brown);
+  border: 1px solid var(--redy-brown);
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  color: var(--white);
+}
  
  
  .usage-summary-card h3 {
    font-size: 1.2rem;
    margin-bottom: 10px;
  }
+
+ .dark-theme .usage-summary-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: var(--white);
+}
  
  
  /* Gradient Circle for Usage */
@@ -400,6 +524,13 @@ main {
    color: #060606;
    cursor: pointer;
  }
+
+.dark-theme .controls i {
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+}
+
  /* Utilities Bills Section */
  .bills {
    display: flex;
@@ -418,6 +549,12 @@ main {
   border: 1px solid #6F4F37; 
 }
 
+.dark-theme .bill {
+  background: var(--red-brown);
+  border-radius: 8px;
+  border: 1px solid #6F4F37; 
+}
+
 .bill-amount, .shared-amount {
   font-size: 1rem;
   font-weight: bold;
@@ -425,11 +562,19 @@ main {
   align-self: center; 
 }
  
+.dark-theme .bill-amount, .shared-amount {
+  color: white;
+}
  
  .bill i {
    font-size: 1.5rem;
    color: #FF6B45;
  }
+
+ .dark-theme .bill i {
+  font-size: 1.5rem;
+  color: var(--brownish-yellow);
+}
  
  
  .bill-title {
@@ -439,6 +584,10 @@ main {
    font-weight: 500;
    color: #333;
  }
+
+ .dark-theme .bill-title {
+  color: white;
+}
  
  
  .bill-amount {
@@ -480,6 +629,14 @@ main {
    border-radius: 12px; 
    margin-top: 30px;
  }
+
+ .dark-theme .utilities-history {
+  padding: 20px; 
+  background-color: var(--red-brown); 
+  border-radius: 12px; 
+  margin-top: 30px;
+  border: 2px solid var(--reddish-brown);
+}
  
  
  .utilities-history h2 {
@@ -487,6 +644,12 @@ main {
    margin-bottom: 20px; 
    color: #333; 
  }
+
+ .dark-theme .utilities-history h2 {
+  font-size: 24px; 
+  margin-bottom: 20px; 
+  color: white; 
+}
  
  
  .utilities-history-card {
@@ -500,6 +663,18 @@ main {
    flex-direction: column; 
    gap: 15px; 
  }
+
+ .dark-theme .utilities-history-card {
+  background: #F6F6E6; 
+  border: 2px solid #dddddd00; 
+  border-radius: 12px; 
+  padding: 20px; 
+  box-shadow: 0 4px 12px rgba(255, 249, 249, 0.1); 
+  margin-top: 20px; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 15px; 
+}
  
  
  /* Table styles */
@@ -520,6 +695,12 @@ main {
    background-color: #f9f9f9; 
    font-weight: bold; 
  }
+
+ .dark-theme th {
+  background-color: var(--red-brown); 
+  font-weight: bold; 
+  color: var(--white);
+}
  
  
  td {
@@ -654,10 +835,23 @@ main {
   margin: 2px 0 0 0; 
 }
 
+.dark-theme .bill-dates p {
+  font-size: 0.8rem;
+  color: white;
+  margin: 2px 0 0 0; 
+}
+
 /* Style for the tenant share below the bill amount, aligning it to the right */
 .bill-tenant-share {
   font-size: 0.8rem;
   color: #666;
+  margin: 2px 0 0 0;
+  align-self: flex-end; 
+}
+
+.dark-theme .bill-tenant-share {
+  font-size: 0.8rem;
+  color: white;
   margin: 2px 0 0 0;
   align-self: flex-end; 
 }
