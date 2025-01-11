@@ -35,27 +35,27 @@
                         <span>Announcement</span>
                     </a>
                 </li>
-                 </li>
+                </li>
                 <li class="sidebar-item">
                     <a href="/tenant/visitors" class="sidebar-link">
                         <i class="fas fa-clipboard-check"></i>
                         <span>Visitors</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
+                <li class="sidebar-item active">
                     <a href="/tenant/maintenance" class="sidebar-link">
                         <i class="fas fa-tools"></i>
                         <span>Maintenance</span>
-                
+
                 </li>
             </ul>
             </li>
-                <li class="sidebar-item active">
-                    <a href="/tenant/settings" class="sidebar-link">
-                        <i class="fa-solid fa-gear"></i>
-                        <span>Settings</span>
-                    </a>
-                </li>
+            <li class="sidebar-item">
+                <a href="/tenant/settings" class="sidebar-link">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
             <div class="sidebar-footer">
                 <a href="#" id="logoutButton" class="logout-button sidebar-link">
                     <i class="fas fa-sign-out-alt"></i>
@@ -65,73 +65,27 @@
         </div>
     </aside>
 
-   <main class="main-content">
+    <main class="main-content">
         <header class="dashboard-header">
             <div class="header-left">
-                <h3>Welcome to Hive</h3>
-                <h1 class="dashboard-title">Account Settings</h1> 
+                <h3 class="welcome-text">Welcome to Hive</h3>
+                <h1 class="dashboard-title">Maintenance</h1>
             </div>
         </header>
-
-
-    
-        <!-- New Card Section Styled Like Sidebar -->
-        <div class="white-card">
-            <ul class="card-nav">
-                <li class="card-item">
-                    <a href="/tenant/customize" class="card-link">
-                        <i class="fas fa-moon"></i>
-                        <span>Customize</span>
-                    </a>
-                </li>
-                <li class="card-item">
-                    <a href="/tenant/feedback" class="card-link">
-                        <i class="fas fa-comment"></i>
-                        <span>Feedback and Support</span>
-                    </a>
-                </li>
-                <li class="card-item">
-                    <a href="/tenant/reset-password" class="card-link">
-                        <i class="fas fa-lock"></i>
-                        <span>Password Reset</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
-
- <!-- Content sections -->
-        <div id="customizeContent" class="content-section hidden">Customize Content</div>
-        <div id="feedbackContent" class="content-section hidden">Feedback and Support Content</div>
-        <div id="passwordResetContent" class="content-section hidden">Password Reset Content</div>
     </main>
 </div>
 
-   <!--
-<main>
-    <div class="pageContainer">
-        <div class="toggle-btn" id="btn">
-            <span id="btnText">Dark</span>
-            <i class="material-icons" id="btnIcon">dark_mode</i>
-        </div>
-        <p>Toggle dark mode settings here. Click the button to switch modes.</p>
-    </div>
-</main>
--->
-
-
-<script src="/js/tenantSettings.js"></script>
+<script src="/js/tenantMaintenance.js"></script>
 <script>
-    window.onload = function() {
-    const theme = localStorage.getItem('theme');
+    window.onload = function () {
+        const theme = localStorage.getItem('theme');
 
-    const logo = document.getElementById('logo');
+        const logo = document.getElementById('logo');
 
-    if (theme === 'dark') {
-        logo.src = '/images/hiveDark.png';
-    } else {
-        logo.src = '/images/hiveLight.png';
-    }
-};
+        if (theme === 'dark') {
+            logo.src = '/images/hiveDark.png';
+        } else {
+            logo.src = '/images/hiveLight.png';
+        }
+    };
 </script>

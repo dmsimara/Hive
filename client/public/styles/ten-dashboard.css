@@ -133,15 +133,16 @@ html {
 }
 
 .sidebar-item {
-    list-style-type: none;
+    list-style-type: none; 
     display: flex;
     align-items: center;
     color: #333;
     font-size: 1em;
     padding: 10px;
-    border-radius: 8px;
+    border-radius: 8px; 
     cursor: pointer;
     transition: all 0.3s ease;
+    margin-bottom: 5px;
 }
 
 .dark-theme .sidebar-item {
@@ -360,7 +361,8 @@ html {
 }
 
 .room-number {
-    font-weight: 800;
+    font-weight: 900;
+    font-size: 100px;
 }
 
 .room-header {
@@ -370,7 +372,6 @@ html {
     color: white;
     margin-top: 30px;
     margin-bottom: 20px;
-
 }
 
 .room-header h1 {
@@ -380,6 +381,8 @@ html {
 
 .room-header .room-greeting {
     font-size: 1.3em;
+    margin-top: 40px;
+    margin-bottom: -5px;
 }
 
 .utilities-overview {

@@ -31,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+<<<<<<< HEAD
 document.addEventListener("DOMContentLoaded", function () {
     const datePicker = document.getElementById("datePicker");
     const today = new Date();
@@ -59,3 +60,5 @@ function toggleContent(contentId) {
     });
     document.getElementById(contentId).classList.remove("hidden");
 }
+=======
+>>>>>>> 7edcfb35ddc5575f3e4ed8263804cbf85938b823
