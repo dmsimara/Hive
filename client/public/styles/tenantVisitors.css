@@ -14,6 +14,23 @@
     --background-color: rgb(245, 245, 245);
 }
 
+.dark-theme {
+    --background-color: #2A1617;  
+    --text-color: #FCFAC3;   
+    --brownish-yellow: #FF9E00;   
+    --brown: #995F00; 
+    --red: #D20000;
+    --d-yellow: #FAB020;
+    --white: #fff;
+    --dark-brown: #331800;
+    --light-brown: #654321;
+    --dark-grey: #0c0807;
+    --dimgray: #696969;
+    --reddish-brown: #DB6D5E;
+    --red-brown: #4B2B2D;
+    --redy-brown: #4F2124;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -196,9 +213,151 @@ html {
     background: #e1e1e1; 
 }
 
+/* main content styles */
+
 .main-content {
     flex: 1;
     padding: 30px;
     margin-left: 20px;
     transition: all 0.35s ease-in-out;
 }
+
+.header-left h3 {
+    font-size: 1.2em;
+    color: #888;
+}
+
+.header-left h1 {
+    font-size: 2.5em;
+    margin-top: 5px;
+}
+
+.upper-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+
+.upper-container .form {
+    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
+    color: white;
+    padding: 15px;
+    border-radius: 15px;
+    display: grid;
+    align-items: center;
+    text-align: center;
+    max-height: 150px; 
+    max-width: 200px;
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+
+.btn-sm.add-btn{
+background: var(--red-brown);
+color: white;
+border: 2px solid var(--red-brown);
+
+}
+
+.analytics-container {
+    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
+    color: white;
+    padding: 15px;
+    border-radius: 15px;
+    display: flex; 
+    gap: 20px; 
+    align-items: center; 
+    justify-content: space-around; 
+    overflow-x: auto; 
+    margin-left: 20px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    max-height: 150px;
+}
+
+.analytics-card {
+    background: #F6F6E6;
+    color: #000000;
+    padding: 20px;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative; /* To allow absolute positioning for the icon */
+    height: 150px; /* Adjust height to fit content */
+    width: 200px; /* Adjust width as needed */
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.analytics-card h3 {
+    text-align: center;
+    margin-bottom: 10px; /* Space between the heading and the paragraph */
+    font-size: 1.2em;
+}
+
+.analytics-card p {
+    text-align: center;
+    margin-top: 0;
+    font-size: 1em;
+}
+
+.material-icons {
+    position: absolute;
+    top: 10px;
+    right: 10px; 
+    font-size: 20px; 
+    color: #000000; 
+}
+
+.middle-container{
+    border-radius: 10px;  
+    border: 2px solid var(--maroon); 
+    margin-bottom: 20px;
+    margin-top: 10px;
+    padding: 15px;
+
+}
+
+.bottom-container{
+    border-radius: 10px;  
+    border: 2px solid var(--maroon); 
+    margin-bottom: 20px;
+    padding: 15px;
+}
+
+.table-dark {
+    background-color: #FF7F42;
+    color: white; 
+}
+
+.table-dark th {
+    background-color: #FF7F42;
+    color: white; 
+}
+
+
+.table-bordered {
+    border-collapse: collapse; 
+}
+
+.table-bordered th,
+.table-bordered td {
+    border-top: 0; 
+    border-bottom: 0; 
+}
+
+.table-bordered tr {
+    border-left: 1px solid #dddddd00; 
+    border-right: 1px solid #dddddd00; 
+    border-top: 1px solid #dddddd00;
+}
+
+.table-bordered th {
+    border-collapse: collapse; 
+    border-bottom: 1px solid #dddddd00;
+}
+
