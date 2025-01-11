@@ -41,3 +41,21 @@ document.addEventListener("DOMContentLoaded", function () {
     datePicker.value = `${yyyy}-${mm}-${dd}`;
 });
 
+document.getElementById("customizeButton").addEventListener("click", function () {
+    toggleContent("customizeContent");
+});
+
+document.getElementById("feedbackButton").addEventListener("click", function () {
+    toggleContent("feedbackContent");
+});
+
+document.getElementById("passwordResetButton").addEventListener("click", function () {
+    toggleContent("passwordResetContent");
+});
+
+function toggleContent(contentId) {
+    document.querySelectorAll(".content-section").forEach(function (section) {
+        section.classList.add("hidden");
+    });
+    document.getElementById(contentId).classList.remove("hidden");
+}
