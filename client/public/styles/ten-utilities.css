@@ -164,11 +164,16 @@ main::-webkit-scrollbar-track:hover {
     border-radius: 8px; 
     cursor: pointer;
     transition: all 0.3s ease;
+    margin-bottom: 5px;
 }
 
 .sidebar-item:hover {
     background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
+    background-size: 100% 50%; /* This reduces the size of the gradient's height */
+    background-position: center; /* Ensures the gradient is centered */
+    transition: background-size 0.3s ease; /* Smooth transition for the background size */
 }
+
 
 .sidebar-item a {
     text-decoration: none;
