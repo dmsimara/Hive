@@ -142,6 +142,7 @@ html {
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
+     margin-bottom: 5px;
 }
 
 .dark-theme .sidebar-item {
@@ -309,35 +310,6 @@ main::-webkit-scrollbar-track:hover {
     align-items: center;
     margin-bottom: 20px;
 }
-
-
-/* styling calendar */
-.header-right input.date-picker {
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 10px;
-    font-family: 'Inter', sans-serif;
-    font-size: 1em;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s ease, border-color 0.3s ease;
-    
-}
-
-
-.header-right input.date-picker:hover {
-    border-color: #FF7F32;
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-   
-}
-
-.header-right input.date-picker:focus {
-    outline: none;
-    border-color: #FF7F32;
-    box-shadow: 0 6px 12px rgba(255, 127, 50, 0.4);
-    
-}
-
-
 
 /* Room Overview */
 .room-overview {
