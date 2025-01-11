@@ -75,7 +75,7 @@ html {
     transition: all .25s ease-in-out;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     height: 100vh;
-    overflow-y: auto;
+    overflow-y: hidden;
 }
 
 .dark-theme .sidebar {
@@ -91,7 +91,7 @@ html {
     transition: all .25s ease-in-out;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     height: 100vh;
-    overflow-y: auto;
+    overflow-y: hidden;
 }
 
 .sidebar-card {
@@ -144,7 +144,7 @@ html {
     transition: all 0.3s ease;
 }
 
-.sidebar-item {
+.dark-theme .sidebar-item {
     list-style-type: none;
     display: flex;
     align-items: center;
@@ -292,16 +292,11 @@ main::-webkit-scrollbar-track:hover {
 
 
 
-.container {
-    display: grid;
-    grid-template-columns: 250px 1fr;
-    gap: 0;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100vh;
-    box-sizing: border-box;
-    background-color: #F5F5F5;
+.main-content {
+    flex: 1;
+    padding: 30px;
+    margin-left: 20px;
+    transition: all 0.35s ease-in-out;
 }
 
 .announcement-header {
@@ -424,48 +419,6 @@ main::-webkit-scrollbar-track:hover {
     overflow-x: hidden;
     max-height: calc(100vh - 350px);
     padding-right: 10px;
-}
-
-.main-content {
-    flex: 1;
-    padding: 30px;
-    margin-left: 20px;
-    transition: all 0.35s ease-in-out;
-}
-
-.sidebar {
-    background-color: #F4F4F4;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    height: 100%;
-    width: 100%;
-    max-width: 250px;
-}
-
-.sidebar-card {
-    background-color: #FFFFFF;
-    border-radius: 15px;
-    margin: 15px;
-    padding: 15px;
-    flex-grow: 1;
-    height: 90;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-
-}
-
-.logo {
-    margin-bottom: -15px;
-    margin-top: -30px;
-}
-
-.sidebar p {
-    font-size: 0.9em;
-    color: #666;
-    line-height: 1.8;
 }
 
 .menu-title {

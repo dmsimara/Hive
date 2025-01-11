@@ -28,14 +28,14 @@
                         <i class="fas fa-lightbulb"></i>
                         <span>Utilities and Bills</span>
                     </a>
-               
+
                 <li class="sidebar-item">
                     <a href="/tenant/announcement" class="sidebar-link">
                         <i class="fas fa-bullhorn"></i>
                         <span>Announcement</span>
                     </a>
                 </li>
-                 </li>
+                </li>
                 <li class="sidebar-item active">
                     <a href="/tenant/visitors" class="sidebar-link">
                         <i class="fas fa-clipboard-check"></i>
@@ -50,12 +50,12 @@
                 </li>
             </ul>
             </li>
-                <li class="sidebar-item">
-                    <a href="/tenant/settings" class="sidebar-link">
-                        <i class="fa-solid fa-gear"></i>
-                        <span>Settings</span>
-                    </a>
-                </li>
+            <li class="sidebar-item">
+                <a href="/tenant/settings" class="sidebar-link">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
             <div class="sidebar-footer">
                 <a href="#" id="logoutButton" class="logout-button sidebar-link">
                     <i class="fas fa-sign-out-alt"></i>
@@ -64,19 +64,229 @@
             </div>
         </div>
     </aside>
+
+    <main class="main-content">
+        <header class="dashboard-header">
+            <div class="header-left">
+                <h3 class="welcome-text">Welcome to Hive</h3>
+                <h1 class="dashboard-title">Visitor Log</h1>
+            </div>
+        </header>
+
+        <div class="upper-container">
+            <div class="form">
+                <h4>Visitor Form</h4>
+                <a href="#" data-bs-toggle="modal" data-bs-target="#addVisitorModal"
+                    class="btn btn-light btn-sm add-btn">
+                    <i class="fa-solid fa-user-plus"></i>Who's Visiting?
+                </a>
+            </div>
+            <div class="analytics-container">
+                <h4>VISITOR</br>Log Tab</h4>
+                <p>View a detailed log of all visitors</p>
+                <i class="fa-sharp fa-solid fa-user-group"></i>
+                <div class="analytics-card">
+                    <i class="material-icons middle-open">open_in_new</i>
+                    <h3>01</h3>
+                    <p>Visitor Pre Approval</p>
+                </div>
+                <div class="analytics-card">
+                    <i class="material-icons middle-open">open_in_new</i>
+                    <h3>01</h3>
+                    <p>Approved Visitors</p>
+                </div>
+                <div class="analytics-card">
+                    <i class="material-icons middle-open">open_in_new</i>
+                    <h3>0</h3>
+                    <p>Rejected Visitors</p>
+                </div>
+                <div class="analytics-card">
+                    <i class="material-icons middle-open">open_in_new</i>
+                    <h3>0</h3>
+                    <p>Restricted</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="middle-container">
+            <h3>VISITORS LOG HISTORY |</h3>
+            <span>Regular Visit</span>
+            <div class="search-bar">
+                <input class="form-control form-control-sm me-2 search" type="search" id="search" placeholder="Search"
+                    name="search" aria-label="Search" autocomplete="off" required value="{{lastSearchTerm}}">
+                <span class="search-icon">
+                    <i class="material-icons">search</i>
+                </span>
+            </div>
+
+            <div class="table-container table-responsive" style="max-height: 400px; overflow-y: auto;">
+                <table class="table table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">Visitor Name</th>
+                            <th scope="col">Visitor's Affiliation</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Check In</th>
+                            <th scope="col">Check Out</th>
+                            <th scope="col">Contact No.</th>
+                            <th scope="col" class="text-end">Purpose of Visit</th>
+                        </tr>
+                    </thead>
+                    <tbody id="results">
+                        <tr>
+                            <td>Jedia Sagun</td>
+                            <td>Classmate</td>
+                            <td>01/05/2024</td>
+                            <td>9:00 AM</td>
+                            <td>3:00 PM</td>
+                            <td>09123456789</td>
+                            <td>Group Project</td>
+                        </tr>
+                        <tr>
+                            <td>Alliah Kais</td>
+                            <td>Friend</td>
+                            <td>01/03/2024</td>
+                            <td>7:00 AM</td>
+                            <td>10:00 PM</td>
+                            <td>09123456789</td>
+                            <td>Friend Visit</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="bottom-container">
+            <h3>VISITORS LOG HISTORY |</h3>
+            <span>Overnight Visit</span>
+            <div class="search-bar">
+                <input class="form-control form-control-sm me-2 search" type="search" id="search" placeholder="Search"
+                    name="search" aria-label="Search" autocomplete="off" required value="{{lastSearchTerm}}">
+                <span class="search-icon">
+                    <i class="material-icons">search</i>
+                </span>
+            </div>
+
+            <div class="table-container table-responsive" style="max-height: 400px; overflow-y: auto;">
+                <table class="table table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">Visitor/s Name</th>
+                            <th scope="col">Date and Time of Check In</th>
+                            <th scope="col">Date and Time of Check Out</th>
+                            <th scope="col">Contact No.</th>
+                            <th scope="col">Purpose of Visit</th>
+                            <th scope="col" class="text-end">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="results">
+                        <tr>
+                            <td>Jedia Sagun</td>
+                            <td>12/31/2024 | 3:00 PM</td>
+                            <td>01/01/25 | 9:00 AM</td>
+                            <td>09123456789</td>
+                            <td>Group Project</td>
+                            <td>Approved</td>
+                        </tr>
+                        <tr>
+                            <td>Alliah Kais</td>
+                            <td>12/20/2024 | 3:00 PM</td>
+                            <td>12/21/25 | 10:00 AM</td>
+                            <td>09123456789</td>
+                            <td>Friend Visit</td>
+                            <td>Rejected</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal fade" id="addVisitorModal" tabindex="-1" aria-labelledby="addVisitorModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addVisitorModalLabel">Add Visitor</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <a href="#">
+                        <button type="button" class="btn btn-primary regular">Regular Visit</button>
+                    </a>
+                    <a href="#">
+                        <button type="button" class="btn btn-primary overnight">Overnight Visit</button>
+                    </a>
+                    <h1>VISITORS INFO</h1>
+                    <form action="#" method="POST" id="visitorForm"></form>
+                    <input type="hidden" id="establishmentId" name="establishmentId" value="{{establishmentId}}">
+
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="visitorFirstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control form-control-sm" id="visitorFirstName"
+                                name="visitorFirstName" required>
+                        </div>
+                        <div class="col">
+                            <label for="visitorLastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control form-control-sm" id="visitorLastName"
+                                name="visitorLastName" required>
+                        </div>
+                        <div class="col">
+                            <label for="visitorAffiliation" class="form-label">Association with Tenant</label>
+                            <input type="text" class="form-control form-control-sm" id="visitorAffiliation"
+                                name="visitorAffiliation" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="visitDateFrom" class="form-label">Date</label>
+                            <input type="date" class="form-control form-control-sm" id="visitDateFrom"
+                                name="visitDateFrom" required>
+                        </div>
+                        <div class="col">
+                            <label for="checkinTime" class="form-label">Time Check In</label>
+                            <input type="time" class="form-control form-control-sm" id="checkinTime"
+                                name="checkinTime" required>
+                        </div>
+                        <div class="col">
+                            <label for="checkoutTime" class="form-label">Time Check Out</label>
+                            <input type="time" class="form-control form-control-sm" id="checkoutTime"
+                                name="checkoutTime" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="contactInfo" class="form-label">Mobile No.</label>
+                            <input type="number" class="form-control form-control-sm" id="contactInfo"
+                                name="contactInfo" required>
+                        </div>
+                        <div class="col">
+                            <label for="purpose" class="form-label">Purpose of Visit</label>
+                            <input type="text" class="form-control form-control-sm" id="purpose"
+                                name="purpose" required>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-secondary">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="/js/tenantVisitors.js"></script>
 <script>
-    window.onload = function() {
-    const theme = localStorage.getItem('theme');
+    window.onload = function () {
+        const theme = localStorage.getItem('theme');
 
-    const logo = document.getElementById('logo');
+        const logo = document.getElementById('logo');
 
-    if (theme === 'dark') {
-        logo.src = '/images/hiveDark.png';
-    } else {
-        logo.src = '/images/hiveLight.png';
-    }
-};
+        if (theme === 'dark') {
+            logo.src = '/images/hiveDark.png';
+        } else {
+            logo.src = '/images/hiveLight.png';
+        }
+    };
 </script>

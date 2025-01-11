@@ -195,3 +195,10 @@ html {
 .dashboard-container::-webkit-scrollbar-track:hover {
     background: #e1e1e1; 
 }
+
+.main-content {
+    flex: 1;
+    padding: 30px;
+    margin-left: 20px;
+    transition: all 0.35s ease-in-out;
+}
