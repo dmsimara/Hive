@@ -109,8 +109,7 @@
         </div>
 
         <div class="middle-container">
-            <h3>VISITORS LOG HISTORY |</h3>
-            <span>Regular Visit</span>
+             <h3 class="log-header">VISITORS LOG HISTORY | <span>Regular Visit</span></h3>
             <div class="search-bar">
                 <input class="form-control form-control-sm me-2 search" type="search" id="search" placeholder="Search"
                     name="search" aria-label="Search" autocomplete="off" required value="{{lastSearchTerm}}">
@@ -140,7 +139,7 @@
                             <td>9:00 AM</td>
                             <td>3:00 PM</td>
                             <td>09123456789</td>
-                            <td>Group Project</td>
+                            <td class="text-end">Group Project</td>
                         </tr>
                         <tr>
                             <td>Alliah Kais</td>
@@ -149,7 +148,7 @@
                             <td>7:00 AM</td>
                             <td>10:00 PM</td>
                             <td>09123456789</td>
-                            <td>Friend Visit</td>
+                            <td class="text-end">Friend Visit</td>
                         </tr>
                     </tbody>
                 </table>
@@ -157,8 +156,7 @@
         </div>
 
         <div class="bottom-container">
-            <h3>VISITORS LOG HISTORY |</h3>
-            <span>Overnight Visit</span>
+            <h3 class="log-header">VISITORS LOG HISTORY | <span>Overnight Visit</span></h3>
             <div class="search-bar">
                 <input class="form-control form-control-sm me-2 search" type="search" id="search" placeholder="Search"
                     name="search" aria-label="Search" autocomplete="off" required value="{{lastSearchTerm}}">
@@ -186,7 +184,7 @@
                             <td>01/01/25 | 9:00 AM</td>
                             <td>09123456789</td>
                             <td>Group Project</td>
-                            <td>Approved</td>
+                            <td class="text-end">Approved</td>
                         </tr>
                         <tr>
                             <td>Alliah Kais</td>
@@ -194,7 +192,7 @@
                             <td>12/21/25 | 10:00 AM</td>
                             <td>09123456789</td>
                             <td>Friend Visit</td>
-                            <td>Rejected</td>
+                            <td class="text-end">Rejected</td>
                         </tr>
                     </tbody>
                 </table>
@@ -211,12 +209,10 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <a href="#">
-                        <button type="button" class="btn btn-primary regular">Regular Visit</button>
-                    </a>
-                    <a href="#">
-                        <button type="button" class="btn btn-primary overnight">Overnight Visit</button>
-                    </a>
+                    <div class="button-group">
+                            <button class="btn-primary regular">Regular</button>
+                             <button class="btn-primary overnight">Overnight</button>
+                        </div>
                     <h1>VISITORS INFO</h1>
                     <form action="#" method="POST" id="visitorForm">
                         <input type="hidden" id="establishmentId" name="establishmentId" value="{{establishmentId}}">

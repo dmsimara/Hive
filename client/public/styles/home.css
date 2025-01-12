@@ -8,6 +8,23 @@
     --dark-gray: rgb(42, 22, 23);  /* #2A1617 */
 }
 
+.dark-theme {
+    --background-color: #2A1617;  
+    --text-color: #FCFAC3;   
+    --brownish-yellow: #FF9E00;   
+    --brown: #995F00; 
+    --red: #D20000;
+    --d-yellow: #FAB020;
+    --white: #fff;
+    --dark-brown: #331800;
+    --light-brown: #654321;
+    --dark-grey: #0c0807;
+    --dimgray: #696969;
+    --reddish-brown: #DB6D5E;
+    --red-brown: #4B2B2D;
+    --redy-brown: #4F2124;
+}
+
 html, body {
     margin: 0;
     padding: 0;
@@ -20,12 +37,33 @@ html, body {
     flex-direction: column;
 }
 
+.dark-theme html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    font-family: 'Raleway', 'Inter', sans-serif; 
+    background-color: var(--background-color);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
 .content {
     flex: 0 0 70%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.dark-theme .content {
+    flex: 0 0 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--white);
 }
 
 .content .intro {
@@ -41,6 +79,15 @@ html, body {
     font-size: 32px;
     font-weight: 800;
     color: var(--dark-gray);
+    letter-spacing: 2px;
+}
+
+.dark-theme .content h2 {
+    position: absolute;
+    top: 8.4em;
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--white);
     letter-spacing: 2px;
 }
 
