@@ -302,8 +302,8 @@ html {
 }
 
 .analytics-container p {
-    margin-top: 5px; /* Add a small gap above the paragraph */
-    margin-bottom: 10px; /* Optional: control spacing below the paragraph */
+    margin-top: 5px; 
+    margin-bottom: 10px; 
 }
 
 
@@ -316,9 +316,9 @@ html {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    position: relative; /* To allow absolute positioning for the icon */
-    height: 150px; /* Adjust height to fit content */
-    width: 200px; /* Adjust width as needed */
+    position: relative;
+    height: 150px; 
+    width: 200px; 
     margin-top: auto;
     margin-bottom: auto;
 }
@@ -436,4 +436,111 @@ html {
 .table-bordered{
     text-align: center;
 
+}
+
+
+.modal-content {
+    border-radius: 10px;
+    border: 2px solid var(--orange); 
+    
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    gap: 10px; 
+}
+
+.button-group {
+    display: flex; 
+    gap: 10px; 
+}
+
+.btn-primary.regular {
+    background: #F6F6E6;
+    border: 2px solid var(--maroon);
+    color: var(--maroon);
+    border-radius: 15px;
+    padding: 15px;
+    width: 170px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.btn-primary.regular:hover {
+    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
+    color: #F6F6E6;
+}
+
+.btn-primary.overnight {
+    background: #F6F6E6;
+    border: 2px solid var(--maroon);
+    color: var(--maroon);
+    border-radius: 15px;
+    padding: 15px;
+    width: 170px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.btn-primary.overnight:hover {
+    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
+    color: #F6F6E6;
+}
+
+.modal-body h1 {
+    font-size: 2.5em;
+    font-weight: bold;
+    margin: 5px 0;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+form input,
+form select {
+    background-color: #f1f1f1;   
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 14px;
+    color: #333;
+    width: 100%;
+    margin-bottom: 6px;
+    transition: all 0.3s ease;   
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);   
+}
+
+button.btn-primary {
+    background: linear-gradient(to right, var(--orange), var(--maroon), var(--gray));
+    color: white;
+    border: none;
+    padding: 5px 25px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: opacity 0.3s ease;
+}
+
+button.btn-primary:hover {
+    opacity: 0.7;
+}
+
+button.btn-secondary {
+    background: #F6F6E6;
+    color: var(--maroon);
+    border: 1px solid var(--maroon);
+    padding: 5px 25px;
+    font-weight: 600;
+    border-radius: 8px;
+    margin-right: 10px;
+    margin-left: 550px;
+    transition: opacity 0.3s ease;
+}
+
+button.btn-secondary:hover {
+    opacity: 0.7;
+    background: var(--maroon);
+    color: white;
 }
