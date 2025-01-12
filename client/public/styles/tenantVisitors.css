@@ -223,43 +223,62 @@ html {
     transition: all 0.35s ease-in-out;
 }
 
-.header-left h3 {
-    font-size: 1.2em;
-    color: #888;
+.header-left {
+    display: flex;
+    flex-direction: column;
+}
+
+.welcome-text {
+    font-size: 1.2rem;
+    color: #555;
+    margin: 0;
 }
 
 .header-left h1 {
     font-size: 2.5em;
     margin-top: 5px;
+    font-weight: bold;
 }
 
 .upper-container {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
+    margin-top: 20px;
 }
 
 
-.upper-container .form {
+.form {
     background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
     color: white;
-    padding: 15px;
+    padding: 30px;
     border-radius: 15px;
-    display: grid;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
     text-align: center;
-    max-height: 150px; 
-    max-width: 200px;
-    margin-top: 20px;
-    overflow: hidden;
+    height: 180px;
+}
+
+.form h4 {
+    font-weight: 700;
+    margin-bottom: 20px;
 }
 
 
-.btn-sm.add-btn{
-background: var(--red-brown);
-color: white;
-border: 2px solid var(--red-brown);
+.add-btn {
+    background-color: #331800;
+    padding: 10px 30px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: 600;
+    transition: opacity 0.1s ease-in-out;
+}
 
+.add-btn:hover {
+    opacity: 0.8;
 }
 
 .analytics-container {
@@ -270,13 +289,23 @@ border: 2px solid var(--red-brown);
     display: flex; 
     gap: 20px; 
     align-items: center; 
-    justify-content: space-around; 
+    justify-content: center; 
     overflow-x: auto; 
     margin-left: 20px;
     margin-bottom: 20px;
-    margin-top: 20px;
-    max-height: 150px;
+    max-height: 200px;
 }
+
+.analytics-container h4 {
+    font-weight: 700;
+    text-align: center;
+}
+
+.analytics-container p {
+    margin-top: 5px; /* Add a small gap above the paragraph */
+    margin-bottom: 10px; /* Optional: control spacing below the paragraph */
+}
+
 
 .analytics-card {
     background: #F6F6E6;
@@ -296,7 +325,7 @@ border: 2px solid var(--red-brown);
 
 .analytics-card h3 {
     text-align: center;
-    margin-bottom: 10px; /* Space between the heading and the paragraph */
+    margin-bottom: 10px;
     font-size: 1.2em;
 }
 
@@ -362,3 +391,49 @@ border: 2px solid var(--red-brown);
     border-bottom: 1px solid #dddddd00;
 }
 
+.middle-container .log-header,
+.bottom-container .log-header {
+    font-size: 1.5rem; 
+    font-weight: bold;
+    margin: 0 0 10px 0;
+    display: inline; 
+}
+
+.middle-container .log-header span,
+.bottom-container .log-header span {
+    font-size: 1rem; 
+    font-weight: normal; 
+    color: #555; 
+    vertical-align: baseline; 
+}
+
+.search-bar {
+    position: relative;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.search-bar input {
+    border-radius: 15px;
+    padding: 5px 10px 5px 40px;
+    font-size: 14px;
+    width: 250px;
+    height: 35px;
+    border: 1px solid var(--gray);
+    box-sizing: border-box;
+}
+
+.search-bar .search-icon {
+    position: absolute;
+    left: 40px;
+    top: -5%;
+    transform: translateY(-50%);
+    color: var(--dark-gray);
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+.table-bordered{
+    text-align: center;
+
+}
