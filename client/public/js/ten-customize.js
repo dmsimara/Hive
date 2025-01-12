@@ -30,32 +30,3 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
-
-document.addEventListener("DOMContentLoaded", function () {
-    const datePicker = document.getElementById("datePicker");
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, '0'); 
-    const dd = String(today.getDate()).padStart(2, '0');
-    
-    datePicker.value = `${yyyy}-${mm}-${dd}`;
-});
-
-document.getElementById("customizeButton").addEventListener("click", function () {
-    toggleContent("customizeContent");
-});
-
-document.getElementById("feedbackButton").addEventListener("click", function () {
-    toggleContent("feedbackContent");
-});
-
-document.getElementById("passwordResetButton").addEventListener("click", function () {
-    toggleContent("passwordResetContent");
-});
-
-function toggleContent(contentId) {
-    document.querySelectorAll(".content-section").forEach(function (section) {
-        section.classList.add("hidden");
-    });
-    document.getElementById(contentId).classList.remove("hidden");
-}

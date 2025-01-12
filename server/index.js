@@ -700,6 +700,64 @@ app.get("/admin/settings/delete-account/:admin_id", verifyToken, async (req, res
     }
 });
 
+// ADMIN PAGES (VISITORS LOG) ---------------------------------------------------------------------------
+app.get("/admin/visitors/log", verifyToken, async (req, res) => {
+    try {
+        const admin = await viewAdmins(req, res);
+
+        const adminId = admin ? admin.admin_id : null;
+
+        res.render("adminVisitors", {
+            title: "Hive",
+            styles: ["adminVisitors"],
+            admin: admin || {},
+            admin_id: adminId 
+        });
+    } catch (error) {
+        console.error('Error fetching admin:', error);
+        res.status(500).send("An error occurred while retrieving admin data.");
+    }
+});
+
+// ADMIN PAGES (VISITORS PENDING) ---------------------------------------------------------------------------
+app.get("/admin/visitors/pending", verifyToken, async (req, res) => {
+    try {
+        const admin = await viewAdmins(req, res);
+
+        const adminId = admin ? admin.admin_id : null;
+
+        res.render("adminPendings", {
+            title: "Hive",
+            styles: ["adminPendings"],
+            admin: admin || {},
+            admin_id: adminId 
+        });
+    } catch (error) {
+        console.error('Error fetching admin:', error);
+        res.status(500).send("An error occurred while retrieving admin data.");
+    }
+});
+
+// ADMIN PAGES (MAINTENANCE) ---------------------------------------------------------------------------
+app.get("/admin/maintenance", verifyToken, async (req, res) => {
+    try {
+        const admin = await viewAdmins(req, res);
+        const tenantsData = await viewTenants(req);
+
+        const adminId = admin ? admin.admin_id : null;
+
+        res.render("adminMaintenance", {
+            title: "Hive",
+            styles: ["adminMaintenance"],
+            admin: admin || {},
+            admin_id: adminId,
+            tenants: tenantsData || [],
+        });
+    } catch (error) {
+        console.error('Error fetching admin:', error);
+        res.status(500).send("An error occurred while retrieving admin data.");
+    }
+});
 
 // ADMIN PAGES (UTILITIES) ---------------------------------------------------------------------------
 app.get("/admin/utilities", verifyToken, async (req, res) => {
@@ -1406,6 +1464,90 @@ app.get("/tenant/maintenance", verifyTenantToken, setEstablishmentId, async (req
         res.render("tenantMaintenance", {
             title: "Hive",
             styles: ["tenantMaintenance"],
+            tenant: plainTenant,
+        });
+    } catch (error) {
+        console.error("Error fetching tenant visitors data:", error.message);
+        res.status(500).json({ error: "Internal server error." });
+    }
+});
+
+// TENANT PAGES (CUSTOMIZE - SETTINGS) -------------------------------------------------------------------------
+app.get("/tenant/customize", verifyTenantToken, setEstablishmentId, async (req, res) => {
+    const { tenantId, establishmentId } = req;
+
+    try {
+        if (!tenantId || !establishmentId) {
+            return res.status(400).json({ error: "Tenant or establishment ID is missing." });
+        }
+
+        const tenant = await Tenant.findOne({ where: { tenant_id: tenantId, establishmentId } });
+
+        if (!tenant) {
+            return res.status(404).json({ error: "Tenant not found." });
+        }
+
+        const plainTenant = tenant.get({ plain: true });
+
+        res.render("ten-customize", {
+            title: "Hive",
+            styles: ["ten-customize"],
+            tenant: plainTenant,
+        });
+    } catch (error) {
+        console.error("Error fetching tenant visitors data:", error.message);
+        res.status(500).json({ error: "Internal server error." });
+    }
+});
+
+// TENANT PAGES (FEEDBACK - SETTINGS) -------------------------------------------------------------------------
+app.get("/tenant/feedback", verifyTenantToken, setEstablishmentId, async (req, res) => {
+    const { tenantId, establishmentId } = req;
+
+    try {
+        if (!tenantId || !establishmentId) {
+            return res.status(400).json({ error: "Tenant or establishment ID is missing." });
+        }
+
+        const tenant = await Tenant.findOne({ where: { tenant_id: tenantId, establishmentId } });
+
+        if (!tenant) {
+            return res.status(404).json({ error: "Tenant not found." });
+        }
+
+        const plainTenant = tenant.get({ plain: true });
+
+        res.render("ten-feedback", {
+            title: "Hive",
+            styles: ["ten-feedback"],
+            tenant: plainTenant,
+        });
+    } catch (error) {
+        console.error("Error fetching tenant visitors data:", error.message);
+        res.status(500).json({ error: "Internal server error." });
+    }
+});
+
+// TENANT PAGES (RESET PASSWORD - SETTINGS) -------------------------------------------------------------------------
+app.get("/tenant/reset-password", verifyTenantToken, setEstablishmentId, async (req, res) => {
+    const { tenantId, establishmentId } = req;
+
+    try {
+        if (!tenantId || !establishmentId) {
+            return res.status(400).json({ error: "Tenant or establishment ID is missing." });
+        }
+
+        const tenant = await Tenant.findOne({ where: { tenant_id: tenantId, establishmentId } });
+
+        if (!tenant) {
+            return res.status(404).json({ error: "Tenant not found." });
+        }
+
+        const plainTenant = tenant.get({ plain: true });
+
+        res.render("ten-reset-password", {
+            title: "Hive",
+            styles: ["ten-reset-password"],
             tenant: plainTenant,
         });
     } catch (error) {
