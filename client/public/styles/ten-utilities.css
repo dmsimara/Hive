@@ -703,11 +703,11 @@ main {
  }
 
  .dark-theme .utilities-history-card {
-  background: #F6F6E6; 
+  background: var(--red-brown); 
   border: 2px solid #dddddd00; 
   border-radius: 12px; 
   padding: 20px; 
-  box-shadow: 0 4px 12px rgba(255, 249, 249, 0.1); 
+  box-shadow: 0 4px 12px rgba(255, 249, 249, 0); 
   margin-top: 20px; 
   display: flex; 
   flex-direction: column; 
@@ -717,33 +717,44 @@ main {
  
  /* Table styles */
  table {
-   width: 100%; 
-   border-collapse: collapse; 
- }
- 
+  width: 100%; 
+  border-collapse: collapse; 
+  border-spacing: 0; 
+  border-radius: 10px; 
+  overflow: hidden; 
+}
+
  
  th, td {
    padding: 12px; 
    text-align: left; 
-   border-bottom: 1px solid #ddd; 
+   border-bottom: 1px solid #ddd;
+   
  }
  
  /* header bg and font color*/
  th {
    background-color: #f9f9f9; 
    font-weight: bold; 
+   border-collapse: collapse;
  }
 
  .dark-theme th {
-  background-color: var(--red-brown); 
+  background: #942713; 
   font-weight: bold; 
   color: var(--white);
+  
 }
  
  
  td {
    background-color: #fafafa; /* Slight background for table data */
  }
+
+ .dark-theme td {
+  background-color: white;;
+  color: #000000;
+}
  
  /* icon and text spacing and color*/
  i {
