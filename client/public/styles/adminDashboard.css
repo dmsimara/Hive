@@ -147,7 +147,7 @@ body {
 }
 
 .sub-menu-wrap.open-menu {
-    max-height: 400px;
+    max-height: 440px;
 }
 
 .sub-menu {
@@ -260,6 +260,7 @@ body {
 .sub-menu-link:hover p {
     font-weight: 600;
 }
+
 
 .container {
     display: flex;

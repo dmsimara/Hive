@@ -8,6 +8,21 @@
     --dark-gray: rgb(42, 22, 23);  /* #2A1617 */
 }
 
+.dark-theme {
+    --background-color: #2A1617;  
+    --text-color: #FCFAC3;   
+    --brownish-yellow: #FF9E00;   
+    --brown: #995F00; 
+    --red: #D20000;
+    --d-yellow: #FAB020;
+    --white: #fff;
+    --dark-brown: #331800;
+    --light-brown: #654321;
+    --dark-grey: #0c0807;
+    --dimgray: #696969;
+    --reddish-brown: #DB6D5E;
+}
+
 html, body {
     margin: 0;
     padding: 0;
@@ -18,6 +33,10 @@ html, body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
+}
+
+body.dark-theme {
+    background-color: #2A1617;
 }
 
 .content {
@@ -42,6 +61,10 @@ html, body {
     font-weight: 800;
     color: var(--dark-gray);
     letter-spacing: 2px;
+}
+
+.content.dark-theme h2 {
+    color: white;
 }
 
 .logo {

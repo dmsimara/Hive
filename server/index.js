@@ -700,6 +700,64 @@ app.get("/admin/settings/delete-account/:admin_id", verifyToken, async (req, res
     }
 });
 
+// ADMIN PAGES (VISITORS LOG) ---------------------------------------------------------------------------
+app.get("/admin/visitors/log", verifyToken, async (req, res) => {
+    try {
+        const admin = await viewAdmins(req, res);
+
+        const adminId = admin ? admin.admin_id : null;
+
+        res.render("adminVisitors", {
+            title: "Hive",
+            styles: ["adminVisitors"],
+            admin: admin || {},
+            admin_id: adminId 
+        });
+    } catch (error) {
+        console.error('Error fetching admin:', error);
+        res.status(500).send("An error occurred while retrieving admin data.");
+    }
+});
+
+// ADMIN PAGES (VISITORS PENDING) ---------------------------------------------------------------------------
+app.get("/admin/visitors/pending", verifyToken, async (req, res) => {
+    try {
+        const admin = await viewAdmins(req, res);
+
+        const adminId = admin ? admin.admin_id : null;
+
+        res.render("adminPendings", {
+            title: "Hive",
+            styles: ["adminPendings"],
+            admin: admin || {},
+            admin_id: adminId 
+        });
+    } catch (error) {
+        console.error('Error fetching admin:', error);
+        res.status(500).send("An error occurred while retrieving admin data.");
+    }
+});
+
+// ADMIN PAGES (MAINTENANCE) ---------------------------------------------------------------------------
+app.get("/admin/maintenance", verifyToken, async (req, res) => {
+    try {
+        const admin = await viewAdmins(req, res);
+        const tenantsData = await viewTenants(req);
+
+        const adminId = admin ? admin.admin_id : null;
+
+        res.render("adminMaintenance", {
+            title: "Hive",
+            styles: ["adminMaintenance"],
+            admin: admin || {},
+            admin_id: adminId,
+            tenants: tenantsData || [],
+        });
+    } catch (error) {
+        console.error('Error fetching admin:', error);
+        res.status(500).send("An error occurred while retrieving admin data.");
+    }
+});
 
 // ADMIN PAGES (UTILITIES) ---------------------------------------------------------------------------
 app.get("/admin/utilities", verifyToken, async (req, res) => {

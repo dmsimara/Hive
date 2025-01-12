@@ -13,6 +13,21 @@
     /* #2A1617 */
 }
 
+.dark-theme {
+    --background-color: #2A1617;  
+    --text-color: #FCFAC3;   
+    --brownish-yellow: #FF9E00;   
+    --brown: #995F00; 
+    --red: #D20000;
+    --d-yellow: #FAB020;
+    --white: #fff;
+    --dark-brown: #331800;
+    --light-brown: #654321;
+    --dark-grey: #0c0807;
+    --dimgray: #696969;
+    --reddish-brown: #DB6D5E;
+}
+
 html,
 body {
     margin: 0;
@@ -24,6 +39,10 @@ body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
+}
+
+.dark-theme body {
+    background-color: #2A1617;
 }
 
 .row {
