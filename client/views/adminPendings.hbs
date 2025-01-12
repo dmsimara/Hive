@@ -74,20 +74,250 @@
   </div>
 </nav>
 
-<div class="container pt-5 pb-5"></div>
+<div class="container pt-5 pb-5">
+  <h1 class="container-title"><i class="material-icons modal-icon">schedule</i>Pending Requests</h1>
+
+  <div class="row-container">
+    <a href="#" data-bs-toggle="modal" data-bs-target="#deetsModal" aria-label="View Tenant Details">
+      <div class="card mb-3">
+        <div class="card-header">
+          <img
+            src="{{#if tenants.tenantProfile}}/images/upload/{{tenants.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+            alt="Profile" width="40px" class="me-2" />
+          <h5 class="card-title d-inline">Tenant A</h5>
+        </div>
+        <div class="card-body">
+          <p class="preview-word">Preview</p>
+          <div class="preview-container">
+            <div class="preview-info">
+              <p class="title">Name of Visitor</p>
+              <p>Angelica Payne</p>
+            </div>
+            <div class="preview-info">
+              <p class="title">Type of Visit</p>
+              <p>Overnight</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+
+    <a href="#" data-bs-toggle="modal" data-bs-target="#deetsModal" aria-label="View Tenant Details">
+      <div class="card mb-3">
+        <div class="card-header">
+          <img
+            src="{{#if tenants.tenantProfile}}/images/upload/{{tenants.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+            alt="Profile" width="40px" class="me-2" />
+          <h5 class="card-title d-inline">Tenant A</h5>
+        </div>
+        <div class="card-body">
+          <p class="preview-word">Preview</p>
+          <div class="preview-container">
+            <div class="preview-info">
+              <p class="title">Name of Visitor</p>
+              <p>Angelica Payne</p>
+            </div>
+            <div class="preview-info">
+              <p class="title">Type of Visit</p>
+              <p>Overnight</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+
+    <a href="#" data-bs-toggle="modal" data-bs-target="#deetsModal" aria-label="View Tenant Details">
+      <div class="card mb-3">
+        <div class="card-header">
+          <img
+            src="{{#if tenants.tenantProfile}}/images/upload/{{tenants.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+            alt="Profile" width="40px" class="me-2" />
+          <h5 class="card-title d-inline">Tenant A</h5>
+        </div>
+        <div class="card-body">
+          <p class="preview-word">Preview</p>
+          <div class="preview-container">
+            <div class="preview-info">
+              <p class="title">Name of Visitor</p>
+              <p>Angelica Payne</p>
+            </div>
+            <div class="preview-info">
+              <p class="title">Type of Visit</p>
+              <p>Overnight</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+
+    <div class="row-container">
+      <a href="#" data-bs-toggle="modal" data-bs-target="#deetsModal" aria-label="View Tenant Details">
+        <div class="card mb-3">
+          <div class="card-header">
+            <img
+              src="{{#if tenants.tenantProfile}}/images/upload/{{tenants.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+              alt="Profile" width="40px" class="me-2" />
+            <h5 class="card-title d-inline">Tenant A</h5>
+          </div>
+          <div class="card-body">
+            <p class="preview-word">Preview</p>
+            <div class="preview-container">
+              <div class="preview-info">
+                <p class="title">Name of Visitor</p>
+                <p>Angelica Payne</p>
+              </div>
+              <div class="preview-info">
+                <p class="title">Type of Visit</p>
+                <p>Overnight</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" data-bs-toggle="modal" data-bs-target="#deetsModal" aria-label="View Tenant Details">
+        <div class="card mb-3">
+          <div class="card-header">
+            <img
+              src="{{#if tenants.tenantProfile}}/images/upload/{{tenants.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+              alt="Profile" width="40px" class="me-2" />
+            <h5 class="card-title d-inline">Tenant A</h5>
+          </div>
+          <div class="card-body">
+            <p class="preview-word">Preview</p>
+            <div class="preview-container">
+              <div class="preview-info">
+                <p class="title">Name of Visitor</p>
+                <p>Angelica Payne</p>
+              </div>
+              <div class="preview-info">
+                <p class="title">Type of Visit</p>
+                <p>Overnight</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" data-bs-toggle="modal" data-bs-target="#deetsModal" aria-label="View Tenant Details">
+        <div class="card mb-3">
+          <div class="card-header">
+            <img
+              src="{{#if tenants.tenantProfile}}/images/upload/{{tenants.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+              alt="Profile" width="40px" class="me-2" />
+            <h5 class="card-title d-inline">Tenant A</h5>
+          </div>
+          <div class="card-body">
+            <p class="preview-word">Preview</p>
+            <div class="preview-container">
+              <div class="preview-info">
+                <p class="title">Name of Visitor</p>
+                <p>Angelica Payne</p>
+              </div>
+              <div class="preview-info">
+                <p class="title">Type of Visit</p>
+                <p>Overnight</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  {{!-- assign modal --}}
+  <div class="modal fade" id="deetsModal" tabindex="-1" aria-labelledby="deetsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-right">
+      <div class="modal-content custom-height">
+        <div class="modal-top">
+          <h5 class="modal-title" id="assignModalLabel">Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button>
+          <div class="tenant-info">
+            <img
+              src="{{#if tenants.tenantProfile}}/images/upload/{{tenants.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
+              alt="Profile" class="modal-picture" />
+            <h5 class="modal-card-title">Tenant A</h5>
+          </div>
+          <hr class="modal-hr">
+          <p class="roomNum">Room Number: 402</p>
+        </div>
+        <div class="modal-bottom">
+          <h3>Visitor's Information</h3>
+
+          <div class="deets-container first">
+            <div class="deets-info first-info">
+              <p class="deets-title">First Name</p>
+              <p>Angelica</p>
+            </div>
+            <div class="deets-info">
+              <p class="deets-title">Last Name</p>
+              <p>Payne</p>
+            </div>
+          </div>
+
+          <div class="deets-container">
+            <div class="deets-info first-info">
+              <p class="deets-title">Type of Visit</p>
+              <p>Overnight</p>
+            </div>
+            <div class="deets-info">
+              <p class="deets-title">Association with Tenant</p>
+              <p>Classmate</p>
+            </div>
+          </div>
+
+          <div class="deets-container">
+            <div class="deets-info first-info">
+              <p class="deets-title">Date</p>
+              <p>Jan 21 - 22, 2025</p>
+            </div>
+            <div class="deets-info">
+              <p class="deets-title">Purpose of Visit</p>
+              <p>Group Project</p>
+            </div>
+          </div>
+
+          <div class="deets-container">
+            <div class="deets-info first-info">
+              <p class="deets-title">Time Check In</p>
+              <p>6:30 PM</p>
+            </div>
+            <div class="deets-info">
+              <p class="deets-title">Time Check Out</p>
+              <p>7:30 AM</p>
+            </div>
+          </div>
+
+          <div class="deets-container">
+            <div class="deets-info first-info">
+              <p class="deets-title">Mobile No.</p>
+              <p>09123456789</p>
+            </div>
+          </div>
+
+          <div class="button-container">
+            <button type="submit" class="btn btn-secondary">Reject</button>
+            <button type="submit" class="btn btn-primary">Approve</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script src="/js/adminPendings.js"></script>
 
 <script>
-  window.onload = function() {
+  window.onload = function () {
     const theme = localStorage.getItem('theme');
 
     const logo = document.getElementById('logo');
 
     if (theme === 'dark') {
-        logo.src = '/images/hiveDark.png';
+      logo.src = '/images/hiveDark.png';
     } else {
-        logo.src = '/images/hiveLight.png';
+      logo.src = '/images/hiveLight.png';
     }
-};
+  };
 </script>

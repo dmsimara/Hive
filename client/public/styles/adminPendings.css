@@ -43,7 +43,7 @@ body {
     font-family: 'Raleway', 'Inter', sans-serif;
     background-color: var(--background-color);
     box-sizing: border-box;
-    overflow: hidden;
+    overflow-y: auto;
 }
 
 .dark-theme body {
@@ -261,11 +261,356 @@ body {
     font-weight: 600;
 }
 
+body::-webkit-scrollbar {
+    width: 10px; 
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: var(--maroon);
+    border-radius: 10px; 
+    border: 2px solid #fff;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+    background-color: var(--maroon);
+}
+
+body::-webkit-scrollbar-track {
+    background: #f1f1f1;  
+    border-radius: 2px;  
+}
+
+body::-webkit-scrollbar-track:hover {
+    background: #e1e1e1; 
+}
 
 .container {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;  
+    justify-content: flex-start;
     margin: 0 auto;
     padding: 0;
     box-sizing: border-box;
+}
+
+.container-title {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    font-size: 40px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    width: 100%;
+    color: var(--dark-gray);
+}
+
+.modal-icon {
+    color: var(--dark-gray);
+    font-size: 50px;
+    margin-right: 12px;   
+}
+
+.row-container {
+    display: flex;
+    flex-wrap: wrap; 
+    column-gap: 50px;
+    justify-content: center;  
+    margin-bottom: 20px;
+    row-gap: 15px;
+}
+
+a {
+    text-decoration: none; 
+}
+
+.card {
+    flex: 1 1 calc(33.333% - 40px);  
+    max-width: 500px;  
+    min-width: 400px; 
+    border: 3px solid var(--orange); 
+    border-radius: 15px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    overflow: hidden;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: transparent;
+    position: relative;
+    border-bottom: transparent !important;
+    padding-bottom: 20px;
+}
+
+.card-header::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;  
+    transform: translateX(-50%);  
+    width: 90%; 
+    border-bottom: 2px solid var(--maroon);  
+}
+
+.card-header img {
+    border-radius: 50%; 
+    object-fit: cover;
+    display: block;
+    overflow: hidden; 
+    aspect-ratio: 1 / 1; 
+    border: 1px solid var(--orange);
+    height: 90px;
+    width: 90px;
+    margin-left: 10px;
+}
+
+.card-title {
+    font-size: 30px;
+    font-weight: bold;
+    margin: 0;
+    flex-grow: 1;
+    margin-left: 10px;
+    color: var(--dark-gray);
+}
+
+.preview-word {
+    margin-top: -8px;
+    color: var(--gray);
+    font-weight: 500;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.preview-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.preview-info {
+    flex: 1;
+    margin-right: 10px;
+    text-align: center;
+}
+
+.preview-info p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.preview-info .title {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--gray);
+    opacity: 0.7;
+}
+
+.modal-dialog-right {
+    position: absolute;
+    top: 15px; 
+    right: 15px;
+    margin: 0;
+    height: calc(100% - 30px);  
+    width: 30%;  
+    max-width: none;
+}
+
+.modal-content {
+    height: 100%;  
+    overflow: hidden;  
+    background-color: transparent;  
+    display: flex;
+    flex-direction: column;  
+    border-radius: 0; 
+    box-shadow: none;  
+    border: none;
+}
+
+.modal-top {
+    border-radius: 30px;
+    background-color: white;
+    padding: 15px;
+    position: relative;
+    flex: 0 0 30%;
+    display: flex;  
+    flex-direction: column;  
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.modal-title {
+    font-weight: 700;
+    margin-right: 40px; 
+}
+
+.btn-close {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-size: 1.2rem;
+    border: none;
+    background: none;
+    padding: 5px;
+    color: #000;
+    z-index: 1;
+    font-weight: 600;
+}
+
+.btn-close:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.tenant-info {
+    display: flex;  
+    align-items: center; 
+    margin-top: 15px;
+}
+
+.modal-picture {
+    border-radius: 50%;
+    object-fit: cover;
+    height: 100px;
+    width: 100px;
+    margin-right: 20px;
+    display: block;
+    overflow: hidden; 
+    aspect-ratio: 1 / 1; 
+    border: 1px solid var(--orange);
+    margin-left: 15px;
+}
+
+.modal-card-title {
+    font-size: 36px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--gray);
+    flex-grow: 1; 
+}
+
+.modal-hr {
+    background-color: var(--orange);  
+    height: 3px;  
+    border: none; 
+    margin: 10px 0; 
+    margin-top: 20px;
+}
+
+.roomNum {
+    color: var(--gray);
+    font-weight: 700;
+    margin-left: 10px;
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+.modal-bottom {
+    border-radius: 30px;
+    background-color: white;
+    padding: 20px;
+    flex: 0 0 70%;
+    padding-left: 30px;
+    padding-top: 30px;   
+    
+    display: flex; 
+    justify-content: flex-start; 
+    align-items: flex-start;       
+    flex-direction: column;  
+    gap: 15px;
+}
+
+.modal-bottom h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--dark-gray);
+    margin: 0;  
+    text-align: left;  
+}
+
+.deets-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0;  
+    padding-left: 23px;  
+    width: 100%; 
+    flex-shrink: 0; 
+}
+
+.deets-info {
+    flex: 1;
+    margin-right: 10px;
+    text-align: left;
+    white-space: nowrap;  
+    overflow: hidden;  
+    text-overflow: ellipsis;  
+}
+
+.deets-info p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray);
+}
+
+.deets-info .deets-title {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: black;
+}
+
+.first {
+    margin-top: 15px;
+}
+
+.button-container {
+    display: flex;
+    gap: 10px;  
+    justify-content: center;  
+    align-items: center; 
+    width: 100%; 
+    margin-top: 15px;
+}
+
+.btn-primary, .btn-secondary {
+    flex: 1; 
+    padding: 10px 40px;  
+    font-size: 14px;
+    border-radius: 4px;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background: linear-gradient(to right, var(--orange), var(--maroon), var(--gray));
+    color: white;
+}
+
+.btn-primary:hover {
+    background: transparent;
+    color: var(--orange);
+    border: 1px solid var(--orange);
+    font-weight: 700;
+}
+
+.btn-secondary {
+    background: rgb(238, 237, 237);
+    color: var(--maroon);
+    border: 1px solid var(--orange);
+}
+
+.btn-secondary:hover {
+    opacity: 0.6;
+    background: transparent;
+    color: var(--maroon);
+    font-weight: 600;
+    border: 1px solid var(--orange);
 }

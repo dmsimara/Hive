@@ -482,6 +482,7 @@ body::-webkit-scrollbar-track:hover {
     flex-direction: column;  
     border-radius: 0; 
     box-shadow: none;  
+    border: none;
 }
 
 .modal-top {
