@@ -86,6 +86,11 @@
                     {{'Tenant.tenantFirstName'}} {{'Tenant.tenantLastName'}}
                 </h5>
                 <i class="material-icons more-icon">more_vert</i>
+
+                <!-- Dropdown Menu (Hidden by default) -->
+                <div class="dropdown-menu">
+                    <button class="btn btn-danger delete-btn" data-id="{{maintenance_id}}">Delete</button>
+                </div>
             </div>
             <div class="card-body">
                 <p class="preview-word">Preview</p>
@@ -102,13 +107,10 @@
                 <a href="#" data-bs-toggle="modal" data-bs-target="#assignModal" class="btn btn-light btn-sm assign-btn"
                     data-maintenance-id="{{maintenance_id}}"
                     data-tenant-name="{{'Tenant.tenantFirstName'}} {{'Tenant.tenantLastName'}}"
-                    data-room-number="{{'Tenant.Room.roomNumber'}}"
-                    data-maintenance-type="{{type}}"
-                    data-urgency="{{urgency}}"
-                    data-scheduled-date="{{scheduledDate}}"
-                    data-contact-num="{{contactNum}}"
-                    data-description="{{description}}"
-                    data-tenant-profile="{{'Tenant.tenantProfile'}}">
+                    data-room-number="{{'Tenant.Room.roomNumber'}}" data-maintenance-type="{{type}}"
+                    data-urgency="{{urgency}}" data-scheduled-date="{{scheduledDate}}" data-contact-num="{{contactNum}}"
+                    data-description="{{description}}" data-tenant-profile="{{'Tenant.tenantProfile'}}"
+                    data-assigned-person="{{assignedPerson}}" data-status="{{status}}">
                     Assign
                 </a>
             </div>
@@ -162,13 +164,13 @@
 
                 <div class="modal-bottom">
                     <h3>Personnel Assignment</h3>
-                    <form id="assignForm" method="POST" action="#">
+                    <form id="assignForm" method="PUT" action="/api/auth/update/maintenance/:maintenance_id">
                         <input type="hidden" id="maintenance_id" name="maintenance_id" value="">
 
                         <div class="form-group">
                             <label for="assignedPerson" class="form-label">Assigned Personnel:</label>
                             <input type="text" class="form-control form-control-sm" id="assignedPerson"
-                                name="assignedPerson" required>
+                                name="assignedPerson">
                         </div>
 
                         <div class="form-group">
@@ -184,6 +186,7 @@
                         <button type="submit" class="btn btn-primary">Complete</button>
                     </form>
                 </div>
+
             </div>
         </div>
     </div>
@@ -196,16 +199,10 @@
     document.addEventListener("DOMContentLoaded", () => {
         const assignButtons = document.querySelectorAll('.assign-btn');
         const assignModal = document.getElementById('assignModal');
-
-        const modalPicture = assignModal.querySelector('.dynamic-modal-picture');
-        const modalTitle = assignModal.querySelector('.dynamic-modal-title');
-        const roomNumber = assignModal.querySelector('.dynamic-room-number');
-        const maintenanceType = assignModal.querySelector('.dynamic-maintenance-type');
-        const urgency = assignModal.querySelector('.dynamic-urgency');
-        const dateTime = assignModal.querySelector('.dynamic-date-time');
-        const contactNumber = assignModal.querySelector('.dynamic-contact-number');
-        const description = assignModal.querySelector('.dynamic-description');
+        const form = document.getElementById('assignForm');
         const fixIdInput = document.getElementById('maintenance_id');
+        const assignedPersonInput = document.getElementById('assignedPerson');
+        const statusSelect = document.getElementById('status');
 
         assignButtons.forEach(button => {
             button.addEventListener('click', () => {
@@ -218,6 +215,17 @@
                 const contactNum = button.getAttribute('data-contact-num');
                 const descriptionValue = button.getAttribute('data-description');
                 const tenantProfile = button.getAttribute('data-tenant-profile');
+                const assignedPerson = button.getAttribute('data-assigned-person');
+                const status = button.getAttribute('data-status');
+
+                const modalPicture = assignModal.querySelector('.dynamic-modal-picture');
+                const modalTitle = assignModal.querySelector('.dynamic-modal-title');
+                const roomNumber = assignModal.querySelector('.dynamic-room-number');
+                const maintenanceType = assignModal.querySelector('.dynamic-maintenance-type');
+                const urgency = assignModal.querySelector('.dynamic-urgency');
+                const dateTime = assignModal.querySelector('.dynamic-date-time');
+                const contactNumber = assignModal.querySelector('.dynamic-contact-number');
+                const description = assignModal.querySelector('.dynamic-description');
 
                 modalPicture.src = tenantProfile || '/images/defaultUser.webp';
                 modalTitle.textContent = tenantName || 'Tenant Name';
@@ -228,10 +236,57 @@
                 contactNumber.textContent = contactNum || '-';
                 description.textContent = descriptionValue || '-';
                 fixIdInput.value = maintenanceId;
+
+                assignedPersonInput.value = assignedPerson || '';
+                statusSelect.value = status || '';
+
+                form.action = `/api/auth/update/maintenance/${maintenanceId}`;
+            });
+        });
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            fetch(form.action, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    assignedPerson: form.assignedPerson.value,
+                    status: form.status.value
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert('Personnel assigned and maintenance status updated successfully!');
+                    window.location.reload();
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('Failed to update maintenance status. Please try again later.');
+                });
+        });
+
+        const moreIcons = document.querySelectorAll(".more-icon");
+        const dropdownMenus = document.querySelectorAll(".dropdown-menu");
+        
+        moreIcons.forEach((moreIcon, index) => {
+            const dropdownMenu = dropdownMenus[index];
+            
+            moreIcon.addEventListener("click", () => {
+                dropdownMenu.classList.toggle("show");
+            });
+            
+            document.addEventListener("click", (event) => {
+                if (!moreIcon.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                    dropdownMenu.classList.remove("show");
+                }
             });
         });
     });
 </script>
+
+
+
 <script>
     window.onload = function () {
         const theme = localStorage.getItem('theme');

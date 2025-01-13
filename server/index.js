@@ -741,6 +741,7 @@ app.get("/admin/visitors/pending", verifyToken, async (req, res) => {
 // ADMIN PAGES (MAINTENANCE) ---------------------------------------------------------------------------
 app.get("/admin/maintenance", verifyToken, async (req, res) => {
     try {
+        const admin = await viewAdmins(req, res);
         const fixesData = await viewFixes(req); 
         console.log("Real Fixes Data from Database:", fixesData); 
         
@@ -752,6 +753,7 @@ app.get("/admin/maintenance", verifyToken, async (req, res) => {
         return res.render("adminMaintenance", {
             title: "Hive",
             styles: ["adminMaintenance"],
+            admin: admin || {},
             fixes: fixesData, 
         });
     } catch (error) {
