@@ -101,6 +101,37 @@
     </div>
 </div>
 
+ <div class="feedback-section">
+    <h2>Feedback Form</h2>
+    <p>Rate your experience and help us improve with your feedback.</p>
+    
+    <form class="feedback-form" action="/tenant/submit-feedback" method="POST">
+        <div class="form-group">
+            <label for="name">Your Name:</label>
+            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+        </div>
+        <div class="form-group">
+            <label for="rating">How would you rate your Experience?</label>
+            <div class="emoji-group">
+                <input type="radio" id="happy" name="rating" value="5">
+                <label for="happy" title="Happy"><span class="emoji">😊</span></label>
+
+                <input type="radio" id="neutral" name="rating" value="3">
+                <label for="neutral" title="Neutral"><span class="emoji">😐</span></label>
+
+                <input type="radio" id="sad" name="rating" value="1">
+                <label for="sad" title="Sad"><span class="emoji">☹️</span></label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="feedbackMessage">Your Feedback:</label>
+            <textarea id="feedbackMessage" name="feedbackMessage" rows="5" placeholder="Type your feedback here..." required></textarea>
+        </div>
+        <button type="submit" class="btn-submit">Submit Feedback</button>
+    </form>
+</div>
+
+
   <!-- Content sections -->
         <div id="customizeContent" class="content-section hidden">Customize Content</div>
         <div id="feedbackContent" class="content-section hidden">Feedback and Support Content</div>
