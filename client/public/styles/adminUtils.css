@@ -383,7 +383,7 @@ h1 {
   color: var(--white);
 }
 
-table {
+.table {
   width: 100%;
   border-collapse: collapse;
   background-color: white;
@@ -412,6 +412,7 @@ thead tr:first-child th {
   font-size: 14px;
   border-bottom: 2px solid var(--brown);
   border-right: 2px solid var(--brown);
+  border: none;
 }
 
 .dark-theme .table1 thead tr:first-child th {
@@ -449,6 +450,7 @@ table td {
   color: var(--dark-gray);
   border-bottom: 1px solid rgba(139, 69, 19, 0.7);
   transition: background-color 0.2s ease, transform 0.2s ease;
+  border: none;
 }
 
 .dark-theme .table1 td {
@@ -538,6 +540,20 @@ table th:last-child {
 .hover-orange i {
   font-size: 20px;
   margin-right: 8px;
+}
+
+.manage-button {
+  background-color: var(--orange);
+  color: white;
+  font-weight: 600;
+  padding: 6px 40px;
+  border-radius: 20px;
+  border: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-right: 5px;
+  margin-left: -80px;
 }
 
 .dark-theme .manage-button {

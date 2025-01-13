@@ -270,13 +270,13 @@ body {
   border-radius: 12px;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   overflow-x: auto;
-  border: 1px solid var(--white);
+  border: 2px solid var(--maroon);
 }
 
 
 .dark-theme .container {
   background-color: #ffffff00;
-  border: 1px solid var(--d-yellow);
+  border: 2px solid var(--d-yellow);
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
 }
 
@@ -574,7 +574,7 @@ thead tr:first-child th {
   border-right: 2px solid var(--brown);
 }
 
-.dark-theme .table1 thead tr:first-child th {
+.dark-theme thead tr:first-child th {
   background-color: var(--brown) !important;
   color: white !important;
   text-transform: uppercase;
@@ -582,7 +582,8 @@ thead tr:first-child th {
   padding: 12px;
   text-align: center;
   font-size: 14px;
-  border: none;
+  border-bottom: 2px solid var(--brown);
+  border-right: 2px solid var(--brown);
 }
 
 .dark-theme .tableModal thead tr:first-child th {
@@ -630,12 +631,17 @@ table td {
 
 table th,
 table td {
-  border-color: brown !important;
+  border: none !important;
 }
 
-.dark-theme th,
 .dark-theme td {
   border: none !important;
+  background-color: transparent !important;
+  color: var(--white);
+}
+
+.dark-theme th{
+  border: 1px solid var(--brownish-yellow);
   background-color: transparent !important;
   color: var(--white);
 }
