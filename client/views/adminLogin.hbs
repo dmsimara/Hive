@@ -45,3 +45,16 @@
 
 
 <script src="/js/adminLogin.js"></script>
+<script>
+    window.onload = function () {
+        const theme = localStorage.getItem('theme');
+
+        const logo = document.getElementById('logo');
+
+        if (theme === 'dark') {
+            logo.src = '/images/hiveDark.png';
+        } else {
+            logo.src = '/images/hiveLight.png';
+        }
+    };
+</script>

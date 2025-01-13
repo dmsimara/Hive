@@ -76,198 +76,47 @@
 <div class="container pt-5 pb-5">
     <h1 class="container-title"><i class="fa-solid fa-wrench modal-icon"></i>Maintenance Requests</h1>
 
+    <!-- Dynamically render cards -->
     <div class="row-container">
+        {{#each fixes}}
         <div class="card mb-3">
             <div class="card-header">
-                <img src="{{#if tenants.tenantProfile}}/images/upload/{{tenants.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
-                    alt="Profile" width="40px" class="me-2" />
-                <h5 class="card-title d-inline">Tenant A</h5>
+                <img src="{{'Tenant.tenantProfile'}}" alt="Profile" width="40px" class="me-2" />
+                <h5 class="card-title d-inline">
+                    {{'Tenant.tenantFirstName'}} {{'Tenant.tenantLastName'}}
+                </h5>
                 <i class="material-icons more-icon">more_vert</i>
-
-                {{!-- delete popup icon --}}
-                <div class="popup-menu hidden">
-                    <button class="popup-button">Delete</button>
-                </div>
             </div>
-            </hr>
             <div class="card-body">
                 <p class="preview-word">Preview</p>
                 <div class="preview-container">
                     <div class="preview-info">
                         <p class="title">Request Type</p>
-                        <p>Leaking Faucet</p>
+                        <p>{{type}}</p>
                     </div>
                     <div class="preview-info">
                         <p class="title">Urgency Level</p>
-                        <p>Urgent</p>
+                        <p>{{urgency}}</p>
                     </div>
                 </div>
-                <a href="#" data-bs-toggle="modal" data-bs-target="#assignModal"
-                    class="btn btn-light btn-sm assign-btn">
+                <a href="#" data-bs-toggle="modal" data-bs-target="#assignModal" class="btn btn-light btn-sm assign-btn"
+                    data-maintenance-id="{{maintenance_id}}"
+                    data-tenant-name="{{'Tenant.tenantFirstName'}} {{'Tenant.tenantLastName'}}"
+                    data-room-number="{{'Tenant.Room.roomNumber'}}"
+                    data-maintenance-type="{{type}}"
+                    data-urgency="{{urgency}}"
+                    data-scheduled-date="{{scheduledDate}}"
+                    data-contact-num="{{contactNum}}"
+                    data-description="{{description}}"
+                    data-tenant-profile="{{'Tenant.tenantProfile'}}">
                     Assign
                 </a>
             </div>
         </div>
-        <div class="card mb-3">
-            <div class="card-header">
-                <img src="{{#if tenants.tenantProfile}}/images/upload/{{tenants.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
-                    alt="Profile" width="40px" class="me-2" />
-                <h5 class="card-title d-inline">Tenant A</h5>
-                <i class="material-icons more-icon">more_vert</i>
-
-                {{!-- delete popup icon --}}
-                <div class="popup-menu hidden">
-                    <button class="popup-button">Delete</button>
-                </div>
-            </div>
-            </hr>
-            <div class="card-body">
-                <p class="preview-word">Preview</p>
-                <div class="preview-container">
-                    <div class="preview-info">
-                        <p class="title">Request Type</p>
-                        <p>Leaking Faucet</p>
-                    </div>
-                    <div class="preview-info">
-                        <p class="title">Urgency Level</p>
-                        <p>Urgent</p>
-                    </div>
-                </div>
-                <a href="#" data-bs-toggle="modal" data-bs-target="#assignModal"
-                    class="btn btn-light btn-sm assign-btn">
-                    Assign
-                </a>
-            </div>
-        </div>
-        <div class="card mb-3">
-            <div class="card-header">
-                <img src="{{#if tenants.tenantProfile}}/images/upload/{{tenants.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
-                    alt="Profile" width="40px" class="me-2" />
-                <h5 class="card-title d-inline">Tenant A</h5>
-                <i class="material-icons more-icon">more_vert</i>
-
-                {{!-- delete popup icon --}}
-                <div class="popup-menu hidden">
-                    <button class="popup-button">Delete</button>
-                </div>
-            </div>
-            </hr>
-            <div class="card-body">
-                <p class="preview-word">Preview</p>
-                <div class="preview-container">
-                    <div class="preview-info">
-                        <p class="title">Request Type</p>
-                        <p>Leaking Faucet</p>
-                    </div>
-                    <div class="preview-info">
-                        <p class="title">Urgency Level</p>
-                        <p>Urgent</p>
-                    </div>
-                </div>
-                <a href="#" data-bs-toggle="modal" data-bs-target="#assignModal"
-                    class="btn btn-light btn-sm assign-btn">
-                    Assign
-                </a>
-            </div>
-        </div>
-    </div>
-    <div class="row-container">
-        <div class="card mb-3">
-            <div class="card-header">
-                <img src="{{#if tenants.tenantProfile}}/images/upload/{{tenants.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
-                    alt="Profile" width="40px" class="me-2" />
-                <h5 class="card-title d-inline">Tenant A</h5>
-                <i class="material-icons more-icon">more_vert</i>
-
-                {{!-- delete popup icon --}}
-                <div class="popup-menu hidden">
-                    <button class="popup-button">Delete</button>
-                </div>
-            </div>
-            </hr>
-            <div class="card-body">
-                <p class="preview-word">Preview</p>
-                <div class="preview-container">
-                    <div class="preview-info">
-                        <p class="title">Request Type</p>
-                        <p>Leaking Faucet</p>
-                    </div>
-                    <div class="preview-info">
-                        <p class="title">Urgency Level</p>
-                        <p>Urgent</p>
-                    </div>
-                </div>
-                <a href="#" data-bs-toggle="modal" data-bs-target="#assignModal"
-                    class="btn btn-light btn-sm assign-btn">
-                    Assign
-                </a>
-            </div>
-        </div>
-        <div class="card mb-3">
-            <div class="card-header">
-                <img src="{{#if tenants.tenantProfile}}/images/upload/{{tenants.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
-                    alt="Profile" width="40px" class="me-2" />
-                <h5 class="card-title d-inline">Tenant A</h5>
-                <i class="material-icons more-icon">more_vert</i>
-
-                {{!-- delete popup icon --}}
-                <div class="popup-menu hidden">
-                    <button class="popup-button">Delete</button>
-                </div>
-            </div>
-            </hr>
-            <div class="card-body">
-                <p class="preview-word">Preview</p>
-                <div class="preview-container">
-                    <div class="preview-info">
-                        <p class="title">Request Type</p>
-                        <p>Leaking Faucet</p>
-                    </div>
-                    <div class="preview-info">
-                        <p class="title">Urgency Level</p>
-                        <p>Urgent</p>
-                    </div>
-                </div>
-                <a href="#" data-bs-toggle="modal" data-bs-target="#assignModal"
-                    class="btn btn-light btn-sm assign-btn">
-                    Assign
-                </a>
-            </div>
-        </div>
-        <div class="card mb-3">
-            <div class="card-header">
-                <img src="{{#if tenants.tenantProfile}}/images/upload/{{tenants.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
-                    alt="Profile" width="40px" class="me-2" />
-                <h5 class="card-title d-inline">Tenant A</h5>
-                <i class="material-icons more-icon">more_vert</i>
-
-                {{!-- delete popup icon --}}
-                <div class="popup-menu hidden">
-                    <button class="popup-button">Delete</button>
-                </div>
-            </div>
-            </hr>
-            <div class="card-body">
-                <p class="preview-word">Preview</p>
-                <div class="preview-container">
-                    <div class="preview-info">
-                        <p class="title">Request Type</p>
-                        <p>Leaking Faucet</p>
-                    </div>
-                    <div class="preview-info">
-                        <p class="title">Urgency Level</p>
-                        <p>Urgent</p>
-                    </div>
-                </div>
-                <a href="#" data-bs-toggle="modal" data-bs-target="#assignModal"
-                    class="btn btn-light btn-sm assign-btn">
-                    Assign
-                </a>
-            </div>
-        </div>
+        {{/each}}
     </div>
 
-    {{!-- assign modal --}}
+    <!-- Modal for Maintenance Details -->
     <div class="modal fade" id="assignModal" tabindex="-1" aria-labelledby="assignModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-right">
             <div class="modal-content custom-height">
@@ -275,39 +124,38 @@
                     <h5 class="modal-title" id="assignModalLabel">Details</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button>
                     <div class="tenant-info">
-                        <img src="{{#if tenants.tenantProfile}}/images/upload/{{tenants.tenantProfile}}{{else}}/images/defaultUser.webp{{/if}}"
-                            alt="Profile" class="modal-picture" />
-                        <h5 class="modal-card-title">Tenant A</h5>
+                        <img src="/images/defaultUser.webp" alt="Profile" class="modal-picture dynamic-modal-picture" />
+                        <h5 class="modal-card-title dynamic-modal-title">Tenant Name</h5>
                     </div>
                     <hr class="modal-hr">
-                    <p class="roomNum">Room Number: 402</p>
+                    <p class="roomNum dynamic-room-number">Room Number: -</p>
                 </div>
 
                 <div class="modal-middle">
                     <div class="deets-container first">
                         <div class="deets-info first-info">
                             <p class="deets-title">Type of Maintenance</p>
-                            <p>Leaking Faucet</p>
+                            <p class="dynamic-maintenance-type">-</p>
                         </div>
                         <div class="deets-info">
                             <p class="deets-title">Urgency</p>
-                            <p>Urgent</p>
+                            <p class="dynamic-urgency">-</p>
                         </div>
                     </div>
                     <div class="deets-container">
                         <div class="deets-info">
                             <p class="deets-title">Preferred Time and Date</p>
-                            <p>January 10, 2025 - 3:00PM</p>
+                            <p class="dynamic-date-time">-</p>
                         </div>
                         <div class="deets-info">
                             <p class="deets-title">Contact Number</p>
-                            <p>09123456789</p>
+                            <p class="dynamic-contact-number">-</p>
                         </div>
                     </div>
                     <div class="deets-container">
                         <div class="deets-info">
                             <p class="deets-title">Description (if applicable)</p>
-                            <p>Hehe</p>
+                            <p class="dynamic-description">-</p>
                         </div>
                     </div>
                 </div>
@@ -315,7 +163,7 @@
                 <div class="modal-bottom">
                     <h3>Personnel Assignment</h3>
                     <form id="assignForm" method="POST" action="#">
-                        <input type="hidden" id="establishmentId" name="establishmentId" value="{{establishmentId}}">
+                        <input type="hidden" id="maintenance_id" name="maintenance_id" value="">
 
                         <div class="form-group">
                             <label for="assignedPerson" class="form-label">Assigned Personnel:</label>
@@ -336,14 +184,54 @@
                         <button type="submit" class="btn btn-primary">Complete</button>
                     </form>
                 </div>
-
             </div>
         </div>
     </div>
 </div>
 
-<script src="/js/adminMaintenance.js"></script>
 
+
+<script src="/js/adminMaintenance.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const assignButtons = document.querySelectorAll('.assign-btn');
+        const assignModal = document.getElementById('assignModal');
+
+        const modalPicture = assignModal.querySelector('.dynamic-modal-picture');
+        const modalTitle = assignModal.querySelector('.dynamic-modal-title');
+        const roomNumber = assignModal.querySelector('.dynamic-room-number');
+        const maintenanceType = assignModal.querySelector('.dynamic-maintenance-type');
+        const urgency = assignModal.querySelector('.dynamic-urgency');
+        const dateTime = assignModal.querySelector('.dynamic-date-time');
+        const contactNumber = assignModal.querySelector('.dynamic-contact-number');
+        const description = assignModal.querySelector('.dynamic-description');
+        const fixIdInput = document.getElementById('maintenance_id');
+
+        assignButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const maintenanceId = button.getAttribute('data-maintenance-id');
+                const tenantName = button.getAttribute('data-tenant-name');
+                const roomNumberValue = button.getAttribute('data-room-number');
+                const maintenanceTypeValue = button.getAttribute('data-maintenance-type');
+                const urgencyValue = button.getAttribute('data-urgency');
+                const scheduledDate = button.getAttribute('data-scheduled-date');
+                const contactNum = button.getAttribute('data-contact-num');
+                const descriptionValue = button.getAttribute('data-description');
+                const tenantProfile = button.getAttribute('data-tenant-profile');
+
+                modalPicture.src = tenantProfile || '/images/defaultUser.webp';
+                modalTitle.textContent = tenantName || 'Tenant Name';
+                roomNumber.textContent = `Room Number: ${roomNumberValue || '-'}`;
+                maintenanceType.textContent = maintenanceTypeValue || '-';
+                urgency.textContent = urgencyValue || '-';
+                dateTime.textContent = new Date(scheduledDate).toLocaleString() || '-';
+                contactNumber.textContent = contactNum || '-';
+                description.textContent = descriptionValue || '-';
+                fixIdInput.value = maintenanceId;
+            });
+        });
+    });
+</script>
 <script>
     window.onload = function () {
         const theme = localStorage.getItem('theme');

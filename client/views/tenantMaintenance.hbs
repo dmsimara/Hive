@@ -164,7 +164,7 @@
                 <div class="modal-body">
                     <h5 class="modal-title" id="addMaintenanceModalLabel"><i class="fa-solid fa-wrench modal-icon"></i>Maintenance
                         Form</h5>
-                    <form action="#" method="POST" id="maintenanceForm">
+                    <form action="api/auth/add/maintenance" method="POST" id="maintenanceForm">
                         <input type="hidden" id="establishmentId" name="establishmentId" value="{{establishmentId}}">
 
                         <div class="row mb-3">
@@ -176,7 +176,7 @@
                                 <label for="description" class="form-label">Description of the issue
                                     <span>(Optional)</span></label>
                                 <input type="text" class="form-control form-control-sm" id="description"
-                                    name="description" required>
+                                    name="description">
                             </div>
                         </div>
 
@@ -184,7 +184,7 @@
                             <div class="col">
                                 <label for="urgency" class="form-label">Urgency Level</label>
                                 <select name="urgency" id="urgency" required>
-                                    <option value="" disabled>Select Urgency</option>
+                                    <option value=""></option>
                                     <option value="urgent">Urgent</option>
                                     <option value="scheduled">Scheduled</option>
                                 </select>
@@ -196,7 +196,7 @@
                             </div>
                             <div class="col">
                                 <label for="contactNum" class="form-label">Contact Number</label>
-                                <input type="tel" pattern="[0-9]{10}" class="form-control form-control-sm"
+                                <input type="tel" class="form-control form-control-sm"
                                     id="contactNum" name="contactNum">
                             </div>
                         </div>

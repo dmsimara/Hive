@@ -674,6 +674,85 @@ export const checkTenantAuth = async (req, res) => {
     }
 };
 
+export const viewFixes = async (req) => {
+    const establishmentId = req.establishmentId;
+
+    if (!establishmentId) {
+        console.error('Establishment ID is undefined. Ensure the user is correctly associated with an establishment.');
+        throw new Error('Establishment ID is missing');
+    }
+
+    try {
+        const rows = await Fix.findAll({
+            where: { establishment_id: establishmentId },
+            include: [
+                {
+                    model: Tenant,
+                    attributes: ['tenantProfile', 'tenantFirstName', 'tenantLastName'],
+                    include: [{
+                        model: Room,
+                        attributes: ['roomNumber'], 
+                    }]
+                }
+            ],
+            raw: true 
+        });
+
+        return rows.map(row => {
+            console.log(row);  
+            return {
+                ...row,
+                tenantProfile: row['tenant.tenantProfile'] || '/images/defaultUser.webp',
+                tenantFirstName: row['tenant.tenantFirstName'] || 'Unknown',
+                tenantLastName: row['tenant.tenantLastName'] || 'Unknown',
+                tenantRoomNumber: row['tenant.room.roomNumber'] || '-',
+                tenantContactNumber: row.contactNum || '-',
+                tenantScheduledDate: row.scheduledDate || '-',
+                tenantDescription: row.description || '-',
+            };
+        });
+
+    } catch (error) {
+        console.error('Error fetching fixes:', error);
+        throw new Error('Error fetching fixes');
+    }
+};
+
+export const viewFixById = async (req, res) => {
+    const { maintenance_id } = req.params;
+
+    if (!maintenance_id) {
+        console.error('Maintenance ID is undefined. Ensure it is passed as a parameter.');
+        return res.status(400).json({ success: false, message: 'Maintenance ID is missing' });
+    }
+
+    try {
+        const fix = await Fix.findByPk(maintenance_id, {
+            include: [{
+                model: Tenant,
+                attributes: ['tenantProfile', 'tenantFirstName', 'tenantLastName'],
+            }],
+        });
+
+        if (!fix) {
+            return res.status(404).json({ success: false, message: 'Fix not found' });
+        }
+
+        const plainFix = fix.get({ plain: true });
+        const formattedFix = {
+            ...plainFix,
+            tenantProfile: plainFix.tenant?.tenantProfile || '/images/defaultUser.webp',
+            tenantFirstName: plainFix.tenant?.tenantFirstName || 'Unknown',
+            tenantLastName: plainFix.tenant?.tenantLastName || 'Unknown',
+        };
+
+        return res.json({ success: true, fix: formattedFix });
+    } catch (error) {
+        console.error('Error fetching fix by ID:', error);
+        return res.status(500).json({ success: false, message: 'Error fetching fix' });
+    }
+};
+
 export const viewTenants = async (req) => {
     const establishmentId = req.establishmentId; 
 
