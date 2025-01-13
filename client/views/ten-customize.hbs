@@ -35,7 +35,6 @@
                         <span>Announcement</span>
                     </a>
                 </li>
-                 </li>
                 <li class="sidebar-item">
                     <a href="/tenant/visitors" class="sidebar-link">
                         <i class="fas fa-clipboard-check"></i>
@@ -46,16 +45,15 @@
                     <a href="/tenant/maintenance" class="sidebar-link">
                         <i class="fas fa-tools"></i>
                         <span>Maintenance</span>
-                
-                </li>
-            </ul>
-            </li>
-                <li class="sidebar-item active">
-                    <a href="/tenant/settings" class="sidebar-link">
-                        <i class="fa-solid fa-gear"></i>
-                        <span>Settings</span>
                     </a>
                 </li>
+            </ul>
+            <li class="sidebar-item active">
+                <a href="/tenant/settings" class="sidebar-link">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
             <div class="sidebar-footer">
                 <a href="#" id="logoutButton" class="logout-button sidebar-link">
                     <i class="fas fa-sign-out-alt"></i>
@@ -65,16 +63,14 @@
         </div>
     </aside>
 
-   <main class="main-content">
+    <main class="main-content">
         <header class="dashboard-header">
             <div class="header-left">
                 <h3>Welcome to Hive</h3>
-                <h1 class="dashboard-title">Account Settings</h1> 
+                <h1 class="dashboard-title">Account Settings</h1>
             </div>
         </header>
 
-
-    
         <!-- New Card Section Styled Like Sidebar -->
         <div class="white-card">
             <ul class="card-nav">
@@ -98,10 +94,44 @@
                 </li>
             </ul>
         </div>
+
+   <!-- Large Centered Card Section -->
+<div class="choose-style-container">
+    <div class="style-card">
+        <div class="card-header">
+            <h2 class="choose-style-title">Choose a style</h2>
+            <p class="choose-style-description">
+                Pop or subtle. Day or night. Customize your interface.
+            </p>
+        </div>
+        <div class="style-options">
+            <!-- Light Mode Option -->
+            <div class="style-option light-mode">
+                <div class="icon-container light-mode-icon"></div>
+                <p class="mode-text">Light Mode</p>
+                <label class="toggle-switch">
+                    <input type="radio" name="mode" value="light" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <!-- Dark Mode Option -->
+            <div class="style-option dark-mode">
+                <div class="icon-container">
+                    <div class="dark-mode-icon"></div>
+                </div>
+                <p class="mode-text">Dark Mode</p>
+                <label class="toggle-switch">
+                    <input type="radio" name="mode" value="dark">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
     </div>
 </div>
 
-  <!-- Content sections -->
+
+
+        <!-- Content sections -->
         <div id="customizeContent" class="content-section hidden">Customize Content</div>
         <div id="feedbackContent" class="content-section hidden">Feedback and Support Content</div>
         <div id="passwordResetContent" class="content-section hidden">Password Reset Content</div>

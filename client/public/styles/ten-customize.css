@@ -376,3 +376,160 @@ html {
     margin-left: 20px;
     transition: all 0.35s ease-in-out;
 }
+
+
+/* Full-Screen Centering */
+.choose-style-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+   
+}
+
+/* White Card Styling */
+.style-card {
+    background-color: #FFFFFF;
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
+    width: 80%;
+    max-width: 800px; /* Cap the width for larger screens */
+    position: relative;
+}
+
+/* Card Header Styling */
+.card-header {
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.choose-style-title {
+    font-size: 2em;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.choose-style-description {
+    font-size: 1em;
+    font-weight: normal;
+    color: #555;
+    margin-top: 5px;
+}
+
+/* Light and Dark Mode Options */
+.style-options {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.style-option {
+    width: 40%;
+    background-color: #F9F9F9;
+    border: 1px solid #DDD;
+    border-radius: 10px;
+    text-align: center;
+    padding: 30px;
+    position: relative;
+}
+
+/* Circle Icons */
+.icon-container {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 15px auto;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3em;
+    color: white;
+}
+
+/* Light Mode Gradient */
+.light-mode-icon {
+    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
+}
+
+/* Dark Mode Moon */
+.dark-mode-icon {
+    background-color: #795548;
+    clip-path: polygon(50% 0%, 65% 35%, 100% 50%, 65% 65%, 50% 100%, 35% 65%, 0% 50%, 35% 35%);
+}
+
+.dark-mode-icon {
+    position: relative;
+    width: 60px; /* Adjust size as needed */
+    height: 60px;
+    background-color: #381A1C; /* Dark red color for the moon */
+    border-radius: 50%; /* Makes it a circle */
+    overflow: hidden;
+}
+
+.dark-mode-icon::before {
+    content: '';
+    position: absolute;
+    top: 10px; /* Adjust for crescent positioning */
+    left: 10px;
+    width: 60px; /* Matches parent size */
+    height: 60px;
+    background-color: white; /* Background color to cut out crescent */
+    border-radius: 50%;
+    transform: translate(15px, 0); /* Adjust for crescent thickness */
+}
+
+/* Mode Text */
+.mode-text {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Toggle Switch Styling */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    border-radius: 30px;
+    transition: 0.4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.4s;
+}
+
+input:checked + .slider {
+    background-color: #A22F05;
+}
+
+input:checked + .slider:before {
+    transform: translateX(30px);
+}
