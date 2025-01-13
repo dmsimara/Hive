@@ -95,39 +95,38 @@
             </ul>
         </div>
 
-   <!-- Large Centered Card Section -->
-<div class="choose-style-container">
-    <div class="style-card">
-        <div class="card-header">
-            <h2 class="choose-style-title">Choose a style</h2>
-            <p class="choose-style-description">
-                Pop or subtle. Day or night. Customize your interface.
-            </p>
-        </div>
-        <div class="style-options">
-            <!-- Light Mode Option -->
-            <div class="style-option light-mode">
-                <div class="icon-container light-mode-icon"></div>
-                <p class="mode-text">Light Mode</p>
-                <label class="toggle-switch">
-                    <input type="radio" name="mode" value="light" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <!-- Dark Mode Option -->
-            <div class="style-option dark-mode">
-                <div class="icon-container">
-                    <div class="dark-mode-icon"></div>
+        <!-- Large Centered Card Section -->
+        <div class="choose-style-container">
+            <div class="style-card">
+                <div class="card-header">
+                    <h2 class="choose-style-title">Choose a style</h2>
+                    <p class="choose-style-description">
+                        Pop or subtle. Day or night. Customize your interface.
+                    </p>
                 </div>
-                <p class="mode-text">Dark Mode</p>
-                <label class="toggle-switch">
-                    <input type="radio" name="mode" value="dark">
-                    <span class="slider"></span>
-                </label>
+                <div class="style-options">
+                    <!-- Light Mode Option -->
+                    <div class="style-option light-mode">
+                        <div class="icon-container light-mode-icon"></div>
+                        <p class="mode-text">Light Mode</p>
+                        <label class="toggle-switch">
+                            <input type="radio" name="mode" value="light" id="lightModeRadio" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <!-- Dark Mode Option -->
+                    <div class="style-option dark-mode">
+                        <div class="icon-container dark-mode-icon"></div>
+                        <p class="mode-text">Dark Mode</p>
+                        <label class="toggle-switch">
+                            <input type="radio" name="mode" value="dark" id="darkModeRadio">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
+
 
 
 
@@ -138,7 +137,7 @@
     </main>
 </div>
 
-   <!--
+<!--
 <main>
     <div class="pageContainer">
         <div class="toggle-btn" id="btn">
@@ -153,15 +152,15 @@
 
 <script src="/js/ten-customize.js"></script>
 <script>
-    window.onload = function() {
-    const theme = localStorage.getItem('theme');
+    window.onload = function () {
+        const theme = localStorage.getItem('theme');
 
-    const logo = document.getElementById('logo');
+        const logo = document.getElementById('logo');
 
-    if (theme === 'dark') {
-        logo.src = '/images/hiveDark.png';
-    } else {
-        logo.src = '/images/hiveLight.png';
-    }
-};
+        if (theme === 'dark') {
+            logo.src = '/images/hiveDark.png';
+        } else {
+            logo.src = '/images/hiveLight.png';
+        }
+    };
 </script>

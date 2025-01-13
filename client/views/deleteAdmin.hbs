@@ -74,32 +74,45 @@
 </nav>
 
 <div class="container pt-5 pb-5">
-    <div class="headerContainer">
-        <h2 class="account-title">Account Settings</h2>
-        <a href="/admin/dashboard/view/account" class="viewProfile"><i class="material-icons">person</i>View Profile</a>
+    <h1 class="container-title"><i class="fa-solid fa-gear modal-icon"></i>Account Settings</h1>
+
+    <div class="pages-container">
+        <a href="/admin/settings" id="appearance-link" data-path="/admin/settings">
+            <button class="pages-link">Appearance</button>
+        </a>
+        <a href="/admin/settings/feedback-support" id="feedback-link" data-path="/admin/settings/feedback-support">
+            <button class="pages-link">Feedback &amp; Support</button>
+        </a>
+        <a href="/admin/settings/password-reset" id="password-link" data-path="/admin/settings/password-reset">
+            <button class="pages-link">Password Reset</button>
+        </a>
+        <a href="/admin/settings/delete-account/{{admin_id}}" id="delete-link"
+            data-path="/admin/settings/delete-account">
+            <button class="pages-link">Delete Account</button>
+        </a>
     </div>
 
-    <div class="sidebarPageContainer">
-        <div class="sidebarContainer">
-            <ul>
-                <li><a href="/admin/settings" class="sidebar-link"><i class="material-icons">nightlight_round</i>Dark
-                        Mode</a></li>
-                <li><a href="/admin/settings/feedback-support" class="sidebar-link"><i
-                            class="material-icons">mail</i>Feedback &
-                        Support</a></li>
-                <li><a href="/admin/settings/password-reset" class="sidebar-link"><i
-                            class="material-icons">lock_reset</i>Password Reset</a></li>
-                <li><a href="/admin/settings/activity-log/{{admin_id}}" class="sidebar-link"><i
-                            class="material-icons">timeline</i>Activity
-                        Log</a></li>
-                <li><a href="/admin/settings/delete-account/{{admin_id}}" class="sidebar-link"><i
-                            class="material-icons">delete</i>Delete
-                        Account</a></li>
-            </ul>
+    <div class="form-container">
+        <div class="upper">
+            <div class="upper-left">
+                <i class="fa-solid fa-trash trash-icon"></i>
+            </div>
+            <div class="upper-right">
+                <h3>Delete Profile?</h3>
+                <p>You'll permanently lose your:</p>
+                <ul>
+                    <li>Profile</li>
+                    <li>Messages</li>
+                    <li>Photos</li>
+                </ul>
+            </div>
         </div>
 
-        <div class="pageContainer">
-            <p>Delete your account permanently.</p>
+        <div class="lower">
+            <a href="#" onclick="deleteAdmin({{admin_id}}); return false;" class="btn btn-delete btn-sm">
+                Cancel
+            </a>
+
             <a href="#" onclick="deleteAdmin({{admin_id}}); return false;" class="btn btn-delete btn-sm">
                 Delete Account
             </a>
@@ -110,15 +123,22 @@
 
 <script src="/js/deleteAdmin.js"></script>
 <script>
-    window.onload = function() {
-    const theme = localStorage.getItem('theme');
+    window.onload = function () {
+        const theme = localStorage.getItem('theme');
 
-    const logo = document.getElementById('logo');
+        const logo = document.getElementById('logo');
 
-    if (theme === 'dark') {
-        logo.src = '/images/hiveDark.png';
-    } else {
-        logo.src = '/images/hiveLight.png';
-    }
-};
+        if (theme === 'dark') {
+            logo.src = '/images/hiveDark.png';
+        } else {
+            logo.src = '/images/hiveLight.png';
+        }
+    };
 </script>
+
+{{!-- <div class="pageContainer">
+    <p>Delete your account permanently.</p>
+    <a href="#" onclick="deleteAdmin({{admin_id}}); return false;" class="btn btn-delete btn-sm">
+        Delete Account
+    </a>
+</div> --}}

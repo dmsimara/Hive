@@ -74,37 +74,35 @@
 </nav>
 
 <div class="container pt-5 pb-5">
-    <div class="headerContainer">
-        <h2 class="account-title">Account Settings</h2>
-        <a href="/admin/dashboard/view/account" class="viewProfile"><i class="material-icons">person</i>View Profile</a>
+    <h1 class="container-title"><i class="fa-solid fa-gear modal-icon"></i>Account Settings</h1>
+
+    <div class="pages-container">
+        <a href="/admin/settings" id="appearance-link" data-path="/admin/settings">
+            <button class="pages-link">Appearance</button>
+        </a>
+        <a href="/admin/settings/feedback-support" id="feedback-link" data-path="/admin/settings/feedback-support">
+            <button class="pages-link">Feedback &amp; Support</button>
+        </a>
+        <a href="/admin/settings/password-reset" id="password-link" data-path="/admin/settings/password-reset">
+            <button class="pages-link">Password Reset</button>
+        </a>
+        <a href="/admin/settings/delete-account/{{admin_id}}" id="delete-link"
+            data-path="/admin/settings/delete-account">
+            <button class="pages-link">Delete Account</button>
+        </a>
     </div>
 
-    <div class="sidebarPageContainer">
-        <div class="sidebarContainer">
-            <ul>
-                <li><a href="/admin/settings" class="sidebar-link"><i class="material-icons">nightlight_round</i>Dark
-                        Mode</a></li>
-                <li><a href="/admin/settings/feedback-support" class="sidebar-link"><i
-                            class="material-icons">mail</i>Feedback &
-                        Support</a></li>
-                <li><a href="/admin/settings/password-reset" class="sidebar-link"><i
-                            class="material-icons">lock_reset</i>Password Reset</a></li>
-                <li><a href="/admin/settings/activity-log/{{admin_id}}" class="sidebar-link"><i
-                            class="material-icons">timeline</i>Activity
-                        Log</a></li>
-                <li><a href="/admin/settings/delete-account/{{admin_id}}" class="sidebar-link"><i
-                            class="material-icons">delete</i>Delete
-                        Account</a></li>
-            </ul>
-        </div>
+    <div class="form-container">
+        <h3>Feedback Form</h3>
+        <p>Rate your experience and help us improve with your feedback.</p>
 
-        <div class="pageContainer">
-            <form id="feedbackForm">
-                <label for="userName">Name:</label>
-                <input type="text" id="userName" name="userName" placeholder="Enter your name" required>
+        <form id="feedbackForm">
+            <label for="userName">Name:</label>
+            <input type="text" id="userName" name="userName" placeholder="Enter your name" required>
 
-                <div class="emoji-feedback">
-                    <p>How would you rate your experience?</p>
+            <div class="emoji-feedback">
+                <p>How would you rate your experience?</p>
+                <div class="emoji-row">
                     <label>
                         <input type="radio" name="feedback" id="feedback" value="1" required>
                         <div class="emoji-container">
@@ -141,27 +139,73 @@
                         </div>
                     </label>
                 </div>
+            </div>
+            <textarea name="content" placeholder="Optional comments..."></textarea>
 
-                <textarea name="content" placeholder="Optional comments..."></textarea>
-
-                <button type="submit">Submit Feedback</button>
-            </form>
-        </div>
+            <button type="submit">Submit Feedback</button>
+        </form>
     </div>
 </div>
 
-
 <script src="/js/feedback.js"></script>
 <script>
-    window.onload = function() {
-    const theme = localStorage.getItem('theme');
+    window.onload = function () {
+        const theme = localStorage.getItem('theme');
 
-    const logo = document.getElementById('logo');
+        const logo = document.getElementById('logo');
 
-    if (theme === 'dark') {
-        logo.src = '/images/hiveDark.png';
-    } else {
-        logo.src = '/images/hiveLight.png';
-    }
-};
+        if (theme === 'dark') {
+            logo.src = '/images/hiveDark.png';
+        } else {
+            logo.src = '/images/hiveLight.png';
+        }
+    };
 </script>
+
+{{!-- <form id="feedbackForm">
+    <label for="userName">Name:</label>
+    <input type="text" id="userName" name="userName" placeholder="Enter your name" required>
+
+    <div class="emoji-feedback">
+        <p>How would you rate your experience?</p>
+        <label>
+            <input type="radio" name="feedback" id="feedback" value="1" required>
+            <div class="emoji-container">
+                <span class="emoji">😞</span>
+                <span class="label-text">Worst</span>
+            </div>
+        </label>
+        <label>
+            <input type="radio" name="feedback" id="feedback" value="2">
+            <div class="emoji-container">
+                <span class="emoji">😟</span>
+                <span class="label-text">Not Good</span>
+            </div>
+        </label>
+        <label>
+            <input type="radio" name="feedback" id="feedback" value="3">
+            <div class="emoji-container">
+                <span class="emoji">😐</span>
+                <span class="label-text">Fine</span>
+            </div>
+        </label>
+        <label>
+            <input type="radio" name="feedback" id="feedback" value="4">
+            <div class="emoji-container">
+                <span class="emoji">🙂</span>
+                <span class="label-text">Look Good</span>
+            </div>
+        </label>
+        <label>
+            <input type="radio" name="feedback" id="feedback" value="5">
+            <div class="emoji-container">
+                <span class="emoji">😃</span>
+                <span class="label-text">Very Good</span>
+            </div>
+        </label>
+    </div>
+
+    <textarea name="content" placeholder="Optional comments..."></textarea>
+
+    <button type="submit">Submit Feedback</button>
+</form> --}}
