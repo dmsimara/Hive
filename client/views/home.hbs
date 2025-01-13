@@ -29,17 +29,15 @@
 
 <script src="/js/home.js"></script>
 <script>
-  window.addEventListener('DOMContentLoaded', (event) => {
-    const theme = localStorage.getItem('theme');
-    const logo = document.getElementById('logo');
+    window.onload = function () {
+        const theme = localStorage.getItem('theme');
 
-    // Set the logo image based on the theme
-    if (theme === 'dark') {
-        document.body.classList.add('dark-theme');
-        logo.src = '/images/hiveDark.png';
-    } else {
-        document.body.classList.remove('dark-theme');
-        logo.src = '/images/hiveLight.png';
-    }
-  });
+        const logo = document.getElementById('logo');
+
+        if (theme === 'dark') {
+            logo.src = '/images/hiveDark.png';
+        } else {
+            logo.src = '/images/hiveLight.png';
+        }
+    };
 </script>

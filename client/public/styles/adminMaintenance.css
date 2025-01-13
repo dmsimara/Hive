@@ -311,9 +311,10 @@ body::-webkit-scrollbar-track:hover {
 .row-container {
     display: flex;
     flex-wrap: wrap; 
-    gap: 30px;  
+    row-gap: 30px;  
     justify-content: center;  
     margin-bottom: 20px;
+    column-gap: 50px;
 }
 
 .card {
@@ -688,4 +689,10 @@ body::-webkit-scrollbar-track:hover {
     color: var(--orange);
     border: 1px solid var(--orange);
     font-weight: 700;
+}
+
+.empty-card {
+    background-color: #f0f0f0;   
+    border: 1px solid #ccc;    
+    visibility: hidden;       
 }

@@ -20,7 +20,7 @@ import Notice from "./models/notice.models.js";
 import Feedback from "./models/feedback.models.js";
 import Utility from "./models/utility.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
-import { addTenant, addTenantView, addUnitView, editTenant, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, logActivity, updateAdminPassword, updateEvent, updateTenant, updateUtility, utilityHistories, viewActivities, viewAdmins, viewEvents, viewNotices, viewTenants, viewUnits, viewUtilities } from './controllers/auth.controllers.js';
+import { addTenant, addTenantView, addUnitView, editTenant, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, logActivity, updateAdminPassword, updateEvent, updateTenant, updateUtility, utilityHistories, viewActivities, viewAdmins, viewEvents, viewFixes, viewNotices, viewTenants, viewUnits, viewUtilities } from './controllers/auth.controllers.js';
 import { createPool } from "mysql2";
 
 // Sets up `__filename` and `__dirname` in an ES module environment using Node.js.
@@ -741,21 +741,22 @@ app.get("/admin/visitors/pending", verifyToken, async (req, res) => {
 // ADMIN PAGES (MAINTENANCE) ---------------------------------------------------------------------------
 app.get("/admin/maintenance", verifyToken, async (req, res) => {
     try {
-        const admin = await viewAdmins(req, res);
-        const tenantsData = await viewTenants(req);
+        const fixesData = await viewFixes(req); 
+        console.log("Real Fixes Data from Database:", fixesData); 
+        
+        if (!fixesData || fixesData.length === 0) {
+            console.error("No fixes data found.");
+            return res.status(500).send("No fixes data found.");
+        }
 
-        const adminId = admin ? admin.admin_id : null;
-
-        res.render("adminMaintenance", {
+        return res.render("adminMaintenance", {
             title: "Hive",
             styles: ["adminMaintenance"],
-            admin: admin || {},
-            admin_id: adminId,
-            tenants: tenantsData || [],
+            fixes: fixesData, 
         });
     } catch (error) {
-        console.error('Error fetching admin:', error);
-        res.status(500).send("An error occurred while retrieving admin data.");
+        console.error("Error fetching data:", error);
+        return res.status(500).send("An error occurred while retrieving data.");
     }
 });
 
