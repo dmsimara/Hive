@@ -37,43 +37,52 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-// document.addEventListener("DOMContentLoaded", () => {
-//     const assignButtons = document.querySelectorAll('.assign-btn');
-//     const assignModal = document.getElementById('assignModal');
+document.addEventListener("DOMContentLoaded", () => {
+    const deleteButtons = document.querySelectorAll('.delete-btn');
 
-//     // Select modal elements
-//     const modalPicture = assignModal.querySelector('.dynamic-modal-picture');
-//     const modalTitle = assignModal.querySelector('.dynamic-modal-title');
-//     const roomNumber = assignModal.querySelector('.dynamic-room-number');
-//     const maintenanceType = assignModal.querySelector('.dynamic-maintenance-type');
-//     const urgency = assignModal.querySelector('.dynamic-urgency');
-//     const dateTime = assignModal.querySelector('.dynamic-date-time');
-//     const contactNumber = assignModal.querySelector('.dynamic-contact-number');
-//     const description = assignModal.querySelector('.dynamic-description');
-//     const fixIdInput = document.getElementById('maintenance_id');
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const maintenanceId = this.getAttribute('data-id'); // Get the maintenance_id
 
-//     // Add click event listener to each assign button
-//     assignButtons.forEach(button => {
-//         button.addEventListener('click', () => {
-//             const fixId = button.getAttribute('data-maintenance-id');
+            // Optional: Ask for confirmation before deleting
+            const confirmation = confirm("Are you sure you want to mark this maintenance as done?");
+            if (confirmation) {
+                // Send PUT request to the backend to mark maintenance as done
+                fetch(`/api/auth/update/maintenance/${maintenanceId}/done`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === 'Maintenance marked as done successfully') {
+                        alert('Maintenance marked as done successfully!');
+                        window.location.reload(); // Reload the page after successful operation
+                    } else {
+                        alert('Failed to mark maintenance as done. Please try again.');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('Failed to mark maintenance as done. Please try again.');
+                });
+            }
+        });
+    });
+});
 
-//             // Fetch the correct fix data from the globally available `fixes` variable
-//             const fix = window.fixes.find(f => f.maintenance_id == fixId);
-
-//             if (fix) {
-//                 // Dynamically update modal content
-//                 modalPicture.src = fix.tenantProfile || '/images/defaultUser.webp';
-//                 modalTitle.textContent = `${fix.tenantFirstName} ${fix.tenantLastName}`;
-//                 roomNumber.textContent = `Room Number: ${fix.tenantRoomNumber || '-'}`;
-//                 maintenanceType.textContent = fix.type || '-';
-//                 urgency.textContent = fix.urgency || '-';
-//                 dateTime.textContent = fix.tenantScheduledDate || '-';
-//                 contactNumber.textContent = fix.tenantContactNumber || '-';
-//                 description.textContent = fix.tenantDescription || '-';
-//                 fixIdInput.value = fix.maintenance_id;
-//             } else {
-//                 console.error(`No fix found with ID: ${fixId}`);
-//             }
-//         });
-//     });
-// });
+document.addEventListener("DOMContentLoaded", () => {
+    const rowContainer = document.querySelector('.row-container');
+    const totalCards = rowContainer.querySelectorAll('.card').length;
+    
+    if (totalCards < 3) {
+        const numEmptyCards = 3 - totalCards;  
+        
+        for (let i = 0; i < numEmptyCards; i++) {
+            const emptyCard = document.createElement('div');
+            emptyCard.classList.add('empty-card');
+            rowContainer.appendChild(emptyCard);
+        }
+    }
+});

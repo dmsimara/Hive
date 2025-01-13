@@ -684,7 +684,9 @@ export const viewFixes = async (req) => {
 
     try {
         const rows = await Fix.findAll({
-            where: { establishment_id: establishmentId },
+            where: { establishment_id: establishmentId,
+                status: ['pending', 'in progress']
+             },
             include: [
                 {
                     model: Tenant,
@@ -1695,7 +1697,7 @@ export const doneMaintenance = async (req, res) => {
       if (!maintenance) {
         return res.status(404).json({ message: 'Maintenance not found' });
       }
-  
+
       maintenance.resolvedDate = currentDate;
       maintenance.status = 'completed';
   

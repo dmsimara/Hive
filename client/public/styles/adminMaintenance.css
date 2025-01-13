@@ -312,7 +312,7 @@ body::-webkit-scrollbar-track:hover {
     display: flex;
     flex-wrap: wrap; 
     row-gap: 30px;  
-    justify-content: center;  
+    justify-content: flex-start;  
     margin-bottom: 20px;
     column-gap: 50px;
 }
@@ -428,42 +428,48 @@ body::-webkit-scrollbar-track:hover {
     font-weight: 700;
 }
 
-/* delete popup style */
 .more-icon {
     cursor: pointer;
     font-size: 24px;
+    z-index: 20;
+    position: relative; 
 }
 
-.popup-menu {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: transparent;
-    border-radius: 5px;
-    padding: 10px;
-    z-index: 10;
-}
-
-.popup-menu.hidden {
+.dropdown-menu {
     display: none;
-}
-
-.popup-button {
-    background-color: rgb(181, 180, 180);
-    border: none;
-    color: black;
-    padding: 6px 30px;
+    position: absolute;
+    top: 60%; 
+    right: 0;  
+    left: 60%;
+    background-color: transparent;
+    border: 1px solid transparent;
     border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: opacity 0.3s ease;
-    text-align: left;
-    font-weight: 600;
+    z-index: 30;
 }
 
-.popup-button:hover {
-    opacity: 0.7;
+.dropdown-menu.show {
+    display: block;
 }
+
+.btn-danger {
+    width: 140px;
+    border: none;
+    background-color: rgb(242, 236, 236); 
+    color: black;
+    padding: 10px;
+    text-align: left;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    z-index: 1000; 
+}
+
+.btn-danger:hover {
+    background-color: rgb(229, 226, 226); 
+    opacity: 0.8;
+    color: black;
+}
+
 
 .modal-dialog-right {
     position: absolute;
@@ -692,7 +698,16 @@ body::-webkit-scrollbar-track:hover {
 }
 
 .empty-card {
+    flex: 1 1 calc(33.333% - 40px);  
+    max-width: 500px;  
+    min-width: 400px; 
+    height: 250px;   
     background-color: #f0f0f0;   
     border: 1px solid #ccc;    
     visibility: hidden;       
+    margin-bottom: 10px;
+}
+
+.row-container > .card:nth-child(3n + 1) {
+    margin-left: 0;
 }
