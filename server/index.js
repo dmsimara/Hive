@@ -10,6 +10,7 @@ import path from "path";
 import session from "express-session"; 
 import fileUpload from "express-fileupload";
 import fs from 'fs';
+import moment from 'moment';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import bcryptjs from 'bcryptjs';
@@ -20,7 +21,7 @@ import Notice from "./models/notice.models.js";
 import Feedback from "./models/feedback.models.js";
 import Utility from "./models/utility.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
-import { addTenant, addTenantView, addUnitView, editTenant, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, logActivity, updateAdminPassword, updateEvent, updateTenant, updateUtility, utilityHistories, viewActivities, viewAdmins, viewEvents, viewFixes, viewNotices, viewTenants, viewUnits, viewUtilities } from './controllers/auth.controllers.js';
+import { addTenant, addTenantView, addUnitView, editTenant, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, logActivity, updateAdminPassword, updateEvent, updateTenant, updateUtility, utilityHistories, viewActivities, viewAdmins, viewEvents, viewFixes, viewFixesAdmin, viewNotices, viewTenants, viewUnits, viewUtilities } from './controllers/auth.controllers.js';
 import { createPool } from "mysql2";
 
 // Sets up `__filename` and `__dirname` in an ES module environment using Node.js.
@@ -84,6 +85,12 @@ app.engine("hbs", exphbs.engine({
         },
         isArrayEmpty: function(arr) {
             return arr && arr.length === 0;
+        },
+        formatDate: function (date) {
+            if (date) {
+                return moment(date).format('MM/DD/YYYY'); 
+            }
+            return '---';
         }
     }
 }));
@@ -742,7 +749,7 @@ app.get("/admin/visitors/pending", verifyToken, async (req, res) => {
 app.get("/admin/maintenance", verifyToken, async (req, res) => {
     try {
         const admin = await viewAdmins(req, res);
-        const fixesData = await viewFixes(req); 
+        const fixesData = await viewFixesAdmin(req); 
         console.log("Real Fixes Data from Database:", fixesData); 
         
         if (!fixesData || fixesData.length === 0) {
@@ -1452,6 +1459,14 @@ app.get("/tenant/maintenance", verifyTenantToken, setEstablishmentId, async (req
     const { tenantId, establishmentId } = req;
 
     try {
+        const fixesData = await viewFixes(req); 
+        console.log("Fixes (Tenant):", fixesData); 
+        
+        if (!fixesData || fixesData.length === 0) {
+            console.error("No fixes data found.");
+            return res.status(500).send("No fixes data found.");
+        }
+
         if (!tenantId || !establishmentId) {
             return res.status(400).json({ error: "Tenant or establishment ID is missing." });
         }
@@ -1468,7 +1483,44 @@ app.get("/tenant/maintenance", verifyTenantToken, setEstablishmentId, async (req
             title: "Hive",
             styles: ["tenantMaintenance"],
             tenant: plainTenant,
+            fixes: fixesData,
         });
+    } catch (error) {
+        console.error("Error fetching tenant visitors data:", error.message);
+        res.status(500).json({ error: "Internal server error." });
+    }
+});
+
+app.get("/tenant/maintenance/view", verifyTenantToken, setEstablishmentId, async (req, res) => {
+    const { tenantId, establishmentId } = req;
+
+    try {
+        const fixesData = await viewFixes(req); 
+        console.log("Fixes (Tenant):", fixesData);
+
+        if (!fixesData || fixesData.length === 0) {
+            console.error("No fixes data found.");
+            return res.status(500).json({ error: "No fixes data found." });
+        }
+
+        if (!tenantId || !establishmentId) {
+            return res.status(400).json({ error: "Tenant or establishment ID is missing." });
+        }
+
+        const tenant = await Tenant.findOne({ where: { tenant_id: tenantId, establishment_id: establishmentId } });
+
+        if (!tenant) {
+            return res.status(404).json({ error: "Tenant not found." });
+        }
+
+        const plainTenant = tenant.get({ plain: true });
+
+        // Return the JSON data here
+        return res.json({
+            tenant: plainTenant,
+            fixes: fixesData
+        });
+
     } catch (error) {
         console.error("Error fetching tenant visitors data:", error.message);
         res.status(500).json({ error: "Internal server error." });

@@ -127,93 +127,131 @@
                         </tr>
                     </thead>
                     <tbody id="results">
+                        {{#if fixes}} 
+                        {{#each fixes}} 
                         <tr>
-                            <td>Leaking Faucet</td>
-                            <td>Completed</td>
-                            <td>01/05/2024</td>
-                            <td>01/05/2024</td>
-                            <td>Ethan Cruz</td>
-                            <td>Urgent</td>
+                            <td>{{this.type}}</td>
+                            <td>{{this.status}}</td> 
+                            <td>{{formatDate this.submissionDate}}</td> 
+                            <td>{{#if this.resolvedDate}}{{formatDate this.resolvedDate}}{{else}}---{{/if}}</td>
+                            <td>{{this.assignedPerson}}</td> 
+                            <td>{{this.urgency}}</td> 
                         </tr>
+                        {{/each}}
+                        {{else}}
                         <tr>
-                            <td>AC Repair</td>
-                            <td>In Progress</td>
-                            <td>01/03/2024</td>
-                            <td>---</td>
-                            <td>Lucas Morales</td>
-                            <td>Urgent</td>
+                            <td colspan="6" class="text-center">No maintenance requests found.</td>
                         </tr>
-                        <tr>
-                            <td>Low Water Pressure</td>
-                            <td>Pending</td>
-                            <td>01/02/2024</td>
-                            <td>---</td>
-                            <td>Nathan Reyes</td>
-                            <td>Scheduled</td>
-                        </tr>
+                        {{/if}}
                     </tbody>
                 </table>
             </div>
+
         </div>
-    </main>
+</div>
+</main>
 
-    <div class="modal fade" id="addMaintenanceModal" tabindex="-1" aria-labelledby="addMaintenanceModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <h5 class="modal-title" id="addMaintenanceModalLabel"><i class="fa-solid fa-wrench modal-icon"></i>Maintenance
-                        Form</h5>
-                    <form action="api/auth/add/maintenance" method="POST" id="maintenanceForm">
-                        <input type="hidden" id="establishmentId" name="establishmentId" value="{{establishmentId}}">
+<div class="modal fade" id="addMaintenanceModal" tabindex="-1" aria-labelledby="addMaintenanceModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h5 class="modal-title" id="addMaintenanceModalLabel"><i
+                        class="fa-solid fa-wrench modal-icon"></i>Maintenance
+                    Form</h5>
+                <form action="api/auth/add/maintenance" method="POST" id="maintenanceForm">
+                    <input type="hidden" id="establishmentId" name="establishmentId" value="{{establishmentId}}">
 
-                        <div class="row mb-3">
-                            <div class="col">
-                                <label for="type" class="form-label">Type of Maintenance</label>
-                                <input type="text" class="form-control form-control-sm" id="type" name="type" required>
-                            </div>
-                            <div class="col-8">
-                                <label for="description" class="form-label">Description of the issue
-                                    <span>(Optional)</span></label>
-                                <input type="text" class="form-control form-control-sm" id="description"
-                                    name="description">
-                            </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="type" class="form-label">Type of Maintenance</label>
+                            <input type="text" class="form-control form-control-sm" id="type" name="type" required>
                         </div>
-
-                        <div class="row mb-3">
-                            <div class="col">
-                                <label for="urgency" class="form-label">Urgency Level</label>
-                                <select name="urgency" id="urgency" required>
-                                    <option value=""></option>
-                                    <option value="urgent">Urgent</option>
-                                    <option value="scheduled">Scheduled</option>
-                                </select>
-                            </div>
-                            <div class="col">
-                                <label for="scheduledDate" class="form-label">Preferred Time and Date</label>
-                                <input type="datetime-local" class="form-control form-control-sm" id="scheduledDate"
-                                    name="scheduledDate">
-                            </div>
-                            <div class="col">
-                                <label for="contactNum" class="form-label">Contact Number</label>
-                                <input type="tel" class="form-control form-control-sm"
-                                    id="contactNum" name="contactNum">
-                            </div>
+                        <div class="col-8">
+                            <label for="description" class="form-label">Description of the issue
+                                <span>(Optional)</span></label>
+                            <input type="text" class="form-control form-control-sm" id="description" name="description">
                         </div>
-                        <div class="d-flex justify-content-end">
-                            <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
+                    </div>
 
-                    </form>
-                </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="urgency" class="form-label">Urgency Level</label>
+                            <select name="urgency" id="urgency" required>
+                                <option value=""></option>
+                                <option value="urgent">Urgent</option>
+                                <option value="scheduled">Scheduled</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label for="scheduledDate" class="form-label">Preferred Time and Date</label>
+                            <input type="datetime-local" class="form-control form-control-sm" id="scheduledDate"
+                                name="scheduledDate">
+                        </div>
+                        <div class="col">
+                            <label for="contactNum" class="form-label">Contact Number</label>
+                            <input type="tel" class="form-control form-control-sm" id="contactNum" name="contactNum">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+
+                </form>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Maintenance Overview Modal -->
+<div class="modal fade" id="eventOverviewModal" tabindex="-1" aria-labelledby="eventOverviewModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventOverviewModalLabel">Maintenance Overview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="overview_event_name" class="form-label">Event Name</label>
+                    <input type="text" class="form-control" id="overview_event_name" disabled>
+                </div>
+
+                <div class="mb-3">
+                    <label for="overview_event_description" class="form-label">Event Description</label>
+                    <input type="text" class="form-control" id="overview_event_description" disabled>
+                </div>
+
+                <div class="mb-3">
+                    <label for="overview_start" class="form-label">Start Date</label>
+                    <input type="date" class="form-control" id="overview_start" disabled>
+                </div>
+
+                <div class="mb-3">
+                    <label for="overview_status" class="form-label">Status</label>
+                    <input type="text" class="form-control" id="overview_status" disabled>
+                </div>
+
+                <div class="mb-3">
+                    <label for="overview_assigned_person" class="form-label">Assigned Person</label>
+                    <input type="text" class="form-control" id="overview_assigned_person" disabled>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
 <script src="/js/tenantMaintenance.js"></script>
 <script>
+    window.establishmentId = {{ establishmentId }};
+
     window.onload = function () {
         const theme = localStorage.getItem('theme');
 
@@ -225,19 +263,61 @@
             logo.src = '/images/hiveLight.png';
         }
     };
+
 </script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', async function () {
         const calendarEl = document.getElementById('calendar');
-        let eventsData;
 
-        try {
-            eventsData = JSON.parse('{{{json events}}}');
-            console.log(eventsData);
-        } catch (error) {
-            console.error('Error parsing events data:', error);
-            eventsData = [];
+        if (!calendarEl) {
+            console.error("Calendar element not found!");
+            alert("Calendar element is missing.");
+            return;
         }
+
+        const fetchFixes = async () => {
+            try {
+                const response = await fetch('/tenant/maintenance/view');
+                if (!response.ok) throw new Error('Failed to fetch maintenance data');
+                const data = await response.json();
+                console.log("Fetched fixes data:", data);
+
+                return data.fixes.map(fix => {
+                    const startDate = new Date(fix.scheduledDate);
+                    const endDate = new Date(startDate.getTime() + 60 * 60 * 1000);
+
+                    let statusClass = '';
+                    if (fix.status === 'in progress') {
+                        statusClass = 'in-progress-event';
+                    } else if (fix.status === 'pending') {
+                        statusClass = 'pending-event';
+                    } else if (fix.status === 'completed') {
+                        statusClass = 'completed-event';
+                    }
+
+                    return {
+                        id: fix.maintenance_id,
+                        title: `${fix.type} - Room ${fix.roomNumber || ''}`,
+                        start: startDate.toISOString(),
+                        end: endDate.toISOString(),
+                        classNames: [statusClass],
+                        extendedProps: {
+                            roomNumber: fix.roomNumber,
+                            type: fix.type,
+                            urgency: fix.urgency,
+                            status: fix.status,
+                            assignedPerson: fix.assignedPerson
+                        }
+                    };
+                });
+            } catch (error) {
+                console.error('Error fetching maintenance data:', error);
+                return [];
+            }
+        };
+
+        const eventsData = await fetchFixes();
+        console.log("Events Data:", eventsData);
 
         const calendar = new FullCalendar.Calendar(calendarEl, {
             headerToolbar: {
@@ -247,15 +327,6 @@
             },
             initialView: 'timeGridWeek',
             firstDay: 1,
-            editable: true,
-            selectable: true,
-            select: function (info) {
-                const selectedDate = info.startStr;
-                document.getElementById('start').value = `${selectedDate}T00:00`;
-                document.getElementById('end').value = `${selectedDate}T23:59`;
-                const modal = new bootstrap.Modal(document.getElementById('addEventModal'));
-                modal.show();
-            },
             events: eventsData,
             titleFormat: {
                 month: "long",
@@ -263,44 +334,15 @@
             },
             eventClick: function (info) {
                 const event = info.event;
-                document.getElementById('overview_event_name').value = event.title || '';
-                document.getElementById('overview_event_description').value = event.extendedProps.description || '';
-                document.getElementById('overview_start').value = event.start.toISOString().slice(0, 16);
-                document.getElementById('overview_end').value = event.end ? event.end.toISOString().slice(0, 16) : '';
+
+                document.getElementById('overview_event_name').value = event.extendedProps.type || '';
+                document.getElementById('overview_event_description').value = event.extendedProps.urgency || '';
+                document.getElementById('overview_start').value = event.start.toISOString().slice(0, 10);
                 document.getElementById('overview_status').value = event.extendedProps.status || 'Not Started';
-                const deleteButton = document.getElementById('deleteEvent');
-                deleteButton.dataset.eventId = event.id;
+                document.getElementById('overview_assigned_person').value = event.extendedProps.assignedPerson || '';
+
                 const modal = new bootstrap.Modal(document.getElementById('eventOverviewModal'));
                 modal.show();
-            },
-
-            eventDrop: async function (info) {
-                const event = info.event;
-                const updatedEventData = {
-                    event_id: event.id,
-                    start: event.start.toISOString(),
-                    end: event.end ? event.end.toISOString() : null,
-                };
-
-                try {
-                    const response = await fetch('/api/auth/edit/event', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(updatedEventData)
-                    });
-
-                    const result = await response.json();
-                    if (result.success) {
-                        alert('Event updated successfully!');
-                    } else {
-                        alert(`Error updating event: ${result.message}`);
-                        info.revert();
-                    }
-                } catch (error) {
-                    console.error('Error updating event:', error);
-                    alert('An error occurred while updating the event. Please try again.');
-                    info.revert();
-                }
             }
         });
 
