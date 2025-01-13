@@ -1,5 +1,5 @@
 import express from "express";
-import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, deleteTenant, viewAdmins, viewUnits, addUnitView, addUnit, deleteUnit, getOccupiedUnits, editTenant, updateTenant, addEvent, viewEvents, editEvent, deleteEvent, getEvents, updateEvent, viewNotices, pinnedNotices, permanentNotices, addNotice, togglePinned, togglePermanent, deleteNotice, getAvailableRooms, getNotices, searchTenants, searchRooms, deleteAdmin, updateAdminPassword, updateTenantPassword, addFeedback, addUtility, viewUtilities, deleteUtility, editUtility, updateUtility, utilityHistories, viewActivities, addRegularRequest, cancelRequest, approvedRequest, viewVisitorsAdmin, viewVisitorsTenant, addOvernightRequest, rejectedRequest, checkin, checkout, addMaintenance, updateMaintenance, doneMaintenance, viewFixes, viewFixById } from "../controllers/auth.controllers.js";
+import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, deleteTenant, viewAdmins, viewUnits, addUnitView, addUnit, deleteUnit, getOccupiedUnits, editTenant, updateTenant, addEvent, viewEvents, editEvent, deleteEvent, getEvents, updateEvent, viewNotices, pinnedNotices, permanentNotices, addNotice, togglePinned, togglePermanent, deleteNotice, getAvailableRooms, getNotices, searchTenants, searchRooms, deleteAdmin, updateAdminPassword, updateTenantPassword, addFeedback, addUtility, viewUtilities, deleteUtility, editUtility, updateUtility, utilityHistories, viewActivities, addRegularRequest, cancelRequest, approvedRequest, viewVisitorsAdmin, viewVisitorsTenant, addOvernightRequest, rejectedRequest, checkin, checkout, addMaintenance, updateMaintenance, doneMaintenance, viewFixes, viewFixesAdmin } from "../controllers/auth.controllers.js";
 import { verifyTenantToken, verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
@@ -58,7 +58,7 @@ router.post("/editUtility/:utility_id", verifyToken, updateUtility);
 router.get("/utilityHistory", utilityHistories);
 router.get("/activity-log/:adminId", verifyToken, viewActivities);
 router.get("/maintenance", verifyToken, viewFixes);
-router.get("/maintenance/:maintenance_id", verifyToken, viewFixById);
+router.get("/admin/maintenance", verifyToken, viewFixesAdmin);
 
 // tenants
 router.get("/view-tenants", viewTenants);

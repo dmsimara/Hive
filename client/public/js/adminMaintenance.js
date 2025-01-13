@@ -42,12 +42,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     deleteButtons.forEach(button => {
         button.addEventListener('click', function() {
-            const maintenanceId = this.getAttribute('data-id'); // Get the maintenance_id
+            const maintenanceId = this.getAttribute('data-id'); 
 
-            // Optional: Ask for confirmation before deleting
             const confirmation = confirm("Are you sure you want to mark this maintenance as done?");
             if (confirmation) {
-                // Send PUT request to the backend to mark maintenance as done
                 fetch(`/api/auth/update/maintenance/${maintenanceId}/done`, {
                     method: 'PUT',
                     headers: {
@@ -58,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 .then(data => {
                     if (data.message === 'Maintenance marked as done successfully') {
                         alert('Maintenance marked as done successfully!');
-                        window.location.reload(); // Reload the page after successful operation
+                        window.location.reload();
                     } else {
                         alert('Failed to mark maintenance as done. Please try again.');
                     }

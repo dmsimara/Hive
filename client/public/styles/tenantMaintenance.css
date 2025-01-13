@@ -660,6 +660,44 @@ h3 span.count {
     border: none !important;
 }
 
+.fc-event {
+    color: black;
+}
+.fc-event.in-progress-event {
+    background-color: rgb(235, 207, 83);
+    color: black !important;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.fc-event.in-progress-event:hover {
+    opacity: 0.7;
+}
+
+.fc-event.pending-event {
+    background-color: var(--orange);
+    color: black;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.fc-event.pending-event:hover {
+    opacity: 0.7;
+}
+
+.fc-event.completed-event {
+    background-color: rgb(84, 238, 84);
+    color: black;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.fc-event.completed-event:hover {
+    opacity: 0.7;
+}
 
 .modal-body {
     padding: 30px;
