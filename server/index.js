@@ -1479,17 +1479,45 @@ app.get("/tenant/maintenance", verifyTenantToken, setEstablishmentId, async (req
 
         const plainTenant = tenant.get({ plain: true });
 
+        const computeCounts = (fixes) => {
+            let pendingCount = 0;
+            let inProgressCount = 0;
+            let completedCount = 0;
+            let scheduledCount = 0;
+            let urgentCount = 0;
+
+            fixes.forEach(fix => {
+                if (fix.status === 'pending') pendingCount++;
+                if (fix.status === 'in progress') inProgressCount++;
+                if (fix.status === 'completed') completedCount++;
+                if (fix.urgency === 'scheduled') scheduledCount++;
+                if (fix.urgency === 'urgent') urgentCount++;
+            });
+
+            return {
+                pending: pendingCount,
+                inProgress: inProgressCount,
+                completed: completedCount,
+                scheduled: scheduledCount,
+                urgent: urgentCount,
+            };
+        };
+
+        const counts = computeCounts(fixesData);
+
         res.render("tenantMaintenance", {
             title: "Hive",
             styles: ["tenantMaintenance"],
             tenant: plainTenant,
             fixes: fixesData,
+            counts: counts,
         });
     } catch (error) {
         console.error("Error fetching tenant visitors data:", error.message);
         res.status(500).json({ error: "Internal server error." });
     }
 });
+
 
 app.get("/tenant/maintenance/view", verifyTenantToken, setEstablishmentId, async (req, res) => {
     const { tenantId, establishmentId } = req;
