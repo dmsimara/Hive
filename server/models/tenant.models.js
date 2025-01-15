@@ -88,6 +88,12 @@ const Tenant = sequelize.define('Tenant', {
     type: DataTypes.STRING(200),
     allowNull: true
   },
+  resetPasswordToken: {
+    type: DataTypes.STRING
+  },
+  resetPasswordExpiresAt: {
+    type: DataTypes.DATE
+  },
   tenantAddress: {
     type: DataTypes.STRING(255),
     allowNull: true

@@ -185,3 +185,36 @@ label[for="adminPassword"] {
     position: absolute;
     bottom: 8em;
 }
+
+.forgot-password-link {
+    font-size: 14px;  
+    color: var(--orange); 
+    text-decoration: none; 
+    font-weight: 600;  
+    margin-top: 10px;  
+    margin-right: 15em;
+    display: inline-block; 
+    position: relative; 
+}
+
+.forgot-password-link:hover {
+    color: var(--maroon);
+    text-decoration: none;
+}
+
+.dark-theme .forgot-password-link {
+    font-size: 14px;  
+    color: var(--reddish-brown); 
+    text-decoration: none; 
+    font-weight: 600;  
+    margin-top: 10px;  
+    margin-right: 15em;
+    display: inline-block; 
+    position: relative; 
+}
+
+.dark-theme .forgot-password-link:hover {
+    color: var(--brownish-yellow);  
+    text-decoration: underline;  
+    transition: color 0.3s ease, text-decoration 0.3s ease;  
+}

@@ -385,7 +385,6 @@ export const tenantLogout = async (req, res) => {
     }
 };
 
-
 export const forgotPassword = async (req, res) => {
     const { adminEmail } = req.body;
 
@@ -441,34 +440,93 @@ export const forgotPassword = async (req, res) => {
     }
 }
 
+export const forgotTenantPassword = async (req, res) => {
+    const { tenantEmail } = req.body;
+
+    try {
+        const tenant = await Tenant.findOne({
+            where: { tenantEmail }
+        });
+
+        if (!tenant) {
+            return res.status(400).json({ success: false, message: "Tenant not found" });
+        };
+
+        const resetToken = crypto.randomBytes(20).toString("hex");
+        const resetTokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000;
+
+        tenant.resetPasswordToken = resetToken;
+        tenant.resetPasswordExpiresAt = resetTokenExpiresAt;
+        await tenant.save();
+
+        const subject = 'Password Reset Request';
+        const html = `
+           <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
+              <h2 style="color: #4CAF50; text-align: center;">Password Reset Request</h2>
+              <p style="text-align: left;">We received a request to reset your password for your Hive tenant account.</p>
+              <p style="text-align: left;">If you did not make this request, you can safely ignore this email.</p>
+              <p style="text-align: left;">To reset your password, click the button below:</p>
+              <div style="text-align: center; margin: 20px 0;">
+                 <a href="${process.env.CLIENT_URL}/reset-password/${resetToken}" 
+                    style="background-color: #4CAF50; color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; display: inline-block;">
+                    Reset Password
+                 </a>
+              </div>
+              <p style="text-align: left; font-size: 0.9em; color: #555;">The link will expire in 1 hour for security reasons.</p>
+              <br>
+              <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
+              <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
+              <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+              <p style="font-size: 0.8em; color: #777; text-align: center;">
+                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.
+              </p>
+           </div>
+        `;
+        
+        await sendMail(tenantEmail, subject, null, html);
+
+        res.status(200).json({
+            success: true,
+            message: "Reset password link sent successfully"
+        })
+    } catch (error) {
+        console.log("Error in forgotPassword", error);
+        res.status(400).json({ success: false, message: error.message});
+    }
+}
+
 export const resetPassword = async (req, res) => {
     try {
-        const {token} = req.params;
-        const {adminPassword} = req.body;
+        const { token } = req.params;
+        const { adminPassword } = req.body;
 
         const admin = await Admin.findOne({
-            resetPasswordToken: token,
-            resetPasswordExpiresAt: {
-                 $gt: Date.now()
-            },
+            where: {
+                resetPasswordToken: token,
+                resetPasswordExpiresAt: {
+                    [Op.gt]: new Date() 
+                }
+            }
         });
 
         if (!admin) {
-            return res.status(400).json({ success: false, message: "Reset password token expired or invalid" });
+            return res.status(400).json({
+                success: false,
+                message: "Reset password token expired or invalid",
+            });
         }
 
         const hashedPassword = await bcryptjs.hash(adminPassword, 10);
 
-        admin.adminPassword = hashedPassword;
-        admin.resetPasswordToken = undefined;
-        admin.resetPasswordExpiresAt = undefined;
-
-        await admin.save();
+        await admin.update({
+            adminPassword: hashedPassword,
+            resetPasswordToken: null,  
+            resetPasswordExpiresAt: null 
+        });
 
         const logMessage = `Admin ${admin.adminFirstName} ${admin.adminLastName} reset their password successfully.`;
         logActivity(admin.admin_id, 'password reset', logMessage);
-        
-        // send email
+
         const subject = 'Password Reset Confirmation';
         const html = `
            <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
@@ -495,15 +553,86 @@ export const resetPassword = async (req, res) => {
         
         res.status(200).json({
             success: true,
-            message: "Password reset successfully"
-        })
+            message: "Password reset successfully",
+        });
     } catch (error) {
-        console.log(200).json({
+        console.log(error);
+        res.status(500).json({
             success: false,
-            message: error.message
+            message: error.message || "An unexpected error occurred.",
         });
     }
-}
+};
+
+export const resetTenantPassword = async (req, res) => {
+    try {
+        const { token } = req.params;
+        const { tenantPassword } = req.body;
+
+        const tenant = await Tenant.findOne({
+            where: {
+                resetPasswordToken: token,
+                resetPasswordExpiresAt: {
+                    [Op.gt]: new Date() 
+                }
+            }
+        });
+
+        if (!tenant) {
+            return res.status(400).json({
+                success: false,
+                message: "Reset password token expired or invalid",
+            });
+        }
+
+        const hashedPassword = await bcryptjs.hash(tenantPassword, 10);
+
+        await tenant.update({
+            tenantPassword: hashedPassword,
+            resetPasswordToken: null,  
+            resetPasswordExpiresAt: null 
+        });
+
+        const logMessage = `Admin ${tenant.tenantFirstName} ${tenant.tenantLastName} reset their password successfully.`;
+
+        logHistory(tenant.tenant_id, 'password reset', logMessage);
+
+        const subject = 'Password Reset Confirmation';
+        const html = `
+           <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
+              <h2 style="color: #4CAF50; text-align: center;">Password Reset Confirmation</h2>
+              <p style="text-align: left;">We are writing to confirm that your password for your Hive tenant account has been successfully reset.</p>
+              <p style="text-align: left;">If you did not initiate this password reset, please contact our support team immediately at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a> or your admin/s.</p>
+              <p style="text-align: left;">For your security, we recommend the following:</p>
+              <ul style="text-align: left; padding-left: 20px; color: #555;">
+                 <li>Use a strong and unique password that you haven’t used on other sites.</li>
+                 <li>Enable two-factor authentication if available.</li>
+                 <li>Avoid using the same password across multiple platforms.</li>
+              </ul>
+              <br>
+              <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
+              <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
+              <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+              <p style="font-size: 0.8em; color: #777; text-align: center;">
+                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.
+              </p>
+           </div>
+        `;
+        
+        await sendMail(tenant.tenantEmail, subject, null, html);
+        
+        res.status(200).json({
+            success: true,
+            message: "Password reset successfully",
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: error.message || "An unexpected error occurred.",
+        });
+    }
+};
 
 export const updateAdminPassword = async (req, res) => {
     const adminId = req.adminId;  
