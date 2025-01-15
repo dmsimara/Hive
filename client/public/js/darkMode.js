@@ -48,19 +48,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (savedFontSize) {
         document.body.style.fontSize = savedFontSize;
-        fontSizeSelect.value = savedFontSize; 
+        fontSizeSelect.value = savedFontSize;  
     }
 
     if (savedZoomDisplay) {
         document.body.style.zoom = savedZoomDisplay;
-        zoomDisplaySelect.value = savedZoomDisplay; 
+        zoomDisplaySelect.value = savedZoomDisplay.replace('%', '');  
     }
 
     fontSizeSelect.addEventListener("change", (event) => {
         const fontSize = event.target.value;
 
         if (fontSize) {
-            document.body.style.fontSize = fontSize; 
+            document.body.style.fontSize = fontSize;
             localStorage.setItem("fontSize", fontSize); 
         } else {
             document.body.style.fontSize = ""; 
@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (zoomLevel) {
             document.body.style.zoom = zoomLevel + "%";
-            localStorage.setItem("zoomDisplay", zoomLevel + "%"); 
+            localStorage.setItem("zoomDisplay", zoomLevel + "%");
         } else {
             document.body.style.zoom = ""; 
             localStorage.removeItem("zoomDisplay"); 

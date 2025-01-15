@@ -36,8 +36,10 @@ body {
     padding: 0;
     height: 100vh;
     width: 100%;
-    font-family: 'Raleway', 'Inter', sans-serif;
+    font-family: 'Inter', sans-serif;
     background-color: var(--background-color);
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .dark-theme html,
