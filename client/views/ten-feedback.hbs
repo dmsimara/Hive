@@ -35,7 +35,7 @@
                         <span>Announcement</span>
                     </a>
                 </li>
-                 </li>
+                </li>
                 <li class="sidebar-item">
                     <a href="/tenant/visitors" class="sidebar-link">
                         <i class="fas fa-clipboard-check"></i>
@@ -46,16 +46,16 @@
                     <a href="/tenant/maintenance" class="sidebar-link">
                         <i class="fas fa-tools"></i>
                         <span>Maintenance</span>
-                
+
                 </li>
             </ul>
             </li>
-                <li class="sidebar-item active">
-                    <a href="/tenant/settings" class="sidebar-link">
-                        <i class="fa-solid fa-gear"></i>
-                        <span>Settings</span>
-                    </a>
-                </li>
+            <li class="sidebar-item active">
+                <a href="/tenant/settings" class="sidebar-link">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
             <div class="sidebar-footer">
                 <a href="#" id="logoutButton" class="logout-button sidebar-link">
                     <i class="fas fa-sign-out-alt"></i>
@@ -65,81 +65,75 @@
         </div>
     </aside>
 
-   <main class="main-content">
+    <main class="main-content">
         <header class="dashboard-header">
             <div class="header-left">
                 <h3>Welcome to Hive</h3>
-                <h1 class="dashboard-title">Account Settings</h1> 
+                <h1 class="dashboard-title">Account Settings</h1>
             </div>
         </header>
 
+        <div class="content-wrapper">
+            <!-- New Card Section Styled Like Sidebar -->
+            <div class="white-card">
+                <ul class="card-nav">
+                    <li class="card-item">
+                        <a href="/tenant/customize" class="card-link">
+                            <i class="fas fa-moon"></i>
+                            <span>Customize</span>
+                        </a>
+                    </li>
+                    <li class="card-item">
+                        <a href="/tenant/feedback" class="card-link">
+                            <i class="fas fa-comment"></i>
+                            <span>Feedback and Support</span>
+                        </a>
+                    </li>
+                    <li class="card-item">
+                        <a href="/tenant/resetPassword" class="card-link">
+                            <i class="fas fa-lock"></i>
+                            <span>Password Reset</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
 
-    
-        <!-- New Card Section Styled Like Sidebar -->
-        <div class="white-card">
-            <ul class="card-nav">
-                <li class="card-item">
-                    <a href="/tenant/customize" class="card-link">
-                        <i class="fas fa-moon"></i>
-                        <span>Customize</span>
-                    </a>
-                </li>
-                <li class="card-item">
-                    <a href="/tenant/feedback" class="card-link">
-                        <i class="fas fa-comment"></i>
-                        <span>Feedback and Support</span>
-                    </a>
-                </li>
-                <li class="card-item">
-                    <a href="/tenant/resetPassword" class="card-link">
-                        <i class="fas fa-lock"></i>
-                        <span>Password Reset</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
+            <div class="choose-style-container">
+                <div class="feedback-section">
+                    <h2>Feedback Form</h2>
+                    <p>Rate your experience and help us improve with your feedback.</p>
 
- <div class="feedback-section">
-    <h2>Feedback Form</h2>
-    <p>Rate your experience and help us improve with your feedback.</p>
-    
-    <form class="feedback-form" action="/tenant/submit-feedback" method="POST">
-        <div class="form-group">
-            <label for="name">Your Name:</label>
-            <input type="text" id="name" name="name" placeholder="Enter your name" required>
-        </div>
-        <div class="form-group">
-            <label for="rating">How would you rate your Experience?</label>
-            <div class="emoji-group">
-                <input type="radio" id="happy" name="rating" value="5">
-                <label for="happy" title="Happy"><span class="emoji">😊</span></label>
+                    <form class="feedback-form" action="/tenant/submit-feedback" method="POST">
+                        <div class="form-group">
+                            <label for="name">Your Name:</label>
+                            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="rating">How would you rate your Experience?</label>
+                            <div class="emoji-group">
+                                <input type="radio" id="happy" name="rating" value="5">
+                                <label for="happy" title="Happy"><span class="emoji">😊</span></label>
 
-                <input type="radio" id="neutral" name="rating" value="3">
-                <label for="neutral" title="Neutral"><span class="emoji">😐</span></label>
+                                <input type="radio" id="neutral" name="rating" value="3">
+                                <label for="neutral" title="Neutral"><span class="emoji">😐</span></label>
 
-                <input type="radio" id="sad" name="rating" value="1">
-                <label for="sad" title="Sad"><span class="emoji">☹️</span></label>
+                                <input type="radio" id="sad" name="rating" value="1">
+                                <label for="sad" title="Sad"><span class="emoji">☹️</span></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="feedbackMessage">Your Feedback:</label>
+                            <textarea id="feedbackMessage" name="feedbackMessage" rows="5"
+                                placeholder="Type your feedback here..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit">Submit Feedback</button>
+                    </form>
+                </div>
             </div>
         </div>
-        <div class="form-group">
-            <label for="feedbackMessage">Your Feedback:</label>
-            <textarea id="feedbackMessage" name="feedbackMessage" rows="5" placeholder="Type your feedback here..." required></textarea>
-        </div>
-        <button type="submit" class="btn-submit">Submit Feedback</button>
-    </form>
 </div>
-
-
-  <!-- Content sections -->
-        <div id="customizeContent" class="content-section hidden">Customize Content</div>
-        <div id="feedbackContent" class="content-section hidden">Feedback and Support Content</div>
-        <div id="passwordResetContent" class="content-section hidden">Password Reset Content</div>
-    </main>
 </div>
-
-   <!--
+<!--
 <main>
     <div class="pageContainer">
         <div class="toggle-btn" id="btn">
@@ -154,15 +148,15 @@
 
 <script src="/js/ten-feedback.js"></script>
 <script>
-    window.onload = function() {
-    const theme = localStorage.getItem('theme');
+    window.onload = function () {
+        const theme = localStorage.getItem('theme');
 
-    const logo = document.getElementById('logo');
+        const logo = document.getElementById('logo');
 
-    if (theme === 'dark') {
-        logo.src = '/images/hiveDark.png';
-    } else {
-        logo.src = '/images/hiveLight.png';
-    }
-};
+        if (theme === 'dark') {
+            logo.src = '/images/hiveDark.png';
+        } else {
+            logo.src = '/images/hiveLight.png';
+        }
+    };
 </script>
