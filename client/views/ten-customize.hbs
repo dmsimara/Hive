@@ -71,69 +71,63 @@
             </div>
         </header>
 
-        <!-- New Card Section Styled Like Sidebar -->
-        <div class="white-card">
-            <ul class="card-nav">
-                <li class="card-item">
-                    <a href="/tenant/customize" class="card-link">
-                        <i class="fas fa-moon"></i>
-                        <span>Customize</span>
-                    </a>
-                </li>
-                <li class="card-item">
-                    <a href="/tenant/feedback" class="card-link">
-                        <i class="fas fa-comment"></i>
-                        <span>Feedback and Support</span>
-                    </a>
-                </li>
-                <li class="card-item">
-                    <a href="/tenant/reset-password" class="card-link">
-                        <i class="fas fa-lock"></i>
-                        <span>Password Reset</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
+        <div class="content-wrapper">
+            <!-- New Card Section Styled Like Sidebar -->
+            <div class="white-card">
+                <ul class="card-nav">
+                    <li class="card-item">
+                        <a href="/tenant/customize" class="card-link">
+                            <i class="fas fa-moon"></i>
+                            <span>Customize</span>
+                        </a>
+                    </li>
+                    <li class="card-item">
+                        <a href="/tenant/feedback" class="card-link">
+                            <i class="fas fa-comment"></i>
+                            <span>Feedback and Support</span>
+                        </a>
+                    </li>
+                    <li class="card-item">
+                        <a href="/tenant/resetPassword" class="card-link">
+                            <i class="fas fa-lock"></i>
+                            <span>Password Reset</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
 
-        <!-- Large Centered Card Section -->
-        <div class="choose-style-container">
-            <div class="style-card">
-                <div class="card-header">
-                    <h2 class="choose-style-title">Choose a style</h2>
-                    <p class="choose-style-description">
-                        Pop or subtle. Day or night. Customize your interface.
-                    </p>
-                </div>
-                <div class="style-options">
-                    <!-- Light Mode Option -->
-                    <div class="style-option light-mode">
-                        <div class="icon-container light-mode-icon"></div>
-                        <p class="mode-text">Light Mode</p>
-                        <label class="toggle-switch">
-                            <input type="radio" name="mode" value="light" id="lightModeRadio" checked>
-                            <span class="slider"></span>
-                        </label>
+            <!-- Large Centered Card Section -->
+            <div class="choose-style-container">
+                <div class="style-card">
+                    <div class="card-header">
+                        <h2 class="choose-style-title">Choose a style</h2>
+                        <p class="choose-style-description">
+                            Pop or subtle. Day or night. Customize your interface.
+                        </p>
                     </div>
-                    <!-- Dark Mode Option -->
-                    <div class="style-option dark-mode">
-                        <div class="icon-container dark-mode-icon"></div>
-                        <p class="mode-text">Dark Mode</p>
-                        <label class="toggle-switch">
-                            <input type="radio" name="mode" value="dark" id="darkModeRadio">
-                            <span class="slider"></span>
-                        </label>
+                    <div class="style-options">
+                        <!-- Light Mode Option -->
+                        <div class="style-option light-mode">
+                            <div class="icon-container light-mode-icon"></div>
+                            <p class="mode-text">Light Mode</p>
+                            <label class="toggle-switch">
+                                <input type="radio" name="mode" value="light" id="lightModeRadio" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <!-- Dark Mode Option -->
+                        <div class="style-option dark-mode">
+                            <div class="icon-container dark-mode-icon"></div>
+                            <p class="mode-text">Dark Mode</p>
+                            <label class="toggle-switch">
+                                <input type="radio" name="mode" value="dark" id="darkModeRadio">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-
-
-
-        <!-- Content sections -->
-        <div id="customizeContent" class="content-section hidden">Customize Content</div>
-        <div id="feedbackContent" class="content-section hidden">Feedback and Support Content</div>
-        <div id="passwordResetContent" class="content-section hidden">Password Reset Content</div>
     </main>
 </div>
 

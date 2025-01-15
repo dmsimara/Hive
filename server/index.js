@@ -14,6 +14,7 @@ import moment from 'moment';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import bcryptjs from 'bcryptjs';
+import './nodecron/cronjobs.js'
 import Admin from "./models/admin.models.js";
 import Room from "./models/room.models.js";
 import Tenant from "./models/tenant.models.js";
@@ -1659,7 +1660,7 @@ app.get("/tenant/feedback", verifyTenantToken, setEstablishmentId, async (req, r
 });
 
 // TENANT PAGES (RESET PASSWORD - SETTINGS) -------------------------------------------------------------------------
-app.get("/tenant/reset-password", verifyTenantToken, setEstablishmentId, async (req, res) => {
+app.get("/tenant/resetPassword", verifyTenantToken, setEstablishmentId, async (req, res) => {
     const { tenantId, establishmentId } = req;
 
     try {

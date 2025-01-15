@@ -259,53 +259,87 @@ html {
     align-items: center;
     text-align: center;
     height: 180px;
+    width: 300px;
 }
 
 .form h4 {
     font-weight: 700;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    font-size: 32px;
 }
 
 
 .add-btn {
     background-color: #331800;
-    padding: 10px 30px;
+    padding: 15px 35px;
     color: white;
     border: none;
     border-radius: 5px;
     font-weight: 600;
     transition: opacity 0.1s ease-in-out;
+    display: inline-flex; 
+    align-items: center;  
+    font-size: 18px;
+    white-space: nowrap;  
 }
 
 .add-btn:hover {
     opacity: 0.8;
 }
 
+.add-btn .fa-user-plus {
+    font-size: 30px;  
+    margin-right: 10px;  
+}
+
 .analytics-container {
     background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
     color: white;
-    padding: 15px;
+    padding: 15px 60px;
     border-radius: 15px;
-    display: flex; 
-    gap: 20px; 
-    align-items: center; 
-    justify-content: center; 
-    overflow-x: auto; 
+    display: flex;  
+    gap: 20px;  
+    align-items: center;  
+    justify-content: flex-start;  
+    overflow-x: auto;
     margin-left: 20px;
     margin-bottom: 20px;
     max-height: 200px;
+    position: relative; 
 }
 
-.analytics-container h4 {
-    font-weight: 700;
-    text-align: center;
+.analytics-container .left-side {
+    display: flex;
+    flex-direction: column; 
+    justify-content: flex-start;
+    margin-right: 70px;
 }
 
-.analytics-container p {
-    margin-top: 5px; 
-    margin-bottom: 10px; 
+.analytics-container .left-side h4 {
+    font-weight: 800;
+    text-align: left; 
+    margin-right: 20px;  
+    margin-top: 10px;
+    font-size: 36px;
 }
 
+.left-p {
+    font-size: 12px;
+}
+
+.analytics-container .left-side p {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    text-align: left;  
+    margin-right: 20px; 
+}
+
+.analytics-cards {
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+    flex-wrap: wrap;  
+}
 
 .analytics-card {
     background: #F6F6E6;
@@ -318,7 +352,7 @@ html {
     align-items: center;
     position: relative;
     height: 150px; 
-    width: 200px; 
+    width: 210px; 
     margin-top: auto;
     margin-bottom: auto;
 }
@@ -335,6 +369,34 @@ html {
     font-size: 1em;
 }
 
+.fa-user-group {
+    background: rgb(250, 249, 249);
+    padding: 10px;
+    border: 1px solid var(--orange);
+    color: black;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    position: absolute;  
+    top: 50%; 
+    left: 32%; 
+    transform: translate(-50%, -50%);  
+    z-index: 2;  
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);  
+    display: flex;  
+    justify-content: center;  
+    align-items: center; 
+    font-size: 26px;  
+    line-height: 1;  
+}
+
+.count {
+    font-weight: 700;
+    font-size: 65px !important;
+    margin-top: 15px;
+    margin-bottom: -20px;
+}
+
 .material-icons {
     position: absolute;
     top: 10px;
@@ -349,7 +411,6 @@ html {
     margin-bottom: 20px;
     margin-top: 10px;
     padding: 15px;
-
 }
 
 .bottom-container{
@@ -380,6 +441,14 @@ html {
     border-bottom: 0; 
 }
 
+.table td {
+    text-align: center !important;
+}
+
+.table thead tr:first-child th.text-end {
+    text-align: center !important;
+}
+
 .table-bordered tr {
     border-left: 1px solid #dddddd00; 
     border-right: 1px solid #dddddd00; 
@@ -389,6 +458,13 @@ html {
 .table-bordered th {
     border-collapse: collapse; 
     border-bottom: 1px solid #dddddd00;
+}
+
+.middle-container-header {
+    display: flex;  
+    justify-content: space-between;  
+    align-items: center;  
+    margin-bottom: 15px;  
 }
 
 .middle-container .log-header,
@@ -437,7 +513,6 @@ html {
     text-align: center;
 
 }
-
 
 .modal-content {
     border-radius: 10px;
@@ -513,6 +588,12 @@ form select {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);   
 }
 
+.search-bar input:focus {
+    outline: none;  
+    box-shadow: 0px 2px 2px rgba(255, 165, 0, 0.8); 
+    border-color: orange; 
+}
+
 button.btn-primary {
     background: linear-gradient(to right, var(--orange), var(--maroon), var(--gray));
     color: white;
@@ -543,4 +624,18 @@ button.btn-secondary:hover {
     opacity: 0.7;
     background: var(--maroon);
     color: white;
+}
+
+.regular span {
+    background: var(--maroon);
+    color: white !important;
+    padding: 8px 15px;
+    border-radius: 40px;
+}
+
+.overnight span {
+    background: var(--orange);
+    color: white !important;
+    padding: 8px 15px;
+    border-radius: 40px;
 }
