@@ -128,8 +128,57 @@ app.get("/tenant/login", (req, res) => {
     res.render("tenantLogin", { title: "Hive", styles: ["tenantLogin"] });
 });
 
-// ADMIN ACTIVITY LOG ---------------------------------------------------------------------------------
+// ADMIN FORGOT PASSWORD ------------------------------------------------------------------------------
+app.get("/forgot-password", async (req, res) => {
+    res.render("forgotPassword", { title: "Hive", styles: ["forgotPassword"] });
+})
 
+app.get("/reset-password", async (req, res) => {
+
+    const { adminEmail } = req.query;  
+    res.render("resetPassword", {
+        title: "Hive",
+        styles: ["resetPassword"],
+        adminEmail,  
+    });
+});
+
+app.get("/reset-password/:resetToken", async(req, res) => {
+
+    const { resetToken } = req.params;
+
+    res.render("changePassword", {
+        title: "Hive",
+        styles: ["changePassword"],
+        token: resetToken,
+    })
+})
+
+// TENANT FORGOT PASSWORD ------------------------------------------------------------------------------
+app.get("/tenant/forgot-password", async (req, res) => {
+    res.render("forgotTenantPassword", { title: "Hive", styles: ["forgotTenantPassword"] });
+})
+
+app.get("/tenant/reset-password", async (req, res) => {
+
+    const { tenantEmail } = req.query;  
+    res.render("resetTenantPassword", {
+        title: "Hive",
+        styles: ["resetTenantPassword"],
+        tenantEmail,  
+    });
+});
+
+app.get("/tenant/reset-password/:resetToken", async(req, res) => {
+
+    const { resetToken } = req.params;
+
+    res.render("changeTenantPassword", {
+        title: "Hive",
+        styles: ["changeTenantPassword"],
+        token: resetToken,
+    })
+})
 
 // ADMIN PAGES (DASHBOARD) ----------------------------------------------------------------------------
 app.get("/admin/dashboard", verifyToken, async (req, res) => {
