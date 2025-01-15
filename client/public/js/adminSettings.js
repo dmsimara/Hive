@@ -117,3 +117,23 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const currentPath = window.location.pathname; 
+
+    const pathToButtonId = {
+        '/admin/settings/feedback-support': 'feedback-link',
+        '/admin/settings/password-reset': 'password-link',
+        '/admin/settings/delete-account': 'delete-link',
+        '/admin/settings': 'appearance-link',
+    };
+
+    const activeButtonId = Object.keys(pathToButtonId).find(path => currentPath.startsWith(path));
+    if (!activeButtonId && currentPath.startsWith('/admin/settings/delete-account')) {
+        const activeLink = document.getElementById('delete-link');
+        activeLink?.querySelector('.pages-link').classList.add('active');
+    } else if (activeButtonId) {
+        const activeLink = document.getElementById(pathToButtonId[activeButtonId]);
+        activeLink?.querySelector('.pages-link').classList.add('active');
+    }
+});

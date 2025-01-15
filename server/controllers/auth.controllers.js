@@ -728,11 +728,29 @@ export const viewFixes = async (req) => {
         throw new Error('Establishment ID is missing');
     }
 
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth(); 
+    const currentYear = currentDate.getFullYear();
+
     try {
         const rows = await Fix.findAll({
-            where: { establishment_id: establishmentId,
-                // status: ['pending', 'in progress']
-             },
+            where: {
+                establishment_id: establishmentId,
+                [Op.and]: [
+                    {
+                        submissionDate: {
+                            [Op.gte]: new Date(currentYear, currentMonth, 1),  
+                            [Op.lt]: new Date(currentYear, currentMonth + 1, 1), 
+                        }
+                    },
+                    {
+                        scheduledDate: {
+                            [Op.gte]: new Date(currentYear, currentMonth, 1),  
+                            [Op.lt]: new Date(currentYear, currentMonth + 1, 1), 
+                        }
+                    }
+                ]
+            },
             include: [
                 {
                     model: Tenant,

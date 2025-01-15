@@ -74,51 +74,114 @@
 </nav>
 
 <div class="container pt-5 pb-5">
-  <div class="headerContainer">
-    <h2 class="account-title">Account Settings</h2>
-    <a href="/admin/dashboard/view/account" class="viewProfile"><i class="material-icons">person</i>View Profile</a>
-  </div>
+    <h1 class="container-title"><i class="fa-solid fa-gear modal-icon"></i>Account Settings</h1>
 
-  <div class="sidebarPageContainer">
-    <div class="sidebarContainer">
-      <ul>
-        <li><a href="/admin/settings" class="sidebar-link"><i class="material-icons">nightlight_round</i>Dark
-            Mode</a></li>
-        <li><a href="/admin/settings/feedback-support" class="sidebar-link"><i class="material-icons">mail</i>Feedback
-            &amp;
-            Support</a></li>
-        <li><a href="/admin/settings/password-reset" class="sidebar-link"><i
-              class="material-icons">lock_reset</i>Password Reset</a></li>
-        <li><a href="/admin/settings/activity-log/{{admin_id}}" class="sidebar-link"><i
-              class="material-icons">timeline</i>Activity
-            Log</a></li>
-        <li><a href="/admin/settings/delete-account/{{admin_id}}" class="sidebar-link"><i
-              class="material-icons">delete</i>Delete
-            Account</a></li>
-      </ul>
+    <div class="pages-container">
+        <a href="/admin/settings" id="appearance-link" data-path="/admin/settings">
+            <button class="pages-link">Appearance</button>
+        </a>
+        <a href="/admin/settings/feedback-support" id="feedback-link" data-path="/admin/settings/feedback-support">
+            <button class="pages-link">Feedback &amp; Support</button>
+        </a>
+        <a href="/admin/settings/password-reset" id="password-link" data-path="/admin/settings/password-reset">
+            <button class="pages-link">Password Reset</button>
+        </a>
+        <a href="/admin/settings/delete-account/{{admin_id}}" id="delete-link" data-path="/admin/settings/delete-account">
+            <button class="pages-link">Delete Account</button>
+        </a>
     </div>
 
-    <div class="pageContainer">
-      <div class="toggle-btn" id="btn">
-        <span id="btnText">Dark</span>
-        <i class="material-icons" id="btnIcon">dark_mode</i>
-      </div>
-      <p>Toggle dark mode settings here. Click the button to switch modes.</p>
+
+    <div class="top">
+        <h3 class="appearance-title">Appearance</h3>
+        <p>Change how your dashboard looks and feels.</p>
     </div>
-  </div>
+
+    <hr />
+
+    <div class="middle">
+        <div class="middle-left">
+            <h3 class="appearance-title">Preference Mode</h3>
+            <p>Adjust the apperance of Hive to reduce glare and <br /> give your eyes a break.</p>
+        </div>
+
+        <div class="choose-style-container middle-right">
+            <div class="style-options">
+                <!-- Light Mode Option -->
+                <div class="style-option light-mode">
+                    <div class="icon-container light-mode-icon"></div>
+                    <p class="mode-text">Light Mode</p>
+                    <label class="toggle-switch">
+                        <input type="radio" name="mode" value="light" id="lightModeRadio" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <!-- Dark Mode Option -->
+                <div class="style-option dark-mode">
+                    <div class="icon-container dark-mode-icon"></div>
+                    <p class="mode-text">Dark Mode</p>
+                    <label class="toggle-switch">
+                        <input type="radio" name="mode" value="dark" id="darkModeRadio">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+   <div class="bottom">
+    <div class="bottom-left">
+        <label for="fontSize" class="appearance-title">Font Size</label>
+        <select id="fontSize" name="fontSize">
+            <option value=""></option>
+            <option value="small">Small</option>
+            <option value="medium">Medium</option>
+            <option value="large">Large</option>
+            <option value="x-large">Extra Large</option>
+        </select>
+    </div>
+    <div class="bottom-right">
+        <label for="zoomDisplay" class="appearance-title">Zoom Display</label>
+        <select id="zoomDisplay" name="zoomDisplay">
+            <option value=""></option>
+            <option value="90">90%</option>
+            <option value="100">100%</option>
+            <option value="110">110%</option>
+            <option value="125">125%</option>
+            <option value="150">150%</option>
+        </select>
+    </div>
+</div>
+
+
 </div>
 
 <script src="/js/adminSettings.js"></script>
 <script>
-    window.onload = function() {
-    const theme = localStorage.getItem('theme');
+    window.onload = function () {
+        const theme = localStorage.getItem('theme');
 
-    const logo = document.getElementById('logo');
+        const logo = document.getElementById('logo');
 
-    if (theme === 'dark') {
-        logo.src = '/images/hiveDark.png';
-    } else {
-        logo.src = '/images/hiveLight.png';
-    }
-};
+        if (theme === 'dark') {
+            logo.src = '/images/hiveDark.png';
+        } else {
+            logo.src = '/images/hiveLight.png';
+        }
+    };
 </script>
+
+
+{{!-- </div>
+
+<div class="pageContainer">
+    <div class="toggle-btn" id="btn">
+        <span id="btnText">Dark</span>
+        <i class="material-icons" id="btnIcon">dark_mode</i>
+    </div>
+    <p>Toggle dark mode settings here. Click the button to switch modes.</p>
+</div>
+</div>
+</div> --}}

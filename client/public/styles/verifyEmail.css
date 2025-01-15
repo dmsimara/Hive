@@ -16,6 +16,7 @@ body {
     justify-content: center;
     min-height: 100vh;
     background: rgb(245, 245, 245);
+    zoom: 100%;
 }
 
 :where(.container, form, .input-field, header) {
