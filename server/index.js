@@ -1331,8 +1331,6 @@ app.get("/tenant/room-details/view/account", verifyTenantToken, async (req, res)
 });
 
 app.get("/tenant/room-details/edit/account", verifyTenantToken, async (req, res) => {
-    const admin = await viewAdmins(req, res);
-
     try {
         const tenant = await Tenant.findOne({ where: { tenant_id: req.tenantId } });
         if (!tenant) {
@@ -1343,7 +1341,6 @@ app.get("/tenant/room-details/edit/account", verifyTenantToken, async (req, res)
             title: "Hive",
             styles: ["editTenantAccount"],
             tenant: tenant.get({ plain: true }),
-            admin: admin || {},
         });
     } catch (error) {
         console.error("Error fetching tenant data:", error);
@@ -1397,6 +1394,7 @@ const updateTenantDetails = async (body, tenantProfile) => {
     const tenantId = body.tenant_id;
     await Tenant.update(tenantDetails, { where: { tenant_id: tenantId } });
 };
+
 
 // TENANT PAGES (SETTINGS) -------------------------------------------------------------------------
 app.get("/tenant/settings", verifyTenantToken, setEstablishmentId, async (req, res) => {
