@@ -1509,8 +1509,8 @@ app.get("/tenant/maintenance", verifyTenantToken, setEstablishmentId, async (req
             title: "Hive",
             styles: ["tenantMaintenance"],
             tenant: plainTenant || [],
-            fixes: fixesData || [],
-            counts: counts || [],
+            fixes: fixesData,
+            counts: counts,
         });
     } catch (error) {
         console.error("Error fetching tenant visitors data:", error.message);
