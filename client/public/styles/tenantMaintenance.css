@@ -528,6 +528,7 @@ h3 span.count {
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: none !important;
 }
 
 .maintenance thead tr:first-child th {
@@ -538,7 +539,7 @@ h3 span.count {
     text-align: center;
     font-size: 14px;
     border-bottom: 2px solid var(--brown);
-    border-right: none;
+    border: none !important;
 }
 
 .maintenance thead tr:first-child th.text-end {
@@ -552,6 +553,7 @@ h3 span.count {
     color: var(--dark-gray);
     border-bottom: 1px solid var(--orange);
     transition: background-color 0.2s ease, transform 0.2s ease;
+    border: none !important;
 }
 
 .maintenance table th,

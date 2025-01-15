@@ -47,6 +47,29 @@ body {
     zoom: 100%;
 }
 
+body::-webkit-scrollbar {
+    width: 10px; 
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: var(--maroon);
+    border-radius: 10px; 
+    border: 2px solid #fff;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+    background-color: var(--maroon);
+}
+
+body::-webkit-scrollbar-track {
+    background: #f1f1f1;  
+    border-radius: 2px;  
+}
+
+body::-webkit-scrollbar-track:hover {
+    background: #e1e1e1; 
+}
+
 .dark-theme body {
     background-color: var(--background-color);
     color: var(--text-color);
@@ -262,11 +285,29 @@ body {
     font-weight: 600;
 }
 
-
 .container {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;  
+    justify-content: flex-start;
     margin: 0 auto;
     padding: 0;
     box-sizing: border-box;
+}
+
+.container-title {
+    display: flex;  
+    align-items: center;   
+    text-align: left;  
+    font-size: 40px;  
+    font-weight: 700;
+    margin-bottom: 30px;
+    width: 100%;   
+    color: var(--dark-gray);
+}
+
+.modal-icon {
+    color: var(--dark-gray);  
+    font-size: 50px;
+    margin-right: 20px;
+    margin-top: 0;   
 }
