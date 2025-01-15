@@ -74,20 +74,51 @@
   </div>
 </nav>
 
-<div class="container pt-5 pb-5"></div>
+<div class="container pt-5 pb-5">
+  <h1 class="container-title"><i class="fa-regular fa-id-card modal-icon"></i>Visitors Log</h1>
+
+  <div class="pendings-container">
+    <table class="table table-bordered maintenance">
+      <thead>
+        <tr>
+          <th scope="col"><i class="material-icons">person</i>Visitor's Name</th>
+          <th scope="col"><i class="material-icons">schedule</i>Check-in & Out</th>
+          <th scope="col"><i class="material-icons">calendar_month</i>Date</th>
+          <th scope="col"><i class="material-icons">call</i>Mobile No.</th>
+          <th scope="col"><i class="material-icons">location_on</i>Purpose of Visit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="profile"></div>
+            <div class="person-deets">
+              <h6>Angelica Payne</h6>
+              <p>Room 204</p>
+            </div>
+          </td>
+          <td>7:08 PM --- 8:09 AM</td>
+          <td>January 21 - 22, 2025</td>
+          <td>09123456789</td>
+          <td>Group Project</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
 <script src="/js/adminVisitors.js"></script>
 
 <script>
-  window.onload = function() {
+  window.onload = function () {
     const theme = localStorage.getItem('theme');
 
     const logo = document.getElementById('logo');
 
     if (theme === 'dark') {
-        logo.src = '/images/hiveDark.png';
+      logo.src = '/images/hiveDark.png';
     } else {
-        logo.src = '/images/hiveLight.png';
+      logo.src = '/images/hiveLight.png';
     }
-};
+  };
 </script>
