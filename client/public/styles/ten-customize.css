@@ -240,7 +240,6 @@ html {
     margin-top: 40px;
 }
 
-/* Main Content Area */
 .content {
     flex-grow: 1;
     padding: 20px;
@@ -249,18 +248,18 @@ html {
 .content-wrapper {
     display: flex;  
     justify-content: flex-start;  
-    gap: 100px; 
+    gap: 60px; 
     width: 100%;
 }
 
 .white-card {
     background-color: #FFFFFF;
     border-radius: 15px;
-    padding: 20px;
+    padding: 30px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 300px; 
-    height: 215px;
+    min-width: 350px; 
+    height: 230px;
 }
 
 .card-nav {
@@ -398,7 +397,7 @@ html {
     padding: 40px;
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
     width: 100%;
-    max-width: 1000px;  
+    min-width: 1000px;  
     height: 700px;
 }
 
@@ -428,13 +427,19 @@ html {
 }
 
 .style-option {
-    width: 40%;
+    width: 45%;   
     background-color: #F9F9F9;
     border: 1px solid #DDD;
     border-radius: 10px;
     text-align: center;
     padding: 30px;
     position: relative;
+    height: 300px;   
+    display: flex;
+    flex-direction: column;  
+    align-items: center;  
+    justify-content: center; 
+    box-sizing: border-box;  
 }
 
 .icon-container {
@@ -460,8 +465,8 @@ html {
 
 .dark-mode-icon {
     position: relative;
-    width: 60px; 
-    height: 60px;
+    width: 80px; 
+    height: 80px;
     background-color: #381A1C;
     border-radius: 50%;
     overflow: hidden;
@@ -472,8 +477,8 @@ html {
     position: absolute;
     top: 10px; 
     left: 10px;
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
     background-color: white; 
     border-radius: 50%;
     transform: translate(15px, 0); 
@@ -483,7 +488,7 @@ html {
     font-size: 1.2em;
     font-weight: bold;
     color: #333;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .toggle-switch {

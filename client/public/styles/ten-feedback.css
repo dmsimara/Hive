@@ -240,21 +240,29 @@ html {
     margin-top: 40px;
 }
 
-/* Main Content Area */
-.content {
-    flex-grow: 1;
-    padding: 20px;
+.content-wrapper {
+    display: flex;  
+    justify-content: flex-start;  
+    gap: 60px; 
+    width: 100%;
 }
 
-/* White Card Styled Like Sidebar */
+.choose-style-container {
+    display: flex;
+    justify-content: center; 
+    align-items: flex-start; 
+    width: 100%;
+    gap: 20px; 
+}
+
 .white-card {
     background-color: #FFFFFF;
     border-radius: 15px;
-    padding: 20px;
+    padding: 30px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
     width: 100%;
-    max-width: 300px; /* Matches sidebar width */
+    min-width: 350px; 
+    height: 230px;
 }
 
 .card-nav {
@@ -371,20 +379,21 @@ html {
 }
 
 .main-content {
-    flex: 1;
-    padding: 30px;
+    display: flex;  
+    flex-direction: column;  
+    gap: 20px;  
+    padding-top: 20px;  
     margin-left: 20px;
-    transition: all 0.35s ease-in-out;
 }
 
 .feedback-section {
     background-color: #FFFFFF;
     border-radius: 15px;
-    padding: 20px 30px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
     width: 100%;
-    max-width: 600px; /* Adjust as needed */
-    margin-top: 20px;
+    min-width: 1000px;  
+    height: 700px;
 }
 
 .feedback-section h2 {
