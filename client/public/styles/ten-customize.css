@@ -246,15 +246,21 @@ html {
     padding: 20px;
 }
 
-/* White Card Styled Like Sidebar */
+.content-wrapper {
+    display: flex;  
+    justify-content: flex-start;  
+    gap: 100px; 
+    width: 100%;
+}
+
 .white-card {
     background-color: #FFFFFF;
     border-radius: 15px;
     padding: 20px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
     width: 100%;
-    max-width: 300px; /* Matches sidebar width */
+    max-width: 300px; 
+    height: 215px;
 }
 
 .card-nav {
@@ -371,17 +377,19 @@ html {
 }
 
 .main-content {
-    flex: 1;
-    padding: 30px;
+    display: flex;  
+    flex-direction: column;  
+    gap: 20px;  
+    padding-top: 20px;  
     margin-left: 20px;
-    transition: all 0.35s ease-in-out;
 }
 
 .choose-style-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; 
+    justify-content: center; 
+    align-items: flex-start; 
+    width: 100%;
+    gap: 20px; 
 }
 
 .style-card {
@@ -389,9 +397,9 @@ html {
     border-radius: 15px;
     padding: 40px;
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
-    width: 80%;
-    max-width: 800px; 
-    position: relative;
+    width: 100%;
+    max-width: 1000px;  
+    height: 700px;
 }
 
 .card-header {

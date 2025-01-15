@@ -82,43 +82,42 @@
                 </a>
             </div>
             <div class="analytics-container">
-                <h4>VISITOR</br>Log Tab</h4>
-                <p>View a detailed log of all visitors</p>
+                <div class="left-side">
+                    <h4>VISITOR</br>Log Tab</h4>
+                    <p class="left-p">View a detailed log of all visitors</p>
+                </div>
                 <i class="fa-sharp fa-solid fa-user-group"></i>
-                <div class="analytics-card">
-                    <i class="material-icons middle-open">open_in_new</i>
-                    <h3>01</h3>
-                    <p>Visitor Pre Approval</p>
-                </div>
-                <div class="analytics-card">
-                    <i class="material-icons middle-open">open_in_new</i>
-                    <h3>01</h3>
-                    <p>Approved Visitors</p>
-                </div>
-                <div class="analytics-card">
-                    <i class="material-icons middle-open">open_in_new</i>
-                    <h3>0</h3>
-                    <p>Rejected Visitors</p>
-                </div>
-                <div class="analytics-card">
-                    <i class="material-icons middle-open">open_in_new</i>
-                    <h3>0</h3>
-                    <p>Restricted</p>
+                <div class="analytics-cards">
+                    <div class="analytics-card">
+                        <h3 class="count">01</h3>
+                        <p>Visitor Pre Approval</p>
+                    </div>
+                    <div class="analytics-card">
+                        <h3 class="count">01</h3>
+                        <p>Approved Visitors</p>
+                    </div>
+                    <div class="analytics-card">
+                        <h3 class="count">0</h3>
+                        <p>Rejected Visitors</p>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="middle-container">
-             <h3 class="log-header">VISITORS LOG HISTORY | <span>Regular Visit</span></h3>
-            <div class="search-bar">
-                <input class="form-control form-control-sm me-2 search" type="search" id="search" placeholder="Search"
-                    name="search" aria-label="Search" autocomplete="off" required value="{{lastSearchTerm}}">
-                <span class="search-icon">
-                    <i class="material-icons">search</i>
-                </span>
+            <div class="middle-container-header">
+                <h3 class="log-header regular">VISITORS LOG HISTORY | <span>Regular Visit</span></h3>
+                <div class="search-bar">
+                    <input class="form-control form-control-sm me-2 search" type="search" id="search"
+                        placeholder="Search" name="search" aria-label="Search" autocomplete="off" required
+                        value="{{lastSearchTerm}}">
+                    <span class="search-icon">
+                        <i class="material-icons">search</i>
+                    </span>
+                </div>
             </div>
 
-            <div class="table-container table-responsive" style="max-height: 400px; overflow-y: auto;">
+            <div class="table-container table-responsive">
                 <table class="table table-bordered">
                     <thead class="table-dark">
                         <tr>
@@ -155,14 +154,18 @@
             </div>
         </div>
 
+
         <div class="bottom-container">
-            <h3 class="log-header">VISITORS LOG HISTORY | <span>Overnight Visit</span></h3>
-            <div class="search-bar">
-                <input class="form-control form-control-sm me-2 search" type="search" id="search" placeholder="Search"
-                    name="search" aria-label="Search" autocomplete="off" required value="{{lastSearchTerm}}">
-                <span class="search-icon">
-                    <i class="material-icons">search</i>
-                </span>
+            <div class="middle-container-header">
+                <h3 class="log-header overnight">VISITORS LOG HISTORY | <span>Overnight Visit</span></h3>
+                <div class="search-bar">
+                    <input class="form-control form-control-sm me-2 search" type="search" id="search"
+                        placeholder="Search" name="search" aria-label="Search" autocomplete="off" required
+                        value="{{lastSearchTerm}}">
+                    <span class="search-icon">
+                        <i class="material-icons">search</i>
+                    </span>
+                </div>
             </div>
 
             <div class="table-container table-responsive" style="max-height: 400px; overflow-y: auto;">
@@ -210,9 +213,9 @@
                 </div>
                 <div class="modal-body">
                     <div class="button-group">
-                            <button class="btn-primary regular">Regular</button>
-                             <button class="btn-primary overnight">Overnight</button>
-                        </div>
+                        <button class="btn-primary regular">Regular</button>
+                        <button class="btn-primary overnight">Overnight</button>
+                    </div>
                     <h1>VISITORS INFO</h1>
                     <form action="#" method="POST" id="visitorForm">
                         <input type="hidden" id="establishmentId" name="establishmentId" value="{{establishmentId}}">

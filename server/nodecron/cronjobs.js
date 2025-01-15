@@ -16,5 +16,4 @@ export const resetVisitorLimits = async () => {
   }
 };
 
-// Schedule the cron job to run at midnight every day
 cron.schedule('0 0 * * *', resetVisitorLimits);
