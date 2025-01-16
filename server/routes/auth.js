@@ -1,5 +1,5 @@
 import express from "express";
-import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, deleteTenant, viewAdmins, viewUnits, addUnitView, addUnit, deleteUnit, getOccupiedUnits, editTenant, updateTenant, addEvent, viewEvents, editEvent, deleteEvent, getEvents, updateEvent, viewNotices, pinnedNotices, permanentNotices, addNotice, togglePinned, togglePermanent, deleteNotice, getAvailableRooms, getNotices, searchTenants, searchRooms, deleteAdmin, updateAdminPassword, updateTenantPassword, addFeedback, addUtility, viewUtilities, deleteUtility, editUtility, updateUtility, utilityHistories, viewActivities, addRegularRequest, cancelRequest, approvedRequest, viewVisitorsAdmin, viewVisitorsTenant, addOvernightRequest, rejectedRequest, checkin, checkout, addMaintenance, updateMaintenance, doneMaintenance, viewFixes, viewFixesAdmin, forgotTenantPassword, resetTenantPassword } from "../controllers/auth.controllers.js";
+import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, deleteTenant, viewAdmins, viewUnits, addUnitView, addUnit, deleteUnit, getOccupiedUnits, editTenant, updateTenant, addEvent, viewEvents, editEvent, deleteEvent, getEvents, updateEvent, viewNotices, pinnedNotices, permanentNotices, addNotice, togglePinned, togglePermanent, deleteNotice, getAvailableRooms, getNotices, searchTenants, searchRooms, deleteAdmin, updateAdminPassword, updateTenantPassword, addFeedback, addUtility, viewUtilities, deleteUtility, editUtility, updateUtility, utilityHistories, viewActivities, addRegularRequest, cancelRequest, approvedRequest, viewVisitorsAdmin, viewVisitorsTenant, addOvernightRequest, rejectedRequest, checkin, checkout, addMaintenance, updateMaintenance, doneMaintenance, viewFixes, viewFixesAdmin, forgotTenantPassword, resetTenantPassword, viewRequestsAdmin, viewRegularRequests, viewOvernightRequests } from "../controllers/auth.controllers.js";
 import { verifyTenantToken, verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
@@ -34,6 +34,8 @@ router.post("/request/checkout", verifyToken, checkout);
 router.get("/view/events", viewEvents);
 router.get("/view/utilities", verifyToken, viewUtilities);
 router.get("/admin/view/visitors", verifyToken, viewVisitorsAdmin);
+router.get("/tenant/view/visitors/regular", verifyTenantToken, viewRegularRequests);
+router.get("/tenant/view/visitors/overnight", verifyTenantToken, viewOvernightRequests);
 router.get("/tenant/view/visitors", verifyTenantToken, viewVisitorsTenant);
 router.post("/edit/event", editEvent);
 router.delete("/delete/event/:eventId", verifyToken, deleteEvent);
@@ -61,6 +63,7 @@ router.get("/utilityHistory", utilityHistories);
 router.get("/activity-log/:adminId", verifyToken, viewActivities);
 router.get("/maintenance", verifyToken, viewFixes);
 router.get("/admin/maintenance", verifyToken, viewFixesAdmin);
+router.get("/admin/pending-visitors", verifyToken, viewRequestsAdmin);
 
 // tenants
 router.get("/view-tenants", viewTenants);

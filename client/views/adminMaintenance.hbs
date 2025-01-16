@@ -78,6 +78,7 @@
 
     <!-- Dynamically render cards -->
     <div class="row-container">
+        {{#if fixes}}
         {{#each fixes}}
         <div class="card mb-3">
             <div class="card-header">
@@ -87,7 +88,6 @@
                 </h5>
                 <i class="material-icons more-icon">more_vert</i>
 
-                <!-- Dropdown Menu (Hidden by default) -->
                 <div class="dropdown-menu">
                     <button class="btn btn-danger delete-btn" data-id="{{maintenance_id}}">Delete</button>
                 </div>
@@ -116,6 +116,11 @@
             </div>
         </div>
         {{/each}}
+        {{else}}
+        <div class="no-requests-message">
+            <p>No maintenance requests at the moment.</p>
+        </div>
+        {{/if}}
     </div>
 
     <!-- Modal for Maintenance Details -->
@@ -268,14 +273,14 @@
 
         const moreIcons = document.querySelectorAll(".more-icon");
         const dropdownMenus = document.querySelectorAll(".dropdown-menu");
-        
+
         moreIcons.forEach((moreIcon, index) => {
             const dropdownMenu = dropdownMenus[index];
-            
+
             moreIcon.addEventListener("click", () => {
                 dropdownMenu.classList.toggle("show");
             });
-            
+
             document.addEventListener("click", (event) => {
                 if (!moreIcon.contains(event.target) && !dropdownMenu.contains(event.target)) {
                     dropdownMenu.classList.remove("show");
@@ -284,8 +289,6 @@
         });
     });
 </script>
-
-
 
 <script>
     window.onload = function () {

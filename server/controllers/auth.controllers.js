@@ -803,6 +803,212 @@ export const checkTenantAuth = async (req, res) => {
     }
 };
 
+export const viewRequestsAdmin = async (req) => {
+    const establishmentId = req.establishmentId;
+
+    if (!establishmentId) {
+        console.error('Establishment ID is undefined. Ensure the user is correctly associated with an establishment.');
+        throw new Error('Establishment ID is missing');
+    }
+
+    try {
+        const rows = await Request.findAll({
+            where: { establishment_id: establishmentId,
+                status: 'pending'
+             },
+            include: [
+                {
+                    model: Tenant,
+                    attributes: ['tenantProfile', 'tenantFirstName', 'tenantLastName'],
+                    include: [{
+                        model: Room,
+                        attributes: ['roomNumber'], 
+                    }]
+                }
+            ],
+            raw: true 
+        });
+
+        return rows.map(row => {
+            console.log(row);  
+            return {
+                ...row,
+                tenantProfile: row['tenant.tenantProfile'] || '/images/defaultUser.webp',
+                tenantFirstName: row['tenant.tenantFirstName'] || 'Unknown',
+                tenantLastName: row['tenant.tenantLastName'] || 'Unknown',
+                tenantRoomNumber: row['tenant.room.roomNumber'] || '-',
+            };
+        });
+
+    } catch (error) {
+        console.error('Error fetching requests:', error);
+        throw new Error('Error fetching requests');
+    }
+};
+
+export const viewRegularRequests = async (req) => {
+    const establishmentId = req.establishmentId;
+
+    if (!establishmentId) {
+        console.error('Establishment ID is undefined. Ensure the user is correctly associated with an establishment.');
+        throw new Error('Establishment ID is missing');
+    }
+
+    try {
+        const startOfMonth = new Date();
+        startOfMonth.setDate(1);  
+        startOfMonth.setHours(0, 0, 0, 0);
+
+        const endOfMonth = new Date(startOfMonth);
+        endOfMonth.setMonth(startOfMonth.getMonth() + 1);
+        endOfMonth.setDate(0);  
+        endOfMonth.setHours(23, 59, 59, 999);
+
+        const rows = await Request.findAll({
+            where: {
+                establishment_id: establishmentId,
+                visitType: 'regular',
+                visitDateFrom: {
+                    [Sequelize.Op.gte]: startOfMonth,  
+                    [Sequelize.Op.lte]: endOfMonth,   
+                },
+            },
+            include: [
+                {
+                    model: Tenant,
+                    attributes: ['tenantProfile', 'tenantFirstName', 'tenantLastName'],
+                    include: [{
+                        model: Room,
+                        attributes: ['roomNumber'], 
+                    }]
+                }
+            ],
+            raw: true 
+        });
+
+        const convertToManilaTime = (utcDate) => {
+            const date = new Date(utcDate);
+            
+            date.setHours(date.getHours() + 8); 
+
+            const options = {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true,
+                timeZone: 'Asia/Manila', 
+            };
+            
+            return date.toLocaleString('en-US', options).replace(',', ' |');
+        };
+
+        return rows.map(row => {
+            console.log(row);
+            
+            const visitDateFrom = convertToManilaTime(row.visitDateFrom);
+            const visitDateTo = convertToManilaTime(row.visitDateTo);
+
+            return {
+                ...row,
+                tenantProfile: row['tenant.tenantProfile'] || '/images/defaultUser.webp',
+                tenantFirstName: row['tenant.tenantFirstName'] || 'Unknown',
+                tenantLastName: row['tenant.tenantLastName'] || 'Unknown',
+                tenantRoomNumber: row['tenant.room.roomNumber'] || '-',
+                visitDate: visitDateFrom.split(' |')[0],  
+                checkInTime: visitDateFrom.split(' |')[1],  
+                checkOutTime: visitDateTo.split(' |')[1],  
+            };
+        });
+
+    } catch (error) {
+        console.error('Error fetching regular requests:', error);
+        throw new Error('Error fetching regular requests');
+    }
+};
+
+export const viewOvernightRequests = async (req) => {
+    const establishmentId = req.establishmentId;
+
+    if (!establishmentId) {
+        console.error('Establishment ID is undefined. Ensure the user is correctly associated with an establishment.');
+        throw new Error('Establishment ID is missing');
+    }
+
+    try {
+        const startOfMonth = new Date();
+        startOfMonth.setDate(1);  
+        startOfMonth.setHours(0, 0, 0, 0);
+
+        const endOfMonth = new Date(startOfMonth);
+        endOfMonth.setMonth(startOfMonth.getMonth() + 1);
+        endOfMonth.setDate(0);  
+        endOfMonth.setHours(23, 59, 59, 999);
+
+        const rows = await Request.findAll({
+            where: {
+                establishment_id: establishmentId,
+                visitType: 'overnight',
+                visitDateFrom: {
+                    [Op.gte]: startOfMonth,  
+                    [Op.lte]: endOfMonth,   
+                },
+            },
+            include: [
+                {
+                    model: Tenant,
+                    attributes: ['tenantProfile', 'tenantFirstName', 'tenantLastName'],
+                    include: [{
+                        model: Room,
+                        attributes: ['roomNumber'], 
+                    }]
+                }
+            ],
+            raw: true 
+        });
+
+        const convertToManilaTime = (utcDate) => {
+            const date = new Date(utcDate);
+            
+            date.setHours(date.getHours() + 8); 
+
+            const options = {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true,
+                timeZone: 'Asia/Manila', 
+            };
+            
+            return date.toLocaleString('en-US', options).replace(',', ' |');
+        };
+
+        return rows.map(row => {
+            console.log(row);
+            
+            const visitDateFrom = convertToManilaTime(row.visitDateFrom);
+            const visitDateTo = convertToManilaTime(row.visitDateTo);
+
+            return {
+                ...row,
+                tenantProfile: row['tenant.tenantProfile'] || '/images/defaultUser.webp',
+                tenantFirstName: row['tenant.tenantFirstName'] || 'Unknown',
+                tenantLastName: row['tenant.tenantLastName'] || 'Unknown',
+                tenantRoomNumber: row['tenant.room.roomNumber'] || '-',
+                checkInDateTime: visitDateFrom,  
+                checkOutDateTime: visitDateTo,     
+            };
+        });
+
+    } catch (error) {
+        console.error('Error fetching overnight requests:', error);
+        throw new Error('Error fetching overnight requests');
+    }
+};
+
 export const viewFixesAdmin = async (req) => {
     const establishmentId = req.establishmentId;
 
@@ -846,6 +1052,113 @@ export const viewFixesAdmin = async (req) => {
     } catch (error) {
         console.error('Error fetching fixes:', error);
         throw new Error('Error fetching fixes');
+    }
+};
+
+export const viewRequests = async (req) => {
+    const establishmentId = req.establishmentId;
+
+    if (!establishmentId) {
+        console.error('Establishment ID is undefined. Ensure the user is correctly associated with an establishment.');
+        throw new Error('Establishment ID is missing');
+    }
+
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth(); 
+    const currentYear = currentDate.getFullYear();
+
+    try {
+        const requestCounts = await Request.findAll({
+            where: {
+                establishment_id: establishmentId,
+                [Op.and]: [
+                    {
+                        visitDateFrom: {
+                            [Op.gte]: new Date(currentYear, currentMonth, 1),  
+                            [Op.lt]: new Date(currentYear, currentMonth + 1, 1), 
+                        }
+                    },
+                    {
+                        visitDateTo: {
+                            [Op.gte]: new Date(currentYear, currentMonth, 1),  
+                            [Op.lt]: new Date(currentYear, currentMonth + 1, 1), 
+                        }
+                    }
+                ]
+            },
+            attributes: [
+                'status',
+                [Sequelize.fn('COUNT', Sequelize.col('status')), 'count']
+            ],
+            group: ['status'],
+            raw: true
+        });
+
+        const counts = {
+            pending: 0,
+            approved: 0,
+            rejected: 0,
+        };
+
+        requestCounts.forEach(row => {
+            if (row.status === 'pending') {
+                counts.pending = parseInt(row.count, 10);
+            } else if (row.status === 'approved') {
+                counts.approved = parseInt(row.count, 10);
+            } else if (row.status === 'rejected') {
+                counts.rejected = parseInt(row.count, 10);
+            }
+        });
+
+        const rows = await Request.findAll({
+            where: {
+                establishment_id: establishmentId,
+                [Op.and]: [
+                    {
+                        visitDateFrom: {
+                            [Op.gte]: new Date(currentYear, currentMonth, 1),  
+                            [Op.lt]: new Date(currentYear, currentMonth + 1, 1), 
+                        }
+                    },
+                    {
+                        visitDateTo: {
+                            [Op.gte]: new Date(currentYear, currentMonth, 1),  
+                            [Op.lt]: new Date(currentYear, currentMonth + 1, 1), 
+                        }
+                    }
+                ]
+            },
+            include: [
+                {
+                    model: Tenant,
+                    attributes: ['tenantProfile', 'tenantFirstName', 'tenantLastName'],
+                    include: [{
+                        model: Room,
+                        attributes: ['roomNumber'],
+                    }]
+                }
+            ],
+            raw: true
+        });
+
+        const data = rows.map(row => {
+            return {
+                ...row,
+                tenantProfile: row['tenant.tenantProfile'] || '/images/defaultUser.webp',
+                tenantFirstName: row['tenant.tenantFirstName'] || 'Unknown',
+                tenantLastName: row['tenant.tenantLastName'] || 'Unknown',
+                tenantRoomNumber: row['tenant.room.roomNumber'] || '-',
+                tenantContactNumber: row.contactNum || '-',
+                tenantScheduledDate: row.scheduledDate || '-',
+                tenantDescription: row.description || '-',
+            };
+        });
+
+        return { data, counts };
+
+    } catch (error) {
+        console.error('Error fetching requests:', error);
+        throw new Error('Error fetching requests');
     }
 };
 
@@ -1905,7 +2218,6 @@ export const doneMaintenance = async (req, res) => {
     }
 };
   
-
 export const addRegularRequest = async (req, res) => {
     try {
         const { visitorName, contactInfo, purpose, visitDateFrom, visitDateTo, visitorAffiliation } = req.body;
@@ -1952,12 +2264,16 @@ export const addRegularRequest = async (req, res) => {
         const t = await sequelize.transaction();
 
         try {
+
+            const visitDateFromManila = moment.utc(visitDateFrom).tz("Asia/Manila").format('YYYY-MM-DD HH:mm:ss');
+            const visitDateToManila = moment.utc(visitDateTo).tz("Asia/Manila").format('YYYY-MM-DD HH:mm:ss');
+
             const newRequest = await Request.create({
                 visitorName,
                 contactInfo,
                 purpose,
-                visitDateFrom,
-                visitDateTo,
+                visitDateFrom: visitDateFromManila,
+                visitDateT: visitDateToManila,
                 visitorAffiliation,
                 tenant_id: tenantId,
                 establishment_id: establishmentId,
@@ -2067,12 +2383,15 @@ export const addOvernightRequest = async (req, res) => {
         const t = await sequelize.transaction();
 
         try {
+            const visitDateFromManila = moment.utc(visitDateFrom).tz("Asia/Manila").format('YYYY-MM-DD HH:mm:ss');
+            const visitDateToManila = moment.utc(visitDateTo).tz("Asia/Manila").format('YYYY-MM-DD HH:mm:ss');
+
             const newRequest = await Request.create({
                 visitorName,
                 contactInfo,
                 purpose,
-                visitDateFrom,
-                visitDateTo,
+                visitDateFrom: visitDateFromManila,
+                visitDateTo: visitDateToManila,
                 visitorAffiliation,
                 tenant_id: tenantId,
                 establishment_id: establishmentId,

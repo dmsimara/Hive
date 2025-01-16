@@ -89,15 +89,15 @@
                 <i class="fa-sharp fa-solid fa-user-group"></i>
                 <div class="analytics-cards">
                     <div class="analytics-card">
-                        <h3 class="count">01</h3>
+                        <h3 class="count">{{counts.pending}}</h3>
                         <p>Visitor Pre Approval</p>
                     </div>
                     <div class="analytics-card">
-                        <h3 class="count">01</h3>
+                        <h3 class="count">{{counts.approved}}</h3>
                         <p>Approved Visitors</p>
                     </div>
                     <div class="analytics-card">
-                        <h3 class="count">0</h3>
+                        <h3 class="count">{{counts.rejected}}</h3>
                         <p>Rejected Visitors</p>
                     </div>
                 </div>
@@ -131,24 +131,25 @@
                         </tr>
                     </thead>
                     <tbody id="results">
+                        {{#if regular}}
+                        {{#each regular}}
                         <tr>
-                            <td>Jedia Sagun</td>
-                            <td>Classmate</td>
-                            <td>01/05/2024</td>
-                            <td>9:00 AM</td>
-                            <td>3:00 PM</td>
-                            <td>09123456789</td>
-                            <td class="text-end">Group Project</td>
+                            <td>{{this.visitorName}}</td>
+                            <td>{{this.visitorAffiliation}}</td>
+                            <td>{{this.visitDate}}</td>
+                            <td>{{this.checkInTime}}</td>
+                            <td>{{this.checkOutTime}}</td>
+                            <td>{{this.contactInfo}}</td>
+                            <td class="text-end">{{this.purpose}}</td>
                         </tr>
+                        {{/each}}
+                        {{else}}
                         <tr>
-                            <td>Alliah Kais</td>
-                            <td>Friend</td>
-                            <td>01/03/2024</td>
-                            <td>7:00 AM</td>
-                            <td>10:00 PM</td>
-                            <td>09123456789</td>
-                            <td class="text-end">Friend Visit</td>
+                            <td colspan="7" class="text-center">
+                                No regular requests found.
+                            </td>
                         </tr>
+                        {{/if}}
                     </tbody>
                 </table>
             </div>
@@ -181,22 +182,24 @@
                         </tr>
                     </thead>
                     <tbody id="results">
+                        {{#if overnight}}
+                        {{#each overnight}}
                         <tr>
-                            <td>Jedia Sagun</td>
-                            <td>12/31/2024 | 3:00 PM</td>
-                            <td>01/01/25 | 9:00 AM</td>
-                            <td>09123456789</td>
-                            <td>Group Project</td>
-                            <td class="text-end">Approved</td>
+                            <td>{{this.visitorName}}</td>
+                            <td>{{this.checkInDateTime}}</td>
+                            <td>{{this.checkOutDateTime}}</td>
+                            <td>{{this.contactInfo}}</td>
+                            <td>{{this.purpose}}</td>
+                            <td class="text-end">{{this.status}}</td>
                         </tr>
+                        {{/each}}
+                        {{else}}
                         <tr>
-                            <td>Alliah Kais</td>
-                            <td>12/20/2024 | 3:00 PM</td>
-                            <td>12/21/25 | 10:00 AM</td>
-                            <td>09123456789</td>
-                            <td>Friend Visit</td>
-                            <td class="text-end">Rejected</td>
+                            <td colspan="6" class="text-center">
+                                No overnight requests found.
+                            </td>
                         </tr>
+                        {{/if}}
                     </tbody>
                 </table>
             </div>
@@ -213,8 +216,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="button-group">
-                        <button class="btn-primary regular">Regular</button>
-                        <button class="btn-primary overnight">Overnight</button>
+                        <button type="button" class="btn-primary regular" id="regularButton">Regular</button>
+                        <button type="button" class="btn-primary overnight" id="overnightButton">Overnight</button>
                     </div>
                     <h1>VISITORS INFO</h1>
                     <form action="#" method="POST" id="visitorForm">
@@ -231,30 +234,13 @@
                                 <input type="text" class="form-control form-control-sm" id="visitorLastName"
                                     name="visitorLastName" required>
                             </div>
+                        </div>
+                        <div class="row mb-3">
                             <div class="col">
                                 <label for="visitorAffiliation" class="form-label">Association with Tenant</label>
                                 <input type="text" class="form-control form-control-sm" id="visitorAffiliation"
                                     name="visitorAffiliation" required>
                             </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col">
-                                <label for="visitDateFrom" class="form-label">Date</label>
-                                <input type="date" class="form-control form-control-sm" id="visitDateFrom"
-                                    name="visitDateFrom" required>
-                            </div>
-                            <div class="col">
-                                <label for="checkinTime" class="form-label">Time Check In</label>
-                                <input type="time" class="form-control form-control-sm" id="checkinTime"
-                                    name="checkinTime" required>
-                            </div>
-                            <div class="col">
-                                <label for="checkoutTime" class="form-label">Time Check Out</label>
-                                <input type="time" class="form-control form-control-sm" id="checkoutTime"
-                                    name="checkoutTime" required>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
                             <div class="col">
                                 <label for="contactInfo" class="form-label">Mobile No.</label>
                                 <input type="number" class="form-control form-control-sm" id="contactInfo"
@@ -264,6 +250,18 @@
                                 <label for="purpose" class="form-label">Purpose of Visit</label>
                                 <input type="text" class="form-control form-control-sm" id="purpose" name="purpose"
                                     required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="visitDateFrom" class="form-label">Check In</label>
+                                <input type="datetime-local" class="form-control form-control-sm" id="visitDateFrom"
+                                    name="visitDateFrom" required>
+                            </div>
+                            <div class="col">
+                                <label for="visitDateTo" class="form-label">Check Out</label>
+                                <input type="datetime-local" class="form-control form-control-sm" id="visitDateTo"
+                                    name="visitDateTo" required>
                             </div>
                         </div>
                         <button class="btn btn-secondary">Cancel</button>
