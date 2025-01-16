@@ -32,6 +32,8 @@
     --dark-grey: #0c0807;
     --dimgray: #696969;
     --reddish-brown: #DB6D5E;
+    --red-brown: #4B2B2D;
+    --redy-brown: #4F2124;
 }
 
 html,
@@ -305,9 +307,150 @@ body::-webkit-scrollbar-track:hover {
     color: var(--dark-gray);
 }
 
+.dark-theme .container-title {
+    display: flex;  
+    align-items: center;   
+    text-align: left;  
+    font-size: 40px;  
+    font-weight: 700;
+    margin-bottom: 30px;
+    width: 100%;   
+    color: #F6F6E6;
+}
+
 .modal-icon {
     color: var(--dark-gray);  
     font-size: 50px;
     margin-right: 20px;
     margin-top: 0;   
 }
+
+.dark-theme .modal-icon {
+    color: var(--white);  
+    font-size: 50px;
+    margin-right: 20px;
+    margin-top: 0;   
+}
+
+table.maintenance {
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 3px solid orange; 
+    border-radius: 10px; 
+    overflow: hidden; 
+  }
+
+  .dark-theme table.maintenance {
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 3px solid rgba(246, 246, 230, 0.32); 
+    border-radius: 10px; 
+    overflow: hidden; 
+  }
+  
+  table.maintenance th {
+    background-color: #F6F6E6; 
+    text-align: left;
+    padding: 12px;
+    border-bottom: 2px solid orange;
+  }
+
+  .dark-theme table.maintenance th {
+    background-color: var(--red-brown); 
+    text-align: left;
+    padding: 12px;
+    border-bottom: 2px solid rgba(246, 246, 230, 0.32);
+    color: #F6F6E6;
+  }
+
+  .table {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .table thead th {
+    text-align: center !important;
+  }
+  
+  .table thead th i.material-icons {
+    font-size: 18px;
+    vertical-align: middle; 
+    margin-right: 5px; 
+  }
+
+  
+  .table th, .table td {
+    text-align: center; 
+  }
+
+  table.maintenance td {
+    padding: 12px;
+    border-bottom: 2px solid #ddd; 
+    background-color: #F6F6E6;
+    font-weight: bold;
+    font-size: 15px;
+  }
+
+  .dark-theme table.maintenance td {
+    padding: 12px;
+    border-bottom: 2px solid #ddd; 
+    background-color: var(--red-brown);
+    font-weight: bold;
+    font-size: 15px;
+    color: white;
+  }
+  
+  table.maintenance tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .person-deets p{
+    font-size: 13px;
+    font-weight: bold;
+    color: #7B4B47;
+  }
+
+  .person-deets h6{
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 10px;
+    color:#000000;
+  }
+
+  .dark-theme .person-deets p{
+    font-size: 13px;
+    font-weight: bold;
+    color: white;
+  }
+
+  .dark-theme .person-deets h6{
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 10px;
+    color:white;
+  }
+
+  .profile {
+    width: 50px; 
+    height: 50px; 
+    border-radius: 50%; 
+    background-color: #f0f0f0; 
+    border: 2px solid #000000;
+    display: inline-block; 
+    background-size: cover; 
+    background-position: center; 
+  }
+
+  .dark-theme .profile {
+    width: 50px; 
+    height: 50px; 
+    border-radius: 50%; 
+    background-color: #f0f0f0; 
+    border: 2px solid var(--d-yellow);
+    display: inline-block; 
+    background-size: cover; 
+    background-position: center; 
+  }
+  
+  
+
