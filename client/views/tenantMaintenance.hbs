@@ -127,15 +127,15 @@
                         </tr>
                     </thead>
                     <tbody id="results">
-                        {{#if fixes}} 
-                        {{#each fixes}} 
+                        {{#if fixes}}
+                        {{#each fixes}}
                         <tr>
                             <td>{{this.type}}</td>
-                            <td>{{this.status}}</td> 
-                            <td>{{formatDate this.submissionDate}}</td> 
+                            <td>{{this.status}}</td>
+                            <td>{{formatDate this.submissionDate}}</td>
                             <td>{{#if this.resolvedDate}}{{formatDate this.resolvedDate}}{{else}}---{{/if}}</td>
-                            <td>{{this.assignedPerson}}</td> 
-                            <td>{{this.urgency}}</td> 
+                            <td>{{this.assignedPerson}}</td>
+                            <td>{{this.urgency}}</td>
                         </tr>
                         {{/each}}
                         {{else}}
@@ -148,8 +148,8 @@
             </div>
 
         </div>
+    </main>
 </div>
-</main>
 
 <div class="modal fade" id="addMaintenanceModal" tabindex="-1" aria-labelledby="addMaintenanceModalLabel"
     aria-hidden="true">

@@ -621,26 +621,14 @@ a {
     padding: 20px;
     flex: 0 0 70%;
     padding-left: 30px;
-    padding-top: 30px;   
+    padding-top: 45px;  
+    padding-bottom: 50; 
+    
     display: flex; 
     justify-content: flex-start; 
     align-items: flex-start;       
     flex-direction: column;  
-    gap: 15px;
-}
-
-.dark-theme .modal-bottom {
-    border-radius: 30px;
-    background-color: #F6F6E6;
-    padding: 20px;
-    flex: 0 0 70%;
-    padding-left: 30px;
-    padding-top: 30px;   
-    display: flex; 
-    justify-content: flex-start; 
-    align-items: flex-start;       
-    flex-direction: column;  
-    gap: 15px;
+    gap: 20px;
 }
 
 .modal-bottom h3 {
@@ -655,9 +643,10 @@ a {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 0;  
+    gap: 10px;  
     padding-left: 23px;  
     width: 100%; 
+    margin-bottom: 5px;
     flex-shrink: 0; 
 }
 
@@ -684,7 +673,7 @@ a {
 }
 
 .first {
-    margin-top: 15px;
+    margin-top: 30px;
 }
 
 .button-container {
@@ -693,7 +682,7 @@ a {
     justify-content: center;  
     align-items: center; 
     width: 100%; 
-    margin-top: 15px;
+    margin-top: 50px;
 }
 
 .btn-primary, .btn-secondary {
@@ -749,4 +738,112 @@ a {
     color: var(--maroon);
     font-weight: 600;
     border: 1px solid var(--orange);
+}
+
+.empty-card {
+    flex: 1 1 calc(33.333% - 40px);  
+    max-width: 500px;  
+    min-width: 400px; 
+    height: 250px;   
+    background-color: #f0f0f0;   
+    border: 1px solid #ccc;    
+    visibility: hidden;       
+    margin-bottom: 10px;
+}
+
+.row-container > .card:nth-child(3n + 1) {
+    margin-left: 0;
+}
+
+#decisionModal .modal-content {
+    background: #f9f9f9;  
+    border-radius: 15px;  
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);  
+    border: none;  
+    overflow: hidden;  
+}
+
+#decisionModal .modal-header {
+    background-color: white; 
+    color: var(--dark-gray);
+    padding: 20px 30px;  
+    border-bottom: 1px solid transparent;
+}
+
+#decisionModal .modal-title {
+    font-weight: 700;
+    font-size: 30px;
+    margin: 0;
+    flex: 1;
+}
+
+#decisionModal .modal-body {
+    padding: 2rem;  
+    background: white;
+    color: var(--dark-gray)
+}
+
+#decisionModal .form-control {
+    border-radius: 8px;  
+    border: 1px solid var(--orange);
+    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;  
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); 
+    transition: all 0.3s ease;  
+    margin-bottom: 20px;
+}
+
+#decisionModal .form-control:focus {
+    border-color: var(--orange); 
+    outline: none;  
+    box-shadow: 0 0 3px rgb(255, 182, 47); 
+}
+
+#decisionModal textarea.form-control {
+    resize: none;  
+}
+
+#decisionModal .btn-secondary, 
+#decisionModal .btn-primary {
+    border-radius: 20px;  
+    font-size: 0.875rem;  
+    padding: 0.6rem 1.5rem; 
+    margin: 0.5rem 0;  
+    transition: all 0.3s ease-in-out;  
+    display: inline-block;  
+    text-align: center;  
+}
+
+#decisionModal .btn-secondary {
+    background: transparent;  
+    border: 2px solid var(--orange); 
+    color: var(--orange);
+    font-weight: 600; 
+}
+
+#decisionModal .btn-secondary:hover {
+    background: transparent;  
+    color: var(--orange);  
+    opacity: 0.7;
+}
+
+#decisionModal .btn-primary {
+    background-color: var(--orange);
+    border: 2px solid transparent; 
+    color: #fff;
+    font-weight: 600; 
+}
+
+#decisionModal .btn-primary:hover {
+    background: transparent; 
+    border: 2px solid var(--orange);
+    color: var(--orange);
+}
+
+#decisionModal .button-container {
+    display: flex;
+    justify-content: flex-end; 
+    align-items: center;
+    gap: 1rem; 
+    margin-top: 1.5rem; 
 }
