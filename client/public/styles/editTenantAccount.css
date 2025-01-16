@@ -14,6 +14,23 @@
     --background-color: rgb(245, 245, 245);
 }
 
+.dark-theme {
+    --background-color: #2A1617;  
+    --text-color: #FCFAC3;   
+    --brownish-yellow: #FF9E00;   
+    --brown: #995F00; 
+    --red: #D20000;
+    --d-yellow: #FAB020;
+    --white: #fff;
+    --dark-brown: #331800;
+    --light-brown: #654321;
+    --dark-grey: #0c0807;
+    --dimgray: #696969;
+    --reddish-brown: #DB6D5E;
+    --red-brown: #4B2B2D;
+    --redy-brown: #4F2124;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -35,6 +52,14 @@ html {
     overflow: auto;
 }
 
+.dark-theme .dashboard-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--background-color);
+    overflow: auto;
+}
+
 .sidebar {
     position: sticky;
     top: 0;
@@ -51,8 +76,34 @@ html {
     overflow-y: auto;
 }
 
+.dark-theme .sidebar {
+    position: sticky;
+    top: 0;
+    background-color: var(--background-color);
+    width: 300px;
+    min-width: 300px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transition: all .25s ease-in-out;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    height: 100vh;
+    overflow-y: auto;
+}
+
 .sidebar-card {
     background-color: #FFFFFF;
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.dark-theme .sidebar-card {
+    background-color: var(--red-brown);
     border-radius: 15px;
     padding: 15px;
     display: flex;
@@ -103,6 +154,14 @@ html {
     transition: color 0.3s ease;
 }
 
+.dark-theme .sidebar-item a {
+    text-decoration: none;
+    color: var(--white);
+    font-size: 18px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
 .sidebar-item:hover a {
     color: white;
 }
@@ -123,6 +182,11 @@ html {
 .sidebar p {
     font-size: 0.9em;
     color: #666;
+}
+
+.dark-theme .sidebar p {
+    font-size: 0.9em;
+    color: white;
 }
 
 
@@ -154,6 +218,18 @@ html {
     transition: color 0.3s ease;
 }
 
+.dark-theme .logout-button {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--white);
+    font-weight: 600;
+    font-size: 1em;
+    padding: 10px;
+    border-radius: 8px;
+    transition: color 0.3s ease;
+}
+
 .logout-button:hover {
     background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
     color: white;
@@ -162,6 +238,11 @@ html {
 .logout-button i {
     margin-right: 10px;
     color: #A22F05;
+}
+
+.dark-theme .logout-button i {
+    margin-right: 10px;
+    color: white;
 }
 
 .logout-button:hover i {
@@ -187,13 +268,33 @@ html {
     margin-right: 15px;
 }
 
+.dark-theme .dots {
+    color: var(--white);
+    margin-right: 15px;
+}
+
 .edit-title {
     color: var(--dark-gray);
     font-weight: 600;
 }
 
+.dark-theme .edit-title {
+    color: var(--reddish-brown);
+    font-weight: 600;
+}
+
 .card {
     margin-top: 20px;
+}
+
+.dark-theme .card {
+    margin-top: 20px;
+    background-color: var(--red-brown);
+    border: 1px solid #BC341D;
+}
+
+.dark-theme .mb-3 {
+    color: white;
 }
 
 .card__left {
@@ -234,6 +335,18 @@ form input[type="file"] {
     border-radius: 5px;
     width: 100%;
     background: var(--background-color);
+}
+
+.dark-theme form input[type="text"],
+form input[type="email"],
+form input[type="number"],
+form select,
+form input[type="file"] {
+    padding: 5px;
+    margin-bottom: 2px;
+    border-radius: 5px;
+    width: 100%;
+    background: var(--white);
 }
 
 form input[type="submit"] {
@@ -288,6 +401,21 @@ input[type="number"] {
     border: 1px solid var(--orange);
     border-radius: 3px;
     background-color: var(--background-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 10px; 
+}
+
+.dark-theme .cancel {
+    text-decoration: none;
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-align: center;
+    color: var(--orange);
+    border: 1px solid var(--orange);
+    border-radius: 3px;
+    background-color: #f6f6e6;
     cursor: pointer;
     transition: all 0.3s ease;
     margin-right: 10px; 

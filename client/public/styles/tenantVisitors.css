@@ -53,6 +53,15 @@ html {
     gap: 20px; 
 }
 
+.dark-theme .dashboard-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--background-color);
+    overflow: auto;
+    gap: 20px; 
+}
+
 .sidebar {
     position: sticky;
     top: 0;
@@ -69,8 +78,34 @@ html {
     overflow-y: auto;
 }
 
+.dark-theme .sidebar {
+    position: sticky;
+    top: 0;
+    background-color: var(--background-color);
+    width: 300px;
+    min-width: 300px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transition: all .25s ease-in-out;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    height: 100vh;
+    overflow-y: auto;
+}
+
 .sidebar-card {
     background-color: #FFFFFF;
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.dark-theme .sidebar-card {
+    background-color: var(--red-brown);
     border-radius: 15px;
     padding: 15px;
     display: flex;
@@ -122,6 +157,14 @@ html {
     transition: color 0.3s ease;
 }
 
+.dark-theme .sidebar-item a {
+    text-decoration: none;
+    color: var(--white);
+    font-size: 18px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
 .sidebar-item:hover a {
     color: white;
 }
@@ -142,6 +185,11 @@ html {
 .sidebar p {
     font-size: 0.9em;
     color: #666;
+}
+
+.dark-theme .sidebar p {
+    font-size: 0.9em;
+    color: white;
 }
 
 
@@ -173,6 +221,18 @@ html {
     transition: color 0.3s ease;
 }
 
+.dark-theme .logout-button {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--white);
+    font-weight: 600;
+    font-size: 1em;
+    padding: 10px;
+    border-radius: 8px;
+    transition: color 0.3s ease;
+}
+
 .logout-button:hover {
     background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
     color: white;
@@ -181,6 +241,11 @@ html {
 .logout-button i {
     margin-right: 10px;
     color: #A22F05;
+}
+
+.dark-theme .logout-button i {
+    margin-right: 10px;
+    color: white;
 }
 
 .logout-button:hover i {
@@ -234,10 +299,23 @@ html {
     margin: 0;
 }
 
+.dark-theme .welcome-text {
+    font-size: 1.2rem;
+    color: white;
+    margin: 0;
+}
+
 .header-left h1 {
     font-size: 2.5em;
     margin-top: 5px;
     font-weight: bold;
+}
+
+.dark-theme .header-left h1 {
+    font-size: 2.5em;
+    margin-top: 5px;
+    font-weight: bold;
+    color: var(--reddish-brown);
 }
 
 .upper-container {
@@ -413,9 +491,26 @@ html {
     padding: 15px;
 }
 
+.dark-theme .middle-container{
+    background-color: var(--red-brown);
+    border-radius: 10px;  
+    border: 2px solid var(--orange); 
+    margin-bottom: 20px;
+    margin-top: 10px;
+    padding: 15px;
+}
+
 .bottom-container{
     border-radius: 10px;  
     border: 2px solid var(--maroon); 
+    margin-bottom: 20px;
+    padding: 15px;
+}
+
+.dark-theme .bottom-container{
+    background-color: var(--red-brown);
+    border-radius: 10px;  
+    border: 2px solid var(--orange); 
     margin-bottom: 20px;
     padding: 15px;
 }
@@ -431,9 +526,16 @@ html {
 }
 
 
-.table-bordered {
-    border-collapse: collapse; 
+.table-container {
+    border-collapse: collapse;
+    border-radius: 10px; 
 }
+
+.dark-theme .table-container {
+    border-collapse: collapse;
+    border-radius: 10px; 
+}
+
 
 .table-bordered th,
 .table-bordered td {
@@ -473,6 +575,15 @@ html {
     font-weight: bold;
     margin: 0 0 10px 0;
     display: inline; 
+}
+
+.dark-theme .middle-container .log-header,
+.bottom-container .log-header {
+    font-size: 1.5rem; 
+    font-weight: bold;
+    margin: 0 0 10px 0;
+    display: inline; 
+    color: var(--white);
 }
 
 .middle-container .log-header span,
@@ -516,8 +627,14 @@ html {
 
 .modal-content {
     border-radius: 10px;
-    border: 2px solid var(--orange); 
-    
+    border: 3px solid var(--orange); 
+}
+
+.dark-theme .modal-content {
+    border-radius: 10px;
+    border: 3px solid var(--orange); 
+    background-color: var(--red-brown);
+    color: white;
 }
 
 .modal-body {
@@ -526,6 +643,15 @@ html {
     justify-content: center; 
     align-items: center; 
     gap: 10px; 
+}
+
+.dark-theme .modal-body {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    gap: 10px; 
+    color: white;
 }
 
 .button-group {
