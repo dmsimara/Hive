@@ -935,3 +935,12 @@ body::-webkit-scrollbar-track:hover {
     border: 1px solid var(--d-yellow); 
 
 }
+
+.no-requests-message {
+    font-style: italic;
+    color: #888;
+    font-size: 16px;
+    padding: 15px;
+    text-align: center;
+    font-weight: normal;
+}

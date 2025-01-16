@@ -1009,6 +1009,99 @@ export const viewOvernightRequests = async (req) => {
     }
 };
 
+export const viewApprovedRequests = async (req) => {
+    const establishmentId = req.establishmentId;
+
+    if (!establishmentId) {
+        console.error('Establishment ID is undefined. Ensure the user is correctly associated with an establishment.');
+        throw new Error('Establishment ID is missing');
+    }
+
+    try {
+        const startOfMonth = new Date();
+        startOfMonth.setDate(1);
+        startOfMonth.setHours(0, 0, 0, 0);
+
+        const endOfMonth = new Date(startOfMonth);
+        endOfMonth.setMonth(startOfMonth.getMonth() + 1);
+        endOfMonth.setDate(0);
+        endOfMonth.setHours(23, 59, 59, 999);
+
+        const rows = await Request.findAll({
+            where: {
+                establishment_id: establishmentId,
+                status: 'approved',
+                visitDateFrom: {
+                    [Op.gte]: startOfMonth,
+                    [Op.lte]: endOfMonth,
+                },
+            },
+            include: [
+                {
+                    model: Tenant,
+                    attributes: ['tenantProfile', 'tenantFirstName', 'tenantLastName'],
+                    include: [{
+                        model: Room,
+                        attributes: ['roomNumber'],
+                    }]
+                }
+            ],
+            raw: true
+        });
+
+        const convertToManilaTime = (utcDate) => {
+            const date = new Date(utcDate);
+            date.setHours(date.getHours() + 8);  
+        
+            const options = { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                hour12: true, 
+                timeZone: 'Asia/Manila' 
+            };
+        
+            return date.toLocaleString('en-US', options);
+        };
+        
+        // Format date range for visitType "overnight"
+        const formatDateRange = (visitDateFrom, visitDateTo, visitType) => {
+            const startDate = new Date(visitDateFrom);
+            const endDate = new Date(visitDateTo);
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        
+            if (visitType === 'overnight') {
+                const startDateFormatted = startDate.toLocaleDateString('en-US', options);
+                const endDateFormatted = endDate.toLocaleDateString('en-US', options);
+                return `${startDateFormatted.split(' ')[0]} ${startDate.getDate()} - ${endDate.getDate()}, ${endDate.getFullYear()}`;
+            } else {
+                return startDate.toLocaleDateString('en-US', options);
+            }
+        };
+        
+        return rows.map(row => {
+            const checkInTime = convertToManilaTime(row.visitDateFrom);
+            const checkOutTime = convertToManilaTime(row.visitDateTo);
+        
+            const visitType = row.visitType || 'regular';  
+            const dateRange = formatDateRange(row.visitDateFrom, row.visitDateTo, visitType);
+        
+            return {
+                ...row,
+                tenantProfile: row['tenant.tenantProfile'] || '/images/defaultUser.webp',
+                tenantFirstName: row['tenant.tenantFirstName'] || 'Unknown',
+                tenantLastName: row['tenant.tenantLastName'] || 'Unknown',
+                tenantRoomNumber: row['tenant.room.roomNumber'] || '-',
+                checkInDateTime: visitType === 'overnight' ? `${checkInTime} ─── ${checkOutTime}` : checkInTime,
+                visitDate: dateRange,
+            };
+        });
+
+    } catch (error) {
+        console.error('Error fetching approved requests:', error);
+        throw new Error('Error fetching approved requests');
+    }
+};
+
 export const viewFixesAdmin = async (req) => {
     const establishmentId = req.establishmentId;
 
@@ -2273,7 +2366,7 @@ export const addRegularRequest = async (req, res) => {
                 contactInfo,
                 purpose,
                 visitDateFrom: visitDateFromManila,
-                visitDateT: visitDateToManila,
+                visitDateTo: visitDateToManila,
                 visitorAffiliation,
                 tenant_id: tenantId,
                 establishment_id: establishmentId,
