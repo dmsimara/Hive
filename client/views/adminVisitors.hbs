@@ -81,27 +81,45 @@
     <table class="table table-bordered maintenance">
       <thead>
         <tr>
-          <th scope="col"><i class="material-icons">person</i>Visitor's Name</th>
-          <th scope="col"><i class="material-icons">schedule</i>Check-in & Out</th>
-          <th scope="col"><i class="material-icons">calendar_month</i>Date</th>
-          <th scope="col"><i class="material-icons">call</i>Mobile No.</th>
-          <th scope="col"><i class="material-icons">location_on</i>Purpose of Visit</th>
+          <th scope="col"><i class="material-icons table-icons">person</i>Visitor's Name</th>
+          <th scope="col"><i class="material-icons table-icons">schedule</i>Check-in & Out</th>
+          <th scope="col"><i class="material-icons table-icons">calendar_month</i>Date</th>
+          <th scope="col"><i class="material-icons table-icons">call</i>Mobile No.</th>
+          <th scope="col"><i class="material-icons table-icons">location_on</i>Purpose of Visit</th>
+          <th scope="col"><i class="material-icons table-icons">gate</i>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
+        {{#if requests}}
+        {{#each requests}}
+        <tr data-request-id="{{this.request_id}}" data-checkin="{{this.checkin}}">
           <td>
-            <div class="profile"></div>
+            <div class="profile">
+              <img src="{{'Tenant.tenantProfile'}}" alt="Profile" class="profile-img">
+            </div>
             <div class="person-deets">
-              <h6>Angelica Payne</h6>
-              <p>Room 204</p>
+              <h6>{{this.visitorName}}</h6>
+              <p>Room {{'Tenant.Room.roomNumber'}}</p>
             </div>
           </td>
-          <td>7:08 PM ───── 8:09 AM</td>
-          <td>January 21 - 22, 2025</td>
-          <td>09123456789</td>
-          <td>Group Project</td>
+          <td>{{this.checkInDateTime}}</td>
+          <td>{{this.visitDate}}</td>
+          <td>{{this.contactInfo}}</td>
+          <td>{{this.purpose}}</td>
+          <td>
+            <button class="btn checkin-btn" {{#if this.checkin}}disabled{{/if}}>Check-in</button>
+            <button class="btn checkout-btn" {{#unless this.checkin}}disabled{{/unless}}>Checkout</button>
+          </td>
+
         </tr>
+        {{/each}}
+        {{else}}
+        <tr>
+          <td colspan="7" class="text-center no-requests">
+            No approved visitor requests yet.
+          </td>
+        </tr>
+        {{/if}}
       </tbody>
     </table>
   </div>

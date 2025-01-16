@@ -22,7 +22,7 @@ import Notice from "./models/notice.models.js";
 import Feedback from "./models/feedback.models.js";
 import Utility from "./models/utility.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
-import { addTenant, addTenantView, addUnitView, editTenant, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, logActivity, updateAdminPassword, updateEvent, updateTenant, updateUtility, utilityHistories, viewActivities, viewAdmins, viewEvents, viewFixes, viewFixesAdmin, viewNotices, viewOvernightRequests, viewRegularRequests, viewRequests, viewRequestsAdmin, viewTenants, viewUnits, viewUtilities } from './controllers/auth.controllers.js';
+import { addTenant, addTenantView, addUnitView, editTenant, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, logActivity, updateAdminPassword, updateEvent, updateTenant, updateUtility, utilityHistories, viewActivities, viewAdmins, viewApprovedRequests, viewEvents, viewFixes, viewFixesAdmin, viewNotices, viewOvernightRequests, viewRegularRequests, viewRequests, viewRequestsAdmin, viewTenants, viewUnits, viewUtilities } from './controllers/auth.controllers.js';
 import { createPool } from "mysql2";
 
 // Sets up `__filename` and `__dirname` in an ES module environment using Node.js.
@@ -762,13 +762,17 @@ app.get("/admin/visitors/log", verifyToken, async (req, res) => {
     try {
         const admin = await viewAdmins(req, res);
 
+        const requestData = await viewApprovedRequests(req);
+        console.log("Request Data (Visitors):", requestData);
+
         const adminId = admin ? admin.admin_id : null;
 
         res.render("adminVisitors", {
             title: "Hive",
             styles: ["adminVisitors"],
             admin: admin || {},
-            admin_id: adminId 
+            admin_id: adminId,
+            requests: requestData.length > 0 ? requestData : [],
         });
     } catch (error) {
         console.error('Error fetching admin:', error);
@@ -1492,11 +1496,6 @@ app.get("/tenant/visitors", verifyTenantToken, setEstablishmentId, async (req, r
         const overnightData = await viewOvernightRequests(req);
         console.log("Overnight Requests:", overnightData);
 
-        if (!overnightData || overnightData.length === 0) {
-            console.log("No overnight requests found");
-            return res.status(500).send("No overnight requests found.");
-        }
-
         if (!tenantId || !establishmentId) {
             return res.status(400).json({ error: "Tenant or establishment ID is missing." });
         }
@@ -1512,9 +1511,9 @@ app.get("/tenant/visitors", verifyTenantToken, setEstablishmentId, async (req, r
         res.render("tenantVisitors", {
             title: "Hive",
             styles: ["tenantVisitors"],
-            tenant: plainTenant,
-            regular: regularData,
-            overnight: overnightData,
+            tenant: plainTenant || [],
+            regular: regularData || [],
+            overnight: overnightData || [],   
             counts,  
         });
     } catch (error) {
@@ -1522,7 +1521,6 @@ app.get("/tenant/visitors", verifyTenantToken, setEstablishmentId, async (req, r
         res.status(500).json({ error: "Internal server error." });
     }
 });
-
 
 // TENANT PAGES (MAINTENANCE) -------------------------------------------------------------------------
 app.get("/tenant/maintenance", verifyTenantToken, setEstablishmentId, async (req, res) => {
