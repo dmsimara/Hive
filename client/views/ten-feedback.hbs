@@ -90,13 +90,15 @@
                         </a>
                     </li>
                     <li class="card-item">
-                        <a href="/tenant/resetPassword" id="resetPassword-link" data-path="/tenant/resetPassword" class="card-link">
+                        <a href="/tenant/resetPassword" id="resetPassword-link" data-path="/tenant/resetPassword"
+                            class="card-link">
                             <i class="fas fa-lock"></i>
                             <span>Password Reset</span>
                         </a>
                     </li>
                     <li class="card-item">
-                        <a href="/tenant/settings/activity-log" id="activity-log-link" data-path="/tenant/settings/activity-log" class="card-link">
+                        <a href="/tenant/settings/activity-log" id="activity-log-link"
+                            data-path="/tenant/settings/activity-log" class="card-link">
                             <i class="fa-regular fa-clipboard"></i>
                             <span>Activity Log</span>
                         </a>
@@ -109,35 +111,58 @@
                     <h2>Feedback Form</h2>
                     <p>Rate your experience and help us improve with your feedback.</p>
 
-                    <form class="feedback-form" action="/tenant/submit-feedback" method="POST">
-                        <div class="form-group">
-                            <label for="name">Your Name:</label>
-                            <input type="text" id="name" name="name" placeholder="Enter your name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="rating">How would you rate your Experience?</label>
-                            <div class="emoji-group">
-                                <input type="radio" id="happy" name="rating" value="5">
-                                <label for="happy" title="Happy"><span class="emoji">😊</span></label>
+                    <form id="feedbackForm">
+                        <label for="userName">Name:</label>
+                        <input type="text" id="userName" name="userName" required>
 
-                                <input type="radio" id="neutral" name="rating" value="3">
-                                <label for="neutral" title="Neutral"><span class="emoji">😐</span></label>
-
-                                <input type="radio" id="sad" name="rating" value="1">
-                                <label for="sad" title="Sad"><span class="emoji">☹️</span></label>
+                        <div class="emoji-feedback">
+                            <p>How would you rate your experience?</p>
+                            <div class="emoji-row">
+                                <label>
+                                    <input type="radio" name="feedback" id="feedback" value="1" required>
+                                    <div class="emoji-container">
+                                        <span class="emoji">😞</span>
+                                        <span class="label-text">Worst</span>
+                                    </div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="feedback" id="feedback" value="2">
+                                    <div class="emoji-container">
+                                        <span class="emoji">😟</span>
+                                        <span class="label-text">Not Good</span>
+                                    </div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="feedback" id="feedback" value="3">
+                                    <div class="emoji-container">
+                                        <span class="emoji">😐</span>
+                                        <span class="label-text">Fine</span>
+                                    </div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="feedback" id="feedback" value="4">
+                                    <div class="emoji-container">
+                                        <span class="emoji">🙂</span>
+                                        <span class="label-text">Look Good</span>
+                                    </div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="feedback" id="feedback" value="5">
+                                    <div class="emoji-container">
+                                        <span class="emoji">😃</span>
+                                        <span class="label-text">Very Good</span>
+                                    </div>
+                                </label>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="feedbackMessage">Your Feedback:</label>
-                            <textarea id="feedbackMessage" name="feedbackMessage" rows="5"
-                                placeholder="Type your feedback here..." required></textarea>
-                        </div>
-                        <button type="submit" class="btn-submit">Submit Feedback</button>
+                        <textarea name="content" placeholder="Share your reviews with us"></textarea>
+
+                        <button type="submit">Submit Feedback</button>
                     </form>
                 </div>
             </div>
         </div>
-</div>
+    </main>
 </div>
 
 

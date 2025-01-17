@@ -754,10 +754,7 @@ export const updateTenantPassword = async (req, res) => {
 
         await sendMail(tenant.tenantEmail, subject, null, html);
 
-        res.status(200).json({
-            success: true,
-            message: "Password updated successfully",
-        });
+        res.status(200).json({ success: true, message: "Password updated successfully" });
     } catch (error) {
         console.error("Error in updateTenantPassword:", error);  
         res.status(500).json({ success: false, message: error.message });
@@ -3030,6 +3027,61 @@ export const addFeedback = async (req, res) => {
         `;
 
         await sendMail(adminEmail, subject, null, html);
+
+        res.status(201).json({
+            message: 'Feedback submitted successfully!',
+            feedback: newFeedback,
+        });
+    } catch (error) {
+        console.error('Error saving feedback:', error);
+        res.status(500).json({
+            message: 'Error saving feedback.',
+            error: error.message,
+        });
+    }
+};
+
+export const addTenantFeedback = async (req, res) => {
+    const tenantId = req.tenantId;
+
+    try {
+        const { userName, feedback, content } = req.body;
+
+        const tenantDetails = await Tenant.findByPk(tenantId); 
+        if (!tenantDetails || !tenantDetails.tenantEmail) {
+            throw new Error('Tenant email not found.');
+        }
+
+        const tenantEmail = tenantDetails.tenantEmail;
+
+        const newFeedback = await Feedback.create({
+            userName: userName,
+            tenant_id: tenantId,
+            admin_id: null,
+            establishment_id: null,
+            feedback_level: feedback,
+            content: content,
+        });
+
+        logHistory(tenantId, 'create', `Added feedback from ${userName}`);
+
+        const subject = 'Feedback Received Confirmation';
+        const html = `
+           <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
+              <h2 style="color: #4CAF50; text-align: center;">Feedback Received</h2>
+              <p style="text-align: left;">Dear <strong>${userName}</strong>,</p>
+              <p style="text-align: left;">Thank you for sharing your feedback with us. We have received your comments and appreciate you taking the time to help us improve.</p>
+              <p style="text-align: left;">Our team will review your feedback and take appropriate action as necessary.</p>
+              <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
+              <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
+              <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+              <p style="font-size: 0.8em; color: #777; text-align: center;">
+                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.
+              </p>
+           </div>
+        `;
+
+        await sendMail(tenantEmail, subject, null, html);
 
         res.status(201).json({
             message: 'Feedback submitted successfully!',

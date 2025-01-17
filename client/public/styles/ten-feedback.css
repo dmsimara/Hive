@@ -626,3 +626,148 @@ textarea:focus {
     color: var(--d-yellow);
     border: 1px solid var(--d-yellow);
 }
+
+.feedback-section h3 {
+    font-weight: 600;
+    color: var(--dark-gray);
+}
+
+.dark-theme .feedback-section h3 {
+    font-weight: 600;
+    color: #F6F6E6;
+}
+
+.feedback-section p {
+    color: var(--dark-gray);
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.dark-theme .feedback-section p {
+    color: var(--white);
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+#feedbackForm label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: var(--dark-gray);
+}
+
+.dark-theme #feedbackForm label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: var(--white);
+}
+
+#feedbackForm input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+.emoji-feedback {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.emoji-row {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;  
+    gap: 15px;
+}
+
+.emoji-feedback p {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.emoji-feedback label {
+    cursor: pointer;
+}
+
+.emoji-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    width: 100px;
+    height: 100px;
+    background-color: #f9f9f9;
+    user-select: none;  
+}
+
+.emoji {
+    font-size: 30px;
+    margin-bottom: 5px;
+    transition: transform 0.3s ease;
+}
+
+.label-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--dark-gray);
+}
+
+textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+button[type="submit"] {
+    display: inline-block;  
+    width: auto; 
+    padding: 8px 16px;  
+    font-size: 16px;  
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
+    border: 1px solid transparent;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    float: right;  
+    margin-top: 10px; 
+}
+
+button[type="submit"]:hover {
+    background: transparent;
+    color: var(--maroon);
+    border: 1px solid var(--maroon);
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+input[type="radio"]:checked + .emoji-container {
+    border-color: var(--maroon);
+    background-color: rgba(255, 158, 0, 0.1);
+    transform: scale(1.1);
+}
+
+input[type="radio"]:checked + .emoji-container .emoji {
+    transform: scale(1.2);
+    color: var(--maroon);
+}
