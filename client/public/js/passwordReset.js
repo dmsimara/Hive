@@ -93,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
         '/admin/settings/feedback-support': 'feedback-link',
         '/admin/settings/password-reset': 'password-link',
         '/admin/settings/delete-account': 'delete-link',
+        '/admin/settings/activity-log': 'activity-link',
         '/admin/settings': 'appearance-link',
     };
 
@@ -105,3 +106,4 @@ document.addEventListener('DOMContentLoaded', () => {
         activeLink?.querySelector('.pages-link').classList.add('active');
     }
 });
+

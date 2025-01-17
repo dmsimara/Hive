@@ -262,7 +262,7 @@ html {
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     width: 100%;
     min-width: 350px; 
-    height: 230px;
+    height: 290px;
 }
 
 .card-nav {
@@ -549,4 +549,18 @@ textarea:focus {
 
 .emoji-group input[type="radio"]:checked + label .emoji {
     transform: scale(1.2);
+}
+
+.card-link.active {
+    background-color: rgba(255, 158, 0, 0.18);
+    color: var(--maroon);
+    border: 1px solid var(--maroon);
+    border-right: 6px solid var(--maroon);   
+    transition: opacity 0.3s ease, border-right 0.3s ease;   
+}
+
+.dark-theme .card-link.active {
+    background-color: rgba(246, 246, 230, 1);
+    color: var(--d-yellow);
+    border: 1px solid var(--d-yellow);
 }
