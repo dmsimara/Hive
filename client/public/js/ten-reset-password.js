@@ -1,20 +1,29 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const updatePasswordForm = document.querySelector("#updatePasswordForm");
+    const urlParams = new URLSearchParams(window.location.search);
+    const success = urlParams.get('success');
+    const message = urlParams.get('message');
 
+    if (message) {
+        const decodedMessage = decodeURIComponent(message);
+        if (success === 'true') {
+            alert(`Success: ${decodedMessage}`);
+        } else {
+            alert(`Error: ${decodedMessage}`);
+        }
+    }
+
+    const updatePasswordForm = document.querySelector("#updatePasswordForm");
     if (updatePasswordForm) {
         updatePasswordForm.addEventListener("submit", async (event) => {
             event.preventDefault();
-
             const currentPassword = document.getElementById("currentPassword").value.trim();
             const newPassword = document.getElementById("newPassword").value.trim();
             const confirmPassword = document.getElementById("confirmPassword").value.trim();
 
-            // Validation
             if (!currentPassword || !newPassword || !confirmPassword) {
                 alert("All fields are required.");
                 return;
             }
-
             if (newPassword !== confirmPassword) {
                 alert("New passwords do not match.");
                 return;
@@ -29,31 +38,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify(payload),
                 });
 
-                // Validate JSON response format
-                if (!response.ok) {
-                    const errorMessage = `HTTP Error: ${response.status}`;
-                    console.error(errorMessage);
-                    alert("Failed to update password. " + errorMessage);
-                    return;
-                }
-
                 const data = await response.json();
-
-                // Ensure the response has the expected structure
-                if (data && data.success && data.message) {
-                    alert(data.message); // Show the success message
-                    location.reload(); // Reload the page after success
+                if (response.ok) {
+                    window.location.href = `/tenant/resetPassword?success=true&message=${encodeURIComponent(data.message)}`;
                 } else {
-                    const errorMsg = data?.message || "Unknown error occurred.";
-                    alert("Error: " + errorMsg);
+                    window.location.href = `/tenant/resetPassword?success=false&message=${encodeURIComponent(data.message)}`;
                 }
             } catch (error) {
-                console.error("Error:", error);
                 alert("An unexpected error occurred. Please try again later.");
             }
         });
-    } else {
-        console.warn("Password update form not found on the page.");
     }
 
     const logoutButton = document.querySelector("#logoutButton");
