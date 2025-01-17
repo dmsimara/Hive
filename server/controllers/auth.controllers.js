@@ -65,18 +65,18 @@ export const adminRegister = async (req, res) => {
         const subject = 'Welcome to Hive! Confirm Your Email';
         const html = `
            <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
-              <h2 style="color: #4CAF50; text-align: center;">Welcome to Hive, ${adminFirstName}!</h2>
+              <h2 style="color: #FB7C41; text-align: center;">Welcome to Hive, ${adminFirstName}!</h2>
               <p>Thank you for registering as an admin for <strong>${eName}</strong>.</p>
               <p>To confirm your account and verify your email, please use the following One-Time Password (OTP):</p>
               <div style="text-align: center; margin: 20px 0;">
-                 <span style="font-size: 24px; font-weight: bold; color: #4CAF50; letter-spacing: 2px;">${verificationToken}</span>
+                 <span style="font-size: 24px; font-weight: bold; color: #B32C1A; letter-spacing: 2px;">${verificationToken}</span>
               </div>
               <p>If you did not create an account with Hive, you can safely disregard this email.</p>
               <p style="margin-top: 30px; font-size: 0.9em; color: #555;">Best regards,</p>
               <p style="font-size: 0.9em; color: #555;"><strong>Hive Team</strong></p>
               <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
               <p style="font-size: 0.8em; color: #777; text-align: center;">
-                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.
+                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #FB7C41;">thehiveph2024@gmail.com</a>.
               </p>
            </div>
         `;
@@ -138,16 +138,16 @@ export const verifyEmail = async (req, res) => {
         const subject = 'Welcome to Hive!';
         const html = `
            <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
-              <h2 style="color: #4CAF50; text-align: center;">Welcome to Hive, ${admin.adminFirstName}!</h2>
-              <p style="text-align: center;">We're thrilled to have you as an admin for <strong>${eName}</strong>.</p>
-              <p style="text-align: center;">Your email has been successfully verified, and your account is now active!</p>
-              <p style="text-align: center;">Here at Hive, we value your contribution and look forward to working with you to make a positive impact. We're excited about all that we can achieve together!</p>
+              <h2 style="color: #FB7C41; text-align: center;">Welcome to Hive, ${admin.adminFirstName}!</h2>
+              <p style="text-align: left;">We're thrilled to have you as an admin for <strong>${eName}</strong>.</p>
+              <p style="text-align: left;">Your email has been successfully verified, and your account is now active!</p>
+              <p style="text-align: left;">Here at Hive, we value your contribution and look forward to working with you to make a positive impact. We're excited about all that we can achieve together!</p>
               <br>
-              <p style="font-size: 0.9em; color: #555; text-align: center;">Best regards,</p>
-              <p style="font-size: 0.9em; color: #555; text-align: center;"><strong>Hive Team</strong></p>
+              <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
+              <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
               <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
-              <p style="font-size: 0.8em; color: #777; text-align: center;">
-                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.
+              <p style="font-size: 0.8em; color: #777; text-align: left;">
+                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #B32C1A;">thehiveph2024@gmail.com</a>.
               </p>
             </div>
         `;
@@ -407,13 +407,13 @@ export const forgotPassword = async (req, res) => {
         const subject = 'Password Reset Request';
         const html = `
            <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
-              <h2 style="color: #4CAF50; text-align: center;">Password Reset Request</h2>
+              <h2 style="color: #FB7C41; text-align: center;">Password Reset Request</h2>
               <p style="text-align: left;">We received a request to reset your password for your Hive admin account.</p>
               <p style="text-align: left;">If you did not make this request, you can safely ignore this email.</p>
               <p style="text-align: left;">To reset your password, click the button below:</p>
               <div style="text-align: center; margin: 20px 0;">
                  <a href="${process.env.CLIENT_URL}/reset-password/${resetToken}" 
-                    style="background-color: #4CAF50; color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; display: inline-block;">
+                    style="background-color: #B32C1A; color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; display: inline-block;">
                     Reset Password
                  </a>
               </div>
@@ -423,7 +423,7 @@ export const forgotPassword = async (req, res) => {
               <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
               <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
               <p style="font-size: 0.8em; color: #777; text-align: center;">
-                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.
+                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #B32C1A;">thehiveph2024@gmail.com</a>.
               </p>
            </div>
         `;
@@ -462,13 +462,13 @@ export const forgotTenantPassword = async (req, res) => {
         const subject = 'Password Reset Request';
         const html = `
            <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
-              <h2 style="color: #4CAF50; text-align: center;">Password Reset Request</h2>
+              <h2 style="color: #FB7C41; text-align: center;">Password Reset Request</h2>
               <p style="text-align: left;">We received a request to reset your password for your Hive tenant account.</p>
               <p style="text-align: left;">If you did not make this request, you can safely ignore this email.</p>
               <p style="text-align: left;">To reset your password, click the button below:</p>
               <div style="text-align: center; margin: 20px 0;">
                  <a href="${process.env.CLIENT_URL}/reset-password/${resetToken}" 
-                    style="background-color: #4CAF50; color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; display: inline-block;">
+                    style="background-color: #B32C1A; color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; display: inline-block;">
                     Reset Password
                  </a>
               </div>
@@ -478,7 +478,7 @@ export const forgotTenantPassword = async (req, res) => {
               <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
               <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
               <p style="font-size: 0.8em; color: #777; text-align: center;">
-                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.
+                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #B32C1A;">thehiveph2024@gmail.com</a>.
               </p>
            </div>
         `;
@@ -530,9 +530,9 @@ export const resetPassword = async (req, res) => {
         const subject = 'Password Reset Confirmation';
         const html = `
            <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
-              <h2 style="color: #4CAF50; text-align: center;">Password Reset Confirmation</h2>
+              <h2 style="color: #FB7C41; text-align: center;">Password Reset Confirmation</h2>
               <p style="text-align: left;">We are writing to confirm that your password for your Hive admin account has been successfully reset.</p>
-              <p style="text-align: left;">If you did not initiate this password reset, please contact our support team immediately at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.</p>
+              <p style="text-align: left;">If you did not initiate this password reset, please contact our support team immediately at <a href="mailto:thehiveph2024@gmail.com" style="color: #B32C1A;">thehiveph2024@gmail.com</a>.</p>
               <p style="text-align: left;">For your security, we recommend the following:</p>
               <ul style="text-align: left; padding-left: 20px; color: #555;">
                  <li>Use a strong and unique password that you haven’t used on other sites.</li>
@@ -544,7 +544,7 @@ export const resetPassword = async (req, res) => {
               <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
               <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
               <p style="font-size: 0.8em; color: #777; text-align: center;">
-                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.
+                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #B32C1A;">thehiveph2024@gmail.com</a>.
               </p>
            </div>
         `;
@@ -600,9 +600,9 @@ export const resetTenantPassword = async (req, res) => {
         const subject = 'Password Reset Confirmation';
         const html = `
            <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
-              <h2 style="color: #4CAF50; text-align: center;">Password Reset Confirmation</h2>
+              <h2 style="color: #FB7C41; text-align: center;">Password Reset Confirmation</h2>
               <p style="text-align: left;">We are writing to confirm that your password for your Hive tenant account has been successfully reset.</p>
-              <p style="text-align: left;">If you did not initiate this password reset, please contact our support team immediately at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a> or your admin/s.</p>
+              <p style="text-align: left;">If you did not initiate this password reset, please contact our support team immediately at <a href="mailto:thehiveph2024@gmail.com" style="color: #B32C1A;">thehiveph2024@gmail.com</a> or your admin/s.</p>
               <p style="text-align: left;">For your security, we recommend the following:</p>
               <ul style="text-align: left; padding-left: 20px; color: #555;">
                  <li>Use a strong and unique password that you haven’t used on other sites.</li>
@@ -614,7 +614,7 @@ export const resetTenantPassword = async (req, res) => {
               <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
               <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
               <p style="font-size: 0.8em; color: #777; text-align: center;">
-                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.
+                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #B32C1A;">thehiveph2024@gmail.com</a>.
               </p>
            </div>
         `;
@@ -674,14 +674,14 @@ export const updateAdminPassword = async (req, res) => {
         const subject = 'Password Change Confirmation';
         const html = `
             <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
-                <h2 style="color: #4CAF50; text-align: center;">Password Change Confirmation</h2>
+                <h2 style="color: #FB7C41; text-align: center;">Password Change Confirmation</h2>
                 <p style="text-align: left;">We are writing to confirm that your password for your Hive admin account has been successfully updated.</p>
-                <p style="text-align: left;">If you did not initiate this change, please contact our support team immediately at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.</p>
+                <p style="text-align: left;">If you did not initiate this change, please contact our support team immediately at <a href="mailto:thehiveph2024@gmail.com" style="color: #B32C1A;">thehiveph2024@gmail.com</a>.</p>
                 <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
                 <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
                 <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
                 <p style="font-size: 0.8em; color: #777; text-align: center;">
-                   This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.
+                   This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #B32C1A;">thehiveph2024@gmail.com</a>.
                 </p>
             </div>
         `;
@@ -740,14 +740,14 @@ export const updateTenantPassword = async (req, res) => {
         const subject = 'Password Change Confirmation';
         const html = `
            <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
-              <h2 style="color: #4CAF50; text-align: center;">Password Change Confirmation</h2>
+              <h2 style="color: #FB7C41; text-align: center;">Password Change Confirmation</h2>
               <p style="text-align: left;">We are writing to confirm that your password for your Hive tenant account has been successfully updated.</p>
-              <p style="text-align: left;">If you did not initiate this change, please contact our support team immediately at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.</p>
+              <p style="text-align: left;">If you did not initiate this change, please contact our support team immediately at <a href="mailto:thehiveph2024@gmail.com" style="color: #B32C1A;">thehiveph2024@gmail.com</a>.</p>
               <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
               <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
               <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
               <p style="font-size: 0.8em; color: #777; text-align: center;">
-                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.
+                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #B32C1A;">thehiveph2024@gmail.com</a>.
               </p>
            </div>
         `;
@@ -2079,15 +2079,15 @@ export const addTenant = async (req, res) => {
         const subject = 'Account Creation Notification';
         const html = `
            <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
-              <h2 style="color: #4CAF50; text-align: center;">Account Creation Notification</h2>
+              <h2 style="color: #FB7C41; text-align: center;">Account Creation Notification</h2>
               <p style="text-align: left;">We are writing to inform you that an account has been created for you under the establishment <strong>${establishment.eName}</strong>.</p> 
               <p style="text-align: left;">For your privacy and security, we strongly recommend that you update your password immediately after logging in.</p>
-              <p style="text-align: left;">If you have any questions or did not expect this account creation, please contact our support team immediately at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.</p>
+              <p style="text-align: left;">If you have any questions or did not expect this account creation, please contact our support team immediately at <a href="mailto:thehiveph2024@gmail.com" style="color: #B32C1A;">thehiveph2024@gmail.com</a>.</p>
               <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
               <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
               <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
               <p style="font-size: 0.8em; color: #777; text-align: center;">
-                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50;">thehiveph2024@gmail.com</a>.
+                 This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #B32C1A;">thehiveph2024@gmail.com</a>.
               </p>
            </div>
         `;
@@ -2178,7 +2178,7 @@ export const addMaintenance = async (req, res) => {
         const subject = 'Fix Request Received Confirmation';
         const html = `
            <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
-              <h2 style="color: #4CAF50; text-align: center; margin-bottom: 20px;">Fix Request Received</h2>
+              <h2 style="color: #FB7C41; text-align: center; margin-bottom: 20px;">Fix Request Received</h2>
               <p style="text-align: left; font-size: 1.1em; margin-bottom: 10px;">Dear <strong>${tenant.tenantFirstName}</strong>,</p>
               <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">We have received your request for a fix service. Please wait for a follow-up email when the service is in progress, along with the name of the assigned personnel.</p>
               
@@ -2193,7 +2193,7 @@ export const addMaintenance = async (req, res) => {
               
               <p style="font-size: 0.8em; color: #777; text-align: center;">
               This is an automated email. Please do not reply. For support, contact us at 
-              <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.
+              <a href="mailto:thehiveph2024@gmail.com" style="color: #B32C1A; text-decoration: none;">thehiveph2024@gmail.com</a>.
               </p>
             </div>
         `;
@@ -2240,7 +2240,7 @@ export const updateMaintenance = async (req, res) => {
       const subject = 'Fix Request Reviewed - Personnel Assigned';
       const html = `
         <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
-          <h2 style="color: #4CAF50; text-align: center; margin-bottom: 20px;">Fix Request Reviewed - Personnel Assigned</h2>
+          <h2 style="color: #FB7C41; text-align: center; margin-bottom: 20px;">Fix Request Reviewed - Personnel Assigned</h2>
           <p style="text-align: left; font-size: 1.1em; margin-bottom: 10px;">Dear <strong>${tenant.tenantFirstName}</strong>,</p>
           <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">We would like to inform you that your fix request has been reviewed by the admin, and the following personnel has been assigned to handle the service:</p>
           <ul style="text-align: left; font-size: 1em; margin-bottom: 20px; padding-left: 20px;">
@@ -2263,7 +2263,7 @@ export const updateMaintenance = async (req, res) => {
 
           <p style="font-size: 0.8em; color: #777; text-align: center;">
             This is an automated email. Please do not reply. For support, contact us at 
-            <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.
+            <a href="mailto:thehiveph2024@gmail.com" style="color: #B32C1A; text-decoration: none;">thehiveph2024@gmail.com</a>.
           </p>
         </div>
       `;
@@ -2317,7 +2317,7 @@ export const doneMaintenance = async (req, res) => {
         const subject = 'Fix Request Resolved';
         const html = `
           <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
-            <h2 style="color: #4CAF50; text-align: center; margin-bottom: 20px;">Fix Request Resolved</h2>
+            <h2 style="color: #FB7C41; text-align: center; margin-bottom: 20px;">Fix Request Resolved</h2>
             <p style="text-align: left; font-size: 1.1em; margin-bottom: 10px;">Dear <strong>${tenant.tenantFirstName}</strong>,</p>
             <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">We are happy to inform you that the fix request for ${maintenance.type} has been successfully resolved on ${currentDate.toLocaleDateString()} at ${currentDate.toLocaleTimeString()}.</p>
             <p style="text-align: left; font-size: 1em; margin-bottom: 20px;">Thank you for your patience during the process. If you need further assistance, feel free to reach out.</p>
@@ -2331,7 +2331,7 @@ export const doneMaintenance = async (req, res) => {
 
             <p style="font-size: 0.8em; color: #777; text-align: center;">
               This is an automated email. Please do not reply. For support, contact us at 
-              <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.
+              <a href="mailto:thehiveph2024@gmail.com" style="color: #B32C1A; text-decoration: none;">thehiveph2024@gmail.com</a>.
             </p>
           </div>
         `;
@@ -2424,7 +2424,7 @@ export const addRegularRequest = async (req, res) => {
             const subject = 'Visitor Request Received Confirmation';
             const html = `
                <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
-                  <h2 style="color: #4CAF50; text-align: center; margin-bottom: 20px;">Visitor Request Approved</h2>
+                  <h2 style="color: #FB7C41; text-align: center; margin-bottom: 20px;">Visitor Request Approved</h2>
                   <p style="text-align: left; font-size: 1.1em; margin-bottom: 10px;">Dear <strong>${tenant.tenantFirstName}</strong>,</p>
                   <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">We have approved your request for a visitor to come and see you. Below is an overview of the visitor details:</p>
                
@@ -2449,7 +2449,7 @@ export const addRegularRequest = async (req, res) => {
                
                   <p style="font-size: 0.8em; color: #777; text-align: center;">
                      This is an automated email. Please do not reply. For support, contact us at 
-                     <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.
+                     <a href="mailto:thehiveph2024@gmail.com" style="color: #B32C1A; text-decoration: none;">thehiveph2024@gmail.com</a>.
                   </p>
                </div>
             `;
@@ -2547,7 +2547,7 @@ export const addOvernightRequest = async (req, res) => {
             const subject = 'Overnight Visitor Request Received Confirmation';
             const html = `
                <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
-                  <h2 style="color: #4CAF50; text-align: center; margin-bottom: 20px;">Overnight Visitor Request Received</h2>
+                  <h2 style="color: #FB7C41; text-align: center; margin-bottom: 20px;">Overnight Visitor Request Received</h2>
                   <p style="text-align: left; font-size: 1.1em; margin-bottom: 10px;">Dear <strong>${tenant.tenantFirstName}</strong>,</p>
                   <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">We have received your request for an overnight visitor to stay. Your request is currently under review by our admin team. Below is a summary of the details you provided:</p>
                
@@ -2572,7 +2572,7 @@ export const addOvernightRequest = async (req, res) => {
                
                   <p style="font-size: 0.8em; color: #777; text-align: center;">
                      This is an automated email. Please do not reply. For support, contact us at 
-                     <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.
+                     <a href="mailto:thehiveph2024@gmail.com" style="color: #B32C1A; text-decoration: none;">thehiveph2024@gmail.com</a>.
                   </p>
                </div>
             `;
@@ -2637,7 +2637,7 @@ export const cancelRequest = async (req, res) => {
         const subject = 'Visitor Entry Cancellation Confirmation';
         const html = `
             <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
-                <h2 style="color: #4CAF50; text-align: center; margin-bottom: 20px;">Visitor Entry Cancellation Request Received</h2>
+                <h2 style="color: #FB7C41; text-align: center; margin-bottom: 20px;">Visitor Entry Cancellation Request Received</h2>
                 <p style="text-align: left; font-size: 1.1em; margin-bottom: 10px;">Dear <strong>${tenantFirstName}</strong>,</p>
                 <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">We have received your request to cancel the visitor entry for <strong>${visitorName}</strong> scheduled for <strong>${visitDate}</strong>.</p>
                 <p style="text-align: left; font-size: 1em; margin-bottom: 20px;">Your request is currently being reviewed. If you have made this cancellation by mistake or wish to undo it, please reach out to your admin immediately for assistance.</p>
@@ -2651,7 +2651,7 @@ export const cancelRequest = async (req, res) => {
                 
                 <p style="font-size: 0.8em; color: #777; text-align: center;">
                    This is an automated email. Please do not reply. For support, contact us at 
-                   <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.
+                   <a href="mailto:thehiveph2024@gmail.com" style="color: #B32C1A; text-decoration: none;">thehiveph2024@gmail.com</a>.
                 </p>
             </div>
         `;
@@ -2712,7 +2712,7 @@ export const approvedRequest = async (req, res) => {
       const subject = 'Overnight Visitor Request Approved';
       const html = `
         <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
-          <h2 style="color: #4CAF50; text-align: center; margin-bottom: 20px;">Overnight Visitor Request Approved</h2>
+          <h2 style="color: #FB7C41; text-align: center; margin-bottom: 20px;">Overnight Visitor Request Approved</h2>
           <p style="text-align: left; font-size: 1.1em; margin-bottom: 10px;">Dear <strong>${tenant.tenantFirstName}</strong>,</p>
           <p style="text-align: left; font-size: 1em; margin-bottom: 10px;">We are pleased to inform you that your overnight visitor request has been approved. Below is an overview of the visitor details:</p>
           <ul style="text-align: left; font-size: 1em; margin-bottom: 20px; padding-left: 20px;">
@@ -2731,7 +2731,7 @@ export const approvedRequest = async (req, res) => {
           <p style="font-size: 0.9em; color: #555; text-align: left;">Best regards,</p>
           <p style="font-size: 0.9em; color: #555; text-align: left;"><strong>Hive Team</strong></p>
           <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
-          <p style="font-size: 0.8em; color: #777; text-align: center;">This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.</p>
+          <p style="font-size: 0.8em; color: #777; text-align: center;">This is an automated email. Please do not reply. For support, contact us at <a href="mailto:thehiveph2024@gmail.com" style="color: #B32C1A; text-decoration: none;">thehiveph2024@gmail.com</a>.</p>
         </div>
       `;
   
@@ -2820,7 +2820,7 @@ export const rejectedRequest = async (req, res) => {
           
           <p style="font-size: 0.8em; color: #777; text-align: center;">
               This is an automated email. Please do not reply. For support, contact us at 
-              <a href="mailto:thehiveph2024@gmail.com" style="color: #4CAF50; text-decoration: none;">thehiveph2024@gmail.com</a>.
+              <a href="mailto:thehiveph2024@gmail.com" style="color: #B32C1A; text-decoration: none;">thehiveph2024@gmail.com</a>.
           </p>
         </div>
       `;
@@ -3016,7 +3016,7 @@ export const addFeedback = async (req, res) => {
         const subject = 'Feedback Received Confirmation';
         const html = `
            <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
-              <h2 style="color: #4CAF50; text-align: center;">Feedback Received</h2>
+              <h2 style="color: #FB7C41; text-align: center;">Feedback Received</h2>
               <p style="text-align: left;">Dear <strong>${userName}</strong>,</p>
               <p style="text-align: left;">Thank you for sharing your feedback with us. We have received your comments and appreciate you taking the time to help us improve.</p>
               <p style="text-align: left;">Our team will review your feedback and take appropriate action as necessary.</p>
