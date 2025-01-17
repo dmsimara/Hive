@@ -754,10 +754,10 @@ export const updateTenantPassword = async (req, res) => {
 
         await sendMail(tenant.tenantEmail, subject, null, html);
 
-        res.status(200).json({ success: true, message: "Password updated successfully" });
+        return res.redirect(`/tenant/resetPassword?success=true&message=Password+updated+successfully`);
     } catch (error) {
         console.error("Error in updateTenantPassword:", error);  
-        res.status(500).json({ success: false, message: error.message });
+        return res.redirect(`/tenant/resetPassword?success=false&message=${encodeURIComponent(error.message)}`);
     }
 };
 
