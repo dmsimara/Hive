@@ -1,61 +1,40 @@
-let subMenu = document.getElementById("subMenu");
+document.addEventListener("DOMContentLoaded", () => {
+    const logoutButton = document.getElementById("logoutButton");
 
-function toggleMenu() {
-    if (subMenu) {
-        subMenu.classList.toggle("open-menu");
-    }
-}
+    logoutButton.addEventListener("click", async () => {
+        const isConfirmed = confirm("Are you sure you want to log out?");
+        
+        if (!isConfirmed) {
+            return;
+        }
+        
+        try {
+            const response = await fetch("/api/auth/tenantLogout", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
 
-document.addEventListener('DOMContentLoaded', () => {
-    const logoutButton = document.querySelector('#logoutButton');
+            const data = await response.json();
 
-    if (logoutButton) {
-        logoutButton.addEventListener('click', async () => {
-            const confirmLogout = confirm('Are you sure you want to log out?');
-            if (!confirmLogout) {
-                return; 
+            if (response.ok) {
+                alert(data.message); 
+                window.location.href = "/"; 
+            } else {
+                alert(data.message || "Logout failed. Please try again.");
             }
-
-            try {
-                const response = await fetch('/api/auth/adminLogout', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include',
-                });
-
-                if (response.ok) {
-                    console.log('Logout successful');
-                    window.location.href = '/'; 
-                } else {
-                    const errorData = await response.json();
-                    console.error('Logout failed:', errorData.message);
-                    alert('Failed to logout. Please try again.');
-                }
-            } catch (error) {
-                console.error('Error during logout:', error);
-                alert('An error occurred. Please try again later.');
-            }
-        });
-    } else {
-        console.error('Logout button not found on the page.');
-    }
+        } catch (error) {
+            alert("An error occurred during logout. Please try again later.");
+            console.error("Error:", error);
+        }
+    });
 });
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Current URL:', window.location.href);
 
-    const pathParts = window.location.pathname.split('/');
-    const adminId = pathParts[pathParts.length - 1];
-
-    console.log('Extracted adminId:', adminId); 
-
-    if (adminId && adminId !== 'activity-log') {
-        fetchActivities(adminId); 
-    } else {
-        console.error('Admin ID not found or URL is malformed.');
-    }
+    fetchTenantActivities(); 
 });
 
 const formatTimestamp = (timestamp) => {
@@ -77,12 +56,12 @@ const formatTimestamp = (timestamp) => {
 let currentPage = 1;
 let totalPages = 1;
 
-const fetchActivities = async (adminId, page = 1) => {
+const fetchTenantActivities = async (page = 1) => {
     try {
-        const response = await fetch(`/api/auth/activity-log/${adminId}?page=${page}`);
+        const response = await fetch(`/api/auth/activity-log?page=${page}`);
         const data = await response.json();
 
-        console.log('Fetched activity log:', data); 
+        console.log('Fetched tenant activity log:', data); 
 
         if (data.success) {
             totalPages = data.totalPages;
@@ -92,7 +71,7 @@ const fetchActivities = async (adminId, page = 1) => {
             console.log('No activities found.');
         }
     } catch (error) {
-        console.error('Error fetching activity log:', error);
+        console.error('Error fetching tenant activity log:', error);
     }
 };
 
@@ -155,27 +134,23 @@ const changePage = (page) => {
     if (page < 1 || page > totalPages) return;
 
     currentPage = page;
-    const adminId = window.location.pathname.split('/').pop();
-    fetchActivities(adminId, page);
+    fetchTenantActivities(page);
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    const currentPath = window.location.pathname; 
+    const currentPath = window.location.pathname;
 
     const pathToButtonId = {
-        '/admin/settings/feedback-support': 'feedback-link',
-        '/admin/settings/password-reset': 'password-link',
-        '/admin/settings/delete-account': 'delete-link',
-        '/admin/settings/activity-log': 'activity-link',
-        '/admin/settings': 'appearance-link',
+        '/tenant/customize': 'customize-link',
+        '/tenant/feedback': 'feedback-link',
+        '/tenant/resetPassword': 'resetPassword-link',
+        '/tenant/settings/activity-log': 'activity-log-link',
     };
 
     const activeButtonId = Object.keys(pathToButtonId).find(path => currentPath.startsWith(path));
-    if (!activeButtonId && currentPath.startsWith('/admin/settings/delete-account')) {
-        const activeLink = document.getElementById('delete-link');
-        activeLink?.querySelector('.pages-link').classList.add('active');
-    } else if (activeButtonId) {
+
+    if (activeButtonId) {
         const activeLink = document.getElementById(pathToButtonId[activeButtonId]);
-        activeLink?.querySelector('.pages-link').classList.add('active');
+        activeLink?.classList.add('active');
     }
 });

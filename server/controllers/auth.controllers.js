@@ -1445,9 +1445,9 @@ export const viewVisitorsAdmin = async (req, res) => {
     }
 };
 
-
 export const viewActivities = async (req, res) => {
     const adminId = req.params.adminId;
+    const { page = 1, limit = 10 } = req.query;  
 
     if (!adminId) {
         return res.status(400).json({ success: false, message: 'Admin ID is required.' });
@@ -1456,19 +1456,62 @@ export const viewActivities = async (req, res) => {
     const connection = connectDB(); 
 
     try {
-        const query = 'SELECT * FROM activities WHERE admin_id = ? ORDER BY timestamp DESC';
-        const [results] = await connection.promise().query(query, [adminId]); 
+        const offset = (page - 1) * limit;
+
+        const countQuery = 'SELECT COUNT(*) AS totalCount FROM activities WHERE admin_id = ?';
+        const [countResult] = await connection.promise().query(countQuery, [adminId]);
+        const totalCount = countResult[0].totalCount;
+
+        const query = 'SELECT * FROM activities WHERE admin_id = ? ORDER BY timestamp DESC LIMIT ? OFFSET ?';
+        const [results] = await connection.promise().query(query, [adminId, limit, offset]);
 
         if (!results.length) {
-            return res.json({ success: true, message: 'No activities found for this admin.', activities: [] });
+            return res.json({ success: true, message: 'No activities found for this admin.', activities: [], totalPages: 1 });
         }
 
-        return res.json({ success: true, activities: results });
+        const totalPages = Math.ceil(totalCount / limit);
+
+        return res.json({ success: true, activities: results, totalPages });
     } catch (error) {
         console.error('Error fetching activity log:', error);
         return res.status(500).json({ success: false, message: 'Internal server error' });
     } finally {
         connection.end(); 
+    }
+};
+
+export const viewHistories = async (req, res) => {
+    const tenantId = req.tenantId;   
+    const { page = 1, limit = 10 } = req.query;
+
+    if (!tenantId) {
+        return res.status(400).json({ success: false, message: 'Tenant ID is required.' });
+    }
+
+    const connection = connectDB();
+
+    try {
+        const offset = (page - 1) * limit;
+
+        const countQuery = 'SELECT COUNT(*) AS totalCount FROM histories WHERE tenant_id = ?';
+        const [countResult] = await connection.promise().query(countQuery, [tenantId]);
+        const totalCount = countResult[0].totalCount;
+
+        const query = 'SELECT * FROM histories WHERE tenant_id = ? ORDER BY timestamp DESC LIMIT ? OFFSET ?';
+        const [results] = await connection.promise().query(query, [tenantId, limit, offset]);
+
+        if (!results.length) {
+            return res.json({ success: true, message: 'No activities found for this tenant.', activities: [], totalPages: 1 });
+        }
+
+        const totalPages = Math.ceil(totalCount / limit);
+
+        return res.json({ success: true, activities: results, totalPages });
+    } catch (error) {
+        console.error('Error fetching tenant activity log:', error);
+        return res.status(500).json({ success: false, message: 'Internal server error' });
+    } finally {
+        connection.end();
     }
 };
 
@@ -3243,10 +3286,9 @@ export const updateTenant = async (req, res) => {
     }
 };
 
-
 export const deleteAdmin = async (req, res) => {
     const adminId = req.params.admin_id;
-    console.log('adminId received by backend:', adminId); 
+    console.log('Admin ID received by backend:', adminId); 
 
     if (!adminId) {
         return res.status(400).json({ success: false, message: 'Admin ID is required' });
@@ -3266,16 +3308,16 @@ export const deleteAdmin = async (req, res) => {
             });
         }
 
+        await logActivity(adminId, 'delete', `Deleted admin account ID ${adminId}.`);
+
         await admin.destroy();
 
-        logActivity(adminId, 'delete', `Deleted admin account ID ${adminId}.`);
         return res.status(200).json({ success: true, message: 'Admin deleted successfully' });
     } catch (error) {
         console.error('Error deleting admin:', error);
         return res.status(500).json({ success: false, message: 'An error occurred while deleting the admin' });
     }
 };
-
 
 export const deleteTenant = async (req, res) => {
     const tenantId = req.params.tenant_id;

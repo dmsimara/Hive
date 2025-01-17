@@ -1008,7 +1008,6 @@ app.get("/tenant/dashboard", verifyTenantToken, setEstablishmentId, async (req, 
     }
 });
 
-
 function getFormattedName(utilityType) {
     switch (utilityType) {
         case 'electricity consumption':
@@ -1453,7 +1452,6 @@ const updateTenantDetails = async (body, tenantProfile) => {
     await Tenant.update(tenantDetails, { where: { tenant_id: tenantId } });
 };
 
-
 // TENANT PAGES (SETTINGS) -------------------------------------------------------------------------
 app.get("/tenant/settings", verifyTenantToken, setEstablishmentId, async (req, res) => {
     const { tenantId, establishmentId } = req;
@@ -1670,6 +1668,33 @@ app.get("/tenant/feedback", verifyTenantToken, setEstablishmentId, async (req, r
     } catch (error) {
         console.error("Error fetching tenant visitors data:", error.message);
         res.status(500).json({ error: "Internal server error." });
+    }
+});
+
+// TENANT PAGES (ACTIVITY LOG - SETTINGS) -------------------------------------------------------------------------
+app.get("/tenant/settings/activity-log", verifyTenantToken, setEstablishmentId, async (req, res) => {
+    try {
+        const { tenantId } = req; 
+
+        if (!tenantId) {
+            return res.status(400).send("Tenant ID is missing.");
+        }
+
+        const tenant = await viewTenants(req, res, tenantId); 
+
+        if (!tenant) {
+            return res.status(404).send("Tenant not found.");
+        }
+
+        res.render("ten-activity", {
+            title: "Hive",
+            styles: ["ten-activity"],
+            tenant: tenant || {}, 
+            tenant_id: tenantId    
+        });
+    } catch (error) {
+        console.error("Error fetching tenant activity log:", error.message);
+        res.status(500).send("An error occurred while retrieving tenant data.");
     }
 });
 

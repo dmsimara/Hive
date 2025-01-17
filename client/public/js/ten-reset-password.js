@@ -30,3 +30,21 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const currentPath = window.location.pathname;
+
+    const pathToButtonId = {
+        '/tenant/customize': 'customize-link',
+        '/tenant/feedback': 'feedback-link',
+        '/tenant/resetPassword': 'resetPassword-link',
+        '/tenant/settings/activity-log': 'activity-log-link',
+    };
+
+    const activeButtonId = Object.keys(pathToButtonId).find(path => currentPath.startsWith(path));
+
+    if (activeButtonId) {
+        const activeLink = document.getElementById(pathToButtonId[activeButtonId]);
+        activeLink?.classList.add('active');
+    }
+});
