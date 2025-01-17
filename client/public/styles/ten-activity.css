@@ -535,7 +535,7 @@ html {
 
 .card-link.active {
     background-color: rgba(255, 158, 0, 0.18);
-    color: #333;
+    color: var(--maroon);
     border: 1px solid var(--maroon);
     border-right: 6px solid var(--maroon);   
     transition: opacity 0.3s ease, border-right 0.3s ease;   
