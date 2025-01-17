@@ -586,11 +586,15 @@ main {
 .dark-theme .bill:hover .bill-amount,
 .dark-theme .bill:hover .shared-amount,
 .dark-theme .bill:hover i {
-  color: #fff; /* Ensures all text and icons turn white */
+  color: #fff; 
+}
+
+.dark-theme .bill-dates p{
+  color: white;
 }
 
 .dark-theme .bill:hover .bill-dates p {
-  color: #fff; /* Ensures the .bill-dates p text turns white on hover */
+  color: #fff; 
 }
 
 .bill-amount, .shared-amount {

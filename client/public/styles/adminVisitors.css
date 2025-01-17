@@ -350,33 +350,29 @@ table.maintenance {
 .dark-theme table.maintenance {
     border-collapse: separate;
     border-spacing: 0;
-    border: 3px solid var(--brownish-yellow);
+    border: 3px solid rgba(246, 246, 230, 0.32);
     border-radius: 10px;
     overflow: hidden;
 }
 
 table.maintenance th {
-    background-color: var(--background-color);
+    background-color: rgba(246, 246, 230, 1);
     text-align: left;
     padding: 12px;
-    border-bottom: 2px solid orange;
+    border-bottom: 2px solid var(--orange);
 }
 
 .dark-theme table.maintenance th {
     background-color: var(--red-brown);
     text-align: left;
     padding: 12px;
-    border-bottom: 2px solid var(--brownish-yellow);
+    border-bottom: 2px solid rgba(246, 246, 230, 0.32);
     color: #F6F6E6;
 }
 
 .table {
     width: 100%;
     text-align: center;
-}
-
-.table thead th {
-    text-align: left !important;
 }
 
 .table thead th i.material-icons {
@@ -387,13 +383,14 @@ table.maintenance th {
 
 .table th,
 .table td {
-    text-align: center;
+    text-align: center !important;
 }
 
 table.maintenance td {
     padding: 12px;
-    border-bottom: 2px solid #ddd;
-    background-color: var(--background-color);
+    border-bottom: none;
+    color: #000000;
+    background-color: rgba(246, 246, 230, 1);
     font-weight: bold;
     font-size: 15px;
 }
@@ -409,10 +406,9 @@ table.maintenance td.no-requests {
 }
 
 
-
 .dark-theme table.maintenance td {
     padding: 12px;
-    border-bottom: 2px solid #ddd;
+    border-bottom: none;
     background-color: var(--red-brown);
     font-weight: bold;
     font-size: 15px;
@@ -438,7 +434,7 @@ table.maintenance tbody tr:last-child td {
 }
 
 .person-deets h6 {
-    font-size: 15px;
+    font-size: 17px;
     font-weight: bold;
     margin-top: 10px;
     color: #000000;
@@ -451,7 +447,7 @@ table.maintenance tbody tr:last-child td {
 }
 
 .dark-theme .person-deets h6 {
-    font-size: 15px;
+    font-size: 17px;
     font-weight: bold;
     margin-top: 10px;
     color: white;

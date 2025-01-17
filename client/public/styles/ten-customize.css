@@ -262,6 +262,16 @@ html {
     height: 290px;
 }
 
+.dark-theme .white-card {
+    background-color: var(--red-brown);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    min-width: 350px; 
+    height: 290px;
+}
+
 .card-nav {
     list-style: none;
     padding: 0;
@@ -283,6 +293,19 @@ html {
     border-radius: 8px;
     transition: all 0.3s ease;
     background-color: #F9F9F9;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dark-theme .card-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    font-size: 1em;
+    padding: 10px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background-color: #F6F6E6;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -451,6 +474,16 @@ html {
     height: 700px;
 }
 
+.dark-theme .style-card {
+    background-color: var(--red-brown);
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    min-width: 1000px;  
+    height: 700px;
+}
+
 .card-header {
     text-align: left;
     margin-bottom: 30px;
@@ -463,10 +496,24 @@ html {
     margin: 0;
 }
 
+.dark-theme .choose-style-title {
+    font-size: 2em;
+    font-weight: bold;
+    color: white;
+    margin: 0;
+}
+
 .choose-style-description {
     font-size: 1em;
     font-weight: normal;
     color: #555;
+    margin-top: 5px;
+}
+
+.dark-theme .choose-style-description {
+    font-size: 1em;
+    font-weight: normal;
+    color: white;
     margin-top: 5px;
 }
 
@@ -479,7 +526,23 @@ html {
 .style-option {
     width: 45%;   
     background-color: #F9F9F9;
-    border: 1px solid #DDD;
+    border: 1px solid var(--maroon);
+    border-radius: 10px;
+    text-align: center;
+    padding: 30px;
+    position: relative;
+    height: 300px;   
+    display: flex;
+    flex-direction: column;  
+    align-items: center;  
+    justify-content: center; 
+    box-sizing: border-box;  
+}
+
+.dark-theme .style-option {
+    width: 45%;   
+    background-color: #F6F6E6;
+    border: 1px solid var(--orange);
     border-radius: 10px;
     text-align: center;
     padding: 30px;
