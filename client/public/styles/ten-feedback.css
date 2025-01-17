@@ -265,6 +265,16 @@ html {
     height: 290px;
 }
 
+.dark-theme .white-card {
+    background-color: var(--red-brown);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    min-width: 350px; 
+    height: 290px;
+}
+
 .card-nav {
     list-style: none;
     padding: 0;
@@ -286,6 +296,19 @@ html {
     border-radius: 8px;
     transition: all 0.3s ease;
     background-color: #F9F9F9;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dark-theme .card-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    font-size: 1em;
+    padding: 10px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background-color: #F6F6E6;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -446,6 +469,16 @@ html {
     height: 700px;
 }
 
+.dark-theme .feedback-section {
+    background-color: var(--red-brown);
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    min-width: 1000px;  
+    height: 700px;
+}
+
 .feedback-section h2 {
     font-size: 1.5rem;
     font-weight: bold;
@@ -453,8 +486,21 @@ html {
     margin-bottom: 10px;
 }
 
+.dark-theme .feedback-section h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 10px;
+}
+
 .feedback-section p {
     color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+.dark-theme .feedback-section p {
+    color: white;
     font-size: 0.9rem;
     margin-bottom: 20px;
 }
@@ -471,10 +517,26 @@ html {
 }
 
 .form-group label {
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 500;
     margin-bottom: 5px;
     color: #333;
+}
+
+.dark-theme .form-group label {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: white;
+}
+
+input{
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    resize: none;
 }
 
 textarea {
