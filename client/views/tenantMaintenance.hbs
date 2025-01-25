@@ -251,7 +251,8 @@
 <script src="/js/tenantMaintenance.js"></script>
 <script>
     window.establishmentId = {{ establishmentId }};
-
+</script>
+<script>
     window.onload = function () {
         const theme = localStorage.getItem('theme');
 
@@ -263,7 +264,6 @@
             logo.src = '/images/hiveLight.png';
         }
     };
-
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', async function () {
