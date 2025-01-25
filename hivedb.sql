@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 20, 2024 at 04:21 PM
+-- Generation Time: Jan 25, 2025 at 04:00 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -20,6 +20,20 @@ SET time_zone = "+00:00";
 --
 -- Database: `hivedb`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `activities`
+--
+
+CREATE TABLE `activities` (
+  `activity_id` int(11) NOT NULL,
+  `admin_id` int(11) DEFAULT NULL,
+  `actionType` varchar(255) DEFAULT NULL,
+  `actionDetails` text DEFAULT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -43,13 +57,6 @@ CREATE TABLE `admins` (
   `verificationTokenExpiresAt` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `admins`
---
-
-INSERT INTO `admins` (`admin_id`, `adminEmail`, `adminPassword`, `adminFirstName`, `adminLastName`, `establishment_id`, `adminProfile`, `isVerified`, `lastLogin`, `resetPasswordToken`, `resetPasswordExpiresAt`, `verificationToken`, `verificationTokenExpiresAt`) VALUES
-(1, 'ellasimara02@gmail.com', '$2a$10$NJzopEp3pATWOXeS2LE60urSmBb5kAkmlZoHy1B8qbIqjIsVBXSbi', 'Daniella', 'Simara', 1, '3e57a0b247a2c9d13cd65e34cbcee697.jpg', 1, '2024-11-18 16:11:56', NULL, NULL, '491415', '2024-11-03 16:14:52');
-
 -- --------------------------------------------------------
 
 --
@@ -67,13 +74,6 @@ CREATE TABLE `calendars` (
   `establishment_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `calendars`
---
-
-INSERT INTO `calendars` (`event_id`, `event_name`, `start`, `end`, `event_description`, `status`, `admin_id`, `establishment_id`) VALUES
-(3, 'Test', '2024-11-19 19:00:00', '2024-11-19 22:00:00', 'Test description', 'Not Started', 1, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -85,12 +85,59 @@ CREATE TABLE `establishments` (
   `eName` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `establishments`
+-- Table structure for table `feedbacks`
 --
 
-INSERT INTO `establishments` (`establishment_id`, `eName`) VALUES
-(1, 'Payne\'s Dormitory');
+CREATE TABLE `feedbacks` (
+  `feedback_id` int(11) NOT NULL,
+  `tenant_id` int(11) DEFAULT NULL,
+  `admin_id` int(11) DEFAULT NULL,
+  `establishment_id` int(11) DEFAULT NULL,
+  `feedback_level` tinyint(1) NOT NULL CHECK (`feedback_level` between 1 and 5),
+  `content` text DEFAULT NULL,
+  `submitted_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `userEmail` varchar(255) DEFAULT NULL,
+  `userName` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fixes`
+--
+
+CREATE TABLE `fixes` (
+  `maintenance_id` int(11) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `urgency` enum('urgent','scheduled') NOT NULL,
+  `scheduledDate` datetime DEFAULT NULL,
+  `contactNum` varchar(15) DEFAULT NULL,
+  `status` enum('completed','in progress','pending') DEFAULT 'pending',
+  `submissionDate` timestamp NOT NULL DEFAULT current_timestamp(),
+  `resolvedDate` datetime DEFAULT NULL,
+  `assignedPerson` varchar(255) DEFAULT NULL,
+  `tenant_id` int(11) DEFAULT NULL,
+  `establishment_id` int(11) DEFAULT NULL,
+  `room_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `histories`
+--
+
+CREATE TABLE `histories` (
+  `history_id` int(11) NOT NULL,
+  `tenant_id` int(11) DEFAULT NULL,
+  `actionType` varchar(255) DEFAULT NULL,
+  `actionDetails` text DEFAULT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -110,12 +157,30 @@ CREATE TABLE `notices` (
   `establishment_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `notices`
+-- Table structure for table `requests`
 --
 
-INSERT INTO `notices` (`notice_id`, `title`, `content`, `pinned`, `permanent`, `created_at`, `updated_at`, `admin_id`, `establishment_id`) VALUES
-(1, 'Test Title', 'Test Content', 0, 0, '2024-11-20 15:20:07', '2024-11-20 15:20:07', 1, 1);
+CREATE TABLE `requests` (
+  `request_id` int(11) NOT NULL,
+  `tenant_id` int(11) NOT NULL,
+  `room_id` int(11) NOT NULL,
+  `visitorName` varchar(255) NOT NULL,
+  `contactInfo` varchar(100) DEFAULT NULL,
+  `purpose` text DEFAULT NULL,
+  `visitDateFrom` datetime NOT NULL,
+  `status` enum('pending','approved','rejected','cancelled') DEFAULT 'pending',
+  `adminComments` text DEFAULT NULL,
+  `requestDate` timestamp NOT NULL DEFAULT current_timestamp(),
+  `establishment_id` int(11) NOT NULL,
+  `decisionTimestamp` timestamp NULL DEFAULT NULL,
+  `visitorAffiliation` varchar(255) DEFAULT NULL,
+  `visitDateTo` datetime NOT NULL,
+  `visitType` enum('regular','overnight') NOT NULL DEFAULT 'regular',
+  `checkin` tinyint(1) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -130,18 +195,11 @@ CREATE TABLE `rooms` (
   `roomTotalSlot` int(11) NOT NULL,
   `roomRemainingSlot` int(11) NOT NULL,
   `establishment_id` int(11) NOT NULL,
-  `floorNumber` int(11) NOT NULL
+  `floorNumber` int(11) NOT NULL,
+  `requestCount` int(11) DEFAULT 0,
+  `visitorLimit` int(11) DEFAULT 0,
+  `originalVisitorLimit` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `rooms`
---
-
-INSERT INTO `rooms` (`room_id`, `roomNumber`, `roomType`, `roomTotalSlot`, `roomRemainingSlot`, `establishment_id`, `floorNumber`) VALUES
-(1, '201', 'Female Studio Type', 4, 1, 1, 2),
-(2, '204', 'Female Studio Type', 6, 4, 1, 2),
-(5, '401', 'Dorm Type', 6, 6, 1, 4),
-(7, '1', 'Dorm', 4, 4, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -167,21 +225,42 @@ CREATE TABLE `tenants` (
   `tenantGuardianName` varchar(200) DEFAULT NULL,
   `tenantAddress` varchar(255) DEFAULT NULL,
   `tenantGuardianNum` varchar(15) DEFAULT NULL,
-  `tenantProfile` varchar(255) DEFAULT NULL
+  `tenantProfile` varchar(255) DEFAULT NULL,
+  `resetPasswordToken` varchar(255) DEFAULT NULL,
+  `resetPasswordExpiresAt` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `tenants`
+-- Table structure for table `utilities`
 --
 
-INSERT INTO `tenants` (`tenant_id`, `tenantFirstName`, `tenantLastName`, `tenantEmail`, `tenantPassword`, `gender`, `mobileNum`, `room_id`, `establishment_id`, `stayFrom`, `stayTo`, `periodRemaining`, `status`, `dateJoined`, `tenantGuardianName`, `tenantAddress`, `tenantGuardianNum`, `tenantProfile`) VALUES
-(5, 'Test', 'Test', 'Test@gmail.com', '$2a$10$Mr7zJ8lZhO36lN2bwwAHfePPxT2nCUPPEYrLQnYrzwEn6sT9FoMzq', 'F', '01987654321', NULL, 1, '2024-11-08 00:00:00', '2024-11-30 00:00:00', NULL, 'active', '2024-11-07 15:33:58', NULL, NULL, NULL, NULL),
-(8, 'Another', 'Test', 'test2@gmail.com', '$2a$10$DEtvK/3Qio/ksqFywvnaherH.MTvwH3Mg37qgTRD9tJTPDIZHb5Mu', 'Other', '01987654321', NULL, 1, NULL, NULL, NULL, 'active', '2024-11-09 09:32:53', NULL, NULL, NULL, NULL),
-(17, 'Working', 'Test', 'workingtest@gmail.com', '$2a$10$NINyBD3YONmpLVT7nLXP6eL4YrsGBEBGSCglUjpc0u39vxYCYzjwi', 'M', '12345678910', 2, 1, '2024-11-18 00:00:00', '2025-01-31 00:00:00', NULL, 'active', '2024-11-14 14:26:36', NULL, NULL, NULL, NULL);
+CREATE TABLE `utilities` (
+  `utility_id` int(11) NOT NULL,
+  `room_id` int(11) DEFAULT NULL,
+  `establishment_id` int(11) NOT NULL,
+  `utilityType` enum('unit rental','electricity consumption','water usage','internet connection','maintenance fees','dorm amenities') NOT NULL,
+  `charge` decimal(10,2) NOT NULL,
+  `statementDate` date NOT NULL,
+  `dueDate` date NOT NULL,
+  `status` enum('unpaid','paid','overdue','partial','cancelled') NOT NULL DEFAULT 'unpaid',
+  `perTenant` decimal(10,2) DEFAULT NULL,
+  `month` varchar(20) DEFAULT NULL,
+  `totalBalance` decimal(10,2) DEFAULT NULL,
+  `sharedBalance` decimal(10,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `activities`
+--
+ALTER TABLE `activities`
+  ADD PRIMARY KEY (`activity_id`),
+  ADD KEY `activities_ibfk_1` (`admin_id`);
 
 --
 -- Indexes for table `admins`
@@ -207,12 +286,46 @@ ALTER TABLE `establishments`
   ADD UNIQUE KEY `eName` (`eName`);
 
 --
+-- Indexes for table `feedbacks`
+--
+ALTER TABLE `feedbacks`
+  ADD PRIMARY KEY (`feedback_id`),
+  ADD KEY `tenant_id` (`tenant_id`),
+  ADD KEY `admin_id` (`admin_id`),
+  ADD KEY `establishment_id` (`establishment_id`);
+
+--
+-- Indexes for table `fixes`
+--
+ALTER TABLE `fixes`
+  ADD PRIMARY KEY (`maintenance_id`),
+  ADD KEY `tenant_id` (`tenant_id`),
+  ADD KEY `establishment_id` (`establishment_id`),
+  ADD KEY `room_id` (`room_id`);
+
+--
+-- Indexes for table `histories`
+--
+ALTER TABLE `histories`
+  ADD PRIMARY KEY (`history_id`),
+  ADD KEY `tenant_id` (`tenant_id`);
+
+--
 -- Indexes for table `notices`
 --
 ALTER TABLE `notices`
   ADD PRIMARY KEY (`notice_id`),
   ADD KEY `admin_id` (`admin_id`),
   ADD KEY `establishment_id` (`establishment_id`);
+
+--
+-- Indexes for table `requests`
+--
+ALTER TABLE `requests`
+  ADD PRIMARY KEY (`request_id`),
+  ADD KEY `tenant_id` (`tenant_id`),
+  ADD KEY `room_id` (`room_id`),
+  ADD KEY `fk_establishment_id` (`establishment_id`);
 
 --
 -- Indexes for table `rooms`
@@ -231,48 +344,98 @@ ALTER TABLE `tenants`
   ADD KEY `establishment_id` (`establishment_id`);
 
 --
+-- Indexes for table `utilities`
+--
+ALTER TABLE `utilities`
+  ADD PRIMARY KEY (`utility_id`),
+  ADD KEY `establishment_id` (`establishment_id`),
+  ADD KEY `utilities_ibfk_1` (`room_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `activities`
+--
+ALTER TABLE `activities`
+  MODIFY `activity_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `calendars`
 --
 ALTER TABLE `calendars`
-  MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `establishments`
 --
 ALTER TABLE `establishments`
-  MODIFY `establishment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `establishment_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `feedbacks`
+--
+ALTER TABLE `feedbacks`
+  MODIFY `feedback_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `fixes`
+--
+ALTER TABLE `fixes`
+  MODIFY `maintenance_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `histories`
+--
+ALTER TABLE `histories`
+  MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `notices`
 --
 ALTER TABLE `notices`
-  MODIFY `notice_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `notice_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `requests`
+--
+ALTER TABLE `requests`
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `rooms`
 --
 ALTER TABLE `rooms`
-  MODIFY `room_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `room_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tenants`
 --
 ALTER TABLE `tenants`
-  MODIFY `tenant_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `tenant_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `utilities`
+--
+ALTER TABLE `utilities`
+  MODIFY `utility_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `activities`
+--
+ALTER TABLE `activities`
+  ADD CONSTRAINT `activities_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `admins` (`admin_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `admins`
@@ -288,11 +451,41 @@ ALTER TABLE `calendars`
   ADD CONSTRAINT `calendars_ibfk_2` FOREIGN KEY (`establishment_id`) REFERENCES `establishments` (`establishment_id`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `feedbacks`
+--
+ALTER TABLE `feedbacks`
+  ADD CONSTRAINT `feedbacks_ibfk_1` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`tenant_id`),
+  ADD CONSTRAINT `feedbacks_ibfk_2` FOREIGN KEY (`admin_id`) REFERENCES `admins` (`admin_id`),
+  ADD CONSTRAINT `feedbacks_ibfk_3` FOREIGN KEY (`establishment_id`) REFERENCES `establishments` (`establishment_id`);
+
+--
+-- Constraints for table `fixes`
+--
+ALTER TABLE `fixes`
+  ADD CONSTRAINT `fixes_ibfk_1` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`tenant_id`),
+  ADD CONSTRAINT `fixes_ibfk_2` FOREIGN KEY (`establishment_id`) REFERENCES `establishments` (`establishment_id`),
+  ADD CONSTRAINT `fixes_ibfk_3` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`room_id`);
+
+--
+-- Constraints for table `histories`
+--
+ALTER TABLE `histories`
+  ADD CONSTRAINT `histories_ibfk_1` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`tenant_id`);
+
+--
 -- Constraints for table `notices`
 --
 ALTER TABLE `notices`
   ADD CONSTRAINT `notices_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `admins` (`admin_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `notices_ibfk_2` FOREIGN KEY (`establishment_id`) REFERENCES `establishments` (`establishment_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `requests`
+--
+ALTER TABLE `requests`
+  ADD CONSTRAINT `fk_establishment_id` FOREIGN KEY (`establishment_id`) REFERENCES `establishments` (`establishment_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `requests_ibfk_1` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`tenant_id`),
+  ADD CONSTRAINT `requests_ibfk_2` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`room_id`);
 
 --
 -- Constraints for table `rooms`
@@ -306,6 +499,13 @@ ALTER TABLE `rooms`
 ALTER TABLE `tenants`
   ADD CONSTRAINT `tenants_ibfk_1` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`room_id`) ON DELETE SET NULL,
   ADD CONSTRAINT `tenants_ibfk_2` FOREIGN KEY (`establishment_id`) REFERENCES `establishments` (`establishment_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `utilities`
+--
+ALTER TABLE `utilities`
+  ADD CONSTRAINT `utilities_ibfk_1` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`room_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `utilities_ibfk_2` FOREIGN KEY (`establishment_id`) REFERENCES `establishments` (`establishment_id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

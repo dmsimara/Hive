@@ -108,6 +108,10 @@ app.use(fileUpload());
 
 // HOME ROUTE ---------------------------------------------------------------------------------------
 app.get("/", (req, res) => {
+    res.render("introduction", { title: "Hive", styles: ["introduction"] });
+});
+
+app.get("/home", (req, res) => {
     res.render("home", { title: "Hive", styles: ["home"] });
 });
 
@@ -292,7 +296,7 @@ app.get("/admin/manage/unit", verifyToken, async (req, res) => {
       console.error("Error fetching admin or unit data:", error);
       res.status(500).json({ success: false, message: "Error fetching data" });
     }
-  });
+});
   
 const getTenantsByRoomId = async (roomId) => {
     try {

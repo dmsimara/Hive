@@ -1,5 +1,5 @@
 import express from "express";
-import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, deleteTenant, viewAdmins, viewUnits, addUnitView, addUnit, deleteUnit, getOccupiedUnits, editTenant, updateTenant, addEvent, viewEvents, editEvent, deleteEvent, getEvents, updateEvent, viewNotices, pinnedNotices, permanentNotices, addNotice, togglePinned, togglePermanent, deleteNotice, getAvailableRooms, getNotices, searchTenants, searchRooms, deleteAdmin, updateAdminPassword, updateTenantPassword, addFeedback, addUtility, viewUtilities, deleteUtility, editUtility, updateUtility, utilityHistories, viewActivities, addRegularRequest, cancelRequest, approvedRequest, viewVisitorsAdmin, viewVisitorsTenant, addOvernightRequest, rejectedRequest, checkin, checkout, addMaintenance, updateMaintenance, doneMaintenance, viewFixes, viewFixesAdmin, forgotTenantPassword, resetTenantPassword, viewRequestsAdmin, viewRegularRequests, viewOvernightRequests, viewHistories, addTenantFeedback } from "../controllers/auth.controllers.js";
+import { adminRegister, adminLogin, adminLogout, verifyEmail, forgotPassword, resetPassword, checkAuth, viewTenants, findTenants, addTenant, addTenantView, checkTenantAuth, tenantLogin, tenantLogout, deleteTenant, viewAdmins, viewUnits, addUnitView, addUnit, deleteUnit, getOccupiedUnits, editTenant, updateTenant, addEvent, viewEvents, editEvent, deleteEvent, getEvents, updateEvent, viewNotices, pinnedNotices, permanentNotices, addNotice, togglePinned, togglePermanent, deleteNotice, getAvailableRooms, getNotices, searchTenants, searchRooms, deleteAdmin, updateAdminPassword, updateTenantPassword, addFeedback, addUtility, viewUtilities, deleteUtility, editUtility, updateUtility, utilityHistories, viewActivities, addRegularRequest, cancelRequest, approvedRequest, viewVisitorsAdmin, viewVisitorsTenant, addOvernightRequest, rejectedRequest, checkin, checkout, addMaintenance, updateMaintenance, doneMaintenance, viewFixes, viewFixesAdmin, forgotTenantPassword, resetTenantPassword, viewRequestsAdmin, viewRegularRequests, viewOvernightRequests, viewHistories, addTenantFeedback, searchUtils } from "../controllers/auth.controllers.js";
 import { verifyTenantToken, verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
@@ -52,6 +52,7 @@ router.delete("/view/notices/:noticeId/delete", verifyToken, deleteNotice);
 router.get("/getAvailableRooms", getAvailableRooms);
 router.get("/search", searchTenants);
 router.get("/searchRooms", searchRooms);
+router.get("/searchUtilities", searchUtils);
 router.get("/searchTenants", findTenants);
 router.delete("/deleteAdmin/:admin_id", deleteAdmin);
 router.post("/update-password", verifyToken, updateAdminPassword);

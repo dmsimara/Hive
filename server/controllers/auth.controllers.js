@@ -1680,6 +1680,49 @@ export const searchRooms = async (req, res, next) => {
     }
 };
 
+export const searchUtils = async (req, res, next) => {
+    try {
+      const searchTerm = req.query.q?.trim() || '';
+      console.log('Search Term:', searchTerm);
+  
+      // Extract token from headers or cookies
+      const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
+      if (!token) {
+        return res.status(401).json({ success: false, message: 'Unauthorized. No token provided.' });
+      }
+  
+      // Verify the token
+      try {
+        jwt.verify(token, process.env.JWT_SECRET);
+        console.log('Token verified successfully.');
+      } catch (err) {
+        console.error('Token verification error:', err);
+        return res.status(401).json({ success: false, message: 'Invalid or expired token.' });
+      }
+  
+      // Set up query conditions
+      const whereConditions = {};
+      if (searchTerm) {
+        whereConditions[Op.or] = [
+          { roomNumber: { [Op.like]: `%${searchTerm}%` } },
+          { roomType: { [Op.like]: `%${searchTerm}%` } },
+        ];
+      }
+  
+      // Fetch utilities based on the search term
+      const utilities = await Utility.findAll({ where: whereConditions });
+  
+      return res.json({
+        success: true,
+        utilities: utilities || [], // Return an empty array if no results found
+      });
+    } catch (error) {
+      console.error('Error executing searchUtils query:', error);
+      return res.status(500).json({ success: false, message: 'Database query failed.' });
+    }
+  };
+  
+
 export const findTenants = async (req, res, next) => {
     try {
         const searchTerm = req.query.q?.trim() || ''; 
