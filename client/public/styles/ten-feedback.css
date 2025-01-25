@@ -712,6 +712,21 @@ textarea:focus {
     user-select: none;  
 }
 
+.dark-theme .emoji-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    width: 100px;
+    height: 100px;
+    background-color: var(--white);
+    user-select: none;  
+}
+
 .emoji {
     font-size: 30px;
     margin-bottom: 5px;
@@ -719,6 +734,12 @@ textarea:focus {
 }
 
 .label-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--dark-gray);
+}
+
+.dark-theme .label-text {
     font-size: 14px;
     font-weight: 500;
     color: var(--dark-gray);
@@ -764,6 +785,12 @@ input[type="radio"] {
 input[type="radio"]:checked + .emoji-container {
     border-color: var(--maroon);
     background-color: rgba(255, 158, 0, 0.1);
+    transform: scale(1.1);
+}
+
+.dark-theme input[type="radio"]:checked + .emoji-container {
+    border-color: var(--brownish-yellow);
+    background-color: rgba(246, 246, 230, 1);
     transform: scale(1.1);
 }
 
