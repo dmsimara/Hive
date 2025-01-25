@@ -1043,25 +1043,30 @@ app.get("/tenant/dashboard", verifyTenantToken, setEstablishmentId, async (req, 
             return res.status(400).json({ error: "Invalid room slot values." });
         }
 
-        const rentedSlot = roomTotalSlot - roomRemainingSlot;
+        const tenantsInRoom = await Tenant.findAll({ where: { room_id: roomId } });
+        const rentedSlot = tenantsInRoom.length;  
 
         const tenants = await getTenantsDashboard(roomId);
-
         const plainTenants = tenants.map((tenant) => tenant.get({ plain: true }));
+
+        const noticesCount = await Notice.count({ where: { establishment_id: establishmentId } }) || 0;
 
         res.render("tenantDashboard", {
             title: "Hive",
             styles: ["ten-dashboard"],
             tenants: plainTenants,
             roomNumber,
-            rentedSlot,
-            utilities: formattedUtilities,  
+            rentedSlot,  
+            utilities: formattedUtilities,
+            notices: noticesCount  
         });
     } catch (error) {
         console.error("Error fetching tenant dashboard data:", error);
         res.status(500).json({ error: "Internal server error." });
     }
 });
+
+
 
 function getFormattedName(utilityType) {
     switch (utilityType) {
