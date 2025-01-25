@@ -2098,17 +2098,8 @@ export const addTenant = async (req, res) => {
         }
 
         const token = req.cookies.token;
-        if (!token) {
-            return res.status(401).json({ success: false, message: "Unauthorized. No token provided." });
-        }
-
-        let establishmentId;
-        try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            establishmentId = decoded.establishmentId;
-        } catch (err) {
-            return res.status(401).json({ success: false, message: "Invalid or expired token." });
-        }
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const establishmentId = decoded.establishmentId;
 
         const availableRooms = await Room.findAll({
             where: {
