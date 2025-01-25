@@ -8,22 +8,7 @@
     --dark-gray: rgb(42, 22, 23);  /* #2A1617 */
 }
 
-.dark-theme {
-    --background-color: #2A1617;  
-    --text-color: #FCFAC3;   
-    --brownish-yellow: #FF9E00;   
-    --brown: #995F00; 
-    --red: #D20000;
-    --d-yellow: #FAB020;
-    --white: #fff;
-    --dark-brown: #331800;
-    --light-brown: #654321;
-    --dark-grey: #0c0807;
-    --dimgray: #696969;
-    --reddish-brown: #DB6D5E;
-    --red-brown: #4B2B2D;
-    --redy-brown: #4F2124;
-}
+
 
 html, body {
     margin: 0;
@@ -37,18 +22,7 @@ html, body {
     flex-direction: column;
 }
 
-.dark-theme html,
-body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
-    font-family: 'Raleway', 'Inter', sans-serif;
-    background-color: var(--background-color);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
+
 
 .row {
     display: flex;
@@ -70,14 +44,7 @@ body {
     text-decoration: none;
 }
 
-.dark-theme .form-container {
-    flex: 0 0 60%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    text-decoration: none;
-    color: var(--white);
-}
+
 
 .logo-container {
     flex: 0 0 38%;
@@ -109,13 +76,7 @@ body {
     top: 160px;
 }
 
-.dark-theme .intro {
-    font-size: 55px;
-    color: var(--white);
-    position: absolute;
-    left: 100px;
-    top: 160px;
-}
+
 
 .desc {
     color: var(--gray);
@@ -126,14 +87,7 @@ body {
     font-weight: 500;
 }
 
-.dark-theme .desc {
-    color: var(--white);
-    position: absolute;
-    left: 110px;
-    top: 220px;
-    font-size: 15px;
-    font-weight: 500;
-}
+
 
 form {
     margin-top: 70px; 
@@ -171,11 +125,7 @@ label[for="adminPassword"] {
     font-weight: 700;
 }
 
-.dark-theme .create a {
-    text-decoration: none;
-    color: var(--white);
-    font-weight: 700;
-}
+
 
 .btn {
     background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
@@ -202,19 +152,6 @@ label[for="adminPassword"] {
     text-decoration: none;
 }
 
-.dark-theme .forgot-password-link {
-    font-size: 14px;  
-    color: var(--reddish-brown); 
-    text-decoration: none; 
-    font-weight: 600;  
-    margin-top: 10px;  
-    margin-right: 15em;
-    display: inline-block; 
-    position: relative; 
-}
 
-.dark-theme .forgot-password-link:hover {
-    color: var(--brownish-yellow);  
-    text-decoration: underline;  
-    transition: color 0.3s ease, text-decoration 0.3s ease;  
-}
+
+

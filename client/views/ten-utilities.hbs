@@ -48,6 +48,7 @@
           </a>
       </ul>
 
+
       </li>
       <li class="sidebar-item">
         <a href="/tenant/customize" class="sidebar-link">
@@ -65,6 +66,8 @@
   </aside>
 
 
+
+
   <!-- Main Content -->
   <main>
     <header class="dashboard-header">
@@ -73,6 +76,8 @@
         <h1 class="dashboard-title">Utilities and Bills</h1>
       </div>
     </header>
+
+
 
 
     <div class="main-content">
@@ -104,62 +109,63 @@
 
 
 
-        <!-- Right Side Cards -->
-        <aside class="right-side">
-          <!-- Room Total Balance -->
-          <div class="total-balance-card">
-            <h2>Room #{{roomNumber}}</h2>
-            <h2>Total Balance</h2>
-            <p class="main-balance">Php {{totalBalance}}</p>
-            <div class="shared-balance-card">
-              <h3>Shared Balance</h3>
-              <p>Php {{sharedBalance}}</p>
-            </div>
-          </div>
 
 
-          <!-- Usage Summary -->
-          <div class="usage-summary-card">
-            <h3>Usage Summary</h3>
-            <div class="usage-circle">
-              <p>50 Mbps</p>
-            </div>
-            <p>Your Subscription is Internet Only</p>
-          </div>
-        </aside>
+
+<!-- Right Side Cards -->
+<aside class="right-side">
+  <!-- Room Total Balance -->
+  <div class="total-balance-card">
+    <!-- Combined Room Number and Total Balance -->
+    <h2>Room #{{roomNumber}} Total Balance:</h2>
+    <p class="main-balance">Php {{totalBalance}}</p>
+
+
+    <!-- Shared Balance Card -->
+    <div class="shared-balance-card">
+      <h3>Shared Balance:</h3>
+      <div class="balance-amount">
+        <p class="shared-balance-amount">Php {{sharedBalance}}</p>
+        <button class="paid-button">Paid</button>
       </div>
-
-
-      <section class="utilities-history">
-        <h2>Utilities History</h2>
-        <div class="utilities-history-card">
-          <table>
-            <thead>
-              <tr>
-                <th>Month</th>
-                <th><i class="fas fa-wallet"></i> Total Charge</th>
-                <th><i class="fas fa-users"></i> Shared Balance</th>
-              </tr>
-            </thead>
-            <tbody>
-              {{#each utilitiesHistory}}
-              <tr>
-                <td>{{this.month}}</td>
-                <td>Php {{this.totalBalance}}</td>
-                <td>Php {{this.sharedBalance}}</td> <!-- Show sharedBalance -->
-              </tr>
-              {{else}}
-              <tr>
-                <td colspan="3">No utilities history available.</td>
-              </tr>
-              {{/each}}
-            </tbody>
-          </table>
-        </div>
-      </section>
     </div>
-  </main>
+  </div>
+</aside>
+
+
+<section class="utilities-history">
+  <h2>Utilities History</h2>
+  <div class="utilities-history-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Month</th>
+          <th><i class="fas fa-wallet"></i> Total Charge</th>
+          <th><i class="fas fa-users"></i> Shared Balance</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each utilitiesHistory}}
+        <tr>
+          <td>{{this.month}}</td>
+          <td>Php {{this.totalBalance}}</td>
+          <td>Php {{this.sharedBalance}}</td> <!-- Show sharedBalance -->
+        </tr>
+        {{else}}
+        <tr>
+          <td colspan="3">No utilities history available.</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</section>
+</main>
 </div>
+
+
+
+
 
 
 <script src="/js/ten-utilities.js"></script>
@@ -167,7 +173,9 @@
   window.onload = function () {
     const theme = localStorage.getItem('theme');
 
+
     const logo = document.getElementById('logo');
+
 
     if (theme === 'dark') {
       logo.src = '/images/hiveDark.png';
@@ -176,3 +184,6 @@
     }
   };
 </script>
+
+
+
