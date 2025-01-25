@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
 
+
 :root {
     --yellow: rgb(255, 251, 151);
     /* #FFFB97 */
@@ -14,11 +15,12 @@
     --background-color: rgb(245, 245, 245);
 }
 
+
 .dark-theme {
   --background-color: #2A1617;  
-  --text-color: #FCFAC3;   
-  --brownish-yellow: #FF9E00;   
-  --brown: #995F00; 
+  --text-color: #FCFAC3;  
+  --brownish-yellow: #FF9E00;  
+  --brown: #995F00;
   --red: #D20000;
   --d-yellow: #FAB020;
   --white: #fff;
@@ -31,17 +33,21 @@
   --redy-brown: #4F2124;
 }
 
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+
 body, html {
     font-family: 'Inter', sans-serif;
     height: 100%;
 
+
 }
+
 
 .dashboard-container {
     display: flex;
@@ -52,6 +58,7 @@ body, html {
     gap: 20px;
 }
 
+
 .dark-theme .dashboard-container {
   display: flex;
   height: 100vh;
@@ -61,32 +68,38 @@ body, html {
   gap: 20px;
 }
 
+
 main::-webkit-scrollbar {
-  width: 12px; 
+  width: 12px;
 }
+
 
 main::-webkit-scrollbar-thumb {
   background-color: var(--maroon);  
   border-radius: 10px;  
-  border: 2px solid #fff; 
+  border: 2px solid #fff;
 }
+
 
 main::-webkit-scrollbar-thumb:hover {
   background-color: var(--maroon);
 }
 
+
 main::-webkit-scrollbar-track {
-  background: #f1f1f1; 
-  border-radius: 10px; 
+  background: #f1f1f1;
+  border-radius: 10px;
 }
+
 
 main::-webkit-scrollbar-track:hover {
   background: #e1e1e1;
 }
 
+
 .sidebar {
     position: sticky;
-    top: 0; 
+    top: 0;
     background-color: #F4F4F4;
     width: 300px;
     min-width: 300px;
@@ -97,12 +110,13 @@ main::-webkit-scrollbar-track:hover {
     transition: all .25s ease-in-out;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     height: 100vh;
-    overflow-y: auto; 
+    overflow-y: auto;
 }
+
 
 .dark-theme .sidebar {
   position: sticky;
-  top: 0; 
+  top: 0;
   background-color: var(--background-color);
   width: 300px;
   min-width: 300px;
@@ -113,8 +127,9 @@ main::-webkit-scrollbar-track:hover {
   transition: all .25s ease-in-out;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   height: 100vh;
-  overflow-y: auto; 
+  overflow-y: auto;
 }
+
 
 .sidebar-card {
     background-color: #FFFFFF;
@@ -125,6 +140,7 @@ main::-webkit-scrollbar-track:hover {
     height: 100%;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
+
 
 .dark-theme .sidebar-card {
   background-color: var(--red-brown);
@@ -137,35 +153,41 @@ main::-webkit-scrollbar-track:hover {
 }
 
 
+
+
 .logo {
     margin-bottom: -15px;
     margin-top: -30px;
 }
+
 
 .logo-img {
     width: 140px;
     height: auto;
 }
 
+
 .sidebar-nav {
-    list-style-type: none; 
+    list-style-type: none;
     padding: 0;  
     margin: 0;  
     flex-grow: 1;
 }
 
+
 .sidebar-item {
-    list-style-type: none; 
+    list-style-type: none;
     display: flex;
     align-items: center;
     color: #333;
     font-size: 1em;
     padding: 10px;
-    border-radius: 8px; 
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
     margin-bottom: 5px;
 }
+
 
 .sidebar-item:hover {
     background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
@@ -173,6 +195,8 @@ main::-webkit-scrollbar-track:hover {
     background-position: center; /* Ensures the gradient is centered */
     transition: background-size 0.3s ease; /* Smooth transition for the background size */
 }
+
+
 
 
 .sidebar-item a {
@@ -183,6 +207,7 @@ main::-webkit-scrollbar-track:hover {
     transition: color 0.3s ease;
 }
 
+
 .dark-theme .sidebar-item a {
   text-decoration: none;
   color: var(--white);
@@ -191,42 +216,52 @@ main::-webkit-scrollbar-track:hover {
   transition: color 0.3s ease;
 }
 
+
 .sidebar-item:hover a {
     color: white;
 }
+
 
 .sidebar-item i {
     margin-right: 10px;
     color: #333;
 }
 
+
 .dark-theme .sidebar-item i {
   margin-right: 10px;
   color: white;
 }
 
+
 .sidebar-item.active {
     background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
-    color: white !important; 
+    color: white !important;
 }
+
 
 .sidebar-item.active a {
     color: white;
 }
 
+
 .sidebar-item.active i {
-  color: white !important; 
+  color: white !important;
 }
+
 
 .sidebar p {
     font-size: 0.9em;
     color: #666;
 }
 
+
 .dark-theme .sidebar p {
   font-size: 0.9em;
   color: white;
 }
+
+
 
 
 .sidebar-nav .menu-title {
@@ -235,15 +270,18 @@ main::-webkit-scrollbar-track:hover {
     margin-left: 5px;
 }
 
+
 .tracker {
     margin-top: 40px;
 }
+
 
 .logout-container {
     margin-top: auto;
     padding-top: 20px;
     border-top: 1px solid #ddd;
 }
+
 
 .logout-button {
     display: flex;
@@ -257,6 +295,7 @@ main::-webkit-scrollbar-track:hover {
     transition: color 0.3s ease;
 }
 
+
 .dark-theme .logout-button {
   display: flex;
   align-items: center;
@@ -269,35 +308,43 @@ main::-webkit-scrollbar-track:hover {
   transition: color 0.3s ease;
 }
 
+
 .logout-button:hover {
     background: linear-gradient(to right, var(--gray), var(--maroon), var(--orange));
-    color: white; 
+    color: white;
 }
+
 
 .logout-button i {
     margin-right: 10px;
     color: #A22F05;
 }
 
+
 .dark-theme .logout-button i {
   margin-right: 10px;
   color: white;
 }
 
+
 .logout-button:hover i {
     color: white;
 }
 
+
 .logout-button:hover span {
-    color: white; 
+    color: white;
 }
+
+
+
 
 
 
 /* main content styles  */
 main {
-  width: 80%; 
-  padding: 30px; 
+  width: 80%;
+  padding: 30px;
   overflow-y: auto;  
   height: 100vh;  
 }
@@ -326,28 +373,31 @@ main {
  
  .welcome-text {
    font-size: 1.2rem;
-   color: #555; 
+   color: #555;
    margin: 0;
  }
 
+
  .dark-theme .welcome-text {
   font-size: 1.2rem;
-  color: white; 
+  color: white;
   margin: 0;
 }
+
 
  .dashboard-title {
    font-size: 2rem;
    font-weight: bold;
-   color: #333; 
-   margin: 0.2rem 0 0 0; 
+   color: #333;
+   margin: 0.2rem 0 0 0;
  }
+
 
  .dark-theme .dashboard-title {
   font-size: 2rem;
   font-weight: bold;
-  color: var(--reddish-brown); 
-  margin: 0.2rem 0 0 0; 
+  color: var(--reddish-brown);
+  margin: 0.2rem 0 0 0;
 }
  
  
@@ -392,8 +442,9 @@ main {
    background: #fff;
    padding: 20px;
    border-radius: 8px;
-   border: 3px solid #B62B1B; 
+   border: 3px solid #B62B1B;
  }
+
 
  .dark-theme .utilities-section {
   width: 65%;
@@ -401,62 +452,95 @@ main {
   padding: 20px;
   border-radius: 8px;
   border: 3px solid var(--reddish-brown);
-  color: var(--white); 
+  color: var(--white);
 }
  
  
  /* Right side: Room Balance and Usage */
- .right-side {
-   width: 30%;
-   display: flex;
-   flex-direction: column;
-   gap: 15px; 
- }
- 
- 
- /* Room Total Balance Card */
- .total-balance-card {
-   background: linear-gradient(to bottom, #B32C19, #FC8042);
-   color: white;
-   padding: 15px;
-   text-align: center;
-   border-radius: 8px;
- }
- 
- 
- 
- 
- .total-balance-card h2 {
-   font-size: 1.2rem;
-   font-weight: bold;
- }
- 
- 
- .total-balance-card .main-balance {
-   font-size: 1.8rem;
-   margin: 10px 0;
- }
- 
- 
- .shared-balance {
-   background: #ffffff;
-   margin-top: 15px;
-   padding: 10px;
-   border-radius: 8px;
-   color: #333;
- }
- 
- 
- .shared-balance-card {
-   background: #fff;
-   color: #333;
-   padding: 10px;
-   border-radius: 8px;
-   text-align: center;
-   margin-top: 10px;
-   font-size: 1rem;
- }
- 
+.right-side {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px;
+}
+
+
+/* Room Total Balance Card */
+.total-balance-card {
+  background: linear-gradient(to bottom, #B32C19, #FC8042);
+  color: white;
+  padding: 20px;
+  text-align: center;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+.total-balance-card h2 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 10px 0 5px 0; /* Reduced top margin to bring text closer */
+}
+
+
+.total-balance-card .main-balance {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 5px 5px 0; /* Reduced top margin to bring text closer */
+}
+
+
+
+
+/* Shared Balance Card */
+.shared-balance-card {
+  background: #fff;
+  color: #333;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+
+.shared-balance-card h3 {
+  font-size: 1rem;
+  margin: 0 0 5px 0; /* Add space below the title */
+  text-align: left
+}
+
+
+.balance-amount {
+  display: flex;
+  justify-content: space-between; /* Space out balance and button */
+  align-items: center; /* Vertically center balance and button */
+}
+
+
+.shared-balance-card p {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+
+/* Paid Button (Gray with shadow) */
+.paid-button {
+  background-color: #d9d9d9; /* Gray color */
+  color: #171717;
+  border: none;
+  border-radius: 15px;
+  padding: 5px 15px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Shadow effect */
+}
+
+
  
  
  
@@ -465,76 +549,12 @@ main {
    padding: 20px;
    border-radius: 8px;
    text-align: center;
-   border: 1px solid #ddd; 
- }
- 
- 
- /* Usage Summary Card */
- .usage-summary-card {
-   background: #fff;
    border: 1px solid #ddd;
-   padding: 20px;
-   border-radius: 8px;
-   text-align: center;
  }
+ 
+ 
+ 
 
- .dark-theme .usage-summary-card {
-  background: var(--red-brown);
-  border: 1px solid var(--redy-brown);
-  padding: 20px;
-  border-radius: 8px;
-  text-align: center;
-  color: var(--white);
-}
- 
- 
- .usage-summary-card h3 {
-   font-size: 1.2rem;
-   margin-bottom: 10px;
- }
-
- .dark-theme .usage-summary-card h3 {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-  color: var(--white);
-}
- 
- 
- /* Gradient Circle for Usage */
- .usage-circle {
-   width: 100px;
-   height: 100px;
-   border-radius: 50%;
-   background: conic-gradient(#FF6B45 75%, #FFAA44 25%);
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   margin: 0 auto 10px;
-   color: white;
-   font-weight: bold;
-   font-size: 1.2rem;
- }
- 
- 
- .utilities-header {
-   display: flex;
-   justify-content: space-between;
-   align-items: center;
-   margin-bottom: 20px;
- }
- 
- 
- .controls i {
-   font-size: 24px;
-   color: #060606;
-   cursor: pointer;
- }
-
-.dark-theme .controls i {
-  font-size: 24px;
-  color: white;
-  cursor: pointer;
-}
 
 /* Utilities Bills Section */
 .bills {
@@ -542,6 +562,8 @@ main {
   flex-direction: column;
   gap: 15px;
 }
+
+
 
 
 .bill {
@@ -555,10 +577,12 @@ main {
   transition: background-color 0.3s ease, background 0.3s ease, color 0.3s ease; /* Smooth transitions */
 }
 
+
 .bill:hover {
   background: linear-gradient(to bottom, #B32C19, #FC8042); /* Gradient background on hover */
   color: #fff; /* Changes text color to white */
 }
+
 
 .bill:hover .bill-title,
 .bill:hover .bill-amount,
@@ -567,9 +591,11 @@ main {
   color: #fff; /* Ensures all text and icons turn white */
 }
 
+
 .bill:hover .bill-dates p {
   color: #fff; /* Ensures the .bill-dates p text turns white on hover */
 }
+
 
 .dark-theme .bill {
   background: var(--red-brown);
@@ -577,25 +603,30 @@ main {
   transition: background-color 0.3s ease, background 0.3s ease, color 0.3s ease;
 }
 
+
 .dark-theme .bill:hover {
   background: linear-gradient(to bottom, #B32C19, #FC8042); /* Gradient background on hover */
   color: #fff; /* Changes text color to white */
 }
 
+
 .dark-theme .bill:hover .bill-title,
 .dark-theme .bill:hover .bill-amount,
 .dark-theme .bill:hover .shared-amount,
 .dark-theme .bill:hover i {
-  color: #fff; 
+  color: #fff;
 }
+
 
 .dark-theme .bill-dates p{
   color: white;
 }
 
+
 .dark-theme .bill:hover .bill-dates p {
-  color: #fff; 
+  color: #fff;
 }
+
 
 .bill-amount, .shared-amount {
   font-size: 1rem;
@@ -604,19 +635,23 @@ main {
   align-self: center;
 }
 
+
 .dark-theme .bill-amount, .shared-amount {
   color: white;
 }
+
 
 .bill i {
   font-size: 1.5rem;
   color: #FF6B45;
 }
 
+
 .dark-theme .bill i {
   font-size: 1.5rem;
   color: var(--brownish-yellow);
 }
+
 
 .bill-title {
   flex: 1;
@@ -626,15 +661,21 @@ main {
   color: #333;
 }
 
+
 .dark-theme .bill-title {
   color: white;
 }
+
 
 .bill-amount {
   font-size: 1rem;
   font-weight: bold;
   color: #444;
 }
+
+
+
+
 
 
 
@@ -659,101 +700,107 @@ main {
  
  
  .unpaid {
-   background: #FF6B45; 
+   background: #FF6B45;
    color: white;
  }
  
  
  /* Utilities History Section */
  .utilities-history {
-   padding: 20px; 
-   background-color: #fafafa; 
-   border-radius: 12px; 
+   padding: 20px;
+   background-color: #fafafa;
+   border-radius: 12px;
    margin-top: 30px;
  }
 
+
  .dark-theme .utilities-history {
-  padding: 20px; 
-  background-color: var(--red-brown); 
-  border-radius: 12px; 
+  padding: 20px;
+  background-color: var(--red-brown);
+  border-radius: 12px;
   margin-top: 30px;
   border: 2px solid var(--reddish-brown);
 }
  
  
  .utilities-history h2 {
-   font-size: 24px; 
-   margin-bottom: 20px; 
-   color: #333; 
+   font-size: 24px;
+   margin-bottom: 20px;
+   color: #333;
  }
 
+
  .dark-theme .utilities-history h2 {
-  font-size: 24px; 
-  margin-bottom: 20px; 
-  color: white; 
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: white;
 }
  
  
  .utilities-history-card {
-   background: #ffffff; 
-   border: 2px solid #ddd; 
-   border-radius: 12px; 
-   padding: 20px; 
-   box-shadow: 0 4px 12px rgba(255, 249, 249, 0.1); 
-   margin-top: 20px; 
-   display: flex; 
-   flex-direction: column; 
-   gap: 15px; 
+   background: #ffffff;
+   border: 2px solid #ddd;
+   border-radius: 12px;
+   padding: 20px;
+   box-shadow: 0 4px 12px rgba(255, 249, 249, 0.1);
+   margin-top: 20px;
+   display: flex;
+   flex-direction: column;
+   gap: 15px;
  }
 
+
  .dark-theme .utilities-history-card {
-  background: var(--red-brown); 
-  border: 2px solid #dddddd00; 
-  border-radius: 12px; 
-  padding: 20px; 
-  box-shadow: 0 4px 12px rgba(255, 249, 249, 0); 
-  margin-top: 20px; 
-  display: flex; 
-  flex-direction: column; 
-  gap: 15px; 
+  background: var(--red-brown);
+  border: 2px solid #dddddd00;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(255, 249, 249, 0);
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
  
  
  /* Table styles */
  table {
-  width: 100%; 
-  border-collapse: collapse; 
-  border-spacing: 0; 
-  border-radius: 10px; 
-  overflow: hidden; 
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border-radius: 10px;
+  overflow: hidden;
 }
+
 
  
  th, td {
-   padding: 12px; 
-   text-align: left; 
+   padding: 12px;
+   text-align: left;
    border-bottom: 1px solid #ddd;
    
  }
  
  /* header bg and font color*/
  th {
-   background-color: #f9f9f9; 
-   font-weight: bold; 
+   background-color: #f9f9f9;
+   font-weight: bold;
    border-collapse: collapse;
  }
 
+
  .dark-theme th {
-  background: #942713; 
-  font-weight: bold; 
+  background: #942713;
+  font-weight: bold;
   color: var(--white);
-  
+ 
 }
  
  
  td {
    background-color: #fafafa; /* Slight background for table data */
  }
+
 
  .dark-theme td {
   background-color: white;;
@@ -763,7 +810,7 @@ main {
  /* icon and text spacing and color*/
  i {
    margin-right: 8px;
-   color: #f39c12; 
+   color: #f39c12;
  }
  
  
@@ -771,31 +818,31 @@ main {
    display: flex;
    justify-content: space-between;
    align-items: center;
-   margin-bottom: 15px; 
+   margin-bottom: 15px;
  }
  
  
  .utilities-history-header h3 {
-   font-size: 1.5rem; 
-   color: #333; 
+   font-size: 1.5rem;
+   color: #333;
    font-weight: bold;
  }
  
  
  .utilities-history-header .year {
    font-size: 1rem;
-   color: #777; 
+   color: #777;
  }
  
  
  .utilities-history-header i {
-   font-size: 1.8rem; 
+   font-size: 1.8rem;
    color: #FF6B45;
  }
  
  
  .utilities-history-list {
-   margin-top: 10px; 
+   margin-top: 10px;
  }
  
  
@@ -803,14 +850,14 @@ main {
    display: flex;
    justify-content: space-between;
    align-items: center;
-   padding: 10px 15px; 
-   border-bottom: 1px solid #ddd; 
-   transition: background 0.3s ease; 
+   padding: 10px 15px;
+   border-bottom: 1px solid #ddd;
+   transition: background 0.3s ease;
  }
  
  
  .history-item:last-child {
-   border-bottom: none; 
+   border-bottom: none;
  }
  
  
@@ -821,15 +868,15 @@ main {
  
  .history-item .title {
    font-size: 1rem;
-   font-weight: 500; 
+   font-weight: 500;
    color: #444;
  }
  
  
  .history-item .amount {
    font-size: 1rem;
-   font-weight: bold; 
-   color: #FF6B45; 
+   font-weight: bold;
+   color: #FF6B45;
  }
  
  
@@ -856,14 +903,15 @@ main {
  /* Ensure that the bill section is using a column layout */
 .bill {
   display: flex;
-  flex-direction: column; 
-  align-items: flex-start; 
+  flex-direction: column;
+  align-items: flex-start;
   padding: 10px 15px;
   background: #fff;
   border-radius: 8px;
-  border: 1px solid #6F4F37; 
-  gap: 5px; 
+  border: 1px solid #6F4F37;
+  gap: 5px;
 }
+
 
 /* Adjust styling for bill title to ensure space is utilized well */
 .bill-title {
@@ -873,13 +921,15 @@ main {
   margin: 0;
 }
 
+
 /* Adjust styling for bill amount, aligning it to the right */
 .bill-amount {
   font-size: 2rem;
   font-weight: bold;
   color: #444;
-  align-self: flex-end; 
+  align-self: flex-end;
 }
+
 
 /* Style for the date section below the bill title */
 .bill-dates p {
@@ -888,6 +938,8 @@ main {
   margin: 2px 0 0 0;
  
 }
+
+
 
 
 /* Style for the tenant share below the bill amount, aligning it to the right */
@@ -899,18 +951,31 @@ main {
   transition: color 0.3s ease; /* Smooth transition for color change */
 }
 
+
 /* Hover effect on the parent .bill container for .bill-tenant-share */
 .bill:hover .bill-tenant-share {
   color: #fff; /* Ensures .bill-tenant-share text turns white on hover */
 }
 
 
+
+
 .dark-theme .bill-tenant-share {
   font-size: 0.8rem;
   color: white;
   margin: 2px 0 0 0;
-  align-self: flex-end; 
+  align-self: flex-end;
 }
+
+
+ 
+
+
+
+
+
+
+
 
  
 
