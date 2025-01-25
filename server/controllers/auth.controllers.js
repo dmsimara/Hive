@@ -227,7 +227,7 @@ export function logActivity(adminId, actionType, actionDetails = '') {
     const connection = connectDB();   
 
     const query = `
-        INSERT INTO activities (admin_id, actionType, actionDetails) 
+        INSERT INTO Activities (admin_id, actionType, actionDetails) 
         VALUES (?, ?, ?)
     `;
 
@@ -246,7 +246,7 @@ export function logHistory(tenantId, actionType, actionDetails = '') {
     const connection = connectDB(); 
 
     const query = `
-        INSERT INTO histories (tenant_id, actionType, actionDetails) 
+        INSERT INTO Histories (tenant_id, actionType, actionDetails) 
         VALUES (?, ?, ?)
     `;
 
@@ -1413,7 +1413,7 @@ export const viewVisitorsTenant = async (req, res) => {
     try {
         const query = `
             SELECT * 
-            FROM requests 
+            FROM Requests 
             WHERE tenant_id = ? 
               AND establishment_id = (
                 SELECT establishment_id 
@@ -1461,7 +1461,7 @@ export const viewVisitorsAdmin = async (req, res) => {
     const connection = connectDB();
 
     try {
-        const query = 'SELECT * FROM requests WHERE establishment_id = ? ORDER BY requestDate ASC';
+        const query = 'SELECT * FROM Requests WHERE establishment_id = ? ORDER BY requestDate ASC';
         const [results] = await connection.promise().query(query, [establishmentId]);
 
         if (!results.length) {
@@ -1504,7 +1504,7 @@ export const viewActivities = async (req, res) => {
         const [countResult] = await connection.promise().query(countQuery, [adminId]);
         const totalCount = countResult[0].totalCount;
 
-        const query = 'SELECT * FROM activities WHERE admin_id = ? ORDER BY timestamp DESC LIMIT ? OFFSET ?';
+        const query = 'SELECT * FROM Activities WHERE admin_id = ? ORDER BY timestamp DESC LIMIT ? OFFSET ?';
         const [results] = await connection.promise().query(query, [adminId, limit, offset]);
 
         if (!results.length) {
@@ -1539,7 +1539,7 @@ export const viewHistories = async (req, res) => {
         const [countResult] = await connection.promise().query(countQuery, [tenantId]);
         const totalCount = countResult[0].totalCount;
 
-        const query = 'SELECT * FROM histories WHERE tenant_id = ? ORDER BY timestamp DESC LIMIT ? OFFSET ?';
+        const query = 'SELECT * FROM Histories WHERE tenant_id = ? ORDER BY timestamp DESC LIMIT ? OFFSET ?';
         const [results] = await connection.promise().query(query, [tenantId, limit, offset]);
 
         if (!results.length) {
