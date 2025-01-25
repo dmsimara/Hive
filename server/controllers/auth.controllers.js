@@ -1500,7 +1500,7 @@ export const viewActivities = async (req, res) => {
     try {
         const offset = (page - 1) * limit;
 
-        const countQuery = 'SELECT COUNT(*) AS totalCount FROM activities WHERE admin_id = ?';
+        const countQuery = 'SELECT COUNT(*) AS totalCount FROM Activities WHERE admin_id = ?';
         const [countResult] = await connection.promise().query(countQuery, [adminId]);
         const totalCount = countResult[0].totalCount;
 
@@ -1535,7 +1535,7 @@ export const viewHistories = async (req, res) => {
     try {
         const offset = (page - 1) * limit;
 
-        const countQuery = 'SELECT COUNT(*) AS totalCount FROM histories WHERE tenant_id = ?';
+        const countQuery = 'SELECT COUNT(*) AS totalCount FROM Histories WHERE tenant_id = ?';
         const [countResult] = await connection.promise().query(countQuery, [tenantId]);
         const totalCount = countResult[0].totalCount;
 
