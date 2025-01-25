@@ -162,7 +162,7 @@
           <div class="analytics-header">
             <i class="fa fa-users analytics-icon"></i>
             <div class="analytics-body">
-              <p class="number">24</p>
+              <p class="number">{{totalTenants}}</p>
               <h5 class="desc">Tenants</h5>
             </div>
           </div>
@@ -175,7 +175,7 @@
             <div class="analytics-header">
               <i class="fa fa-lock analytics-icon"></i>
               <div class="analytics-body">
-                <p class="number">12</p>
+                <p class="number">{{occupiedUnits}}</p>
                 <h5 class="desc">Occupied Units</h5>
               </div>
             </div>
@@ -191,7 +191,7 @@
           <div class="analytics-header">
             <i class="fa fa-users analytics-icon"></i>
             <div class="analytics-body">
-              <p class="number">80</p>
+              <p class="number">{{totalUnits}}</p>
               <h5 class="desc">Total Units</h5>
             </div>
           </div>
@@ -203,7 +203,7 @@
           <div class="analytics-header">
             <i class="fa fa-users analytics-icon"></i>
             <div class="analytics-body">
-              <p class="number">7</p>
+              <p class="number">{{totalFixes}}</p>
               <h5 class="long-desc">Pending Maintenance</h5>
             </div>
           </div>
@@ -254,5 +254,73 @@
         logo.src = '/images/hiveLight.png';
     }
 };
+</script>
 
+<canvas id="rentPieChart"></canvas>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var paidCount = {{paidCount}}; 
+        var pendingCount = {{pendingCount}};  
+
+        var canvas = document.getElementById('rentPieChart');
+        var ctx = canvas.getContext('2d');
+        var gray = getComputedStyle(document.documentElement).getPropertyValue('--gray');
+        var maroon = getComputedStyle(document.documentElement).getPropertyValue('--maroon');
+        var orange = getComputedStyle(document.documentElement).getPropertyValue('--orange');
+
+        var paidGradient = ctx.createLinearGradient(0, 0, 0, 400);
+        paidGradient.addColorStop(0, gray);
+        paidGradient.addColorStop(0.5, maroon);
+        paidGradient.addColorStop(1, orange);
+
+        var pendingColor = '#ECECEC';
+
+        var rentPieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Paid', 'Pending'],
+                datasets: [{
+                    data: [paidCount, pendingCount], 
+                    backgroundColor: [paidGradient, pendingColor],
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, 
+                aspectRatio: 1,
+                layout: {
+                    padding: {
+                        top: 0,
+                        left: 0,
+                        right: 20,
+                        bottom: 20
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'right', 
+                        align: 'start',
+                        labels: {
+                            boxWidth: 20,
+                            padding: 10,
+                            color: '#000', 
+                            font: {
+                                weight: 'bold', 
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                var value = tooltipItem.raw;  
+                                var percentage = tooltipItem.raw / (paidCount + pendingCount) * 100; 
+                                return tooltipItem.label + ": " + value + " (" + percentage.toFixed(2) + "%)"; 
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
 </script>

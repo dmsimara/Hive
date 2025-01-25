@@ -1060,7 +1060,6 @@ export const viewApprovedRequests = async (req) => {
             return date.toLocaleString('en-US', options);
         };
         
-        // Format date range for visitType "overnight"
         const formatDateRange = (visitDateFrom, visitDateTo, visitType) => {
             const startDate = new Date(visitDateFrom);
             const endDate = new Date(visitDateTo);
@@ -1096,6 +1095,52 @@ export const viewApprovedRequests = async (req) => {
     } catch (error) {
         console.error('Error fetching approved requests:', error);
         throw new Error('Error fetching approved requests');
+    }
+};
+
+export const viewPendingFixes = async (req) => {
+    const establishmentId = req.establishmentId;
+
+    if (!establishmentId) {
+        console.error('Establishment ID is undefined. Ensure the user is correctly associated with an establishment.');
+        throw new Error('Establishment ID is missing');
+    }
+
+    try {
+        const rows = await Fix.findAll({
+            where: { establishment_id: establishmentId,
+                status: 'status'
+             },
+            include: [
+                {
+                    model: Tenant,
+                    attributes: ['tenantProfile', 'tenantFirstName', 'tenantLastName'],
+                    include: [{
+                        model: Room,
+                        attributes: ['roomNumber'], 
+                    }]
+                }
+            ],
+            raw: true 
+        });
+
+        return rows.map(row => {
+            console.log(row);  
+            return {
+                ...row,
+                tenantProfile: row['tenant.tenantProfile'] || '/images/defaultUser.webp',
+                tenantFirstName: row['tenant.tenantFirstName'] || 'Unknown',
+                tenantLastName: row['tenant.tenantLastName'] || 'Unknown',
+                tenantRoomNumber: row['tenant.room.roomNumber'] || '-',
+                tenantContactNumber: row.contactNum || '-',
+                tenantScheduledDate: row.scheduledDate || '-',
+                tenantDescription: row.description || '-',
+            };
+        });
+
+    } catch (error) {
+        console.error('Error fetching fixes:', error);
+        throw new Error('Error fetching fixes');
     }
 };
 
@@ -1634,6 +1679,49 @@ export const searchRooms = async (req, res, next) => {
         return res.status(500).json({ success: false, message: 'Database query failed' });
     }
 };
+
+export const searchUtils = async (req, res, next) => {
+    try {
+      const searchTerm = req.query.q?.trim() || '';
+      console.log('Search Term:', searchTerm);
+  
+      // Extract token from headers or cookies
+      const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
+      if (!token) {
+        return res.status(401).json({ success: false, message: 'Unauthorized. No token provided.' });
+      }
+  
+      // Verify the token
+      try {
+        jwt.verify(token, process.env.JWT_SECRET);
+        console.log('Token verified successfully.');
+      } catch (err) {
+        console.error('Token verification error:', err);
+        return res.status(401).json({ success: false, message: 'Invalid or expired token.' });
+      }
+  
+      // Set up query conditions
+      const whereConditions = {};
+      if (searchTerm) {
+        whereConditions[Op.or] = [
+          { roomNumber: { [Op.like]: `%${searchTerm}%` } },
+          { roomType: { [Op.like]: `%${searchTerm}%` } },
+        ];
+      }
+  
+      // Fetch utilities based on the search term
+      const utilities = await Utility.findAll({ where: whereConditions });
+  
+      return res.json({
+        success: true,
+        utilities: utilities || [], // Return an empty array if no results found
+      });
+    } catch (error) {
+      console.error('Error executing searchUtils query:', error);
+      return res.status(500).json({ success: false, message: 'Database query failed.' });
+    }
+  };
+  
 
 export const findTenants = async (req, res, next) => {
     try {
@@ -3537,7 +3625,7 @@ export const deleteUtility = async (req, res) => {
 };
 
 export const getOccupiedUnits = async (req, res) => {
-    const establishmentId = req.establishmentId; 
+    const establishmentId = req.establishmentId;
 
     try {
         const rooms = await Room.findAll({
@@ -3545,16 +3633,11 @@ export const getOccupiedUnits = async (req, res) => {
             raw: true, 
         });
 
-        let occupiedUnits = 0;
+        const occupiedUnits = rooms.reduce((count, room) => {
+            return count + (room.roomRemainingSlot < room.roomTotalSlot ? 1 : 0);
+        }, 0);
 
-        rooms.forEach(room => {
-            const occupiedSlots = room.roomTotalSlot - room.roomRemainingSlot;
-            if (occupiedSlots > 0) {
-                occupiedUnits += occupiedSlots; 
-            }
-        });
-
-        return occupiedUnits; 
+        return occupiedUnits;
 
     } catch (error) {
         console.error("Error calculating occupied units:", error);
@@ -3563,6 +3646,28 @@ export const getOccupiedUnits = async (req, res) => {
         }
     }
 };
+
+export const getTotalUnits = async (req, res) => {
+    const establishmentId = req.establishmentId;
+
+    try {
+        const rooms = await Room.findAll({
+            where: { establishmentId },
+            raw: true,
+        });
+
+        const totalUnits = rooms.length;
+
+        return totalUnits;
+
+    } catch (error) {
+        console.error("Error fetching total units:", error);
+        if (!res.headersSent) {
+            res.status(500).send("An error occurred while fetching total units.");
+        }
+    }
+};
+
 
 export const getAvailableRooms = async (req, res) => {
     try {

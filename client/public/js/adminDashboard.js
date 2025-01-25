@@ -122,15 +122,21 @@ function openTenantModal(tenant) {
     }
 
     const profileImageUrl = tenant.tenantProfile ? `/images/upload/${tenant.tenantProfile}` : "/images/defaultUser.webp";
-    
-    modalBody.innerHTML = `
+
+    const tenantDetailsHTML = `
         <div class="profile-container">
             <img src="${profileImageUrl}" alt="Tenant Profile" class="img-fluid"/>
             <div class="profile-details">
-                <p class="name">${tenant.tenantFirstName} ${tenant.tenantLastName}</p>
+                <p class="name">${tenant.tenantFirstName || "Unknown"} ${tenant.tenantLastName || ""}</p>
                 <div class="contact-info">
-                    <p class="mobileNum"><span class="material-icons call-icon">call</span> ${tenant.mobileNum || "N/A"}</p>
-                    <p class="email"><span class="material-icons email-icon">mail</span> ${tenant.tenantEmail || "N/A"}</p>
+                    <p class="mobileNum">
+                        <span class="material-icons call-icon">call</span> 
+                        ${tenant.mobileNum || "N/A"}
+                    </p>
+                    <p class="email">
+                        <span class="material-icons email-icon">mail</span> 
+                        ${tenant.tenantEmail || "N/A"}
+                    </p>
                 </div>
             </div>
         </div>
@@ -144,10 +150,25 @@ function openTenantModal(tenant) {
                 <p><strong>Guardian Number:</strong> <span>${tenant.tenantGuardianNum || "N/A"}</span></p>
             </div>
         </div>
+    `;
+
+    const utilitiesHTML = (tenant.utilities || []).map(utility => `
+        <tr>
+            <th scope="row">${utility.utilityType || "Unknown Utility"}</th>
+            <td>${utility.charge ? `PHP ${utility.charge}` : "N/A"}</td>
+            <td>${utility.statementDate || "N/A"}</td>
+            <td>${utility.dueDate || "N/A"}</td>
+            <td class="${utility.status ? utility.status.toLowerCase() : "unknown"}">${utility.status || "N/A"}</td>
+        </tr>
+    `).join("");
+
+    const utilitiesContainerHTML = `
         <div class="bills-container">
             <div class="bills-header">
                 <p>Monthly Bills</p>
-                <a href="#" class="btn btn-edit btn-sm"><i class="material-icons edit-icon">edit</i>Edit</a>
+                <a href="#" class="btn btn-edit btn-sm">
+                    <i class="material-icons edit-icon">edit</i>Edit
+                </a>
             </div>
             <table class="table table-bordered">
                 <thead class="table-dark">
@@ -160,112 +181,88 @@ function openTenantModal(tenant) {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th scope="row">Unit Rental</th>
-                        <td>PHP 2,000</td>
-                        <td>October 15, 2024</td>
-                        <td>October 23, 2024</td>
-                        <td class="paid">Paid</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Electricity Consumption</th>
-                        <td>PHP 2,000</td>
-                        <td>October 15, 2024</td>
-                        <td>October 23, 2024</td>
-                        <td class="unpaid">Unpaid</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Water Usage</th>
-                        <td>PHP 2,000</td>
-                        <td>October 15, 2024</td>
-                        <td>October 23, 2024</td>
-                        <td class="paid">Paid</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Water Usage</th>
-                        <td>PHP 2,000</td>
-                        <td>October 15, 2024</td>
-                        <td>October 23, 2024</td>
-                        <td class="paid">Paid</td>
-                    </tr>
+                    ${utilitiesHTML || '<tr><td colspan="5">No utilities available</td></tr>'}
                 </tbody>
             </table>
         </div>
     `;
 
+    modalBody.innerHTML = tenantDetailsHTML + utilitiesContainerHTML;
+
     const modal = new bootstrap.Modal(document.getElementById("tenantModal"));
     modal.show();
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    var rentTitle = document.querySelector('.rent-title');
-    rentTitle.style.fontWeight = '700'; 
-    rentTitle.style.color = '#fff'; 
-    rentTitle.style.marginBottom = '10px';
 
-    var canvas = document.getElementById('rentPieChart');
-    canvas.width = 90; 
-    canvas.height = 90; 
+// document.addEventListener('DOMContentLoaded', function () {
+//     var rentTitle = document.querySelector('.rent-title');
+//     rentTitle.style.fontWeight = '700'; 
+//     rentTitle.style.color = '#fff'; 
+//     rentTitle.style.marginBottom = '10px';
 
-    var ctx = canvas.getContext('2d');
-    var gray = getComputedStyle(document.documentElement).getPropertyValue('--gray');
-    var maroon = getComputedStyle(document.documentElement).getPropertyValue('--maroon');
-    var orange = getComputedStyle(document.documentElement).getPropertyValue('--orange');
+//     var canvas = document.getElementById('rentPieChart');
+//     canvas.width = 90; 
+//     canvas.height = 90; 
 
-    var paidGradient = ctx.createLinearGradient(0, 0, 0, 400);
-    paidGradient.addColorStop(0, gray);
-    paidGradient.addColorStop(0.5, maroon);
-    paidGradient.addColorStop(1, orange);
+//     var ctx = canvas.getContext('2d');
+//     var gray = getComputedStyle(document.documentElement).getPropertyValue('--gray');
+//     var maroon = getComputedStyle(document.documentElement).getPropertyValue('--maroon');
+//     var orange = getComputedStyle(document.documentElement).getPropertyValue('--orange');
 
-    var pendingColor = '#ECECEC';
+//     var paidGradient = ctx.createLinearGradient(0, 0, 0, 400);
+//     paidGradient.addColorStop(0, gray);
+//     paidGradient.addColorStop(0.5, maroon);
+//     paidGradient.addColorStop(1, orange);
 
-    var rentPieChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: ['Paid', 'Pending'],
-            datasets: [{
-                data: [80, 20], 
-                backgroundColor: [paidGradient, pendingColor],
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false, 
-            aspectRatio: 1,
-            layout: {
-                padding: {
-                    top: 0,
-                    left: 0,
-                    right: 20,
-                    bottom: 20
-                }
-            },
-            plugins: {
-                legend: {
-                    position: 'right', 
-                    align: 'start',
-                    labels: {
-                        boxWidth: 20,
-                        padding: 10,
-                        color: '#fff',  
-                        font: {
-                            weight: 'bold', 
-                        } 
-                    }
-                }
-            }
-        }
-    });
-});
+//     var pendingColor = '#ECECEC';
 
-document.addEventListener('DOMContentLoaded', function() {
-    const progressBars = document.querySelectorAll('.progress-bar');
+//     var rentPieChart = new Chart(ctx, {
+//         type: 'pie',
+//         data: {
+//             labels: ['Paid', 'Pending'],
+//             datasets: [{
+//                 data: [80, 20], 
+//                 backgroundColor: [paidGradient, pendingColor],
+//             }]
+//         },
+//         options: {
+//             responsive: true,
+//             maintainAspectRatio: false, 
+//             aspectRatio: 1,
+//             layout: {
+//                 padding: {
+//                     top: 0,
+//                     left: 0,
+//                     right: 20,
+//                     bottom: 20
+//                 }
+//             },
+//             plugins: {
+//                 legend: {
+//                     position: 'right', 
+//                     align: 'start',
+//                     labels: {
+//                         boxWidth: 20,
+//                         padding: 10,
+//                         color: '#fff',  
+//                         font: {
+//                             weight: 'bold', 
+//                         } 
+//                     }
+//                 }
+//             }
+//         }
+//     });
+// });
+
+// document.addEventListener('DOMContentLoaded', function() {
+//     const progressBars = document.querySelectorAll('.progress-bar');
   
-    progressBars.forEach(function(progressBar) {
-      const progressValue = progressBar.getAttribute('data-progress');
-      progressBar.style.width = `${progressValue}%`;
-    });
-});
+//     progressBars.forEach(function(progressBar) {
+//       const progressValue = progressBar.getAttribute('data-progress');
+//       progressBar.style.width = `${progressValue}%`;
+//     });
+// });
 
 const searchInput = document.querySelector('#search');
 const resultsBody = document.querySelector('#tenantCardsContainer');

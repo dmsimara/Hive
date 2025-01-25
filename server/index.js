@@ -22,7 +22,7 @@ import Notice from "./models/notice.models.js";
 import Feedback from "./models/feedback.models.js";
 import Utility from "./models/utility.models.js";
 import { verifyTenantToken, verifyToken } from "./middleware/verifyToken.js";
-import { addTenant, addTenantView, addUnitView, editTenant, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, logActivity, updateAdminPassword, updateEvent, updateTenant, updateUtility, utilityHistories, viewActivities, viewAdmins, viewApprovedRequests, viewEvents, viewFixes, viewFixesAdmin, viewNotices, viewOvernightRequests, viewRegularRequests, viewRequests, viewRequestsAdmin, viewTenants, viewUnits, viewUtilities } from './controllers/auth.controllers.js';
+import { addTenant, addTenantView, addUnitView, editTenant, getAvailableRooms, getEvents, getNotices, getOccupiedUnits, getTotalUnits, logActivity, updateAdminPassword, updateEvent, updateTenant, updateUtility, utilityHistories, viewActivities, viewAdmins, viewApprovedRequests, viewEvents, viewFixes, viewFixesAdmin, viewNotices, viewOvernightRequests, viewPendingFixes, viewRegularRequests, viewRequests, viewRequestsAdmin, viewTenants, viewUnits, viewUtilities } from './controllers/auth.controllers.js';
 import { createPool } from "mysql2";
 
 // Sets up `__filename` and `__dirname` in an ES module environment using Node.js.
@@ -108,6 +108,10 @@ app.use(fileUpload());
 
 // HOME ROUTE ---------------------------------------------------------------------------------------
 app.get("/", (req, res) => {
+    res.render("introduction", { title: "Hive", styles: ["introduction"] });
+});
+
+app.get("/home", (req, res) => {
     res.render("home", { title: "Hive", styles: ["home"] });
 });
 
@@ -184,40 +188,91 @@ app.get("/tenant/reset-password/:resetToken", async(req, res) => {
 // ADMIN PAGES (DASHBOARD) ----------------------------------------------------------------------------
 app.get("/admin/dashboard", verifyToken, async (req, res) => {
     try {
-      const admin = await viewAdmins(req, res);
-      const establishmentId = req.establishmentId;
-      const tenantsData = await viewTenants(req);
-      const events = await getEvents(req, res);
-      const notices = await getNotices(req, res); 
-  
-      console.log("Admin:", admin);
-      console.log("Tenants:", tenantsData);
-      console.log("Events:", events);
-      console.log("Notices:", notices);
-  
-      if (req.xhr || req.headers.accept.includes('application/json')) {
-        return res.json({
-          success: true,
-          tenants: tenantsData.tenants || [],
-          establishmentId: establishmentId,
-        });
-      }
-  
-      res.render("adminDashboard", {
-        title: "Hive",
-        styles: ["adminDashboard"],
-        admin: admin || {},
-        tenants: tenantsData.tenants || [],
-        events: events || [],
-        notices: notices || [], 
-        establishmentId: establishmentId,
-      });
-    } catch (error) {
-      console.error("Error fetching admin dashboard data:", error);
-      res.status(500).json({ success: false, message: "Error fetching admin dashboard data" });
-    }
-  });
+        const admin = await viewAdmins(req, res);
+        const establishmentId = req.establishmentId;
+        const tenantsData = await viewTenants(req);
+        const totalTenants = tenantsData.tenants.length;  
 
+        const events = await getEvents(req, res);
+        const notices = await getNotices(req, res); 
+        const unitsData = await viewUnits(req, res);
+        const occupiedUnits = unitsData.success ? await getOccupiedUnits(req, res) : [];
+
+        const totalUnits = await getTotalUnits(req, res);
+
+        const utilities = await viewUtilities(req);
+
+        const paidCount = utilities.filter(utility => utility.status === 'paid').length;
+        const pendingCount = utilities.filter(utility => utility.status !== 'paid').length;
+
+        const totalCount = paidCount + pendingCount;
+
+        const fixes = await viewPendingFixes(req); 
+        const totalFixes = fixes.length; 
+
+        const adminId = admin ? admin.admin_id : null;
+
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth();
+        const currentYear = currentDate.getFullYear();
+
+        const currentMonthUtilities = utilities.filter(utility => {
+            const statementDate = new Date(utility.statementDate);
+            const dueDate = new Date(utility.dueDate);
+
+            return (
+                (statementDate.getMonth() === currentMonth && statementDate.getFullYear() === currentYear) ||
+                (dueDate.getMonth() === currentMonth && dueDate.getFullYear() === currentYear)
+            );
+        });
+
+        const displayUtilities = currentMonthUtilities.length > 0 ? currentMonthUtilities : utilities;
+
+        const formattedUtilities = displayUtilities.map(utility => ({
+            roomNumber: utility.roomNumber || "N/A",
+            roomType: utility.roomType || "N/A",
+            sharedBalance: utility.sharedBalance ? parseFloat(utility.sharedBalance).toFixed(2) : "0.00",
+            totalBalance: utility.totalBalance ? parseFloat(utility.totalBalance).toFixed(2) : "0.00",
+            room_id: utility.room_id,
+            utility_id: utility.utility_id,
+        }));
+
+        console.log("Dashboard Utilities:", formattedUtilities);
+
+        if (req.xhr || req.headers.accept.includes('application/json')) {
+            return res.json({
+                success: true,
+                tenants: tenantsData.tenants || [],
+                establishmentId: establishmentId,
+                utilities: utilities,
+                noUtilities: utilities.length === 0,
+                totalFixes: totalFixes,  
+            });
+        }
+
+        res.render("adminDashboard", {
+            title: "Hive",
+            styles: ["adminDashboard"],
+            admin: admin || {},
+            tenants: tenantsData.tenants || [],
+            events: events || [],
+            notices: notices || [], 
+            establishmentId: establishmentId,
+            occupiedUnits: occupiedUnits,
+            utilities: utilities,
+            paidCount: paidCount,
+            pendingCount: pendingCount,
+            totalCount: totalCount,
+            noUtilities: utilities.length === 0,
+            totalUnits: totalUnits,
+            totalTenants: totalTenants,  
+            totalFixes: totalFixes,  
+        });
+    } catch (error) {
+        console.error("Error fetching admin dashboard data:", error);
+        res.status(500).json({ success: false, message: "Error fetching admin dashboard data" });
+    }
+});
 
 // ADMIN PAGES (MANAGE UNIT) ---------------------------------------------------------------------------
 app.get("/admin/manage/unit", verifyToken, async (req, res) => {
@@ -241,7 +296,7 @@ app.get("/admin/manage/unit", verifyToken, async (req, res) => {
       console.error("Error fetching admin or unit data:", error);
       res.status(500).json({ success: false, message: "Error fetching data" });
     }
-  });
+});
   
 const getTenantsByRoomId = async (roomId) => {
     try {

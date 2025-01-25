@@ -14,7 +14,7 @@
                     <a class="nav-link" href="/admin/dashboard/userManagement">Manage Tenant</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/manage/unit">Manage Unit</a>
+                    <a class="nav-link active" href="/admin/manage/unit">Manage Unit</a>
                 </li>
                 <li class="nav-item">
                     <a href="/admin/utilities" class="nav-link">Manage Utilities</a>
@@ -88,8 +88,8 @@
           <form class="d-flex" role="search" method="POST" action="/api/auth/find-units" novalidate>
             <input type="hidden" name="establishmentId" value="{{establishmentId}}">
             <div class="search-bar">
-              <input class="form-control me-2 search" type="search" id="search" autocomplete="off" placeholder="Search"
-                name="searchUnits" value="{{lastSearchTerm}}">
+              <input type="search" class="form-control form-control-sm me-2 search" id="search" placeholder="Search"
+              name="search" aria-label="Search" autocomplete="off" required value="{{lastSearchTerm}}">
               <span class="search-icon">
                 <i class="material-icons">search</i>
               </span>

@@ -4,38 +4,6 @@ function toggleMenu() {
     subMenu.classList.toggle("open-menu");
 }
 
-// async function handleLogout() {
-//     const isConfirmed = confirm("Are you sure you want to logout?");
-//     
-//     if (!isConfirmed) {
-//         return;
-//     }
-//
-//     try {
-//         const response = await fetch('/api/auth/adminLogout', {
-//             method: 'POST',  
-//             credentials: 'include',  
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//         });
-//
-//         const data = await response.json();
-//
-//         if (response.ok) {
-//             alert(data.message);  
-//             window.location.href = "/";  
-//         } else {
-//             alert(`Logout failed: ${data.message || 'An error occurred'}`);
-//         }
-//     } catch (error) {
-//         console.error('Error logging out:', error);
-//         alert('An error occurred while logging out. Please try again.');
-//     }
-// }
-
-// document.getElementById('logoutButton').addEventListener('click', handleLogout);
-
 document.addEventListener("DOMContentLoaded", () => {
     const logoutButton = document.getElementById("logoutButton");
     const utilityForm = document.getElementById("utilityForm");
@@ -230,9 +198,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
       const roomNumber = row.dataset.roomNumber;
   
       if (seenRooms.has(roomNumber)) {
-        row.remove();  // Remove duplicate row
+        row.remove();  
       } else {
-        seenRooms.add(roomNumber);  // Mark this room as seen
+        seenRooms.add(roomNumber);   
       }
     });
 });
