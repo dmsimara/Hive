@@ -333,7 +333,7 @@ body::-webkit-scrollbar-track:hover {
 }
 
 .table {
-    width: 100%;
+    max-width: 1300px;
     text-align: center;
 }
 
@@ -370,10 +370,6 @@ table.maintenance th {
     color: #F6F6E6;
 }
 
-.table {
-    width: 100%;
-    text-align: center;
-}
 
 .table thead th i.material-icons {
     font-size: 18px;
@@ -463,6 +459,13 @@ table.maintenance tbody tr:last-child td {
     background-size: cover;
     background-position: center;
     margin-left: 5px;
+    object-fit: cover;
+    display: block;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+}
+
+.profile-img {
     object-fit: cover;
     display: block;
     overflow: hidden;

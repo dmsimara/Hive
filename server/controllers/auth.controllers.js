@@ -830,7 +830,9 @@ export const viewRequestsAdmin = async (req) => {
             console.log(row);  
             return {
                 ...row,
-                tenantProfile: row['tenant.tenantProfile'] || '/images/defaultUser.webp',
+                tenantProfile: row['Tenant.tenantProfile'] 
+                   ? `/images/upload/${row['Tenant.tenantProfile']}` 
+                   : '/images/defaultUser.webp',
                 tenantFirstName: row['tenant.tenantFirstName'] || 'Unknown',
                 tenantLastName: row['tenant.tenantLastName'] || 'Unknown',
                 tenantRoomNumber: row['tenant.room.roomNumber'] || '-',
@@ -1083,7 +1085,9 @@ export const viewApprovedRequests = async (req) => {
         
             return {
                 ...row,
-                tenantProfile: row['tenant.tenantProfile'] || '/images/defaultUser.webp',
+                tenantProfile: row['Tenant.tenantProfile'] 
+                   ? `/images/upload/${row['Tenant.tenantProfile']}` 
+                   : '/images/defaultUser.webp',
                 tenantFirstName: row['tenant.tenantFirstName'] || 'Unknown',
                 tenantLastName: row['tenant.tenantLastName'] || 'Unknown',
                 tenantRoomNumber: row['tenant.room.roomNumber'] || '-',
@@ -1174,7 +1178,9 @@ export const viewFixesAdmin = async (req) => {
             console.log(row);  
             return {
                 ...row,
-                tenantProfile: row['tenant.tenantProfile'] || '/images/defaultUser.webp',
+                tenantProfile: row['Tenant.tenantProfile'] 
+                   ? `/images/upload/${row['Tenant.tenantProfile']}` 
+                   : '/images/defaultUser.webp',
                 tenantFirstName: row['tenant.tenantFirstName'] || 'Unknown',
                 tenantLastName: row['tenant.tenantLastName'] || 'Unknown',
                 tenantRoomNumber: row['tenant.room.roomNumber'] || '-',

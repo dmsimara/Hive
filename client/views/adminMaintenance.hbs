@@ -82,7 +82,7 @@
         {{#each fixes}}
         <div class="card mb-3">
             <div class="card-header">
-                <img src="{{'tenantProfile'}}" alt="Profile" width="40px" class="me-2" />
+                <img src="{{tenantProfile}}" alt="Profile" width="40px" class="me-2" />
                 <h5 class="card-title d-inline">
                     {{'Tenant.tenantFirstName'}} {{'Tenant.tenantLastName'}}
                 </h5>
@@ -109,7 +109,7 @@
                     data-tenant-name="{{'Tenant.tenantFirstName'}} {{'Tenant.tenantLastName'}}"
                     data-room-number="{{'Tenant.Room.roomNumber'}}" data-maintenance-type="{{type}}"
                     data-urgency="{{urgency}}" data-scheduled-date="{{scheduledDate}}" data-contact-num="{{contactNum}}"
-                    data-description="{{description}}" data-tenant-profile="{{'Tenant.tenantProfile'}}"
+                    data-description="{{description}}" data-tenant-profile="{{tenantProfile}}"
                     data-assigned-person="{{assignedPerson}}" data-status="{{status}}">
                     Assign
                 </a>

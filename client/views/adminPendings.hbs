@@ -82,7 +82,7 @@
     {{#each requests}}
     <div class="link-group">
       <a href="#" data-bs-toggle="modal" class="deets-btn" data-bs-target="#deetsModal" aria-label="View Tenant Details"
-        data-requests-id="{{request_id}}" data-tenant-profile="{{'Tenant.tenantProfile'}}"
+        data-requests-id="{{request_id}}" data-tenant-profile="{{tenantProfile}}"
         data-tenant-name="{{'Tenant.tenantFirstName'}} {{'Tenant.tenantLastName'}}"
         data-room-number="{{'Tenant.Room.roomNumber'}}" data-visitor-name="{{visitorName}}"
         data-visitor-contact="{{contactInfo}}" data-visitor-type="{{visitType}}"
@@ -91,7 +91,7 @@
         data-visitor-checkout="{{visitorDateTo}}">
         <div class="card mb-3">
           <div class="card-header">
-            <img src="{{'tenantProfile'}}" alt="Profile" width="40px" class="me-2" />
+            <img src="{{tenantProfile}}" alt="Profile" width="40px" class="me-2" />
             <h5 class="card-title d-inline">
               {{'Tenant.tenantFirstName'}} {{'Tenant.tenantLastName'}}
             </h5>
