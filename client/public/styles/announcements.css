@@ -560,6 +560,8 @@ body::-webkit-scrollbar-track:hover {
     background: linear-gradient(to bottom, var(--gray), var(--maroon), var(--orange));
     border: none !important;
     box-shadow: none !important;
+    margin-left: 30px;
+    margin-top: 80px;
 }
 
 .dark-theme .modal-content {
@@ -567,6 +569,8 @@ body::-webkit-scrollbar-track:hover {
     background: linear-gradient(to bottom, var(--white), var(--gray));
     border: none !important;
     box-shadow: none !important;
+    margin-left: 30px;
+    margin-top: 80px;
 }
 
 .modal-backdrop {
