@@ -1862,6 +1862,35 @@ export const viewUtilities = async (req) => {
     }
 };
 
+export const viewUtilitiesTenant = async (req, res) => {
+    try {
+        const tenantId = req.query.id; 
+        console.log("Tenant ID from query:", tenantId); 
+
+        const tenant = await Tenant.findByPk(tenantId);
+
+        if (!tenant) {
+            return res.status(404).json({ error: "Tenant not found" });
+        }
+
+        const roomId = tenant.room_id; 
+        console.log("Tenant Room ID: ", tenant.room_id);
+
+        const utilities = await Utility.findAll({
+            where: { room_id: roomId },
+        });
+        console.log("Tenant Room Utils: ", utilities);
+
+        res.json({
+            tenant,
+            utilities,
+        });
+    } catch (error) {
+        console.error("Error fetching tenant data:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
 export const utilityHistories = async (req, res) => {
     try {
         const establishmentId = req.establishmentId;
