@@ -114,6 +114,9 @@ function updateTenantCards(tenants) {
 }
 
 function openTenantModal(tenant) {
+    const tenantId = tenant.tenant_id;  
+    console.log("Tenant ID: ", tenantId); 
+
     const modalBody = document.querySelector("#tenantModal .modal-body");
 
     if (!modalBody) {
@@ -121,148 +124,111 @@ function openTenantModal(tenant) {
         return;
     }
 
-    const profileImageUrl = tenant.tenantProfile ? `/images/upload/${tenant.tenantProfile}` : "/images/defaultUser.webp";
+    fetch(`/api/auth/tenant/utilities?id=${tenantId}`)
+        .then((response) => response.json())
+        .then((data) => {
+            const tenant = data.tenant;
+            const utilities = data.utilities;
 
-    const tenantDetailsHTML = `
-        <div class="profile-container">
-            <img src="${profileImageUrl}" alt="Tenant Profile" class="img-fluid"/>
-            <div class="profile-details">
-                <p class="name">${tenant.tenantFirstName || "Unknown"} ${tenant.tenantLastName || ""}</p>
-                <div class="contact-info">
-                    <p class="mobileNum">
-                        <span class="material-icons call-icon">call</span> 
-                        ${tenant.mobileNum || "N/A"}
-                    </p>
-                    <p class="email">
-                        <span class="material-icons email-icon">mail</span> 
-                        ${tenant.tenantEmail || "N/A"}
-                    </p>
+            console.log("Tenant Data: ", tenant);  
+            console.log("Utilities: ", utilities);  
+
+            const profileImageUrl = tenant.tenantProfile
+                ? `/images/upload/${tenant.tenantProfile}`
+                : "/images/defaultUser.webp";
+
+            const tenantDetailsHTML = `
+                <div class="profile-container">
+                    <img src="${profileImageUrl}" alt="Tenant Profile" class="img-fluid"/>
+                    <div class="profile-details">
+                        <p class="name">${tenant.tenantFirstName || "Unknown"} ${tenant.tenantLastName || ""}</p>
+                        <div class="contact-info">
+                            <p class="mobileNum">
+                                <span class="material-icons call-icon">call</span> 
+                                ${tenant.mobileNum || "N/A"}
+                            </p>
+                            <p class="email">
+                                <span class="material-icons email-icon">mail</span> 
+                                ${tenant.tenantEmail || "N/A"}
+                            </p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="details-container">
-            <div class="details-row">
-                <p><strong>Tenant ID:</strong> <span>${tenant.tenant_id || "N/A"}</span></p>
-                <p><strong>Guardian:</strong> <span>${tenant.tenantGuardianName || "N/A"}</span></p>
-            </div>
-            <div class="second-row">
-                <p><strong>Gender:</strong> <span>${tenant.gender || "N/A"}</span></p>
-                <p><strong>Guardian Number:</strong> <span>${tenant.tenantGuardianNum || "N/A"}</span></p>
-            </div>
-        </div>
-    `;
+                <div class="details-container">
+                    <div class="details-row">
+                        <p><strong>Tenant ID:</strong> <span>${tenant.tenant_id || "N/A"}</span></p>
+                        <p><strong>Guardian:</strong> <span>${tenant.tenantGuardianName || "N/A"}</span></p>
+                    </div>
+                    <div class="second-row">
+                        <p><strong>Gender:</strong> <span>${tenant.gender || "N/A"}</span></p>
+                        <p><strong>Guardian Number:</strong> <span>${tenant.tenantGuardianNum || "N/A"}</span></p>
+                    </div>
+                </div>
+            `;
 
-    const utilitiesHTML = (tenant.utilities || []).map(utility => `
-        <tr>
-            <th scope="row">${utility.utilityType || "Unknown Utility"}</th>
-            <td>${utility.charge ? `PHP ${utility.charge}` : "N/A"}</td>
-            <td>${utility.statementDate || "N/A"}</td>
-            <td>${utility.dueDate || "N/A"}</td>
-            <td class="${utility.status ? utility.status.toLowerCase() : "unknown"}">${utility.status || "N/A"}</td>
-        </tr>
-    `).join("");
-
-    const utilitiesContainerHTML = `
-        <div class="bills-container">
-            <div class="bills-header">
-                <p>Monthly Bills</p>
-                <a href="#" class="btn btn-edit btn-sm">
-                    <i class="material-icons edit-icon">edit</i>Edit
-                </a>
-            </div>
-            <table class="table table-bordered">
-                <thead class="table-dark">
+            let utilitiesHTML = "";
+            if (utilities && utilities.length > 0) {
+                utilitiesHTML = utilities
+                    .map(
+                        (utility) => `
+                        <tr>
+                            <th scope="row">${utility.utilityType || "Unknown Utility"}</th>
+                            <td>${utility.charge ? `PHP ${utility.charge}` : "N/A"}</td>
+                            <td>${utility.statementDate || "N/A"}</td>
+                            <td>${utility.dueDate || "N/A"}</td>
+                            <td class="${utility.status ? utility.status.toLowerCase() : "unknown"}">
+                                ${
+                                    utility.status === "Paid"
+                                        ? '<span class="badge bg-success">Paid</span>'
+                                        : '<span class="badge bg-warning">Pending</span>'
+                                }
+                            </td>
+                        </tr>
+                    `
+                    )
+                    .join("");
+            } else {
+                utilitiesHTML = `
                     <tr>
-                        <th scope="col">Utilities</th>
-                        <th scope="col">Charge</th>
-                        <th scope="col">Statement Date</th>
-                        <th scope="col">Due Date</th>
-                        <th scope="col">Status</th>
+                        <td colspan="5" class="text-center">No utilities available</td>
                     </tr>
-                </thead>
-                <tbody>
-                    ${utilitiesHTML || '<tr><td colspan="5">No utilities available</td></tr>'}
-                </tbody>
-            </table>
-        </div>
-    `;
+                `;
+            }
 
-    modalBody.innerHTML = tenantDetailsHTML + utilitiesContainerHTML;
+            const utilitiesContainerHTML = `
+                <div class="bills-container">
+                    <div class="bills-header">
+                        <p>Monthly Bills</p>
+                        <a href="#" class="btn btn-edit btn-sm">
+                            <i class="material-icons edit-icon">edit</i>Edit
+                        </a>
+                    </div>
+                    <table class="table table-bordered">
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col">Utilities</th>
+                                <th scope="col">Charge</th>
+                                <th scope="col">Statement Date</th>
+                                <th scope="col">Due Date</th>
+                                <th scope="col">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${utilitiesHTML}
+                        </tbody>
+                    </table>
+                </div>
+            `;
 
-    const modal = new bootstrap.Modal(document.getElementById("tenantModal"));
-    modal.show();
+            modalBody.innerHTML = tenantDetailsHTML + utilitiesContainerHTML;
+
+            const modal = new bootstrap.Modal(document.getElementById("tenantModal"));
+            modal.show();
+        })
+        .catch((error) => {
+            console.error("Error fetching tenant and utilities data:", error);
+        });
 }
-
-
-// document.addEventListener('DOMContentLoaded', function () {
-//     var rentTitle = document.querySelector('.rent-title');
-//     rentTitle.style.fontWeight = '700'; 
-//     rentTitle.style.color = '#fff'; 
-//     rentTitle.style.marginBottom = '10px';
-
-//     var canvas = document.getElementById('rentPieChart');
-//     canvas.width = 90; 
-//     canvas.height = 90; 
-
-//     var ctx = canvas.getContext('2d');
-//     var gray = getComputedStyle(document.documentElement).getPropertyValue('--gray');
-//     var maroon = getComputedStyle(document.documentElement).getPropertyValue('--maroon');
-//     var orange = getComputedStyle(document.documentElement).getPropertyValue('--orange');
-
-//     var paidGradient = ctx.createLinearGradient(0, 0, 0, 400);
-//     paidGradient.addColorStop(0, gray);
-//     paidGradient.addColorStop(0.5, maroon);
-//     paidGradient.addColorStop(1, orange);
-
-//     var pendingColor = '#ECECEC';
-
-//     var rentPieChart = new Chart(ctx, {
-//         type: 'pie',
-//         data: {
-//             labels: ['Paid', 'Pending'],
-//             datasets: [{
-//                 data: [80, 20], 
-//                 backgroundColor: [paidGradient, pendingColor],
-//             }]
-//         },
-//         options: {
-//             responsive: true,
-//             maintainAspectRatio: false, 
-//             aspectRatio: 1,
-//             layout: {
-//                 padding: {
-//                     top: 0,
-//                     left: 0,
-//                     right: 20,
-//                     bottom: 20
-//                 }
-//             },
-//             plugins: {
-//                 legend: {
-//                     position: 'right', 
-//                     align: 'start',
-//                     labels: {
-//                         boxWidth: 20,
-//                         padding: 10,
-//                         color: '#fff',  
-//                         font: {
-//                             weight: 'bold', 
-//                         } 
-//                     }
-//                 }
-//             }
-//         }
-//     });
-// });
-
-// document.addEventListener('DOMContentLoaded', function() {
-//     const progressBars = document.querySelectorAll('.progress-bar');
-  
-//     progressBars.forEach(function(progressBar) {
-//       const progressValue = progressBar.getAttribute('data-progress');
-//       progressBar.style.width = `${progressValue}%`;
-//     });
-// });
 
 const searchInput = document.querySelector('#search');
 const resultsBody = document.querySelector('#tenantCardsContainer');
