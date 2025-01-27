@@ -259,7 +259,7 @@ app.get("/admin/dashboard", verifyToken, async (req, res) => {
             notices: notices || [], 
             establishmentId: establishmentId,
             occupiedUnits: occupiedUnits,
-            utilities: utilities,
+            utilities: formattedUtilities || [],
             paidCount: paidCount,
             pendingCount: pendingCount,
             totalCount: totalCount,
