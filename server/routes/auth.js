@@ -67,6 +67,7 @@ router.get("/admin/maintenance", verifyToken, viewFixesAdmin);
 router.get("/admin/pending-visitors", verifyToken, viewRequestsAdmin);
 router.get("/activity-log/", verifyTenantToken, viewHistories);
 router.post("/tenant/submit-feedback", verifyTenantToken, addTenantFeedback);
+router.get("/tenant/utilities", viewUtilitiesTenant);
 
 // tenants
 router.get("/view-tenants", viewTenants);
